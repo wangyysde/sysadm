@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/wangyysde/sysadm/cmd"
+	"github.com/wangyysde/sysadm/sysadm/cmd"
 	"github.com/wangyysde/sysadmServer"
 )
 
