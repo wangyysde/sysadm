@@ -18,18 +18,18 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+//	"fmt"
+//	"net/http"
 
 	"github.com/wangyysde/sysadm/sysadm/cmd"
-	"github.com/wangyysde/sysadmServer"
+//	"github.com/wangyysde/sysadmServer"
 )
 
 func main(){
 
     cmd.Execute()
 
-    
+    /*
     r := sysadmServer.New()
 
        // Define handlers
@@ -43,4 +43,6 @@ func main(){
     // Listen and serve on defined port
     sysadmServer.Log(fmt.Sprintf("Listening on port %s", "8080"),"info")
     r.Run(":8080")
+
+	*/
 }

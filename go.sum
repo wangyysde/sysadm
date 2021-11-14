@@ -265,6 +265,8 @@ github.com/wangyysde/sysadmLog v0.0.0-20210915071829-f43fc1c68a76 h1:tP8BtrLqh2+
 github.com/wangyysde/sysadmLog v0.0.0-20210915071829-f43fc1c68a76/go.mod h1:q7sl/wAt9d5O08N9uoWOeBHoH5mSvIL2rR7+rEPKECs=
 github.com/wangyysde/sysadmServer v0.0.0-20211011135335-545900cfe454 h1:dyYaEApaCnx0YWBs1zO2jsHrCAzYw680+9Hsr5tCJWs=
 github.com/wangyysde/sysadmServer v0.0.0-20211011135335-545900cfe454/go.mod h1:aXTxq2UyIC1xnd3Z7/Dq4xhKhjCRa+MrMx39pkfdpF4=
+github.com/wangyysde/yaml v1.4.0 h1:7p3d8FzDnnGgS4ZYEtApBjTiTU56M23tuhKQFqe0ILM=
+github.com/wangyysde/yaml v1.4.0/go.mod h1:M5fmsQSs4Dqy7j7+4s7j960xjNdsqJp0i+G7Hmum9rU=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

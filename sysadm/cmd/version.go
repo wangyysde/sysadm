@@ -20,10 +20,8 @@ package cmd
 import (
     "fmt"
 	"encoding/json"
-	"os"
 
     "github.com/spf13/cobra"
-    "github.com/wangyysde/sysadm/sysadm"
     "github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
 )
@@ -38,7 +36,7 @@ var versionCmd = &cobra.Command{
     Run: func(cmd *cobra.Command, args []string){
 		const flag = "output"
 		v := Version{
-			ServerVersion: sysadm.ServerVersion,
+			ServerVersion: "v1.0.0",
 		}
 
         of, err := cmd.Flags().GetString(flag)
