@@ -30,6 +30,13 @@ import (
 
 var cfgFile string
 
+// Disable completion to sysadm package
+var disableCompletion = cobra.CompletionOptions{
+	DisableDefaultCmd: true,
+	DisableNoDescFlag: true,
+	DisableDescriptions: true,
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "sysadm",
@@ -45,6 +52,8 @@ var rootCmd = &cobra.Command{
 
 	======================================================
 	`),
+	CompletionOptions: disableCompletion, 
+	
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
