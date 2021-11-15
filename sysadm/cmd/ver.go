@@ -17,5 +17,5 @@
 
 package cmd
 
-var version="1.0.0"
+var versionStr="1.0.0"
 var author="Wayne Wang<net_use@bzhy.com>"
