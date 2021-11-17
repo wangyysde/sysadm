@@ -32,7 +32,7 @@ func main(){
     /*
     r := sysadmServer.New()
 
-       // Define handlers
+    // Define handlers
     r.GET("/", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "Hello World!")
     })  
