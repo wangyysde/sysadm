@@ -18,13 +18,13 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/wangyysde/sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -72,7 +72,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c","conf/config.yaml", "specified config file")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c",config.DefaultConfigFile, "specified config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -89,7 +89,7 @@ func initConfig() {
 		dir, err :=  filepath.Abs(filepath.Dir(os.Args[0]))
 
 		if err != nil {
-			sysadmServer.Log(fmt.Sprintf("%s",err),"error")
+			sysadmServer.Logf("error","%s",err)
 			os.Exit(1)
 		}
 
@@ -103,6 +103,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		sysadmServer.Logf("info","Using config file: %s\n", viper.ConfigFileUsed())
 	}
 }

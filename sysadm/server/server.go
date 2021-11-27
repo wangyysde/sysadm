@@ -20,8 +20,10 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/wangyysde/sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -36,8 +38,22 @@ var StartData = &StartParameters{
 	OldConfigPath: "",
 }
 
-func DaemonStart(cmd *cobra.Command, args []string){
-	sysadmServer.Log(fmt.Sprintf("configPath is %s",StartData.ConfigPath),"info")
+var DefinedConfig *config.Config 
+func DaemonStart(cmd *cobra.Command, cmdPath string){
+	fmt.Printf("%#v",cmdPath)
+	configPath, err := config.GetConfigPath(StartData.ConfigPath, cmdPath)
+	if err != nil {
+		sysadmServer.Logf("error","%s",err)
+		os.Exit(1)
+	}
+
+	DefinedConfig, err = config.GetConfigContent(configPath)
+	if err != nil {
+		sysadmServer.Logf("error","%s",err)
+		os.Exit(1)
+	}
+
+	//sysadmServer.Log(fmt.Sprintf("configPath is %s",StartData.ConfigPath),"info")
 	
 	r := sysadmServer.New()
 	// Define handlers
@@ -53,3 +69,4 @@ func DaemonStart(cmd *cobra.Command, args []string){
     r.Run(":8080")
 
 }
+

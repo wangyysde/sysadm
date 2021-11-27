@@ -20,6 +20,7 @@ package cmd
 import (
 	//    "fmt"
 	//"encoding/json"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/sysadm/server"
@@ -44,7 +45,7 @@ var startCmd =  &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string){
 		server.StartData.OldConfigPath = ""
 		server.StartData.ConfigPath = cfgFile
-		server.DaemonStart(cmd, args)
+		server.DaemonStart(cmd, os.Args[0])
 	},
 	Args: cobra.NoArgs,
 

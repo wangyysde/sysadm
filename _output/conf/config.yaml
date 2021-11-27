@@ -1,0 +1,15 @@
+version: v1
+server:
+  address: 0.0.0.0
+  port: 8081
+  socket: "/var/run/sysadm.sock"
+log:
+  accessLog: "logs/sysadm-access.log"
+  errorLog: "logs/sysadm-error.log"
+  kind: "text"
+  level: "debug"
+  splitAccessAndError: true
+  timeStampFormat: ""
+user:
+  defaultUser: "admin"
+  defaultPassword: "Sysadm12345"
