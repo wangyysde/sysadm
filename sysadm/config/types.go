@@ -47,3 +47,24 @@ type Config struct {
 }
 
 var DefinedConfig Config = Config{}
+
+var defaultConfig Config = Config{
+	Version: "v1.0",
+	Server: Server {
+		Address: "0.0.0.0",
+		Port: 8080,
+		Socket: "/var/run/sysadm.sock",
+	},
+	Log: Log{
+		AccessLog: "logs/sysadmAccess.log",
+		ErrorLog: "logs/sysadmError.log",
+		Kind: "text",
+		Level: "debug",
+		SplitAccessAndError: true,
+		TimeStampFormat: "",
+	},
+	User: User{
+		DefaultUser: "admin",
+		DefaultPassword: "Sysadm12345",
+	},
+}
