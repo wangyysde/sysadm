@@ -24,6 +24,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/sysadm/server"
+	"github.com/wangyysde/sysadm/sysadm/config"
 	//    "github.com/wangyysde/sysadmServer"
 	//	"github.com/wangyysde/yaml"
 )
@@ -45,6 +46,7 @@ var startCmd =  &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string){
 		server.StartData.OldConfigPath = ""
 		server.StartData.ConfigPath = cfgFile
+		config.Version = versionStr
 		server.DaemonStart(cmd, os.Args[0])
 	},
 	Args: cobra.NoArgs,

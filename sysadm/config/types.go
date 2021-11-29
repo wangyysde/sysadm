@@ -17,6 +17,10 @@
 
 package config
 
+import(
+	"github.com/wangyysde/sysadmServer"
+)
+
 //Defining server configuration
 type Server struct {
 	Address string `json:"address"`
@@ -49,22 +53,22 @@ type Config struct {
 var DefinedConfig Config = Config{}
 
 var defaultConfig Config = Config{
-	Version: "v1.0",
+	Version:  Version,
 	Server: Server {
-		Address: "0.0.0.0",
-		Port: 8080,
-		Socket: "/var/run/sysadm.sock",
+		Address: DefaultIP,
+		Port: DefaultPort,
+		Socket: DefaultSocket,
 	},
 	Log: Log{
-		AccessLog: "logs/sysadmAccess.log",
-		ErrorLog: "logs/sysadmError.log",
-		Kind: "text",
-		Level: "debug",
+		AccessLog: DefaultAccessLog,
+		ErrorLog: DefaultErrorLog,
+		Kind: DefaultLogKind,
+		Level: DefaultLogLevel,
 		SplitAccessAndError: true,
-		TimeStampFormat: "",
+		TimeStampFormat: sysadmServer.TimestampFormat["DateTime"],
 	},
 	User: User{
-		DefaultUser: "admin",
-		DefaultPassword: "Sysadm12345",
+		DefaultUser: DefaultUser,
+		DefaultPassword: DefaultPasswd,
 	},
 }
