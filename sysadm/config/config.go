@@ -23,6 +23,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/wangyysde/sysadmServer"
@@ -48,7 +49,7 @@ var ConfigDefined Config = Config{}
 // Getting the path of configurationn file and try to open it
 // configPath: the path of configuration file user specified
 // cmdRunPath: args[0]
-func GetConfigPath(configPath string, cmdRunPath string) (string, error) {
+func getConfigPath(configPath string, cmdRunPath string) (string, error) {
 	
 	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
 	if error != nil {
@@ -84,7 +85,7 @@ func GetConfigPath(configPath string, cmdRunPath string) (string, error) {
 // Reading the content of configuration from configPath and parsing the content 
 // returning a pointer to Config if it is successfully parsed
 // Or returning an error and nil
-func GetConfigContent(configPath string) (*Config, error) {
+func getConfigContent(configPath string) (*Config, error) {
 	if configPath == "" {
 		return nil, fmt.Errorf("The configration file path must not empty")
 	}
@@ -105,7 +106,7 @@ func GetConfigContent(configPath string) (*Config, error) {
 // check the supporting of the version of configuration file specified
 // return nil if the version be supported
 // Or return err 
-func CheckVerIsValid(ver string) error {
+func checkVerIsValid(ver string) error {
 	 found := false
 	for _,value := range SupportVers {
 		if strings.ToLower(ver) == strings.ToLower(value) {
@@ -124,7 +125,7 @@ func CheckVerIsValid(ver string) error {
 // check the validity of IP address 
 // return IP(net.IP) if the ip address is valid
 // Or return nil with error
-func CheckIpAddress(address string) (net.IP, error) {
+func checkIpAddress(address string) (net.IP, error) {
 	if len(address) < 1 {
 		return nil, fmt.Errorf("The address(%s) is empty or the length of it is less 1",address)
 	}
@@ -219,7 +220,7 @@ func checkLogLevel(level string) (string, error) {
 		return defaultConfig.Log.Level, fmt.Errorf("Level is empty,default level has be set")
 	}
 
-	for _,l := range sysadmServer.Log.Level {
+	for _,l := range sysadmServer.Levels {
 		if strings.ToLower(level) == strings.ToLower(l) {
 			return strings.ToLower(level),nil
 		}
@@ -243,4 +244,118 @@ func checkLogTimeFormat(format string)(string, error){
 	}
 
 	return sysadmServer.TimestampFormat["DateTime"], fmt.Errorf("format(%s) is not valid ,default format will be set.",format)
+}
+
+// Try to get listenIP from one of  SYSADMSERVER_IP,configuration file or default value.
+// The order for getting listenIP is SYSADMSERVER_IP,configuration file and default value.
+func getServerAddress(confContent *Config) string{
+	address := os.Getenv("SYSADMSERVER_IP")
+	if address != "" {
+		_, err := checkIpAddress(address)
+		if err == nil {
+			return address
+		}
+		sysadmServer.Logf("warn","We have found environment variable SYSADMSERVER_IP: %s,but the value of SYSADMSERVER_IP is not a valid server IP(%s)",address,err)
+	}
+
+	if confContent != nil {
+		_,err := checkIpAddress(confContent.Server.Address)
+		if err == nil {
+			return confContent.Server.Address
+		}
+		sysadmServer.Logf("warn","We have found server address(%s) from configuration file,but the value of server address is not a valid server IP(%s).default value of server address:%s will be used.",confContent.Server.Address,err,defaultConfig.Server.Address)
+	}
+
+	return defaultConfig.Server.Address
+
+}
+
+// Try to get listenPort from one of  SYSADMSERVER_PORT,configuration file or default value.
+// The order for getting listenPort is SYSADMSERVER_PORT,configuration file and default value.
+func getServerPort(confContent *Config) int{
+	port := os.Getenv("SYSADMSERVER_PORT")
+	if port != "" {
+		p, err := strconv.Atoi(port)
+		if err != nil {
+			sysadmServer.Logf("warn","We have found environment variable SYSADMSERVER_PORT: %s,but the value of SYSADMSERVER_PORT is not a valid server port(%s)",port,err)
+		}else{
+			_, err = checkPort(p)
+			if err == nil {
+				return p
+			}
+			sysadmServer.Logf("warn","We have found environment variable SYSADMSERVER_PORT: %d,but the value of SYSADMSERVER_PORT is not a valid server port(%s)",p,err)
+		}
+	}
+
+	if confContent != nil {
+		_,err := checkPort(confContent.Server.Port)
+		if err == nil {
+			return confContent.Server.Port
+		}
+		sysadmServer.Logf("warn","We have found server port(%d) from configuration file,but the value of server port is not a valid server port(%s).default value of server port:%s will be used.",confContent.Server.Port,err,defaultConfig.Server.Port)
+	}
+
+	return defaultConfig.Server.Port
+}
+
+// Try to get socket file  from one of  SYSADMSERVER_SOCK,configuration file or default value.
+// The order for getting socket file is SYSADMSERVER_SOCK,configuration file and default value.
+func getSockFile(confContent *Config,  cmdRunPath string) (string, error) {
+	sockFile := os.Getenv("SYSADMSERVER_SOCK")
+	if sockFile != "" {
+		f, err := getFile(sockFile,cmdRunPath)
+		if err != nil {
+			sysadmServer.Logf("warn","We have found environment variable SYSADMSERVER_SOCK: %s,but the value of SYSADMSERVER_SOCK is not a valid socket file(%s)",sockFile,err)
+		}else{
+			return f,nil
+		}
+	}
+
+	if confContent != nil {
+		f,err := getFile(confContent.Server.Socket,cmdRunPath)
+		if err == nil {
+			return f,nil
+		}
+		sysadmServer.Logf("warn","We have found server socket file (%s) from configuration file,but the value of server socket file is not a valid server socket file(%s).default value of server socket file: %s will be used.",confContent.Server.Socket,err,defaultConfig.Server.Socket)
+	}
+
+	f,err := getFile(defaultConfig.Server.Socket,cmdRunPath)
+	if err == nil {
+		return f,nil
+	}
+
+	return "",fmt.Errorf("we can not open socket file (%s): %s .",defaultConfig.Server.Socket,cmdRunPath,err)
+}
+
+func handleConfig(configPath string, cmdRunPath string) error {
+	var confContent *Config = nil
+	cfgFile,err := getConfigPath(configPath,cmdRunPath)
+	if err != nil {
+		sysadmServer.Logf("warn","Can not get configuration file: %s",err)
+		ConfigDefined.Version = confContent.Version
+	}else{
+		tmpConfContent,err := getConfigContent(cfgFile)
+		if err != nil {
+			sysadmServer.Logf("warn","Can not get the content of the configuration file: %s error: %s configuration file: %s",cfgFile, err)
+			ConfigDefined.Version = confContent.Version
+		}else {
+			confContent = tmpConfContent
+			e := checkVerIsValid(confContent.Version)
+			if e != nil {
+				sysadmServer.Logf("warn","%s",e)
+				ConfigDefined.Version = defaultConfig.Version
+			}else{
+				ConfigDefined.Version = confContent.Version
+			}
+		}
+	}
+
+	ConfigDefined.Server.Address = getServerAddress(confContent)
+	ConfigDefined.Server.Port = getServerPort(confContent) 
+	ConfigDefined.Server.Socket,err = getSockFile(confContent,cmdRunPath)
+	if err != nil {
+		return err
+	}
+	
+	
 }
