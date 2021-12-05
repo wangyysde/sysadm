@@ -38,20 +38,16 @@ var StartData = &StartParameters{
 	OldConfigPath: "",
 }
 
-var DefinedConfig *config.Config 
+var definedConfig *config.Config 
+var err error
 func DaemonStart(cmd *cobra.Command, cmdPath string){
-	fmt.Printf("%#v",cmdPath)
-	configPath, err := config.GetConfigPath(StartData.ConfigPath, cmdPath)
+	definedConfig, err = config.HandleConfig(StartData.ConfigPath,cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","%s",err)
 		os.Exit(1)
 	}
-
-	DefinedConfig, err = config.GetConfigContent(configPath)
-	if err != nil {
-		sysadmServer.Logf("error","%s",err)
-		os.Exit(1)
-	}
+	
+	fmt.Printf("configuration: %#v\n",definedConfig)
 
 	//sysadmServer.Log(fmt.Sprintf("configPath is %s",StartData.ConfigPath),"info")
 	
