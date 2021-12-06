@@ -177,7 +177,7 @@ func checkPort(port int)(int, error){
 // Converting relative path to absolute path of  file(such as socket, accesslog, errorlog) and return the  file path
 // return "" and error if  file can not opened .
 // Or return string and nil.
-func getFile(f string,cmdRunPath string)(string,error){
+func getFile(f string,cmdRunPath string, isRmTest bool)(string,error){
 	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
 	if error != nil {
 		return "",error
@@ -193,7 +193,9 @@ func getFile(f string,cmdRunPath string)(string,error){
 		return "",err
 	}
 	fp.Close()
-
+	if isRmTest {
+		_ = os.Remove(f)
+	}
 	return f,nil
 }
 
@@ -287,7 +289,7 @@ func getServerPort(confContent *Config) int{
 func getSockFile(confContent *Config,  cmdRunPath string) (string, error) {
 	sockFile := os.Getenv("SYSADMSERVER_SOCK")
 	if sockFile != "" {
-		f, err := getFile(sockFile,cmdRunPath)
+		f, err := getFile(sockFile,cmdRunPath,true)
 		if err != nil {
 			sysadmServer.Logf("warning","We have found environment variable SYSADMSERVER_SOCK: %s,but the value of SYSADMSERVER_SOCK is not a valid socket file(%s)",sockFile,err)
 		}else{
@@ -296,14 +298,14 @@ func getSockFile(confContent *Config,  cmdRunPath string) (string, error) {
 	}
 
 	if confContent != nil {
-		f,err := getFile(confContent.Server.Socket,cmdRunPath)
+		f,err := getFile(confContent.Server.Socket,cmdRunPath,true)
 		if err == nil {
 			return f,nil
 		}
 		sysadmServer.Logf("warning","We have found server socket file (%s) from configuration file,but the value of server socket file is not a valid server socket file(%s).default value of server socket file: %s will be used.",confContent.Server.Socket,err,defaultConfig.Server.Socket)
 	}
 
-	f,err := getFile(defaultConfig.Server.Socket,cmdRunPath)
+	f,err := getFile(defaultConfig.Server.Socket,cmdRunPath,true)
 	if err == nil {
 		return f,nil
 	}
@@ -316,7 +318,7 @@ func getSockFile(confContent *Config,  cmdRunPath string) (string, error) {
 func getAccessLogFile(confContent *Config,  cmdRunPath string) string {
 	accessFile := os.Getenv("SYSADMSERVER_ACCESSLOG")
 	if accessFile != "" {
-		f, err := getFile(accessFile,cmdRunPath)
+		f, err := getFile(accessFile,cmdRunPath,false)
 		if err != nil {
 			sysadmServer.Logf("warning","We have found environment variable SYSADMSERVER_ACCESSLOG: %s,but the value of SYSADMSERVER_ACCESSLOG is not a valid access log file(%s)",accessFile,err)
 		}else{
@@ -325,14 +327,14 @@ func getAccessLogFile(confContent *Config,  cmdRunPath string) string {
 	}
 
 	if confContent != nil {
-		f,err := getFile(confContent.Log.AccessLog,cmdRunPath)
+		f,err := getFile(confContent.Log.AccessLog,cmdRunPath,false)
 		if err == nil {
 			return f
 		}
 		sysadmServer.Logf("warning","We have found server access log file (%s) from configuration file,but the value of server access log file is not a valid server access log file(%s).default value of server access log file: %s will be used.",confContent.Log.AccessLog,err,defaultConfig.Log.AccessLog)
 	}
 
-	f,err := getFile(defaultConfig.Log.AccessLog,cmdRunPath)
+	f,err := getFile(defaultConfig.Log.AccessLog,cmdRunPath,false)
 	if err == nil {
 		return f
 	}
@@ -345,7 +347,7 @@ func getAccessLogFile(confContent *Config,  cmdRunPath string) string {
 func getErrorLogFile(confContent *Config,  cmdRunPath string) string {
 	errorFile := os.Getenv("SYSADMSERVER_ERRORLOG")
 	if errorFile != "" {
-		f, err := getFile(errorFile,cmdRunPath)
+		f, err := getFile(errorFile,cmdRunPath,false)
 		if err != nil {
 			sysadmServer.Logf("warning","We have found environment variable SYSADMSERVER_ERRORLOG: %s,but the value of SYSADMSERVER_ERRORLOG is not a valid error log file(%s)",errorFile,err)
 		}else{
@@ -354,14 +356,14 @@ func getErrorLogFile(confContent *Config,  cmdRunPath string) string {
 	}
 
 	if confContent != nil {
-		f,err := getFile(confContent.Log.ErrorLog,cmdRunPath)
+		f,err := getFile(confContent.Log.ErrorLog,cmdRunPath,false)
 		if err == nil {
 			return f
 		}
 		sysadmServer.Logf("warning","We have found server error log file (%s) from configuration file,but the value of server error log file is not a valid server error log file(%s).default value of server error log file: %s will be used.",confContent.Log.ErrorLog,err,defaultConfig.Log.ErrorLog)
 	}
 
-	f,err := getFile(defaultConfig.Log.ErrorLog,cmdRunPath)
+	f,err := getFile(defaultConfig.Log.ErrorLog,cmdRunPath,false)
 	if err == nil {
 		return f
 	}

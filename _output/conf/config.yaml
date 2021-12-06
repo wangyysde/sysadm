@@ -7,7 +7,7 @@ log:
   accessLog: "logs/sysadm-access.log"
   errorLog: "logs/sysadm-error.log"
   kind: "text"
-  level: "debug"
+  level: "info"
   splitAccessAndError: true
   timeStampFormat: ""
 user:
