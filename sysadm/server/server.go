@@ -84,13 +84,17 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 
 	r := sysadmServer.New()
 	// Define handlers
-    r.GET("/", func(c *sysadmServer.Context) {
-        c.String(http.StatusOK, "Hello World!")
-    })  
+  //  r.GET("/", func(c *sysadmServer.Context) {
+  //      c.String(http.StatusOK, "Hello World!")
+  //  })  
     r.GET("/ping", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "echo ping message")
     })  
 
+	if err = addStaicRoute(r,cmdPath); err != nil {
+		sysadmServer.Logf("error","%s",err)
+		os.Exit(2)
+	}
     // Listen and serve on defined port
     sysadmServer.Log(fmt.Sprintf("Listening on port %s", "8080"),"info")
 	if definedConfig.Server.Socket !=  "" {
@@ -98,7 +102,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 			err := r.RunUnix(sock)
 			if err != nil {
 				sysadmServer.Logf("error","We can not listen to %s, error: %s", sock, err)
-				os.Exit(2)
+				os.Exit(3)
 			}
 		}(definedConfig.Server.Socket)
 	}
