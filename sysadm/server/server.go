@@ -21,6 +21,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/sysadm/config"
@@ -41,6 +43,8 @@ var StartData = &StartParameters{
 
 var definedConfig *config.Config 
 var err error
+var exitChan chan os.Signal
+
 func DaemonStart(cmd *cobra.Command, cmdPath string){
 	definedConfig, err = config.HandleConfig(StartData.ConfigPath,cmdPath)
 	if err != nil {
@@ -95,6 +99,10 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		sysadmServer.Logf("error","%s",err)
 		os.Exit(2)
 	}
+
+	exitChan = make(chan os.Signal)
+	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill)
+	go removeSocketFile()
     // Listen and serve on defined port
     sysadmServer.Log(fmt.Sprintf("Listening on port %s", "8080"),"info")
 	if definedConfig.Server.Socket !=  "" {
@@ -106,9 +114,22 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 			}
 		}(definedConfig.Server.Socket)
 	}
+	defer removeSocketFile()
 	liststr := fmt.Sprintf("%s:%d",definedConfig.Server.Address,definedConfig.Server.Port)
 	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
     r.Run(liststr)
 
 }
 
+
+func removeSocketFile(){
+	<-exitChan
+	_,err := os.Stat(definedConfig.Server.Socket)
+	fmt.Print("This is runing\n")
+	if err == nil {
+		fmt.Print("aaaaaa\n")
+		os.Remove(definedConfig.Server.Socket)
+	}
+
+	os.Exit(1)
+}

@@ -542,3 +542,4 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 
 	return &ConfigDefined,nil
 }
+
