@@ -16,10 +16,10 @@
 */
 package cmd
 
-var gitCommitId = "0875fd43844183bdbeffe37f5724b9224e9bbcfd"
+var gitCommitId = "0a58cec8a766a70e883a522c26251820de5e721b"
 var branchName = "add-configFile-parse"
 var gitTreeStatus = "noclean"
-var buildDateTime = "2021-12-09CST22:43:32"
+var buildDateTime = "2021-12-11CST21:12:55"
 var goVersion = "go1.17"
 var compiler = "gcc"
 var arch = "amd64"

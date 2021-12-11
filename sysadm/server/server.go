@@ -34,11 +34,15 @@ type StartParameters struct {
 	// Point to configuration file path of server 
 	ConfigPath  string 		
 	OldConfigPath string
+	accessLogFp *os.File
+	errorLogFp *os.File
 }
 
 var StartData = &StartParameters{
 	ConfigPath: "",
 	OldConfigPath: "",
+	accessLogFp: nil,
+	errorLogFp: nil,
 }
 
 var definedConfig *config.Config 
@@ -52,41 +56,10 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(1)
 	}
 	
-	sysadmServer.SetLoggerKind(definedConfig.Log.Kind)
-	sysadmServer.SetLogLevel(definedConfig.Log.Level)
-	sysadmServer.SetTimestampFormat(definedConfig.Log.TimeStampFormat)
-	if definedConfig.Log.AccessLog != ""{
-		fn,fp,err := sysadmServer.SetAccessLogFile(definedConfig.Log.AccessLog)
-		if err != nil {
-			sysadmServer.Logf("error","%s",err)
-		}else{
-			defer fn(fp)
-		}
-		
-	}
-
-	if definedConfig.Log.SplitAccessAndError && definedConfig.Log.ErrorLog != "" {
-		fu,fp, err := sysadmServer.SetErrorLogFile(definedConfig.Log.ErrorLog)
-		if err != nil {
-			sysadmServer.Logf("error","%s",err)
-		}else{
-			defer fu(fp)
-		}
-	}
-	sysadmServer.SetIsSplitLog(definedConfig.Log.SplitAccessAndError)
-	
-	level, e := log.ParseLevel(definedConfig.Log.Level)
-	if e != nil {
-		sysadmServer.SetMode(sysadmServer.DebugMode)
-	}else {
-		if level >= log.DebugLevel {
-			sysadmServer.SetMode(sysadmServer.DebugMode)
-		}else{
-			sysadmServer.SetMode(sysadmServer.ReleaseMode)
-		}
-	}
-
+	setLogger()
+	defer closeLogger()
 	r := sysadmServer.New()
+	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
 	// Define handlers
   //  r.GET("/", func(c *sysadmServer.Context) {
   //      c.String(http.StatusOK, "Hello World!")
@@ -112,16 +85,17 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 				sysadmServer.Logf("error","We can not listen to %s, error: %s", sock, err)
 				os.Exit(3)
 			}
+			defer removeSocketFile()
 		}(definedConfig.Server.Socket)
 	}
 	defer removeSocketFile()
 	liststr := fmt.Sprintf("%s:%d",definedConfig.Server.Address,definedConfig.Server.Port)
-	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
+	sysadmServer.Logf("error","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
     r.Run(liststr)
 
 }
 
-
+// removeSocketFile deleting the socket file when server exit
 func removeSocketFile(){
 	<-exitChan
 	_,err := os.Stat(definedConfig.Server.Socket)
@@ -132,4 +106,59 @@ func removeSocketFile(){
 	}
 
 	os.Exit(1)
+}
+
+// set parameters to accessLogger and errorLooger
+func setLogger(){
+	sysadmServer.SetLoggerKind(definedConfig.Log.Kind)
+	sysadmServer.SetLogLevel(definedConfig.Log.Level)
+	sysadmServer.SetTimestampFormat(definedConfig.Log.TimeStampFormat)
+	if definedConfig.Log.AccessLog != ""{
+		_,fp,err := sysadmServer.SetAccessLogFile(definedConfig.Log.AccessLog)
+		if err != nil {
+			sysadmServer.Logf("error","%s",err)
+		}else{
+			StartData.accessLogFp = fp
+		}
+		
+	}
+
+	if definedConfig.Log.SplitAccessAndError && definedConfig.Log.ErrorLog != "" {
+		_,fp, err := sysadmServer.SetErrorLogFile(definedConfig.Log.ErrorLog)
+		if err != nil {
+			sysadmServer.Logf("error","%s",err)
+		}else{
+			StartData.errorLogFp = fp
+		}
+	}
+	sysadmServer.SetIsSplitLog(definedConfig.Log.SplitAccessAndError)
+	
+	level, e := log.ParseLevel(definedConfig.Log.Level)
+	if e != nil {
+		sysadmServer.SetMode(sysadmServer.DebugMode)
+	}else {
+		if level >= log.DebugLevel {
+			sysadmServer.SetMode(sysadmServer.DebugMode)
+		}else{
+			sysadmServer.SetMode(sysadmServer.ReleaseMode)
+		}
+	}
+}
+
+// close access log file descriptor and error log file descriptor
+// set AccessLogger  and ErrorLogger to nil
+func closeLogger(){
+	if StartData.accessLogFp != nil {
+		fp := StartData.accessLogFp 
+		fp.Close()
+		sysadmServer.LoggerConfigVar.AccessLogger = nil
+		sysadmServer.LoggerConfigVar.AccessLogFile = ""
+	}
+
+	if StartData.errorLogFp != nil {
+		fp := StartData.errorLogFp 
+		fp.Close()
+		sysadmServer.LoggerConfigVar.ErrorLogger = nil
+		sysadmServer.LoggerConfigVar.ErrorLogFile = ""
+	}
 }
