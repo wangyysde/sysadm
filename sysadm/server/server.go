@@ -23,6 +23,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/sysadm/config"
@@ -36,6 +37,7 @@ type StartParameters struct {
 	OldConfigPath string
 	accessLogFp *os.File
 	errorLogFp *os.File
+	sysadmRootPath string
 }
 
 var StartData = &StartParameters{
@@ -43,6 +45,7 @@ var StartData = &StartParameters{
 	OldConfigPath: "",
 	accessLogFp: nil,
 	errorLogFp: nil,
+	sysadmRootPath: "",
 }
 
 var definedConfig *config.Config 
@@ -56,10 +59,20 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(1)
 	}
 	
+	if _,err = getSysadmRootPath(cmdPath); err != nil {
+		sysadmServer.Logf("error","error:%s",err)
+		os.Exit(2)
+	}
 	setLogger()
 	defer closeLogger()
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
+
+	err = addFormHandler(r,cmdPath)
+	if err != nil {
+		sysadmServer.Logf("error","error:%s",err)
+		os.Exit(1)
+	}
 	// Define handlers
   //  r.GET("/", func(c *sysadmServer.Context) {
   //      c.String(http.StatusOK, "Hello World!")
@@ -77,7 +90,6 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill)
 	go removeSocketFile()
     // Listen and serve on defined port
-    sysadmServer.Log(fmt.Sprintf("Listening on port %s", "8080"),"info")
 	if definedConfig.Server.Socket !=  "" {
 		go func (sock string){
 			err := r.RunUnix(sock)
@@ -90,7 +102,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	}
 	defer removeSocketFile()
 	liststr := fmt.Sprintf("%s:%d",definedConfig.Server.Address,definedConfig.Server.Port)
-	sysadmServer.Logf("error","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
+	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
     r.Run(liststr)
 
 }
@@ -161,4 +173,17 @@ func closeLogger(){
 		sysadmServer.LoggerConfigVar.ErrorLogger = nil
 		sysadmServer.LoggerConfigVar.ErrorLogFile = ""
 	}
+}
+
+// Get the install dir path of  sysadm 
+func getSysadmRootPath(cmdPath string) (string,error){
+	dir ,error := filepath.Abs(filepath.Dir(cmdPath))
+	if error != nil {
+		return "",error
+	}
+	 
+	dir = filepath.Join(dir,"../")
+	StartData.sysadmRootPath = dir
+
+	return dir, nil
 }

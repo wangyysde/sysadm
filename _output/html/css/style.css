@@ -18,7 +18,7 @@
                     left: 30%;
                     top: 50px;
                     width: 430px;
-                    height: 430px;
+                    height: 370px;
                     margin: 0px 0 0px -0px;
                     border: 1px solid #fff;
                     border-radius: 20px;
@@ -27,7 +27,7 @@
                 
                 .logo {
                     width: 330px;
-                    height: 75px;
+                    height: 80px;
                     margin: 15px auto 10px;
                     background: url(../images/admin_big.png) 0 0 no-repeat;
                 }
