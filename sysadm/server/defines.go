@@ -21,3 +21,7 @@
  var formBaseUri = "/forms/"
  var templateDelimLeft ="{{"
  var templateDelimRight ="}}"
+ var sessionPath = "/"
+ var sessionName = "sysadm"
+ var sessionDomain = ""
+ var sessionAge = 300

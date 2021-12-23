@@ -27,6 +27,7 @@ import(
 type formDataStruct struct{
 	htmlTitle string
 	formTemplateName string
+	formUri string
 	actionHandler sysadmServer.HandlerFunc
 }
 
@@ -34,6 +35,7 @@ var formsData = map[string] formDataStruct {
 	"login": formDataStruct {
 		htmlTitle: "请你登录",
 		formTemplateName: "login.html",
+		formUri: "login",
 		actionHandler: loginHandler,
 	},
 	/*

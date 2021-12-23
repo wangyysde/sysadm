@@ -38,8 +38,7 @@ func addStaicRoute(r *sysadmServer.Engine,cmdRunPath string) error {
 	if err != nil {
 		return err
 	}
-	r.StaticFile("/", path)
-
+	
 	// images directory
 	path,err = getStaticPath(config.ImagesDir,cmdRunPath)
 	if err != nil {

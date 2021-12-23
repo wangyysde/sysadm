@@ -67,6 +67,11 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	defer closeLogger()
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
+    
+	if err = initSession(r); err != nil {
+		sysadmServer.Logf("error","error:%s",err)
+		os.Exit(3)
+	}
 
 	err = addFormHandler(r,cmdPath)
 	if err != nil {
@@ -77,6 +82,8 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
   //  r.GET("/", func(c *sysadmServer.Context) {
   //      c.String(http.StatusOK, "Hello World!")
   //  })  
+	r.GET("/",handleRootPath)
+
     r.GET("/ping", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "echo ping message")
     })  
@@ -111,9 +118,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 func removeSocketFile(){
 	<-exitChan
 	_,err := os.Stat(definedConfig.Server.Socket)
-	fmt.Print("This is runing\n")
 	if err == nil {
-		fmt.Print("aaaaaa\n")
 		os.Remove(definedConfig.Server.Socket)
 	}
 
@@ -186,4 +191,14 @@ func getSysadmRootPath(cmdPath string) (string,error){
 	StartData.sysadmRootPath = dir
 
 	return dir, nil
+}
+
+func handleRootPath(c *sysadmServer.Context){
+	isLogin,_ := getSessionValue(c,"islogin")
+	if isLogin == nil  {
+		formUri := formBaseUri + formsData["login"].formUri
+		c.Redirect(http.StatusTemporaryRedirect, formUri)
+	}
+
+	 c.String(http.StatusOK , "This is homepage.")
 }
