@@ -20,6 +20,9 @@
 import(
 	"fmt"
 	"net/http"
+	"strings"
+	"crypto/md5"
+	"encoding/hex"
 
 	"github.com/wangyysde/sysadmServer"
 )
@@ -78,6 +81,7 @@ func addForms(r *sysadmServer.Engine){
 		tplData := map[string] interface{}{
 			"htmlTitle": f.htmlTitle,
 			"formUri": formUri,
+			"formId": "login",
 		}
 
 		r.GET(formUri,func(c *sysadmServer.Context) {
@@ -94,19 +98,45 @@ func addForms(r *sysadmServer.Engine){
 // handler for handling login form.
 func loginHandler(c *sysadmServer.Context) {
 	value,ok := c.GetPostForm("username")
-	if !ok {
-		fmt.Print("We can not got name field value")
-	}else{
-		fmt.Printf("We got the value of name is: %s\n",value)
-		c.String(http.StatusOK, fmt.Sprintf("We got the value of name is: %s\n",value))
+	if !ok || strings.TrimSpace(value) == "" {
+		c.JSON(http.StatusOK, sysadmServer.H{"errCode": 100, "msg": "请输入帐号！"})
+		return
 	}
+	username := strings.TrimSpace(value);
 
 	value,ok = c.GetPostForm("password")
-	if !ok {
-		fmt.Print("We can not got name field value")
-	}else{
-		fmt.Printf("We got the value of name is: %s\n",value)
-		c.String(http.StatusOK, fmt.Sprintf("We got the valvalueue of name is: %s\n",value))
+	if !ok || strings.TrimSpace(value) == "" {
+		c.JSON(http.StatusOK, sysadmServer.H{"errCode": 101, "msg": "请输入密码！"})
+		return 
 	}
-	
+	password := strings.TrimSpace(value)
+
+	if strings.ToLower(username) == strings.ToLower(definedConfig.User.DefaultUser) && 
+		md5Encrypt(strings.ToLower(password)) == md5Encrypt(strings.ToLower(definedConfig.User.DefaultPassword)){
+			if err := setSessionValue(c,"isLogin",true); err != nil {
+				c.JSON(http.StatusOK, sysadmServer.H{"errCode": 102, "msg": err})
+				return 	
+			} else {
+				c.JSON(http.StatusOK, sysadmServer.H{"errCode": 0, "msg": "登录成功！"})
+				return 
+			}
+	} 
+
+	c.JSON(http.StatusOK, sysadmServer.H{"errCode": 103, "msg": "用户名或密码错误！"})
+	return 
+}
+
+
+// encrypt data with md5 
+// if the length is zero ,then return ""
+// otherwise return encrypted data`
+func md5Encrypt(data string) string{
+	if len(data) < 1 {
+		return ""
+	}
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(data))
+	cipherStr := md5Ctx.Sum(nil)
+	encryptedData := hex.EncodeToString(cipherStr)
+	return encryptedData
 }

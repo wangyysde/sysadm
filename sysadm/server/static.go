@@ -51,7 +51,6 @@ func addStaicRoute(r *sysadmServer.Engine,cmdRunPath string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("css:%s",path)
 	r.Static("/css", path)
 
 	// css directory

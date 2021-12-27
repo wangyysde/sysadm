@@ -83,6 +83,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
   //      c.String(http.StatusOK, "Hello World!")
   //  })  
 	r.GET("/",handleRootPath)
+	r.POST("/",handleRootPath)
 
     r.GET("/ping", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "echo ping message")
@@ -194,7 +195,7 @@ func getSysadmRootPath(cmdPath string) (string,error){
 }
 
 func handleRootPath(c *sysadmServer.Context){
-	isLogin,_ := getSessionValue(c,"islogin")
+	isLogin,_ := getSessionValue(c,"isLogin")
 	if isLogin == nil  {
 		formUri := formBaseUri + formsData["login"].formUri
 		c.Redirect(http.StatusTemporaryRedirect, formUri)

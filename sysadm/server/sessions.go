@@ -21,6 +21,7 @@
 	"fmt"
 	"strings"
 	"net/http"
+	"time"
 
 	sessions "github.com/wangyysde/sysadmSessions"
   	"github.com/wangyysde/sysadmSessions/cookie"
@@ -32,8 +33,8 @@
 	  Path: sessionPath,
 	  Domain: sessionDomain,
 	  MaxAge: sessionAge,
-	  Secure: true,
-	  HttpOnly: false,
+	  Secure: false,
+	  HttpOnly: true,
 	  SameSite: http.SameSiteDefaultMode,
   }
 
@@ -45,14 +46,23 @@
 
 	store := cookie.NewStore([]byte("secret"))
   	r.Use(sessions.Sessions(sessionName, store))
-	r.Use(refreshSession)
-	
 	return nil
  }
 
 func refreshSession(c *sysadmServer.Context){
-	session := sessions.Default(c)
-	session.Options(sessionOptions)
+	cc,_ :=c.Request.Cookie(sessionName)
+	if cc != nil{
+   		cookie :=http.Cookie{
+    		Name:     sessionName,
+      		Value:    cc.Value,
+      		Expires: time.Now().Add(time.Duration(sessionAge) * time.Second),
+      		Path:    sessionPath,
+      		Domain:   "",
+      		Secure:   false,
+      		HttpOnly: true,
+   		}
+		http.SetCookie(c.Writer,&cookie)
+	}
 }
 
 func setSessionValue(c *sysadmServer.Context,key string, value interface{}) error{
@@ -67,9 +77,9 @@ func setSessionValue(c *sysadmServer.Context,key string, value interface{}) erro
 
 	session := sessions.Default(c)
 	session.Set(key, value)
-    session.Save()
-
-	return nil
+    err := session.Save()
+	refreshSession(c)
+	return err
 }
 
 func getSessionValue(c *sysadmServer.Context,key string) (interface{},error) {
@@ -88,6 +98,8 @@ func getSessionValue(c *sysadmServer.Context,key string) (interface{},error) {
 	if value == nil {
 		return nil,fmt.Errorf("The value of session key:%s has not found",key)
 	}
+
+	refreshSession(c)
 	return value, nil
 }
 

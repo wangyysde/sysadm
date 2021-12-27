@@ -591,3 +591,1052 @@ time=2021-12-22T21:40:14+08:00 level=debug msg=Listening and serving HTTP on uni
 
 time=2021-12-22T21:40:20+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
 
+time=2021-12-23T21:27:30+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=Loaded HTML Templates (2): 
+	- 
+	- login.html
+
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-23T21:27:30+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-23T21:27:51+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=Loaded HTML Templates (2): 
+	- 
+	- login.html
+
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-23T21:38:35+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=Loaded HTML Templates (3): 
+	- 
+	- login.html
+	- login_bak.html
+
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-25T16:39:56+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-25T16:40:17+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=Loaded HTML Templates (3): 
+	- 
+	- login.html
+	- login_bak.html
+
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-25T16:50:40+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=Loaded HTML Templates (3): 
+	- login.html
+	- login_bak.html
+	- 
+
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T11:04:46+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=Loaded HTML Templates (3): 
+	- 
+	- login.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T11:26:49+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T20:42:21+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211226.html
+	- 
+	- login.html
+	- login_bak20211223.html
+
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T20:43:29+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T20:59:35+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:02:49+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:06:03+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:06:35+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:21:42+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:26:14+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:26:23+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:37:37+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:38:31+08:00 level=error msg=error msg: The value of session key:islogin has not found
+time=2021-12-26T21:38:31+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+	- login.html
+
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:40:39+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:41:11+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T21:41:11+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:53:33+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:53:54+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T21:53:54+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:54:14+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T21:54:14+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211226.html
+	- 
+	- login.html
+	- login_bak20211223.html
+
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T21:58:43+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T21:59:29+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T21:59:29+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T22:06:48+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T22:06:48+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T22:22:04+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T22:22:35+08:00 level=error msg=v:%!s(bool=true) e: %!s(<nil>)
+time=2021-12-26T22:22:35+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T22:22:35+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T22:24:23+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T22:25:04+08:00 level=error msg=v:true e: <nil>
+time=2021-12-26T22:25:04+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T22:25:04+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+	- login.html
+
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T22:31:53+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T22:32:26+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-26T22:32:26+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-26T22:50:41+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-26T22:51:28+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-26T22:51:37+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-26T22:51:39+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:23:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T20:23:23+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T20:23:45+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:23:49+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:24:18+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:24:32+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:29:33+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:36:19+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T20:36:19+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T20:36:30+08:00 level=error msg=error msg: The value of session key:isLogin has not found
+time=2021-12-27T20:36:30+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T20:38:10+08:00 level=error msg=error msg: %!s(<nil>)
+time=2021-12-27T20:44:17+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+	- login.html
+
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T20:44:17+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T20:45:15+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T21:39:03+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T21:39:45+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:39:58+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:40:17+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:40:43+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:41:12+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+	- login.html
+
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T21:42:51+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- 
+
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T21:46:17+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T21:46:33+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2021-12-27T21:48:23+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2021-12-27T21:48:38+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+

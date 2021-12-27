@@ -23,5 +23,5 @@
  var templateDelimRight ="}}"
  var sessionPath = "/"
  var sessionName = "sysadm"
- var sessionDomain = ""
- var sessionAge = 300
+ var sessionDomain = "sysadm"
+ var sessionAge = 100

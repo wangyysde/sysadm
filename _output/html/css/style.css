@@ -9,7 +9,7 @@
                 
                 body {
                     height: 100%;
-                    background: #fff url(../images/1.jpg) 50% 50% no-repeat;
+                    background: #fff url(/images/1.jpg) 50% 50% no-repeat;
                     background-size: cover;
                 }
                 
@@ -29,7 +29,7 @@
                     width: 330px;
                     height: 80px;
                     margin: 15px auto 10px;
-                    background: url(../images/admin_big.png) 0 0 no-repeat;
+                    background: url(/images/admin_big.png) 0 0 no-repeat;
                 }
                 
                 .form-item {
@@ -63,24 +63,31 @@
                     background-color: #fff;
                 }
                 
-                #username {
-                    background: url(../images/user.png) 0px 0px no-repeat;
+                .form-item input#username {
+                    background: url("../images/user.png") 0px 0px no-repeat;
                 }
                 
-                #password {
-                    background: url(../images/passwd.PNG) 0px 0px no-repeat;
+                .form-item input#password {
+                    background: url("../images/passwd.PNG") 0px 0px no-repeat;
                 }
                 
                 .tip {
                     display: none;
                     position: absolute;
-                    left: 20px;
-                    top: 52px;
-                    font-size: 14px;
-                    color: #f50;
+                    left: 600px;
+                    top: 10px;
+                    font-size: 12px;
+                    color: #fff;
+                    background-color: #ff0000;
+                    font-size: 18px;
+                    border: 1px solid #fff;
+                    padding-right: 10px;
+                    padding-left: 10px;
+                    padding-top: 5px;
+                    padding-bottom: 5px;
                 }
-                
-                .reg-bar {
+                /*
+				.reg-bar {
                     width: 360px;
                     margin: 20px auto 0;
                     font-size: 14px;
@@ -152,3 +159,5 @@
                         width: 100%;
                     }
                 }
+                
+                */
