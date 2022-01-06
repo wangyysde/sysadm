@@ -43,11 +43,26 @@ type User struct {
 	DefaultPassword string `json:"defaultPassword"`
 }
 
+type DB struct {
+	Host string `json:"host"`
+	Port int `json:"port"`
+	User string `json:"user"`
+	Password string `json:"password"`
+	Dbname string `json:"dbname"`
+	DbMaxConnect int `json:"dbMaxConnect"`
+	DbIdleConnect int `json:"dbIdleConnect"`
+	Sslmode string `json:"sslmode"`
+	Sslrootcert string `json:"sslrootcert"`
+	Sslkey string `json:"sslkey"`
+	Sslcert string `json:"sslcert"`
+}
+
 type Config struct {
 	Version string `json:"version"`
 	Server Server `json:"server"`
 	Log Log `json:"log"`
 	User User `json:"user"`
+	DB DB `json:"db"`
 }
 
 var DefinedConfig Config = Config{}
@@ -70,5 +85,18 @@ var defaultConfig Config = Config{
 	User: User{
 		DefaultUser: DefaultUser,
 		DefaultPassword: DefaultPasswd,
+	},
+	DB: DB{
+		Host: DefaultDbHost,
+		Port: DefaultDbPort,
+		User: DefaultDbUser,
+		Password: DefaultDbPassword,
+		Dbname: DefaultDbDbName,
+		DbMaxConnect: DefaultDbMaxConnect,
+		DbIdleConnect: DefaultDbIdleConnect,
+		Sslmode: DefaultDbSslmode,
+		Sslrootcert: DefaltDbSslrootcert,
+		Sslkey: DefaultDbSslkey,
+		Sslcert: DefaultDbSslcert,
 	},
 }

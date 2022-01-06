@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/gin-contrib/sessions v0.0.4 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
+	github.com/lib/pq v1.10.4 // indirect
 	github.com/lithammer/dedent v1.1.0
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.8.1

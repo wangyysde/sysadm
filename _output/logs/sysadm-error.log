@@ -1640,3 +1640,84 @@ time=2021-12-27T21:48:23+08:00 level=debug msg=Listening and serving HTTP on uni
 
 time=2021-12-27T21:48:38+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
 
+time=2022-01-06T22:36:47+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:36:47+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:36:47+08:00 level=error msg=Open connection to postgre error:missing "=" after "::1]" in connection info string"
+time=2022-01-06T22:44:38+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:44:38+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:44:38+08:00 level=error msg=Open connection to postgre error:missing "=" after "::1]" in connection info string"
+time=2022-01-06T22:49:56+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:49:56+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:49:56+08:00 level=error msg=Open connection to postgre error:dial tcp 127.0.0.1:5432: connect: connection refused
+time=2022-01-06T22:51:19+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:51:19+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:51:19+08:00 level=error msg=Open connection to postgre error:pq: password authentication failed for user "Sysadm"
+time=2022-01-06T22:51:45+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:51:45+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:51:45+08:00 level=error msg=Open connection to postgre error:pq: password authentication failed for user "sysadm"
+time=2022-01-06T22:52:00+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:52:00+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:52:00+08:00 level=error msg=Open connection to postgre error:pq: password authentication failed for user "sysadm"
+time=2022-01-06T22:52:20+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-06T22:52:20+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-06T22:52:21+08:00 level=debug msg=Loaded HTML Templates (4): 
+	- 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-01-06T22:52:21+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+

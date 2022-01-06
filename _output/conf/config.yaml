@@ -13,3 +13,13 @@ log:
 user:
   defaultUser: "admin"
   defaultPassword: "Sysadm12345"
+DB: 
+  host: "10.6.206.6"
+  port: 30432
+  user: sysadm
+  password: "Zaq12wsX"
+  dbname: "sysadm"
+  sslmode: "disable"
+  sslrootcert: ""
+  sslkey: ""
+  sslcert: ""

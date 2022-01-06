@@ -499,6 +499,273 @@ func getDefaultPassword(confContent *Config) string {
 	return defaultConfig.User.DefaultPassword
 }
 
+// check the validity of IP address 
+// return IP(string) if the ip address is valid
+// Or return nil with error
+func checkHostAddress(address string) (string, error) {
+	if len(address) < 1 {
+		return "", fmt.Errorf("The address(%s) is empty or the length of it is less 1",address)
+	}
+
+	if ip := net.ParseIP(address); ip != nil {
+		return address,nil
+	}
+
+	ips,err := net.LookupIP(address)
+	if err != nil {
+		return "" , fmt.Errorf("Lookup the IP of address(%s) error.",err)
+	}
+	
+	return ips[0].String(), nil
+}
+
+// Getting host address of Postgre  from environment and checking the validity of it
+// return the address of it is valid ,otherwise getting host address of Postgre  from 
+// configuration file and checking the validity of it. return the address of it is valid.
+// otherwise return the default address of Postgre.
+func getPostgreHost(confContent *Config)string{
+	dbHost := os.Getenv("SYSADMSERVER_DBHOST")
+	if dbHost != ""{
+		if host,err := checkHostAddress(dbHost); err == nil{
+			return host
+		}
+	}
+
+	if confContent != nil  {
+		if host,err := checkHostAddress(confContent.DB.Host); err == nil{
+			return host
+		}
+	}
+
+	return defaultConfig.DB.Host
+}
+
+// Getting port of Postgre  from environment and checking the validity of it
+// return the port if it is valid ,otherwise getting port of Postgre  from 
+// configuration file and checking the validity of it. return the port if it is valid.
+// otherwise return the default port of Postgre.
+func getPostgrePort(confContent *Config) int{
+	dbPort := os.Getenv("SYSADMSERVER_DBPORT")
+	if dbPort != ""{
+		port, err := strconv.Atoi(dbPort)
+		if err == nil {
+			if port > 1024 && port < 65536 {
+				return port
+			}
+		}
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Port > 1024 && confContent.DB.Port <= 65535 {
+			return confContent.DB.Port 
+		}
+	}
+
+	return defaultConfig.DB.Port
+}
+
+// Getting user of Postgre  from environment and checking the validity of it
+// return the user if it is valid ,otherwise getting user of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default user of Postgre.
+func getPostgreUser(confContent *Config) string{
+	dbUser := os.Getenv("SYSADMSERVER_DBUSER")
+	if dbUser != ""{
+		return dbUser
+	}
+
+	if confContent != nil  {
+		if confContent.DB.User != "" {
+			return confContent.DB.User
+		}
+	}
+
+	return defaultConfig.DB.User
+}
+
+// Getting Password of Postgre  from environment and checking the validity of it
+// return the Password if it is valid ,otherwise getting Password of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default user of Postgre.
+func getPostgrePassword(confContent *Config) string{
+	dbPassword := os.Getenv("SYSADMSERVER_DBPASSWORD")
+	if dbPassword != ""{
+		return dbPassword
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Password != "" {
+			return confContent.DB.Password
+		}
+	}
+
+	return defaultConfig.DB.Password
+}
+
+// Getting DBName of Postgre  from environment and checking the validity of it
+// return the DBName if it is valid ,otherwise getting DBName of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default DBName of Postgre.
+func getPostgreDBName(confContent *Config) string{
+	dbDBName := os.Getenv("SYSADMSERVER_DBDBNAME")
+	if dbDBName != ""{
+		return dbDBName
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Dbname != "" {
+			return confContent.DB.Dbname
+		}
+	}
+
+	return defaultConfig.DB.Dbname
+}
+
+// Getting MaxConnect of Postgre  from environment and checking the validity of it
+// return the MaxConnect if it is valid ,otherwise getting MaxConnect of Postgre  from 
+// configuration file and checking the validity of it. return the port if it is valid.
+// otherwise return the default MaxConnect of Postgre.
+func getPostgreMaxConnect(confContent *Config) int{
+	dbMaxConnect := os.Getenv("SYSADMSERVER_DBMAXCONNECT")
+	if dbMaxConnect != ""{
+		maxConnect,err := strconv.Atoi(dbMaxConnect)
+		if err == nil{
+			if maxConnect >1 && maxConnect < 20000 {
+				return maxConnect
+			}
+		}
+	}
+
+	if confContent != nil  {
+		if confContent.DB.DbMaxConnect > 1 && confContent.DB.DbMaxConnect <= 20000 {
+			return confContent.DB.DbMaxConnect 
+		}
+	}
+
+	return defaultConfig.DB.DbMaxConnect
+}
+
+// Getting dbIdleConnect of Postgre  from environment and checking the validity of it
+// return the dbIdleConnect if it is valid ,otherwise getting dbIdleConnect of Postgre  from 
+// configuration file and checking the validity of it. return the port if it is valid.
+// otherwise return the default dbIdleConnect of Postgre.
+func getPostgreDbIdleConnect(confContent *Config) int{
+	dbIdleConnect := os.Getenv("SYSADMSERVER_DBIDLECONNECT")
+	if dbIdleConnect != ""{
+		idleConnect, err := strconv.Atoi(dbIdleConnect)
+		if err == nil {
+			if idleConnect >1 && idleConnect < 20000 {
+				return idleConnect
+			}
+		}
+	}
+
+	if confContent != nil  {
+		if confContent.DB.DbIdleConnect > 1 && confContent.DB.DbIdleConnect <= 20000 {
+			return confContent.DB.DbIdleConnect 
+		}
+	}
+
+	return defaultConfig.DB.DbIdleConnect
+}
+
+// Getting Sslmode of Postgre  from environment and checking the validity of it
+// return the Sslmode if it is valid ,otherwise getting Sslmode of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default Sslmode of Postgre.
+func getPostgreSslmode(confContent *Config) string{
+	dbSslmode := os.Getenv("SYSADMSERVER_DBSSLMODE")
+	if dbSslmode != ""{
+		return dbSslmode
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Sslmode != "" {
+			return confContent.DB.Sslmode
+		}
+	}
+
+	return defaultConfig.DB.Sslmode
+}
+
+// Checking a file if is exists.
+func checkFileExists(f string,cmdRunPath string ) bool {
+	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
+	if error != nil {
+		sysadmServer.Logf("error","Getting program root path error: %s",error)
+		return false
+	}
+
+	if ! filepath.IsAbs(f) {
+		tmpDir := filepath.Join(dir,"../")
+		f = filepath.Join(tmpDir,f)
+	}
+
+	_, err := os.Stat(f)
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
+// Getting Sslrootcert of Postgre  from environment and checking the validity of it
+// return the Sslrootcert if it is valid ,otherwise getting Sslrootcert of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default Sslrootcert of Postgre.
+func getPostgreSslrootcert(confContent *Config) string{
+	dbSslCa := os.Getenv("SYSADMSERVER_DBSSLCA")
+	if dbSslCa != ""{
+		return dbSslCa
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Sslrootcert != "" {
+			return confContent.DB.Sslrootcert
+		}
+	}
+
+	return defaultConfig.DB.Sslrootcert
+}
+
+// Getting Sslkey of Postgre  from environment and checking the validity of it
+// return the Sslkey if it is valid ,otherwise getting Sslkey of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default Sslkey of Postgre.
+func getPostgreSslkey(confContent *Config) string{
+	dbSslKey := os.Getenv("SYSADMSERVER_DBSSLKEY")
+	if dbSslKey != ""{
+		return dbSslKey
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Sslkey != "" {
+			return confContent.DB.Sslkey
+		}
+	}
+
+	return defaultConfig.DB.Sslkey
+}
+
+// Getting Sslcert of Postgre  from environment and checking the validity of it
+// return the Sslcert if it is valid ,otherwise getting Sslcert of Postgre  from 
+// configuration file and checking the validity of it. return the user if it is valid.
+// otherwise return the default Sslcert of Postgre.
+func getPostgreSslcert(confContent *Config) string{
+	dbSslcert := os.Getenv("SYSADMSERVER_DBSSLCERT")
+	if dbSslcert != ""{
+		return dbSslcert
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Sslcert != "" {
+			return confContent.DB.Sslcert
+		}
+	}
+
+	return defaultConfig.DB.Sslcert
+}
+
 // Try to get the values of items of configuration from OS variables ,configuratio file or default value.
 // The value of a item will be come from OS variables first ,then come from configuration file and last come from default value.
 // All the values of items should be passed check when set it to ConfigDefined
@@ -539,6 +806,38 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 	ConfigDefined.Log.SplitAccessAndError = getIsSplitLog(confContent)
 	ConfigDefined.User.DefaultUser = getDefaultUser(confContent)
 	ConfigDefined.User.DefaultPassword = getDefaultPassword(confContent)
+	ConfigDefined.DB.Host = getPostgreHost(confContent)
+	ConfigDefined.DB.Port = getPostgrePort(confContent)
+	ConfigDefined.DB.User = getPostgreUser(confContent)
+	ConfigDefined.DB.Password = getPostgrePassword(confContent)
+	ConfigDefined.DB.Dbname = getPostgreDBName(confContent)
+	ConfigDefined.DB.Sslmode = getPostgreSslmode(confContent)
+	if strings.ToLower(ConfigDefined.DB.Sslmode) != "disable" {
+		ConfigDefined.DB.Sslrootcert = getPostgreSslrootcert(confContent)
+		if !checkFileExists(ConfigDefined.DB.Sslrootcert, cmdRunPath) {
+			sysadmServer.Logf("warning","SslMode of Postgre has be set to %s But sslCA(%s) can not be found. We will try to set SslMode to disable ",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslrootcert)
+			ConfigDefined.DB.Sslmode = "disable"
+		}
+	}
+
+	if strings.ToLower(ConfigDefined.DB.Sslmode) != "disable" {
+		ConfigDefined.DB.Sslkey = getPostgreSslkey(confContent)
+		if !checkFileExists(ConfigDefined.DB.Sslkey, cmdRunPath) {
+			sysadmServer.Logf("warning","SslMode of Postgre has be set to %s But SslKey(%s) can not be found. We will try to set SslMode to disable ",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslkey)
+			ConfigDefined.DB.Sslmode = "disable"
+		}
+	}
+
+	if strings.ToLower(ConfigDefined.DB.Sslmode) != "disable" {
+		ConfigDefined.DB.Sslcert = getPostgreSslcert(confContent)
+		if !checkFileExists(ConfigDefined.DB.Sslcert, cmdRunPath) {
+			sysadmServer.Logf("warning","SslMode of Postgre has be set to %s But Sslcert(%s) can not be found. We will try to set SslMode to disable ",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslcert)
+			ConfigDefined.DB.Sslmode = "disable"
+		}
+	}
+
+	ConfigDefined.DB.DbMaxConnect = getPostgreMaxConnect(confContent)
+	ConfigDefined.DB.DbIdleConnect = getPostgreDbIdleConnect(confContent)
 
 	return &ConfigDefined,nil
 }

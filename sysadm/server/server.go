@@ -73,6 +73,12 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(3)
 	}
 
+	if err = ininDBConnect(); err != nil {
+		sysadmServer.Logf("error","Open connection to postgre error:%s",err)
+		os.Exit(4)
+	}
+	defer dbConnect.Close()
+
 	err = addFormHandler(r,cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","error:%s",err)
