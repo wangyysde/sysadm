@@ -1,0 +1,21 @@
+html {
+    background-color: #f2f2f2;
+    color: #666;
+    font-size: 12px;
+    font-family: "Verdana", "Arial", "Microsoft Yahei", "sans-serif", "Tahoma";
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+body {
+    font: 14px Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    display: block;
+}
+
+.layui-layout-body {
+    overflow: hidden;
+}

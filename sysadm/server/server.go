@@ -88,9 +88,13 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
   //  r.GET("/", func(c *sysadmServer.Context) {
   //      c.String(http.StatusOK, "Hello World!")
   //  })  
-	r.GET("/",handleRootPath)
-	r.POST("/",handleRootPath)
-
+	
+	err = addRootHandler(r,cmdPath)
+	if err != nil {
+		sysadmServer.Logf("error","error:%s",err)
+		os.Exit(1)
+	}
+	
     r.GET("/ping", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "echo ping message")
     })  
@@ -200,6 +204,17 @@ func getSysadmRootPath(cmdPath string) (string,error){
 	return dir, nil
 }
 
+func addRootHandler(r *sysadmServer.Engine,cmdRunPath string) error {
+	if r == nil {
+		return fmt.Errorf("router is nil.")
+	}
+
+	r.Any("/",handleRootPath)
+//	r.POST("/",handleRootPath)
+
+	return nil
+}
+
 func handleRootPath(c *sysadmServer.Context){
 	isLogin,_ := getSessionValue(c,"isLogin")
 	if isLogin == nil  {
@@ -207,5 +222,9 @@ func handleRootPath(c *sysadmServer.Context){
 		c.Redirect(http.StatusTemporaryRedirect, formUri)
 	}
 
-	 c.String(http.StatusOK , "This is homepage.")
+	tplData := map[string] interface{}{
+		"htmlTitle": mainTitle,
+	}
+
+	c.HTML(http.StatusOK, "index.html", tplData)
 }

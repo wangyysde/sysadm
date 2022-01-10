@@ -58,7 +58,14 @@ func addStaicRoute(r *sysadmServer.Engine,cmdRunPath string) error {
 	if err != nil {
 		return err
 	}
-	r.Static("/js", path)
+	r.Static("/js", path)    
+
+	// fonts directory
+	path,err = getStaticPath(config.FontsDir,cmdRunPath)
+	if err != nil {
+		return err
+	}
+	r.Static("/fonts", path)   
 
 	return nil
 }

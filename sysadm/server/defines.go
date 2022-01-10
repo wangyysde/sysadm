@@ -21,6 +21,7 @@
  var formBaseUri = "/forms/"
  var templateDelimLeft ="{{"
  var templateDelimRight ="}}"
+ var mainTitle = "sysadm系统"
  var sessionPath = "/"
  var sessionName = "sysadm"
  var sessionDomain = "sysadm"

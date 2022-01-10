@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>index</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="css/ionicons.css"> 
+    <!-- Theme style -->
+    <link rel="stylesheet" href="css/AdminLTE.css">
+    <link rel="stylesheet" href="css/skins/skin-blue.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    
+    <link rel="stylesheet"
+          href="css/google-fonts.css">
+    
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Main Header -->
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="https://www.sysadm.cn" target="_blank" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><img src="images/sysadm_red_20201216_50_50.png" width="50px"></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><img src="images/sysadm20201215_300_75.png" width="200px"></span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- Messages: style can be found in dropdown.less-->
+                    <li class="dropdown messages-menu">
+                        <!-- Menu toggle button -->
+                        <a href="http://www.sysadm.cn/info" class="dropdown-toggle" title="关于系统">
+                            <i class="fa fa-info-circle"></i>
+                            <!-- <span class="label label-success">4</span> -->
+                        </a>
+                        
+                    </li>
+									
+										<!-- help Menu -->
+                    <li class="dropdown tasks-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="http://www.sysadm.cn/help" class="dropdown-toggle" title="在线帮助">
+                            <i class="fa fa-book" ></i>
+                        </a>
+                        
+                    </li>
+                    <!-- Notifications Menu -->
+                    <li class="dropdown notifications-menu">
+                        <!-- Menu toggle button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="告警信息">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">5</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">您有5条告警信息</li>
+                            <li>
+                                <!-- Inner Menu: contains the notifications -->
+                                <ul class="menu">
+                                    <li><!-- start notification -->
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 01节点kubelet异常
+                                        </a>
+                                    </li>
+                                    <!-- end notification -->
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="http://www.sysadm.cn/alarm">查看所有</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user img in the navbar-->
+                            <img src="images/user.jfif" class="user-image" alt="User Image">
+                            <!-- hidden-xs hides the username on small devices so only the img appears. -->
+                            <span class="hidden-xs">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user img in the menu -->
+                            <li class="user-header">
+                                <img src="images/user.jfif" class="img-circle" alt="User Image">
+
+                                <p>
+                                    Alexander Pierce - Web Developer
+                                    <small>Member since Nov. 2012</small>
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="row">
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#">Followers</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#">Sales</a>
+                                    </div>
+                                    <div class="col-xs-4 text-center">
+                                        <a href="#">Friends</a>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->                                                 
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- search form (Optional) -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+              <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+              </button>
+            </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">HEADER</li>
+                <!-- Optionally, you can add icons to the links -->
+                <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-cloud"></i> <span>集群管理</span>
+                        <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="http://www.sysadm.cn/addCluster"><i class="fa fa-folder-open"></i>添加集群</a></li>
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="checkbox.html">点击是checkbox页面</a></li>
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="userList.html">我是userList</a></li>
+                    </ul>
+                </li>
+
+                <li class="header text-center panel panel-primary"><span class="fa-lg ">我就是系统标题</span></li>
+                <!-- Optionally, you can add icons to the links -->
+                <li class=""><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+                <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                <li class="treeview">
+                    <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+                        <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="add.html">我是add</a></li>
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="checkbox.html">点击是checkbox页面</a></li>
+                        <li><a href="javascript:void(0)" class="myLeftMenu" data="userList.html">我是userList</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Page Header
+                <small>Optional description</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                <li class="active">Here</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content container-fluid"> 
+            <div id="container">
+                中文不能显示吗？this is contentet
+            </div>
+
+            <!--------------------------
+              | Your Page Content Here |
+              -------------------------->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+            Powered By <a href="https://www.sysadm.cn">Sysadm.cn </a>版权所有 © 2004-2022, All right reserved.
+        </div>
+        <!-- Default to the left -->
+       <!-- <strong> </strong>  -->
+    </footer>
+
+    
+    <!-- Add the sidebar's background. This div must be placed
+    immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 3 -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="js/adminlte.min.js"></script>
+<script>
+    $(function () {
+        $('ul.sidebar-menu li').click(function () {
+            var li = $('ul.sidebar-menu li.active');
+            li.removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $('.myLeftMenu').click(function (e) {
+
+            var url = $(this).attr('data');
+          //  console.log(url);
+            $('#container').load(url);
+        });
+    })
+</script>
+
+<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. -->
+</body>
+</html>

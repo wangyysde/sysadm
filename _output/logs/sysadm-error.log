@@ -1721,3 +1721,178 @@ time=2022-01-06T22:52:21+08:00 level=debug msg=Listening and serving HTTP on 0.0
 
 time=2022-01-06T22:52:21+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
 
+time=2022-01-10T21:30:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-10T21:30:23+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-10T21:30:24+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+	- index.html
+
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-01-10T21:30:24+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-01-10T21:30:48+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-10T21:38:36+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- main.html
+	- 
+	- index.html
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-01-10T21:38:36+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-01-10T21:38:42+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=Opening a connection to prostgre
+time=2022-01-10T21:47:01+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- index.html
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/sysadm/server.DaemonStart.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-01-10T21:47:01+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-01-10T21:47:27+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
