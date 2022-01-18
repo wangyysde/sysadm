@@ -5,6 +5,8 @@ OUT_DIR ?= _output
 BIN_DIR := $(OUT_DIR)/bin
 PRINT_HELP ?=
 PREFIX ?= /usr/local/sysadm
+REGISTRYvER ?= v2.7.0
+REGISTRYIMGVER ?= v1.0.0
 
 .PHONY: all
 ifeq ($(PRINT_HELP),y)
@@ -22,6 +24,18 @@ sysadm:
 	build/build.sh $(WHAT)
 #	go build -o $(BIN_DIR)/sysadm 
 
+.PHONY: registrybinary
+registrybinary: 
+	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")
+	build/build_registry_binary.sh $(REGISTRYvER)
+
+.PHONY: registryimage
+registryimage:
+	$(info Now building registry image. registry image will be sysadm_registry:"$(BIN_DIR)")
+	build/build_registry_image.sh $(REGISTRYIMGVER)
+
+.PHONY: registry
+registry: registrybinary registryimage
 .PHONY: install 
 install: 
 	test -d '$(PREFIX)/bin' || mkdir -p '$(PREFIX)/bin'

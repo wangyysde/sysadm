@@ -1,0 +1,24 @@
+From 3fe1d67ace89292f7a8c4e3d8976dc48fb36b2e9 Mon Sep 17 00:00:00 2001
+From: Wang Yan <wangyan@vmware.com>
+Date: Tue, 23 Feb 2021 18:47:56 +0800
+Subject: [PATCH] close the io.ReadCloser from storage driver
+
+Backport PR #3309 to release/2.7
+
+Signed-off-by: Wang Yan <wangyan@vmware.com>
+---
+ registry/storage/io.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/registry/storage/io.go b/registry/storage/io.go
+index f79e7a6f2f..7cde6a3345 100644
+--- a/registry/storage/io.go
++++ b/registry/storage/io.go
+@@ -18,6 +18,7 @@ func getContent(ctx context.Context, driver driver.StorageDriver, p string) ([]b
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	defer r.Close()
+ 
+ 	return readAllLimited(r, maxBlobGetSize)
+ }
