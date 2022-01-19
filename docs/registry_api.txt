@@ -1,0 +1,5 @@
+Ref: https://docs.docker.com/registry/spec/api/
+拿指定镜像的manifests:GET http://172.17.0.4:5000/v2/sysadm/sysadm-registry/manifests/v1.0.3
+检查指定镜像的manifests是否存在： HEAD http://172.17.0.4:5000/v2/sysadm/sysadm-registry/manifests/v1.0.3
+获取指定的layer: 其中shaxxx为layer的摘要： GET http://172.17.0.4:5000/v2/sysadm/sysadm-registry/blobs/sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4
+获取仓库内镜像列表： GET http://172.17.0.4:5000/v2/_catalog
