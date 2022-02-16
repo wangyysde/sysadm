@@ -103,7 +103,7 @@ func checkVerIsValid(ver string) ([]sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 	found := false
 	for _,value := range SupportVers {
-		if strings.ToLower(ver) == strings.ToLower(value) {
+		if strings.EqualFold(ver,value)  {
 			found = true
 			break
 		}
@@ -171,7 +171,7 @@ func checkIpAddress(address string) (net.IP, error) {
 		}
 	}
 	
-	return nil, fmt.Errorf("the ip(%v) to the address(hostname:%s) is not any the IP address of host interfaces.",ips,address)
+	return nil, fmt.Errorf("the ip(%v) to the address(hostname:%s) is not any the IP address of host interfaces",ips,address)
 }
 
 // check the validity of port 
@@ -182,7 +182,7 @@ func checkPort(port int)(int, error){
 		return port,nil
 	}
 
-	return 0, fmt.Errorf("The port should be great than 1024 and less than 65535. Now is :%d\n",port)
+	return 0, fmt.Errorf("the port should be great than 1024 and less than 65535. Now is :%d",port)
 }
 
 // Converting relative path to absolute path of  file(such as socket, accesslog, errorlog) and return the  file path
@@ -215,16 +215,16 @@ func getFile(f string,cmdRunPath string, isRmTest bool)(string,error){
 // Or the value of level and nil will be returned
 func checkLogLevel(level string) (string, error) {
 	if len(level) < 1 {
-		return defaultConfig.Log.Level, fmt.Errorf("Level is empty,default level has be set")
+		return defaultConfig.Log.Level, fmt.Errorf("level is empty,default level has be set")
 	}
 
 	for _,l := range sysadmServer.Levels {
-		if strings.ToLower(level) == strings.ToLower(l) {
+		if  strings.EqualFold(level,l)  {
 			return strings.ToLower(level),nil
 		}
 	}
 
-	return defaultConfig.Log.Level,fmt.Errorf("Level(%s) was not found,default level has be set.",level)
+	return defaultConfig.Log.Level,fmt.Errorf("level(%s) was not found,default level has be set",level)
 }
 
 // check the validity of log format.
@@ -236,12 +236,12 @@ func checkLogTimeFormat(format string)(string, error){
 	}
 
 	for _,v := range sysadmServer.TimestampFormat {
-		if strings.ToLower(format) == strings.ToLower(v) {
+		if strings.EqualFold(format,v) {
 			return format, nil
 		}
 	}
 
-	return sysadmServer.TimestampFormat["DateTime"], fmt.Errorf("format(%s) is not valid ,default format will be set.",format)
+	return sysadmServer.TimestampFormat["DateTime"], fmt.Errorf("format(%s) is not valid ,default format will be set",format)
 }
 
 // Try to get listenIP from one of  SERVER_IP,configuration file or default value.
@@ -539,7 +539,7 @@ func checkHostAddress(address string) (string, error) {
 
 	ips,err := net.LookupIP(address)
 	if err != nil {
-		return "" , fmt.Errorf("lookup the IP of address(%s) error.",err)
+		return "" , fmt.Errorf("lookup the IP of address(%s) error",err)
 	}
 	
 	return ips[0].String(), nil
@@ -935,10 +935,8 @@ func getRegistryPassword(confContent *Config) string{
 
 func appendErrs(dst []sysadmerror.Sysadmerror,from []sysadmerror.Sysadmerror)([]sysadmerror.Sysadmerror){
 
-	for _,e := range from {
-		dst = append(dst,e)
-	}
-	
+	dst = append(dst,from...)
+		
 	return dst
 }
 

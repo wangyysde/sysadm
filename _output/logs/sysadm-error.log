@@ -2183,3 +2183,15 @@ time=2022-02-16T10:57:59+08:00 level=debug msg=Listening and serving HTTP on 0.0
 
 time=2022-02-16T10:57:59+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
 
+time=2022-02-16T14:04:24+08:00 level=error msg=erroCode: 201002 Msg: Can not open the configuration file:/data/code/golang/src/bzhyProjects/sysadm/_output/conf/registryctl.yaml, error: open /data/code/golang/src/bzhyProjects/sysadm/_output/conf/registryctl.yaml: no such file or directory.
+time=2022-02-16T14:04:24+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-02-16T14:04:24+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/registryctl/server.DaemonStart.func1 (3 handlers)
+
+time=2022-02-16T14:04:24+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8080
+
+time=2022-02-16T14:04:24+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+

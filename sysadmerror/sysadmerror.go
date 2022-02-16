@@ -16,10 +16,10 @@
  */
 
 package sysadmerror
- 
-import(
-	"strings"
+
+import (
 	"fmt"
+	"strings"
 )
 
  var Levels = []string{
@@ -42,7 +42,7 @@ type Sysadmerror struct {
 // Return int of index if found otherwise return 1 which is the index of "debug"
 func GetLevelNum(level string) int { 
 
-	for key,_ := range Levels {
+	for key := range Levels {
 		if strings.ToLower(Levels[key]) == strings.ToLower(level) {
 			return key
 		}
@@ -127,7 +127,7 @@ func GetMaxLevel(errs []Sysadmerror) int {
 	}
 
 	maxLevel := 0
-	for key,_ := range errs {
+	for key := range errs {
 		if key > maxLevel {
 			maxLevel = key
 		}

@@ -1,0 +1,37 @@
+version: v21.0.0
+server:
+  address: 0.0.0.0
+  port: 5001
+  socket: "/var/run/registryctl.sock"
+log:
+  accessLog: "logs/registryctl-access.log"
+  errorLog: "logs/registryctl-error.log"
+  kind: "text"
+  level: "debug"
+  splitAccessAndError: true
+  timeStampFormat: ""
+user:
+  defaultUser: "registryctl_user"
+  defaultPassword: "registryctl_password"
+DB: 
+  host: "10.6.206.6"
+  port: 30432
+  user: sysadm
+  password: "Zaq12wsX"
+  dbname: "sysadm"
+  sslmode: "disable"
+  sslrootcert: ""
+  sslkey: ""
+  sslcert: ""
+registry:
+  server:
+    host: "10.6.206.6"
+    port: 5000
+    sslmode: "disable"
+    certs:
+      ca: ""
+      cert: ""
+      key: ""
+  credit:
+    username: "sysadm_registry_user"
+    password: "sysadm_registry_password"
