@@ -57,19 +57,38 @@ var exitChan chan os.Signal
 func DaemonStart(cmd *cobra.Command, cmdPath string){
 	var errs []sysadmerror.Sysadmerror
 	definedConfig, errs = config.HandleConfig(StartData.ConfigPath,cmdPath)
+	maxLevel := sysadmerror.GetMaxLevel(errs)
+	fatalLevel := sysadmerror.GetLevelNum("fatal")
+
+	if maxLevel >= fatalLevel {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202003,"debug","configurations have been handled.but the configuration is not valid"))
+	} else {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202004,"debug","configurations have been handled and it is ok"))
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202005,"debug","try to setting logger..."))
 	e := setLogger()
 	defer closeLogger()
 	if len(e) > 0 {
 		errs = appendErrs(errs,e)
 	}
-	logErrors(errs)
-	maxLevel := sysadmerror.GetMaxLevel(errs)
-	fatalLevel := sysadmerror.GetLevelNum("fatal")
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202006,"debug","loggers have been set"))
 
+	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202007,"debug","fatal(or higher level) error(s) occurred. we will exit."))
+		logErrors(errs)
 		os.Exit(202002)
 	}
 	
+	if len(errs) > 0 {
+		logErrors(errs)
+	}
+
+	maxLevel = sysadmerror.GetMaxLevel(errs)
+	if maxLevel >= fatalLevel {
+		os.Exit(202002)
+	}
 	//errs = errs[:0]
 	
 	if _,err = getSysadmRootPath(cmdPath); err != nil {
@@ -297,10 +316,6 @@ func logErrors(errs []sysadmerror.Sysadmerror){
 }
 
 func appendErrs(dst []sysadmerror.Sysadmerror,from []sysadmerror.Sysadmerror)([]sysadmerror.Sysadmerror){
-
-//	for _,e := range from {
 		dst = append(dst,from...)
-//	}
-	
 	return dst
 }

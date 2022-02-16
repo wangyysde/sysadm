@@ -127,9 +127,10 @@ func GetMaxLevel(errs []Sysadmerror) int {
 	}
 
 	maxLevel := 0
-	for key := range errs {
-		if key > maxLevel {
-			maxLevel = key
+	for _,v := range errs {
+		l := v.ErrorLevel
+		if l > maxLevel {
+			maxLevel = l
 		}
 	}
 

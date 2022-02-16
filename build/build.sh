@@ -90,7 +90,6 @@ function build::package(){
 BUILD_LIST=""
 [ "X$@" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=$@
 
-echo "${BUILD_LIST}"
 for p in ${BUILD_LIST}
 do
    create::build::infofile ${p}

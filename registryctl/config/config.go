@@ -945,7 +945,12 @@ func appendErrs(dst []sysadmerror.Sysadmerror,from []sysadmerror.Sysadmerror)([]
 // All the values of items should be passed check when set it to ConfigDefined
 func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.Sysadmerror) {
 	var confContent *Config = nil
-	cfgFile,errs := getConfigPath(configPath,cmdRunPath)
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201035,"debug","try to handling configurations....."))
+	cfgFile,temperrs := getConfigPath(configPath,cmdRunPath)
+	errs = appendErrs(errs,temperrs)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201036,"debug","got configuration file path is: %s",cfgFile))
+
 	if cfgFile != "" {
 		tmpConfContent,err := getConfigContent(cfgFile)
 		if len(err) > 0 {
@@ -960,67 +965,95 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 			}
 		}
 	}
-	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201037,"debug","read the content of the configuration file"))
+
 	address,err := getServerAddress(confContent)
 	ConfigDefined.Server.Address = address
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201038,"debug","got the address of server: %s",address))
 
 	ConfigDefined.Server.Port,err = getServerPort(confContent)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201039,"debug","got the port of server: %d",ConfigDefined.Server.Port))
 
 	ConfigDefined.Server.Socket,err = getSockFile(confContent,cmdRunPath)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201040,"debug","socket file's path is : %s",ConfigDefined.Server.Socket))
 
 	ConfigDefined.Log.AccessLog,err = getAccessLogFile(confContent,cmdRunPath)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201041,"debug","access log file's path is : %s",ConfigDefined.Log.AccessLog))
 
 	ConfigDefined.Log.ErrorLog,err = getErrorLogFile(confContent,cmdRunPath)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201042,"debug","error log file's path is : %s",ConfigDefined.Log.ErrorLog))
 
 	ConfigDefined.Log.Kind,err = getLogKind(confContent)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201043,"debug","the kind of log is  : %s",ConfigDefined.Log.Kind))
 
 	ConfigDefined.Log.Level,err = getLogLevel(confContent)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201044,"debug","log level has be set to: %s",ConfigDefined.Log.Level))
 
 	ConfigDefined.Log.TimeStampFormat,err = getLogTimeFormat(confContent)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201045,"debug","timeformat has be set to: %s",ConfigDefined.Log.TimeStampFormat))
 
 	ConfigDefined.Log.SplitAccessAndError,err = getIsSplitLog(confContent)
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201046,"debug","is split error and access log to difference log file: %t",ConfigDefined.Log.SplitAccessAndError))
 
 	ConfigDefined.User.DefaultUser = getDefaultUser(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201047,"debug","registryctl user is : %s",ConfigDefined.User.DefaultUser))
+
 	ConfigDefined.User.DefaultPassword = getDefaultPassword(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201048,"debug","registryctl password is : %s",ConfigDefined.User.DefaultPassword))
+
 	ConfigDefined.DB.Host = getPostgreHost(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201049,"debug","db host : %s",ConfigDefined.DB.Host))
+
 	ConfigDefined.DB.Port = getPostgrePort(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201050,"debug","db port : %d",ConfigDefined.DB.Port))
+
 	ConfigDefined.DB.User = getPostgreUser(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201051,"debug","db user: %s",ConfigDefined.DB.User))
+
 	ConfigDefined.DB.Password = getPostgrePassword(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201052,"debug","db password: %s",ConfigDefined.DB.Password))
+
 	ConfigDefined.DB.Dbname = getPostgreDBName(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201053,"debug","db name: %s",ConfigDefined.DB.Dbname))
+
 	ConfigDefined.DB.Sslmode = getPostgreSslmode(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201054,"debug","ssl mode for db: %s",ConfigDefined.DB.Sslmode))
+
 	if strings.ToLower(ConfigDefined.DB.Sslmode) != "disable" {
 		ConfigDefined.DB.Sslrootcert = getPostgreSslrootcert(confContent)
 		ret, err := checkFileExists(ConfigDefined.DB.Sslrootcert, cmdRunPath)
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201028,"warning","SslMode of Postgre has be set to %s But sslCA(%s) can not be found. We will try to set SslMode to disable. Error: %s",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslrootcert,err))
 			ConfigDefined.DB.Sslmode = "disable"
+		}else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201055,"debug","ca file(%s) for db is exist",ConfigDefined.DB.Sslrootcert))
 		}
 	}
 
@@ -1030,6 +1063,8 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201029,"warning","SslMode of Postgre has be set to %s But SslKey(%s) can not be found. We will try to set SslMode to disable error: %s",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslkey,err))
 			ConfigDefined.DB.Sslmode = "disable"
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201056,"debug","key file(%s) for db is exist",ConfigDefined.DB.Sslkey))
 		}
 	}
 
@@ -1039,20 +1074,29 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201030,"warning","SslMode of Postgre has be set to %s But Sslcert(%s) can not be found. We will try to set SslMode to disable,error: %s ",ConfigDefined.DB.Sslmode, ConfigDefined.DB.Sslcert,err))
 			ConfigDefined.DB.Sslmode = "disable"
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201057,"debug","cert file(%s) for db is exist",ConfigDefined.DB.Sslcert))
 		}
 	}
 
 	ConfigDefined.DB.DbMaxConnect = getPostgreMaxConnect(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201058,"debug","maxconnection to db is: %d",ConfigDefined.DB.DbMaxConnect))
+
 	ConfigDefined.DB.DbIdleConnect = getPostgreDbIdleConnect(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201059,"debug","idle connection to db is: %d",ConfigDefined.DB.DbIdleConnect))
 
 	host,e := getRegistryHost(confContent)
 	if e == nil {
 		ConfigDefined.Registry.Server.Host = host
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(201060,"debug","registry host is: %s",host))
 	}else{
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(201031,"fatal","registry host(%s) is not valid.error:%s. ",host, e))
 	}
 
 	ConfigDefined.Registry.Server.Port = getRegistryPort(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201061,"debug","registry server port is: %d",ConfigDefined.Registry.Server.Port))
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201062,"debug","ssl mode for registry server: %s",ConfigDefined.Registry.Server.Sslmode))
 
 	if strings.ToLower(ConfigDefined.Registry.Server.Sslmode) != "disable" {
 		ConfigDefined.Registry.Server.Certs.Ca = getRegistrySslCa(confContent)
@@ -1060,6 +1104,8 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201032,"warning","SslMode of Registry has be set to %s But sslCA(%s) can not be found. We will try to set SslMode to disable. Error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Ca,err))
 			ConfigDefined.Registry.Server.Sslmode = "disable"
+		}else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201063,"debug","ca file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Ca))
 		}
 	}
 
@@ -1069,6 +1115,8 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201033,"warning","SslMode of Registry has be set to %s But Key(%s) file can not be found. We will try to set SslMode to disable error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Key,err))
 			ConfigDefined.Registry.Server.Sslmode = "disable"
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201064,"debug","key file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Key))
 		}
 	}
 
@@ -1078,11 +1126,16 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		if !ret {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201034,"warning","SslMode of Registry has be set to %s But Cert(%s) file can not be found. We will try to set SslMode to disable error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Cert,err))
 			ConfigDefined.Registry.Server.Sslmode = "disable"
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201065,"debug","cert file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Cert))
 		}
 	}
 
 	ConfigDefined.Registry.Credit.Username = getRegistryUser(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201066,"debug","registry server user %s",ConfigDefined.Registry.Credit.Username))
+
 	ConfigDefined.Registry.Credit.Password = getRegistryPassword(confContent)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201066,"debug","registry server password %s",ConfigDefined.Registry.Credit.Password))
 
 	return &ConfigDefined,errs
 }

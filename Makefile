@@ -23,6 +23,11 @@ sysadm:
 	$(info Now building sysadm package. sysadm binary file will be placed into "$(BIN_DIR)")
 	build/build.sh $(WHAT)
 #	go build -o $(BIN_DIR)/sysadm 
+	
+.PHONY: registryctl
+registryctl:
+	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
+	build/build.sh registryctl
 
 .PHONY: registrybinary
 registrybinary: 
