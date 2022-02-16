@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2021 Bzhy Network. All rights reserved.
+* @Copyright (c) 2022 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,9 @@ import (
 	"github.com/wangyysde/sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 	log "github.com/wangyysde/sysadmLog"
+	sysadmDB "github.com/wangyysde/sysadm/db"
+	"github.com/wangyysde/sysadm/sysadmerror"
+
 )
 
 type StartParameters struct {
@@ -71,6 +74,48 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	if err = initSession(r); err != nil {
 		sysadmServer.Logf("error","error:%s",err)
 		os.Exit(3)
+	}
+
+	dbConf := sysadmDB.DbConfig {
+		Type: "postgre",
+		Host: config.ConfigDefined.DB.Host, 
+		Port: config.ConfigDefined.DB.Port, 
+		User: config.ConfigDefined.DB.User,
+		Password: config.ConfigDefined.DB.Password,
+		DbName: config.ConfigDefined.DB.Dbname,
+		SslMode: "disable",
+		SslCa: "",
+		SslCert: "",
+		SslKey: "",
+		MaxOpenConns: 50,
+		MaxIdleConns: 20,
+	}
+	dbConfig,errs := sysadmDB.InitDbConfig(&dbConf,cmdPath)
+	if len(errs) >0 {
+		logErrors(errs)
+	}
+
+	dbEntity := dbConfig.Entity
+	if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
+		errs := dbEntity.OpenDbConnect()
+		if len(errs) >0 {
+			logErrors(errs)
+		}
+		if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
+			dbData := sysadmDB.FieldData {
+				"username": "test3User",
+      			"email": "test3User@bzhy.com",
+      			"password": "123456",
+      			"realname": "Real Name",
+			}
+			rows,e := dbEntity.InsertData("test_user",dbData)
+			if len(e) >0 {
+				logErrors(e)
+			} else {
+				sysadmServer.Logf("info","rows %d data have be inserted",rows)
+			}
+		}
+
 	}
 
 	if err = ininDBConnect(); err != nil {
@@ -227,4 +272,15 @@ func handleRootPath(c *sysadmServer.Context){
 	}
 
 	c.HTML(http.StatusOK, "index.html", tplData)
+}
+
+func logErrors(errs []sysadmerror.Sysadmerror){
+
+	for _,e := range errs {
+		l := sysadmerror.GetErrorLevelString(e)
+		no := e.ErrorNo
+		sysadmServer.Logf(l,"erroCode: %d Msg: %s",no,e.ErrorMsg)
+	}
+	
+	return
 }

@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2021 Bzhy Network. All rights reserved.
+* @Copyright (c) 2022 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,7 @@ var startCmd =  &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string){
 		server.StartData.OldConfigPath = ""
 		server.StartData.ConfigPath = cfgFile
-		config.Version = versionStr
+		config.Version = SysadmVer
 		server.DaemonStart(cmd, os.Args[0])
 	},
 	Args: cobra.NoArgs,

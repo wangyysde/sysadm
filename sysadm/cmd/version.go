@@ -40,8 +40,8 @@ type Version struct {
 }
 
 var v = Version{
-	Version: versionStr,
-	Author: author,
+	Version: SysadmVer,
+	Author: Author,
 	GitCommitId: gitCommitId,
 	Branch: branchName,
 	GitTreeStatus: gitTreeStatus,

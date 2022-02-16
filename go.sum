@@ -307,8 +307,9 @@ github.com/ugorji/go/codec v1.2.6 h1:7kbGefxLoDBuYXOms4yD7223OpNMMPNPZxXk5TvFcyQ
 github.com/ugorji/go/codec v1.2.6/go.mod h1:V6TCNZ4PHqoHGFZuSG1W8nrCzzdgA2DozYxWFFpvxTw=
 github.com/wangyysde/sysadmLog v0.0.0-20210915071829-f43fc1c68a76 h1:tP8BtrLqh2+tdPF/nfJAMY9ISTtwfhJc38ETY7IaE58=
 github.com/wangyysde/sysadmLog v0.0.0-20210915071829-f43fc1c68a76/go.mod h1:q7sl/wAt9d5O08N9uoWOeBHoH5mSvIL2rR7+rEPKECs=
-github.com/wangyysde/sysadmServer v0.0.0-20211122141337-358ab0f4fa21 h1:5K+4OQo3IfXvfSgj29QbaVJQLAK6JOEPIkDgjReKi4E=
 github.com/wangyysde/sysadmServer v0.0.0-20211122141337-358ab0f4fa21/go.mod h1:aXTxq2UyIC1xnd3Z7/Dq4xhKhjCRa+MrMx39pkfdpF4=
+github.com/wangyysde/sysadmServer v0.0.0-20220123085218-e23ac4a4232c h1:VuZRen0MzD8biTVR8W7evMriba/oJAKDhiGU+jlouOw=
+github.com/wangyysde/sysadmServer v0.0.0-20220123085218-e23ac4a4232c/go.mod h1:aXTxq2UyIC1xnd3Z7/Dq4xhKhjCRa+MrMx39pkfdpF4=
 github.com/wangyysde/sysadmSessions v0.0.0-20211221141353-08b8dd3b9f29 h1:17cBejKJQJzlmgvgwCCqc3a7pzNpFSs2zBDz8hJKZ54=
 github.com/wangyysde/sysadmSessions v0.0.0-20211221141353-08b8dd3b9f29/go.mod h1:nLwwUjieVThNlybEMkkzEg8q94ejTs+YVNJ84wcSLpE=
 github.com/wangyysde/sysadmSessions v0.0.0-20211222125714-def5d4b4f078 h1:gum4dT+X+coTe/3KWczl2QgCaNrWzhms6MuhZWzu1mc=

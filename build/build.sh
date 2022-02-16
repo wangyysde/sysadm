@@ -21,7 +21,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm"
+PACKAGE_LIST="sysadm registryctl"
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SYSADM_OUTPUT="${SYSADM_ROOT}/_output/bin"
@@ -55,6 +55,7 @@ function create::build::infofile(){
 		return 1
 	fi
 	
+    echo "Creating buildInfo for package ${package_name} ..."
 	[ ! -e "${build_file}" ] && rm -rf "${build_file}"
 	cat "${SYSADM_ROOT}/CopyRight" >"${build_file}"
 	echo "" >> "${build_file}"
@@ -89,7 +90,8 @@ function build::package(){
 BUILD_LIST=""
 [ "X$@" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=$@
 
-for p in "${BUILD_LIST}"
+echo "${BUILD_LIST}"
+for p in ${BUILD_LIST}
 do
    create::build::infofile ${p}
    [ $? -eq  1 ] && exit 1

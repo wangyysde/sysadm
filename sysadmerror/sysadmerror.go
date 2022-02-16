@@ -19,7 +19,7 @@ package sysadmerror
  
 import(
 	"strings"
-	
+	"fmt"
 )
 
  var Levels = []string{
@@ -42,8 +42,8 @@ type Sysadmerror struct {
 // Return int of index if found otherwise return 1 which is the index of "debug"
 func GetLevelNum(level string) int { 
 
-	for key,l := range Levels {
-		if strings.Tolower(Levels[key]) == strings.ToLower(level) {
+	for key,_ := range Levels {
+		if strings.ToLower(Levels[key]) == strings.ToLower(level) {
 			return key
 		}
 	}
@@ -62,7 +62,7 @@ func GetLevelString(level int) string{
 
 // Return the error no of err if err is not nil, otherwise return 0
 func GetErrorNo(err Sysadmerror) int {
-	if err == nil {
+	if err == (Sysadmerror{}) {
 		return 0
 	}
 	return err.ErrorNo
@@ -70,7 +70,7 @@ func GetErrorNo(err Sysadmerror) int {
 
 // Return the error level of err if err is not nil, otherwise return 1("debug")
 func GetErrorLevelNum(err Sysadmerror) int {
-	if err == nil {
+	if err == (Sysadmerror{}) {
 		return 1
 	}
 
@@ -79,7 +79,7 @@ func GetErrorLevelNum(err Sysadmerror) int {
 
 // Return the error level of err if err is not nil, otherwise return 1("debug")
 func GetErrorLevelString(err Sysadmerror) string {
-	if err == nil {
+	if err == (Sysadmerror{}) {
 		return "debug"
 	}
 
@@ -88,7 +88,7 @@ func GetErrorLevelString(err Sysadmerror) string {
 
 // NewErrorWithNumLevel create a new instance of Sysadmerror with errno,errLevel(int) and errMsg
 // return Sysadmerror
-func NewErrorWithNumLevel(errno int, errLevel int, errMsg string ...args interface{}) Sysadmerror {
+func NewErrorWithNumLevel(errno int, errLevel int, errMsg string, args ...interface{}) Sysadmerror {
 	errmsg := fmt.Sprintf(errMsg, args...)
 	if errLevel < 0 || errLevel > 6 {
 		errLevel = 1
@@ -97,7 +97,7 @@ func NewErrorWithNumLevel(errno int, errLevel int, errMsg string ...args interfa
 	err := Sysadmerror{
 		ErrorNo: errno,
 		ErrorLevel: errLevel,
-		ErrorMsg, errmsg,
+		ErrorMsg: errmsg,
 	}
 
 	return err
@@ -105,16 +105,33 @@ func NewErrorWithNumLevel(errno int, errLevel int, errMsg string ...args interfa
 
 // NewErrorWithStringLevel create a new instance of Sysadmerror with errno,errLevel(string) and errMsg
 // return Sysadmerror. ErrorLevel will be set to 1("debug") if errLevel was not found in Levels
-func NewErrorWithStringLevel(errno int, errLevel string, errMsg string ...args interface{}) Sysadmerror {
+func NewErrorWithStringLevel(errno int, errLevel string, errMsg string, args ...interface{}) Sysadmerror {
 	errmsg := fmt.Sprintf(errMsg, args...)
 	level := GetLevelNum(errLevel)
 	
 	err := Sysadmerror{
 		ErrorNo: errno,
 		ErrorLevel: level,
-		ErrorMsg, errmsg,
+		ErrorMsg: errmsg,
 	}
 
 	return err
 }
 
+// Get the maxLevels in []Sysadmerror
+// return -1 if the length of []Sysadmerror less 1
+// otherwise return the maxLevels in the []Sysadmerror
+func GetMaxLevel(errs []Sysadmerror) int {
+	if len(errs) < 1 {
+		return -1
+	}
+
+	maxLevel := 0
+	for key,_ := range errs {
+		if key > maxLevel {
+			maxLevel = key
+		}
+	}
+
+	return maxLevel
+}
