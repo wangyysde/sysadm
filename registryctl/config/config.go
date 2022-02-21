@@ -26,6 +26,7 @@ import (
 	"strconv"
 	"strings"
 
+	sysadmDB "github.com/wangyysde/sysadm/db"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
@@ -609,6 +610,37 @@ func getPostgreUser(confContent *Config) string{
 	return defaultConfig.DB.User
 }
 
+// Getting type of DB  from c and checking the validity of it
+// return the type if it is valid ,otherwise getting type of DB   from 
+// configuration file and checking the validity of it. return the type if it is valid.
+// otherwise return the default type (postgre).
+func getDbType(confContent *Config) (string,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	dbType := os.Getenv("DBTYPE")
+	if dbType != ""{
+		if sysadmDB.IsSupportedDB(dbType) {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201067,"debug","db type is: %s",dbType))
+			return dbType,errs
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201068,"debug","got db type: %s from dbType, but we can not support it now.",dbType))
+		}
+	}
+
+	if confContent != nil  {
+		if confContent.DB.Type  != "" {
+			if sysadmDB.IsSupportedDB(confContent.DB.Type) {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(201069,"debug","db type is: %s",confContent.DB.Type))
+				return confContent.DB.Type,errs
+			} else {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(201070,"debug","got db type: %s from configuration file, but we can not support it now.",confContent.DB.Type))
+			}
+		}
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201071,"debug","default db(%s) will be used",defaultConfig.DB.Type))
+	return defaultConfig.DB.Type,errs
+}
+
 // Getting Password of Postgre  from environment and checking the validity of it
 // return the Password if it is valid ,otherwise getting Password of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
@@ -1027,6 +1059,11 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 
 	ConfigDefined.User.DefaultPassword = getDefaultPassword(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201048,"debug","registryctl password is : %s",ConfigDefined.User.DefaultPassword))
+
+	ConfigDefined.DB.Type,err = getDbType(confContent)
+	if len(err) > 0 {
+		errs = appendErrs(errs,err)
+	}
 
 	ConfigDefined.DB.Host = getPostgreHost(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201049,"debug","db host : %s",ConfigDefined.DB.Host))

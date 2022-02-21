@@ -26,7 +26,7 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	//sysadmDB "github.com/wangyysde/sysadm/db"
+	sysadmDB "github.com/wangyysde/sysadm/db"
 	"github.com/wangyysde/sysadm/registryctl/config"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	log "github.com/wangyysde/sysadmLog"
@@ -40,6 +40,7 @@ type StartParameters struct {
 	accessLogFp *os.File
 	errorLogFp *os.File
 	sysadmRootPath string
+	dbEntity sysadmDB.DbEntity `json:"entity"`
 }
 
 var StartData = &StartParameters{
@@ -48,11 +49,13 @@ var StartData = &StartParameters{
 	accessLogFp: nil,
 	errorLogFp: nil,
 	sysadmRootPath: "",
+	dbEntity: nil,
 }
 
 var definedConfig *config.Config 
 var err error
 var exitChan chan os.Signal
+var entity sysadmDB.DbEntity
 
 func DaemonStart(cmd *cobra.Command, cmdPath string){
 	var errs []sysadmerror.Sysadmerror
@@ -89,13 +92,23 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	if maxLevel >= fatalLevel {
 		os.Exit(202002)
 	}
-	//errs = errs[:0]
 	
 	if _,err = getSysadmRootPath(cmdPath); err != nil {
 		sysadmServer.Logf("fatal","erroCode: 202003 Msg: can not get the root path of the program,err:%s ",err)
 		os.Exit(202003)
 	}
 	
+	dbConfig := initDBConfig(definedConfig)
+	entity,errs = initDBEntity(&dbConfig)
+	if len(errs) > 0 {
+		logErrors(errs)
+	}
+	maxLevel = sysadmerror.GetMaxLevel(errs)
+	if maxLevel >= fatalLevel {
+		os.Exit(202011)
+	}
+	StartData.dbEntity = entity
+
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
     

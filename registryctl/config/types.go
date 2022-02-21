@@ -44,6 +44,7 @@ type User struct {
 }
 
 type DB struct {
+	Type string `json:"type"`
 	Host string `json:"host"`
 	Port int `json:"port"`
 	User string `json:"user"`
@@ -116,6 +117,7 @@ var defaultConfig Config = Config{
 		DefaultPassword: DefaultPasswd,
 	},
 	DB: DB{
+		Type: DefaultDbType,
 		Host: DefaultDbHost,
 		Port: DefaultDbPort,
 		User: DefaultDbUser,

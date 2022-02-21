@@ -14,6 +14,7 @@ user:
   defaultUser: "registryctl_user"
   defaultPassword: "registryctl_password"
 DB: 
+  type: "postgre"
   host: "10.6.206.6"
   port: 30432
   user: sysadm

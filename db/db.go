@@ -15,19 +15,31 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
- package db
+package db
 
- import (
+import (
+	"database/sql"
 	"net"
-	"strings"
 	"os"
 	"path/filepath"
-	"database/sql"
+	"strings"
 
 	"github.com/wangyysde/sysadm/sysadmerror"
- )
+)
   
- 
+ var SupportDBs = []string{
+    "postgre",
+	/* =============================
+	TODO:
+    "mysql",
+    "info",
+    "warning",
+    "error",
+    "fatal",
+    "panic",
+	*/
+}
+
  type DbConfig struct {
 	Type string `json:"type"`
 	Host string `json:"host"`
@@ -181,4 +193,17 @@ func getFile(f string,cmdRunPath string)(string,error){
 	fp.Close()
 	
 	return f,nil
+}
+
+// IsSupportedDB checking the DB of t has be supported now.
+// return true if DB is supported
+// otherwise return false
+func IsSupportedDB(t string) bool {
+	for _,v := range SupportDBs {
+		if strings.EqualFold(v,t) {
+			return true
+		}
+	}
+
+	return false
 }

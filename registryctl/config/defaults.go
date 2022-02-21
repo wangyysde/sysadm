@@ -32,6 +32,7 @@ var DefaultLogKind = "text"
 var DefaultLogLevel = "debug"
 var DefaultUser = "admin"
 var DefaultPasswd = "Sysadm12345"
+var DefaultDbType =  "postgre"
 var DefaultDbHost = "localhost"
 var DefaultDbPort = 5432
 var DefaultDbUser = "Sysadm"

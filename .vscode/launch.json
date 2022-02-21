@@ -10,9 +10,9 @@
             "request": "launch",
             "mode": "debug",
             "remotePath": "",
-            "port": 8080,
-            "host": "127.0.0.1",
-            "program": "${workspaceRoot}\\bin\\sysadm",
+        //    "port": 8080,
+        //    "host": "127.0.0.1",
+            "program": "${workspaceRoot}/registryctl",
             "env": {},
             "args": []
         }
