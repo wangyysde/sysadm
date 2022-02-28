@@ -25,6 +25,8 @@ import (
 	"github.com/wangyysde/sysadm/sysadmerror"
 )
 
+// initDBEntity initating a dbConfig accroding configurations
+// return sysadmDB.DbConfig
  func initDBConfig(definedConfig *config.Config )(sysadmDB.DbConfig) {
 	dbConf := sysadmDB.DbConfig {
 		Type: definedConfig.DB.Type,
@@ -46,6 +48,8 @@ import (
 	return dbConf
  }
 
+ // initDBEntity initating a DB interface entity accroding to the DB configurations.
+ // return sysadmDB.DbEntity
  func initDBEntity(dbConfig *sysadmDB.DbConfig)(sysadmDB.DbEntity,[]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	var entity sysadmDB.DbEntity
@@ -66,4 +70,30 @@ import (
 	}
 
 	return entity,errs
- }
+}
+
+// openDBConnection open a connection to DB server accroding to the  DBConfig
+// closeDBConnection calling should be followed with this function calling.
+func openDBConnection(dbConfig *sysadmDB.DbConfig)([]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202011,"debug","now try to connect to %s db server(%s)",dbConfig.Host,dbConfig.Type))
+
+	entity := dbConfig.Entity
+	e := entity.OpenDbConnect()
+	if len(e) > 0 {
+		errs = appendErrs(errs,e)
+	}
+
+	return errs
+}
+
+// closeDBConnection closing the connection to the DB.
+// the calling of this function should be following with the calling of openDBConnection
+func closeDBConnection(dbConfig *sysadmDB.DbConfig){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202016,"debug","now try to closing the connection to %s db server(%s)",dbConfig.Host,dbConfig.Type))
+	entity := dbConfig.Entity
+	errs =  entity.CloseDB()
+	logErrors(errs)
+}

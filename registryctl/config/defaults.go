@@ -21,7 +21,7 @@ package config
 var DefaultConfigFile = "conf/registryctl.yaml"
 var SupportVers = [...]string{"v0.1", "v0.2","v21.0.0"}
 var SysadmVersion = ""
-var RegistryctlVer = ""
+var RegistryctlVer = "v21.0.0"
 var RegistryApiVer = "" 
 var DefaultIP = "0.0.0.0"
 var DefaultPort = 50001
@@ -46,7 +46,7 @@ var DefaultDbSslkey = ""
 var DefaultDbSslcert = ""
 var RegistryHost = "sysadm_registry"
 var RegistryPort = 5000
-var RegistrySslMode = "disable"
+var RegistryTls = false
 var RegistryCa = ""
 var RegistryKey = ""
 var RegistryCert = ""

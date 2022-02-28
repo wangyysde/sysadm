@@ -17,7 +17,7 @@
 
 package config
 
-import(
+import (
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -58,18 +58,11 @@ type DB struct {
 	Sslcert string `json:"sslcert"`
 }
 
-type Certs struct {
-	Ca string `json:"ca"`
-	Key string `json:"key"`
-	Cert string `json:"cert"`
-}
-
 type RegistryServer struct {
 	Host string `json:"host"`
 	Port int `json:"port"`
-	Sslmode string `json:"sslmode"`
-	Certs Certs `json:"certs"`
-
+	Tls bool `json:"tls"`
+	InsecureSkipVerify bool `json:"insecureskipverify"`
 }
 
 type Credit struct {
@@ -83,7 +76,6 @@ type Registry struct {
 }
 
 type Config struct {
-	SysadmVersion string `json:"sysadmversion"`
 	RegistryctlVer string `json:"version"`
 	RegistryApiVer string `json:"ApiVer"`
 	Server Server `json:"server"`
@@ -96,7 +88,6 @@ type Config struct {
 var DefinedConfig Config = Config{}
 
 var defaultConfig Config = Config{
-	SysadmVersion:  SysadmVersion,
 	RegistryctlVer: RegistryctlVer,
 	RegistryApiVer: RegistryApiVer,
 	Server: Server {
@@ -134,12 +125,7 @@ var defaultConfig Config = Config{
 		Server: RegistryServer{
 			Host: RegistryHost,
 			Port: RegistryPort,
-			Sslmode: RegistrySslMode,
-			Certs: Certs {
-				Ca: RegistryCa,
-				Key: RegistryKey,
-				Cert: RegistryCert,
-			},
+			Tls: RegistryTls,
 		},
 		Credit: Credit{
 			Username: RegistryUsername,

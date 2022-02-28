@@ -26,13 +26,10 @@ DB:
   sslcert: ""
 registry:
   server:
-    host: "10.6.206.6"
+    host: "localhost"
     port: 5000
-    sslmode: "disable"
-    certs:
-      ca: ""
-      cert: ""
-      key: ""
+    tls: false
+    insecureSkipVerify: true
   credit:
     username: "sysadm_registry_user"
     password: "sysadm_registry_password"

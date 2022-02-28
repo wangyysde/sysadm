@@ -870,63 +870,6 @@ func getRegistryPort(confContent *Config) int{
 	return defaultConfig.Registry.Server.Port
 }
 
-// Getting Sslkey of Registry  from environment and checking the validity of it
-// return the Sslkey if it is valid ,otherwise getting Sslkey of Registry  from 
-// configuration file and checking the validity of it. return the user if it is valid.
-// otherwise return the default Sslkey of Postgre.
-func getRegistrySslkey(confContent *Config) string{
-	registrySslKey := os.Getenv("REGISTRYSSLKEY")
-	if registrySslKey != ""{
-		return registrySslKey
-	}
-
-	if confContent != nil  {
-		if confContent.Registry.Server.Certs.Key != "" {
-			return confContent.Registry.Server.Certs.Key
-		}
-	}
-
-	return defaultConfig.Registry.Server.Certs.Key
-}
-
-// Getting Sslcert of Registry  from environment and checking the validity of it
-// return the Sslcert if it is valid ,otherwise getting Sslkey of Registry  from 
-// configuration file and checking the validity of it. return the user if it is valid.
-// otherwise return the default Sslcert of Postgre.
-func getRegistrySslCert(confContent *Config) string{
-	registrySslCert := os.Getenv("REGISTRYSSLCERT")
-	if registrySslCert != ""{
-		return registrySslCert
-	}
-
-	if confContent != nil  {
-		if confContent.Registry.Server.Certs.Cert != "" {
-			return confContent.Registry.Server.Certs.Cert
-		}
-	}
-
-	return defaultConfig.Registry.Server.Certs.Cert
-}
-
-// Getting Sslca of Registry  from environment and checking the validity of it
-// return the Sslrootcert if it is valid ,otherwise getting Sslca of Registry  from 
-// configuration file and checking the validity of it. return the user if it is valid.
-// otherwise return the default Sslca of Postgre.
-func getRegistrySslCa(confContent *Config) string{
-	registrySslCa := os.Getenv("REGISTRYSSLCA")
-	if registrySslCa != ""{
-		return registrySslCa
-	}
-
-	if confContent != nil  {
-		if confContent.Registry.Server.Certs.Ca != "" {
-			return confContent.Registry.Server.Certs.Ca
-		}
-	}
-
-	return defaultConfig.Registry.Server.Certs.Ca
-}
-
 // Getting user of Registry  from environment and checking the validity of it
 // return the user if it is valid ,otherwise getting user of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
@@ -965,6 +908,48 @@ func getRegistryPassword(confContent *Config) string{
 	return defaultConfig.Registry.Credit.Password
 }
 
+// Getting the tls value for connecting  Registry server from environment and checking the validity of it
+// return the tls if it is valid ,otherwise getting the value from 
+// configuration file and checking the validity of it. return the it if it is valid.
+// otherwise return the default value.
+func getRegistryTls(confContent *Config) bool{
+	registryTls := os.Getenv("REGISTRYTLS")
+	if strings.ToLower(registryTls) == "true" || strings.ToLower(registryTls) == "false" {
+		if strings.ToLower(registryTls) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Registry.Server.Tls
+	}
+
+	return defaultConfig.Registry.Server.Tls
+}
+
+// Getting the InsecureSkipVerify value for connecting  Registry server from environment and checking the validity of it
+// return the InsecureSkipVerify if it is valid ,otherwise getting the value from 
+// configuration file and checking the validity of it. return the it if it is valid.
+// otherwise return the default value.
+func getRegistryInsecureSkipVerify(confContent *Config) bool{
+	registryInsecureSkipVerify	 := os.Getenv("REGISTRYINSECURESKIPVERIFY")
+	if strings.ToLower(registryInsecureSkipVerify) == "true" || strings.ToLower(registryInsecureSkipVerify) == "false" {
+		if strings.ToLower(registryInsecureSkipVerify) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Registry.Server.InsecureSkipVerify
+	}
+
+	return defaultConfig.Registry.Server.InsecureSkipVerify
+}
+
 func appendErrs(dst []sysadmerror.Sysadmerror,from []sysadmerror.Sysadmerror)([]sysadmerror.Sysadmerror){
 
 	dst = append(dst,from...)
@@ -989,11 +974,11 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 			errs =  appendErrs(errs,err) 
 		}else {
 			confContent = tmpConfContent
-			e := checkVerIsValid(confContent.SysadmVersion)
+			e := checkVerIsValid(confContent.RegistryctlVer)
 			if len(e) >0  {
 				errs = appendErrs(errs,e)
 			}else{
-				ConfigDefined.SysadmVersion = confContent.SysadmVersion
+				ConfigDefined.RegistryctlVer = confContent.RegistryctlVer
 			}
 		}
 	}
@@ -1133,46 +1118,14 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 	ConfigDefined.Registry.Server.Port = getRegistryPort(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201061,"debug","registry server port is: %d",ConfigDefined.Registry.Server.Port))
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201062,"debug","ssl mode for registry server: %s",ConfigDefined.Registry.Server.Sslmode))
-
-	if strings.ToLower(ConfigDefined.Registry.Server.Sslmode) != "disable" {
-		ConfigDefined.Registry.Server.Certs.Ca = getRegistrySslCa(confContent)
-		ret, err := checkFileExists(ConfigDefined.Registry.Server.Certs.Ca, cmdRunPath)
-		if !ret {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201032,"warning","SslMode of Registry has be set to %s But sslCA(%s) can not be found. We will try to set SslMode to disable. Error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Ca,err))
-			ConfigDefined.Registry.Server.Sslmode = "disable"
-		}else {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201063,"debug","ca file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Ca))
-		}
-	}
-
-	if strings.ToLower(ConfigDefined.Registry.Server.Sslmode) != "disable" {
-		ConfigDefined.Registry.Server.Certs.Key = getRegistrySslkey(confContent)
-		ret,err := checkFileExists(ConfigDefined.Registry.Server.Certs.Key, cmdRunPath)
-		if !ret {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201033,"warning","SslMode of Registry has be set to %s But Key(%s) file can not be found. We will try to set SslMode to disable error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Key,err))
-			ConfigDefined.Registry.Server.Sslmode = "disable"
-		} else {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201064,"debug","key file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Key))
-		}
-	}
-
-	if strings.ToLower(ConfigDefined.Registry.Server.Sslmode) != "disable" {
-		ConfigDefined.Registry.Server.Certs.Cert = getRegistrySslCert(confContent)
-		ret,err := checkFileExists(ConfigDefined.Registry.Server.Certs.Cert, cmdRunPath)
-		if !ret {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201034,"warning","SslMode of Registry has be set to %s But Cert(%s) file can not be found. We will try to set SslMode to disable error: %s",ConfigDefined.Registry.Server.Sslmode, ConfigDefined.Registry.Server.Certs.Cert,err))
-			ConfigDefined.Registry.Server.Sslmode = "disable"
-		} else {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(201065,"debug","cert file(%s) for registry server is exist",ConfigDefined.Registry.Server.Certs.Cert))
-		}
-	}
-
 	ConfigDefined.Registry.Credit.Username = getRegistryUser(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201066,"debug","registry server user %s",ConfigDefined.Registry.Credit.Username))
 
 	ConfigDefined.Registry.Credit.Password = getRegistryPassword(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201066,"debug","registry server password %s",ConfigDefined.Registry.Credit.Password))
+
+	ConfigDefined.Registry.Server.Tls = getRegistryTls(confContent)
+	ConfigDefined.Registry.Server.InsecureSkipVerify = getRegistryInsecureSkipVerify(confContent)
 
 	return &ConfigDefined,errs
 }

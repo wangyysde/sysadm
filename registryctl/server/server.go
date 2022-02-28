@@ -40,7 +40,8 @@ type StartParameters struct {
 	accessLogFp *os.File
 	errorLogFp *os.File
 	sysadmRootPath string
-	dbEntity sysadmDB.DbEntity `json:"entity"`
+	dbConfig *sysadmDB.DbConfig `json:"entity"`
+	router *sysadmServer.Engine
 }
 
 var StartData = &StartParameters{
@@ -49,7 +50,8 @@ var StartData = &StartParameters{
 	accessLogFp: nil,
 	errorLogFp: nil,
 	sysadmRootPath: "",
-	dbEntity: nil,
+	dbConfig: nil,
+	router: nil,
 }
 
 var definedConfig *config.Config 
@@ -59,16 +61,18 @@ var entity sysadmDB.DbEntity
 
 func DaemonStart(cmd *cobra.Command, cmdPath string){
 	var errs []sysadmerror.Sysadmerror
+	
+	// handling configurations 
 	definedConfig, errs = config.HandleConfig(StartData.ConfigPath,cmdPath)
 	maxLevel := sysadmerror.GetMaxLevel(errs)
 	fatalLevel := sysadmerror.GetLevelNum("fatal")
-
 	if maxLevel >= fatalLevel {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202003,"debug","configurations have been handled.but the configuration is not valid"))
 	} else {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202004,"debug","configurations have been handled and it is ok"))
 	}
 
+	// setting logger according the configurations
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202005,"debug","try to setting logger..."))
 	e := setLogger()
 	defer closeLogger()
@@ -76,91 +80,56 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		errs = appendErrs(errs,e)
 	}
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202006,"debug","loggers have been set"))
-
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202007,"debug","fatal(or higher level) error(s) occurred. we will exit."))
 		logErrors(errs)
 		os.Exit(202002)
 	}
-	
 	if len(errs) > 0 {
 		logErrors(errs)
 	}
 
-	maxLevel = sysadmerror.GetMaxLevel(errs)
-	if maxLevel >= fatalLevel {
-		os.Exit(202002)
-	}
-	
+	// getting program root path	
 	if _,err = getSysadmRootPath(cmdPath); err != nil {
 		sysadmServer.Logf("fatal","erroCode: 202003 Msg: can not get the root path of the program,err:%s ",err)
 		os.Exit(202003)
 	}
 	
+	// handing DB configuration,initating an entity, open an connection to DB server according to the configuration
 	dbConfig := initDBConfig(definedConfig)
+	StartData.dbConfig = &dbConfig
 	entity,errs = initDBEntity(&dbConfig)
+	maxLevel = sysadmerror.GetMaxLevel(errs)
+	if maxLevel >= fatalLevel {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202012,"fatal","fatal(or higher level) error(s) occurred. we will exit."))
+		logErrors(errs)
+		os.Exit(202013)
+	}
 	if len(errs) > 0 {
 		logErrors(errs)
 	}
+	dbConfig.Entity = entity
+	errs = openDBConnection(StartData.dbConfig)
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
-		os.Exit(202011)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202014,"debug","fatal(or higher level) error(s) occurred. we will exit."))
+		logErrors(errs)
+		os.Exit(202015)
 	}
-	StartData.dbEntity = entity
-
-	r := sysadmServer.New()
-	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
-    
-	/*
-	dbConf := sysadmDB.DbConfig {
-		Type: "postgre",
-		Host: config.ConfigDefined.DB.Host, 
-		Port: config.ConfigDefined.DB.Port, 
-		User: config.ConfigDefined.DB.User,
-		Password: config.ConfigDefined.DB.Password,
-		DbName: config.ConfigDefined.DB.Dbname,
-		SslMode: "disable",
-		SslCa: "",
-		SslCert: "",
-		SslKey: "",
-		MaxOpenConns: 50,
-		MaxIdleConns: 20,
-	}
-	dbConfig,errs := sysadmDB.InitDbConfig(&dbConf,cmdPath)
-	if len(errs) >0 {
+	defer closeDBConnection(StartData.dbConfig)
+	if len(errs) > 0 {
 		logErrors(errs)
 	}
 
-	dbEntity := dbConfig.Entity
-	if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
-		errs := dbEntity.OpenDbConnect()
-		if len(errs) >0 {
-			logErrors(errs)
-		}
-		if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
-			dbData := sysadmDB.FieldData {
-				"username": "test3User",
-      			"email": "test3User@bzhy.com",
-      			"password": "123456",
-      			"realname": "Real Name",
-			}
-			rows,e := dbEntity.InsertData("test_user",dbData)
-			if len(e) >0 {
-				logErrors(e)
-			} else {
-				sysadmServer.Logf("info","rows %d data have be inserted",rows)
-			}
-		}
-
-	}
-
-	if err = ininDBConnect(); err != nil {
-		sysadmServer.Logf("error","Open connection to postgre error:%s",err)
-		os.Exit(4)
-	}
-	defer dbConnect.Close()
-
+	e = getRepositories()
+	
+	r := sysadmServer.New()
+	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
+	StartData.router = r
+    
+	/*
+	
 	err = addFormHandler(r,cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","error:%s",err)

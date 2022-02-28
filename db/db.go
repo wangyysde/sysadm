@@ -60,6 +60,7 @@ import (
 
  type DbEntity interface {
 	OpenDbConnect() ([]sysadmerror.Sysadmerror)
+	CloseDB()([]sysadmerror.Sysadmerror)
 	InsertData(string,FieldData) (int, []sysadmerror.Sysadmerror)
  }
 
