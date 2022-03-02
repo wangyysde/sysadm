@@ -40,7 +40,7 @@ type StartParameters struct {
 	accessLogFp *os.File
 	errorLogFp *os.File
 	sysadmRootPath string
-	dbConfig *sysadmDB.DbConfig `json:"entity"`
+	dbConfig *sysadmDB.DbConfig 
 	router *sysadmServer.Engine
 }
 
@@ -123,11 +123,21 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	}
 
 	e = getRepositories()
-	
+	errs = e
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
 	StartData.router = r
-    
+	e = addRegistryV2RootHandler()
+	errs = appendErrs(errs,e)
+	maxLevel = sysadmerror.GetMaxLevel(errs)
+	if maxLevel >= fatalLevel {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202015,"fatal","fatal(or higher level) error(s) occurred. we will exit."))
+		logErrors(errs)
+		os.Exit(202016)
+	}
+	if len(errs) > 0 {
+		logErrors(errs)
+	}
 	/*
 	
 	err = addFormHandler(r,cmdPath)

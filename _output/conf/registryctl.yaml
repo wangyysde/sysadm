@@ -26,10 +26,18 @@ DB:
   sslcert: ""
 registry:
   server:
-    host: "localhost"
+    host: "172.17.0.4"
     port: 5000
     tls: false
     insecureSkipVerify: true
   credit:
     username: "sysadm_registry_user"
     password: "sysadm_registry_password"
+sysadmserver:
+  apiVerion: v1.0
+  server:
+    host: "172.17.0.4"
+    port: 8081
+    tls: false
+    insecureSkipVerify: true
+  

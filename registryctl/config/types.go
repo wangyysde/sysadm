@@ -75,7 +75,20 @@ type Registry struct {
 	Credit Credit `json:"credit"`
 }
 
+type SysadmServer struct {
+	Host string `json:"host"`
+	Port int `json:"port"`
+	Tls bool `json:"tls"`
+	InsecureSkipVerify bool `json:"insecureskipverify"`
+}
+
+type Sysadm struct {
+	ApiVerion string `json:"apiVerion"`
+	Server SysadmServer `json:"server"`
+}
+
 type Config struct {
+	SysadmVersion string 
 	RegistryctlVer string `json:"version"`
 	RegistryApiVer string `json:"ApiVer"`
 	Server Server `json:"server"`
@@ -83,11 +96,13 @@ type Config struct {
 	User User `json:"user"`
 	DB DB `json:"db"`
 	Registry Registry `json:"registry"`
+	Sysadm Sysadm `json:"sysadm"`
 }
 
 var DefinedConfig Config = Config{}
 
 var defaultConfig Config = Config{
+	SysadmVersion: SysadmVersion,
 	RegistryctlVer: RegistryctlVer,
 	RegistryApiVer: RegistryApiVer,
 	Server: Server {
@@ -126,10 +141,20 @@ var defaultConfig Config = Config{
 			Host: RegistryHost,
 			Port: RegistryPort,
 			Tls: RegistryTls,
+			InsecureSkipVerify: RegistryInsecureSkipVerify,
 		},
 		Credit: Credit{
 			Username: RegistryUsername,
 			Password: RegistryPassword,
+		},
+	},
+	Sysadm: Sysadm{
+		ApiVerion: ApiVersion,
+		Server: SysadmServer{
+			Host: SysadmHost,
+			Port: SysadmPort,
+			Tls: SysadmTls,
+			InsecureSkipVerify: SysadmInsecureSkipVerify,
 		},
 	},
 }

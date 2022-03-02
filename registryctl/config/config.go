@@ -957,6 +957,156 @@ func appendErrs(dst []sysadmerror.Sysadmerror,from []sysadmerror.Sysadmerror)([]
 	return dst
 }
 
+// Getting ApiVersion of Sysadm from environment and checking the validity of it
+// return the address of it is valid ,otherwise getting ApiVersion of sysadm  from 
+// configuration file and checking the validity of it. returns the version if  it is valid.
+// otherwise return the default apiVersion of sysadm.
+func getSysadmApiVersion(confContent *Config)(string){
+	sysadmApiVersion := os.Getenv("SYSADMAPIVERION")
+	if sysadmApiVersion != ""{
+		return sysadmApiVersion
+	}
+
+	if confContent != nil  {
+		if confContent.Sysadm.ApiVerion != "" {
+			return sysadmApiVersion
+		}
+		
+	}
+
+	return defaultConfig.Sysadm.ApiVerion
+}
+
+/* Getting host address of Sysadm from environment and checking the validity of it
+ return the address of it is valid ,otherwise getting host address of sysadm  from 
+ configuration file and checking the validity of it. return the address of it is valid.
+ otherwise return the default address of Registry.
+*/
+func getSysadmHost(confContent *Config)(string,error){
+	sysadmHost := os.Getenv("SYSADMHOST")
+	if sysadmHost != ""{
+		if host,err := checkHostAddress(sysadmHost); err == nil{
+			return host,nil
+		}
+	}
+
+	if confContent != nil  {
+		if host,err := checkHostAddress(confContent.Sysadm.Server.Host); err == nil{
+			return host,nil
+		}
+	}
+
+	host, err := checkHostAddress(defaultConfig.Sysadm.Server.Host)
+	if err == nil{
+		return host,nil
+	}
+
+	return defaultConfig.Sysadm.Server.Host, err
+}
+
+/*
+  Getting port of sysadm  from environment and checking the validity of it
+  return the port if it is valid ,otherwise getting port of sysadm  from 
+  configuration file and checking the validity of it. return the port if it is valid.
+  otherwise return the default port of sysadm.
+*/
+func getSysadmPort(confContent *Config) int{
+	sysadmPort := os.Getenv("SYSADMPORT")
+	if sysadmPort != ""{
+		port, err := strconv.Atoi(sysadmPort)
+		if err == nil {
+			if port > 1024 && port < 65536 {
+				return port
+			}
+		}
+	}
+
+	if confContent != nil  {
+		if confContent.Sysadm.Server.Port > 1024 && confContent.Sysadm.Server.Port <= 65535 {
+			return confContent.Sysadm.Server.Port
+		}
+	}
+
+	return defaultConfig.Sysadm.Server.Port
+}
+
+/*
+  Getting the tls value for connecting Sysadm server from environment and checking the validity of it
+  return the tls if it is valid ,otherwise getting the value from 
+  configuration file and checking the validity of it. return the it if it is valid.
+  otherwise return the default value.
+*/
+func getSysadmTls(confContent *Config) bool{
+	sysadmTls := os.Getenv("SYSADMTLS")
+	if strings.ToLower(sysadmTls) == "true" || strings.ToLower(sysadmTls) == "false" {
+		if strings.ToLower(sysadmTls) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Sysadm.Server.Tls 
+	}
+
+	return defaultConfig.Sysadm.Server.Tls 
+}
+
+/*
+  Getting the InsecureSkipVerify value for connecting  Sysadm server from environment and checking the validity of it
+  return the InsecureSkipVerify if it is valid ,otherwise getting the value from 
+  configuration file and checking the validity of it. return the it if it is valid.
+  otherwise return the default value.
+*/
+func getSysadmInsecureSkipVerify(confContent *Config) bool{
+	sysadmInsecureSkipVerify	 := os.Getenv("SYSADMINSECURESKIPVERIFY")
+	if strings.ToLower(sysadmInsecureSkipVerify) == "true" || strings.ToLower(sysadmInsecureSkipVerify) == "false" {
+		if strings.ToLower(sysadmInsecureSkipVerify) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Sysadm.Server.InsecureSkipVerify
+	}
+
+	return defaultConfig.Sysadm.Server.InsecureSkipVerify
+}
+
+/*
+  Try to get the values of items of configuration from OS variables ,configuratio file or default value.
+  The value of a item will be come from OS variables first ,then come from configuration file and last come from default value.
+  All the values of items should be passed check when set it to ConfigDefined
+*/
+func handlerConfForSysadm(confContent *Config)([]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	if confContent == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(201069,"fatal","confContent is nil, we can not handle sysadm configurations"))
+		return errs
+	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201070,"debug","now handling configurations for sysadm section"))
+
+	ConfigDefined.Sysadm.ApiVerion = getSysadmApiVersion(confContent)
+
+	host,e := getSysadmHost(confContent)
+	if e == nil {
+		ConfigDefined.Sysadm.Server.Host = host
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(201067,"debug","sysadm host is: %s",host))
+	}else{
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(201068,"fatal","sysadm host(%s) is not valid.error:%s. ",host, e))
+	}
+
+	ConfigDefined.Sysadm.Server.Port = getSysadmPort(confContent)
+
+	ConfigDefined.Sysadm.Server.Tls = getSysadmTls(confContent)
+	ConfigDefined.Sysadm.Server.InsecureSkipVerify = getSysadmInsecureSkipVerify(confContent)
+
+	return errs
+}
+
 // Try to get the values of items of configuration from OS variables ,configuratio file or default value.
 // The value of a item will be come from OS variables first ,then come from configuration file and last come from default value.
 // All the values of items should be passed check when set it to ConfigDefined
@@ -986,6 +1136,7 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 
 	address,err := getServerAddress(confContent)
 	ConfigDefined.Server.Address = address
+	ConfigDefined.SysadmVersion = SysadmVersion
 	if len(err) > 0 {
 		errs = appendErrs(errs,err)
 	}
@@ -1107,6 +1258,7 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 	ConfigDefined.DB.DbIdleConnect = getPostgreDbIdleConnect(confContent)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201059,"debug","idle connection to db is: %d",ConfigDefined.DB.DbIdleConnect))
 
+	// for registry
 	host,e := getRegistryHost(confContent)
 	if e == nil {
 		ConfigDefined.Registry.Server.Host = host
@@ -1126,6 +1278,11 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 
 	ConfigDefined.Registry.Server.Tls = getRegistryTls(confContent)
 	ConfigDefined.Registry.Server.InsecureSkipVerify = getRegistryInsecureSkipVerify(confContent)
+
+	err = handlerConfForSysadm(confContent)
+	if len(err) > 0 {
+		errs = appendErrs(errs,err)
+	}
 
 	return &ConfigDefined,errs
 }

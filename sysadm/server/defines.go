@@ -26,3 +26,23 @@
  var sessionName = "sysadm"
  var sessionDomain = "sysadm"
  var sessionAge = 100
+
+ type Module struct {
+	Name string
+	Path string
+ }
+
+ var Modules = map[string]Module{
+	"user": {
+		Name: "user",
+		Path: "user",
+	},
+	"registry": {
+		Name: "registry",
+		Path: "registry",
+	},
+	"sysadm": {
+		Name: "sysadm",
+		Path: "sysadm",
+	},
+ }
