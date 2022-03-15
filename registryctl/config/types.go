@@ -96,7 +96,7 @@ type Config struct {
 	User User `json:"user"`
 	DB DB `json:"db"`
 	Registry Registry `json:"registry"`
-	Sysadm Sysadm `json:"sysadm"`
+	Sysadm Sysadm `json:"sysadmserver"`
 }
 
 var DefinedConfig Config = Config{}

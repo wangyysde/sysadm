@@ -15,7 +15,7 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
- package server
+package server
 
  var formTemplateDir = "formstmpl/"
  var formBaseUri = "/forms/"
@@ -27,22 +27,4 @@
  var sessionDomain = "sysadm"
  var sessionAge = 100
 
- type Module struct {
-	Name string
-	Path string
- }
-
- var Modules = map[string]Module{
-	"user": {
-		Name: "user",
-		Path: "user",
-	},
-	"registry": {
-		Name: "registry",
-		Path: "registry",
-	},
-	"sysadm": {
-		Name: "sysadm",
-		Path: "sysadm",
-	},
- }
+ 

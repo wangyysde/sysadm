@@ -28,6 +28,7 @@ import (
 
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
+	sysadmDB "github.com/wangyysde/sysadm/db"
 )
 
 var ConfigDefined Config = Config{}
@@ -519,11 +520,33 @@ func checkHostAddress(address string) (string, error) {
 	return ips[0].String(), nil
 }
 
+// Getting type  of DB from environment and checking the validity of it
+// returns the type value  if it is valid ,otherwise getting type  of DB  from 
+// configuration file and checking the validity of it. return the type value if it is valid.
+// otherwise return the default DB type(postgre).
+func getDBType(confContent *Config)string{
+	dbType := os.Getenv("SYSADMSERVER_DBTYPE")
+	if dbType != ""{
+		if sysadmDB.IsSupportedDB(dbType) {
+			return strings.ToLower(dbType)
+		}
+	}
+
+	if confContent != nil  {
+		dbType := confContent.DB.Type
+		if sysadmDB.IsSupportedDB(dbType) {
+			return strings.ToLower(dbType)
+		}
+	}
+
+	return defaultConfig.DB.Type
+}
+
 // Getting host address of Postgre  from environment and checking the validity of it
 // return the address of it is valid ,otherwise getting host address of Postgre  from 
 // configuration file and checking the validity of it. return the address of it is valid.
 // otherwise return the default address of Postgre.
-func getPostgreHost(confContent *Config)string{
+func getDBHost(confContent *Config)string{
 	dbHost := os.Getenv("SYSADMSERVER_DBHOST")
 	if dbHost != ""{
 		if host,err := checkHostAddress(dbHost); err == nil{
@@ -544,7 +567,7 @@ func getPostgreHost(confContent *Config)string{
 // return the port if it is valid ,otherwise getting port of Postgre  from 
 // configuration file and checking the validity of it. return the port if it is valid.
 // otherwise return the default port of Postgre.
-func getPostgrePort(confContent *Config) int{
+func getDBPort(confContent *Config) int{
 	dbPort := os.Getenv("SYSADMSERVER_DBPORT")
 	if dbPort != ""{
 		port, err := strconv.Atoi(dbPort)
@@ -568,7 +591,7 @@ func getPostgrePort(confContent *Config) int{
 // return the user if it is valid ,otherwise getting user of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
 // otherwise return the default user of Postgre.
-func getPostgreUser(confContent *Config) string{
+func getDBUser(confContent *Config) string{
 	dbUser := os.Getenv("SYSADMSERVER_DBUSER")
 	if dbUser != ""{
 		return dbUser
@@ -587,7 +610,7 @@ func getPostgreUser(confContent *Config) string{
 // return the Password if it is valid ,otherwise getting Password of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
 // otherwise return the default user of Postgre.
-func getPostgrePassword(confContent *Config) string{
+func getDBPassword(confContent *Config) string{
 	dbPassword := os.Getenv("SYSADMSERVER_DBPASSWORD")
 	if dbPassword != ""{
 		return dbPassword
@@ -606,7 +629,7 @@ func getPostgrePassword(confContent *Config) string{
 // return the DBName if it is valid ,otherwise getting DBName of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
 // otherwise return the default DBName of Postgre.
-func getPostgreDBName(confContent *Config) string{
+func getDBDBName(confContent *Config) string{
 	dbDBName := os.Getenv("SYSADMSERVER_DBDBNAME")
 	if dbDBName != ""{
 		return dbDBName
@@ -625,7 +648,7 @@ func getPostgreDBName(confContent *Config) string{
 // return the MaxConnect if it is valid ,otherwise getting MaxConnect of Postgre  from 
 // configuration file and checking the validity of it. return the port if it is valid.
 // otherwise return the default MaxConnect of Postgre.
-func getPostgreMaxConnect(confContent *Config) int{
+func getDBMaxConnect(confContent *Config) int{
 	dbMaxConnect := os.Getenv("SYSADMSERVER_DBMAXCONNECT")
 	if dbMaxConnect != ""{
 		maxConnect,err := strconv.Atoi(dbMaxConnect)
@@ -649,7 +672,7 @@ func getPostgreMaxConnect(confContent *Config) int{
 // return the dbIdleConnect if it is valid ,otherwise getting dbIdleConnect of Postgre  from 
 // configuration file and checking the validity of it. return the port if it is valid.
 // otherwise return the default dbIdleConnect of Postgre.
-func getPostgreDbIdleConnect(confContent *Config) int{
+func getDBDbIdleConnect(confContent *Config) int{
 	dbIdleConnect := os.Getenv("SYSADMSERVER_DBIDLECONNECT")
 	if dbIdleConnect != ""{
 		idleConnect, err := strconv.Atoi(dbIdleConnect)
@@ -673,7 +696,7 @@ func getPostgreDbIdleConnect(confContent *Config) int{
 // return the Sslmode if it is valid ,otherwise getting Sslmode of Postgre  from 
 // configuration file and checking the validity of it. return the user if it is valid.
 // otherwise return the default Sslmode of Postgre.
-func getPostgreSslmode(confContent *Config) string{
+func getDBSslmode(confContent *Config) string{
 	dbSslmode := os.Getenv("SYSADMSERVER_DBSSLMODE")
 	if dbSslmode != ""{
 		return dbSslmode
@@ -806,12 +829,13 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 	ConfigDefined.Log.SplitAccessAndError = getIsSplitLog(confContent)
 	ConfigDefined.User.DefaultUser = getDefaultUser(confContent)
 	ConfigDefined.User.DefaultPassword = getDefaultPassword(confContent)
-	ConfigDefined.DB.Host = getPostgreHost(confContent)
-	ConfigDefined.DB.Port = getPostgrePort(confContent)
-	ConfigDefined.DB.User = getPostgreUser(confContent)
-	ConfigDefined.DB.Password = getPostgrePassword(confContent)
-	ConfigDefined.DB.Dbname = getPostgreDBName(confContent)
-	ConfigDefined.DB.Sslmode = getPostgreSslmode(confContent)
+	ConfigDefined.DB.Type = getDBType(confContent)
+	ConfigDefined.DB.Host = getDBHost(confContent)
+	ConfigDefined.DB.Port = getDBPort(confContent)
+	ConfigDefined.DB.User = getDBUser(confContent)
+	ConfigDefined.DB.Password = getDBPassword(confContent)
+	ConfigDefined.DB.Dbname = getDBDBName(confContent)
+	ConfigDefined.DB.Sslmode = getDBSslmode(confContent)
 	if strings.ToLower(ConfigDefined.DB.Sslmode) != "disable" {
 		ConfigDefined.DB.Sslrootcert = getPostgreSslrootcert(confContent)
 		if !checkFileExists(ConfigDefined.DB.Sslrootcert, cmdRunPath) {
@@ -836,8 +860,8 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 		}
 	}
 
-	ConfigDefined.DB.DbMaxConnect = getPostgreMaxConnect(confContent)
-	ConfigDefined.DB.DbIdleConnect = getPostgreDbIdleConnect(confContent)
+	ConfigDefined.DB.DbMaxConnect = getDBMaxConnect(confContent)
+	ConfigDefined.DB.DbIdleConnect = getDBDbIdleConnect(confContent)
 
 	return &ConfigDefined,nil
 }

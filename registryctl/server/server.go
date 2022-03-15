@@ -169,7 +169,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
         c.String(http.StatusOK, "echo ping message")
     })  
 	exitChan = make(chan os.Signal)
-	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill)
+	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill, syscall.SIGKILL)
 	go removeSocketFile()
     // Listen and serve on defined port
 	if definedConfig.Server.Socket !=  "" {

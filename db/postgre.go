@@ -15,14 +15,17 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
- package db
+package db
 
- import (
+import (
 	"database/sql"
 	"fmt"
+	"strconv"
+
+	_ "github.com/lib/pq"
 
 	"github.com/wangyysde/sysadm/sysadmerror"
- )
+)
 
 type Postgre struct {
 	Config *DbConfig `json:"config"`
@@ -151,4 +154,116 @@ func (p Postgre)CloseDB()([]sysadmerror.Sysadmerror){
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(101018,"debug","The connection to DB server has be closed. "))
 
 	return errs
+}
+
+/*
+   execute a DB query according selectdata I
+   return a set of the result and []sysadmerror.Sysadmerror if teh SQL statement is be execute successful.
+   Or return nil and []sysadmerror.Sysadmerror
+*/
+func (p Postgre)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(101019,"debug","now preparing db query."))
+	if len(sd.Tb) <1 || len(sd.OutFeilds) <1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(101020,"error","tables or output feilds is empty"))
+		return nil,errs
+	}
+	
+	querySQL := "select "
+	first := true
+	for _,key := range sd.OutFeilds {
+		if first {
+			querySQL = querySQL + key
+			first = false
+		} else {
+			querySQL = querySQL + "," + key
+		}
+	}
+
+	querySQL = querySQL + " from " 
+
+	first = true
+	for _,t := range sd.Tb {
+		if first {
+			querySQL = querySQL + "\"" + t + "\""
+			first = false
+		} else {
+			querySQL = querySQL + "," + "\"" + t + "\""
+		}
+	}
+
+	first = true
+	for key,value := range sd.Where {
+		if first {
+			querySQL = querySQL + " where " + key + value
+			first = false
+		} else {
+			querySQL = querySQL + " and " + key + value
+		}
+	}
+
+	first = true
+	for _,key := range sd.Group {
+		if first {
+			querySQL = querySQL + " group by " + key 
+			first = false
+		} else {
+			querySQL = querySQL + "," + key 
+		}
+	}
+
+	first = true
+	for _,key := range sd.Order {
+		if first {
+			querySQL = querySQL + " order by " + key 
+			first = false
+		} else {
+			querySQL = querySQL + "," + key 
+		}
+	}
+
+	if len(sd.Limit) == 1 {
+		querySQL = querySQL + " limit " + strconv.Itoa(sd.Limit[0]) 
+	}
+
+	if len(sd.Limit) == 2 {
+		querySQL = querySQL + " limit " + strconv.Itoa(sd.Limit[0]) + " OFFSET " + strconv.Itoa(sd.Limit[1]) 
+	}
+
+	dbConnect := p.Config.Connect
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(101021,"debug","now execute the SQL query: %s",querySQL))
+	rows, err := dbConnect.Query(querySQL)
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(101022,"error","SQL query error: %s",err))
+		return nil,errs
+	}
+
+	cols, err := rows.Columns()
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(101023,"error","get column data error: %s",err))
+	}
+
+	colsLen := len(cols)
+	cache := make([]interface{},colsLen)
+	for i := range cache {
+		var value interface{}
+		cache[i] = &value
+	}
+    
+	var resData []FieldData
+	for rows.Next(){
+		_ = rows.Scan(cache...)
+
+		line :=  make(map[string]interface{})
+		for i, data := range cache {
+			line[cols[i]] = *data.(*interface{})
+		}
+
+		resData = append(resData,line)
+	}
+
+	_ = rows.Close()
+	
+	return resData, errs
 }

@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"strconv"
 
+	sysadmApi "github.com/wangyysde/sysadm/sysadm/server"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 
@@ -94,61 +95,62 @@ func addRegistryV2RootHandler()(([]sysadmerror.Sysadmerror)){
 }
 
 func handerRootV2(c *sysadmServer.Context) {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030010,"debug","handling V2 root path request."))
 	r := c.Request
 	username,password,_ := r.BasicAuth()
 	ok := isLogin(username,password)
 	if !ok {
-
-		//Bearer realm="http://harbor.bzhy.com/service/token",service="harbor-registry"
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030011,"debug","responsing to client with user has not login"))
 		c.Header("Docker-Distribution-API-Version","registry/2.0")
-		//c.Header("Content-Length","83")
 		c.Header("WWW-Authenticate","Basic realm=\"basic-realm\"")
-		//	c.Header("WWW-Authenticate","Bearer realm=\"http://harbor.bzhy.com/service/token\",service=\"harbor-registry\"")
 		be := []BodyError{{
 			Code: "UNAUTHORIZED",
 			Message: "unauthorized:unauthorized",
 			Detail: "",},
 		}
 		
-		
 		var re = ReponseError{
 			Errors: be,
 		}
-	
-		reponseBody,err := json.Marshal(re)
-		sysadmServer.Logf("debug","json is: %s\n",reponseBody)
-		if err == nil {
-			c.JSON(http.StatusUnauthorized,re)
-		}else {
-			c.JSON(http.StatusUnauthorized,sysadmServer.H{})
-		}
+		reponseBody,_ := json.Marshal(re)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030012,"debug","the content responsed to the client is: %s",reponseBody))
+		c.JSON(http.StatusUnauthorized,re)
+		logErrors(errs)
 		return 
 	}
 
-	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030013,"debug","the user has login successful"))
 	c.Header("Docker-Distribution-API-Version","registry/2.0")
 	c.JSON(http.StatusOK,  sysadmServer.H{})
+	
+	logErrors(errs)
+	return 
 }
 
 func isLogin(username string, password string) bool {
 	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030003,"debug","now checking the user is login"))
 	if username == "" && password == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030004,"error","username and password are empty."))
+		logErrors(errs)
 		return false
 	}
 
 	var reqUrl string = ""
 	m := sysadm.Modules
+	
 	if definedConfig.Sysadm.Server.Tls {
 		if definedConfig.Sysadm.Server.Port == 443 {
-			reqUrl = "https://" + definedConfig.Sysadm.Server.Host + "/api/" + definedConfig.Sysadm.ApiVerion + m["user"].Path +"/login" 
+			reqUrl = "https://" + definedConfig.Sysadm.Server.Host + "/api/" + definedConfig.Sysadm.ApiVerion + "/" + m["user"].Path +"/login" 
 		} else {
-			reqUrl = "https://" + definedConfig.Sysadm.Server.Host + ":" + strconv.Itoa(definedConfig.Sysadm.Server.Port) + "/api/" + definedConfig.Sysadm.ApiVerion+ m["user"].Path +"/login" 
+			reqUrl = "https://" + definedConfig.Sysadm.Server.Host + ":" + strconv.Itoa(definedConfig.Sysadm.Server.Port) + "/api/" + definedConfig.Sysadm.ApiVerion + "/" + m["user"].Path +"/login" 
 		}
 	}else {
 		if definedConfig.Sysadm.Server.Port == 80 {
-			reqUrl = "http://" + definedConfig.Sysadm.Server.Host + "/api/" + definedConfig.Sysadm.ApiVerion + m["user"].Path +"/login"
+			reqUrl = "http://" + definedConfig.Sysadm.Server.Host + "/api/" + definedConfig.Sysadm.ApiVerion  + "/" + m["user"].Path +"/login"
 		} else {
-			reqUrl = "http://" + definedConfig.Sysadm.Server.Host + ":" + strconv.Itoa(definedConfig.Sysadm.Server.Port) + "/api/" + definedConfig.Sysadm.ApiVerion + m["user"].Path +"/login"
+			reqUrl = "http://" + definedConfig.Sysadm.Server.Host + ":" + strconv.Itoa(definedConfig.Sysadm.Server.Port) + "/api/" + definedConfig.Sysadm.ApiVerion +  "/" + m["user"].Path +"/login"
 		}
 	}
 
@@ -157,22 +159,33 @@ func isLogin(username string, password string) bool {
 	requestParams.method = "POST"
 	requestParams.data = append(requestParams.data,&requestData{key: "username", value: username})
 	requestParams.data = append(requestParams.data,&requestData{key: "password", value: password})
-	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030005,"debug","try to execute the request with:%s",reqUrl))
 	body,err := sendRequest(&requestParams)
-	logErrors(err)
-	var ret *apiResponseForBool = &apiResponseForBool{} 
-	if len(body) > 1{
-		e := json.Unmarshal(body,ret)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030003,"error","can not unmarshal reponse body. error %s",e))
+	errs = append(errs, err...)
+
+	if len(body) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030006,"error","the response from  the server is empty"))
+		logErrors(errs)
+		return false
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030007,"debug","got response body is: %s",string(body)))
+	ret := &sysadmApi.ApiResponseStatus{}
+	e := json.Unmarshal(body,ret)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030009,"error","can not parsing reponse body to json. error: %s",e))
+		logErrors(errs)
+		return false
+	}
+
+	if ret.Errorcode  != 0 || ret.Message  != "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030004,"debug","can not login with errorcode: %d message: %s",ret.Errorcode,ret.Message))
 		logErrors(errs)
 		return false
 	}
 	
-	if ret.errorcode != "" || ret.message != "" {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030004,"debug","can not login with errorcode: %s message: %s",ret.errorcode,ret.message))
-	}
-	
-	return ret.status
+	logErrors(errs)
+	return ret.Status
 }
 /*
 func addRegistryHandlersRoot(startParams *StartParameters)(([]sysadmerror.Sysadmerror)){

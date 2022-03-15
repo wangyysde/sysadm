@@ -13,8 +13,9 @@ log:
 user:
   defaultUser: "admin"
   defaultPassword: "Sysadm12345"
-DB: 
-  host: "10.6.206.6"
+DB:
+  type: "postgre" 
+  host: "172.17.0.4"
   port: 30432
   user: sysadm
   password: "Zaq12wsX"

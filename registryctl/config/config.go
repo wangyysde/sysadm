@@ -969,7 +969,7 @@ func getSysadmApiVersion(confContent *Config)(string){
 
 	if confContent != nil  {
 		if confContent.Sysadm.ApiVerion != "" {
-			return sysadmApiVersion
+			return confContent.Sysadm.ApiVerion
 		}
 		
 	}

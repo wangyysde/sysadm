@@ -1,0 +1,67 @@
+time=2022-03-15T10:16:21+08:00 level=warning msg=We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2022-03-15T10:16:21+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-03-15T10:16:21+08:00 level=debug msg=erroCode: 100003 Msg: Database type postgre is right.
+time=2022-03-15T10:16:21+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 10.6.206.6 is right.
+time=2022-03-15T10:16:21+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30432 is right.
+time=2022-03-15T10:16:21+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-03-15T10:16:22+08:00 level=debug msg=erroCode: 101001 Msg: Try to open a connection to postgre server
+time=2022-03-15T10:16:22+08:00 level=debug msg=erroCode: 101003 Msg: Connect to postgre server with host: 10.6.206.6 and Port: 30432. successful
+time=2022-03-15T10:16:22+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+	- index.html
+
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-03-15T10:16:22+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T10:16:22+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-03-15T10:16:22+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+

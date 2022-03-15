@@ -129,7 +129,7 @@ func setBasicAuth(req *http.Request)([]sysadmerror.Sysadmerror){
 	return errs
 }
 
-func handleData(r *requestParams)(string,[]sysadmerror.Sysadmerror){
+func handleQueryData(r *requestParams)(string,[]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202021,"debug","now handling the data for the request"))
 	if r == nil {
@@ -167,13 +167,14 @@ func sendRequest(r *requestParams)([]byte, []sysadmerror.Sysadmerror){
 
 	var bodyReader *strings.Reader = nil
 	if len(r.data) > 0 {
-		query,err := handleData(r) 
+		query,err := handleQueryData(r) 
 		maxLevel := sysadmerror.GetMaxLevel(err)
+		errs = appendErrs(errs, err)
 		if maxLevel >= fatalLevel {
-			errs = appendErrs(errs, err)
 			return body, errs
 		}
-		bodyReader = strings.NewReader(query)
+		r.url = r.url + "?" + query
+		//bodyReader = strings.NewReader(query)
 	}
 
 	client := &http.Client{

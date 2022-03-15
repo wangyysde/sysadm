@@ -58,7 +58,7 @@ func addFormHandler(r *sysadmServer.Engine,cmdRunPath string) error {
 		return fmt.Errorf("router is nil.")
 	}
 
-	if StartData.sysadmRootPath == "" {
+	if RuntimeData.StartParas.SysadmRootPath  == "" {
 		if _,err := getSysadmRootPath(cmdRunPath); err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func addFormHandler(r *sysadmServer.Engine,cmdRunPath string) error {
 
 	r.Delims(templateDelimLeft,templateDelimRight)
 
-	formTmplPath := StartData.sysadmRootPath + "/" + formTemplateDir +"*.html" 
+	formTmplPath := RuntimeData.StartParas.SysadmRootPath + "/" + formTemplateDir +"*.html" 
 	r.LoadHTMLGlob(formTmplPath)
 
 	addForms(r)
@@ -111,8 +111,8 @@ func loginHandler(c *sysadmServer.Context) {
 	}
 	password := strings.TrimSpace(value)
 
-	if strings.ToLower(username) == strings.ToLower(definedConfig.User.DefaultUser) && 
-		md5Encrypt(strings.ToLower(password)) == md5Encrypt(strings.ToLower(definedConfig.User.DefaultPassword)){
+	if strings.ToLower(username) == strings.ToLower(RuntimeData.RuningParas.DefinedConfig.User.DefaultUser ) && 
+		md5Encrypt(strings.ToLower(password),"") == md5Encrypt(strings.ToLower(RuntimeData.RuningParas.DefinedConfig.User.DefaultPassword),""){
 			if err := setSessionValue(c,"isLogin",true); err != nil {
 				c.JSON(http.StatusOK, sysadmServer.H{"errCode": 102, "msg": err})
 				return 	
@@ -130,12 +130,15 @@ func loginHandler(c *sysadmServer.Context) {
 // encrypt data with md5 
 // if the length is zero ,then return ""
 // otherwise return encrypted data`
-func md5Encrypt(data string) string{
+func md5Encrypt(data string, salt string) string{
 	if len(data) < 1 {
 		return ""
 	}
 	md5Ctx := md5.New()
 	md5Ctx.Write([]byte(data))
+	if len(salt) > 0 {
+		md5Ctx.Write([]byte(salt))
+	}
 	cipherStr := md5Ctx.Sum(nil)
 	encryptedData := hex.EncodeToString(cipherStr)
 	return encryptedData

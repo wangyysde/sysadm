@@ -23,8 +23,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/sysadm/server"
 	"github.com/wangyysde/sysadm/sysadm/config"
+	"github.com/wangyysde/sysadm/sysadm/server"
 	//    "github.com/wangyysde/sysadmServer"
 	//	"github.com/wangyysde/yaml"
 )
@@ -44,8 +44,12 @@ var startCmd =  &cobra.Command{
 	Use: "start",
 	Short: "Start the daemon of sysadm server",
 	Run: func(cmd *cobra.Command, args []string){
-		server.StartData.OldConfigPath = ""
-		server.StartData.ConfigPath = cfgFile
+		// try to save old configurations for reload or recover from panic
+		if server.RuntimeData.StartParas != nil {
+			server.RuntimeData.OldStartParas = server.RuntimeData.StartParas
+		}
+		server.CliData.ConfigPath = cfgFile
+		
 		config.Version = SysadmVer
 		server.DaemonStart(cmd, os.Args[0])
 	},

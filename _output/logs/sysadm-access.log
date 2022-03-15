@@ -1541,3 +1541,561 @@ time=2022-01-23T21:31:29+08:00 level=info msg=We are listen to 0.0.0.0:8081,port
 time=2022-01-23T21:40:42+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
 time=2022-02-16T10:57:59+08:00 level=info msg=We are listen to 0.0.0.0:8080,port:8080
 time=2022-02-16T14:04:24+08:00 level=info msg=We are listen to 0.0.0.0:8080,port:8080
+time=2022-03-11T11:37:40+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T11:37:54+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T11:50:42+08:00 level=info StatusCode=404 ErrorMessage="" BodySize=-1 Path=/api/user/login Request=&{POST /api/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0003a8100 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45304 /api/user/login <nil> <nil> <nil> 0xc0003a8180} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a1e0] ClientIP=172.17.0.4 Method=POST
+time=2022-03-11T12:12:37+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T12:13:15+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T12:17:01+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc0004161e0] ClientIP=172.17.0.4 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45418 /v2/ <nil> <nil> <nil> 0xc000032300}
+time=2022-03-11T12:17:01+08:00 level=info Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45420 /v2/ <nil> <nil> <nil> 0xc000032440} Keys=map[github.com/wangyysde/sysadmSessions:0xc000416690] ClientIP=172.17.0.4 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1
+time=2022-03-11T12:18:17+08:00 level=info StatusCode=404 ErrorMessage="" BodySize=-1 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45424 /v2/ <nil> <nil> <nil> 0xc0000321c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004161e0] ClientIP=172.17.0.4 Method=GET
+time=2022-03-11T12:18:17+08:00 level=info ClientIP=172.17.0.4 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45426 /v2/ <nil> <nil> <nil> 0xc000032340} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004166e0]
+time=2022-03-11T12:18:19+08:00 level=info BodySize=-1 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45430 /v2/ <nil> <nil> <nil> 0xc0000324c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc000416910] ClientIP=172.17.0.4 Method=GET StatusCode=404 ErrorMessage=""
+time=2022-03-11T12:18:19+08:00 level=info Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45432 /v2/ <nil> <nil> <nil> 0xc0000325c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc000416af0] ClientIP=172.17.0.4
+time=2022-03-11T12:19:53+08:00 level=info BodySize=-1 Path=/api/user/login Request=&{POST /api/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000032600 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45442 /api/user/login <nil> <nil> <nil> 0xc000032640} Keys=map[github.com/wangyysde/sysadmSessions:0xc000416d20] ClientIP=172.17.0.4 Method=POST StatusCode=404 ErrorMessage=""
+time=2022-03-11T12:27:50+08:00 level=info Path=//api/user/login Request=&{GET //api/user/login HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:59772 //api/user/login <nil> <nil> <nil> 0xc00035e000} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004161e0] ClientIP=172.17.0.1 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1
+time=2022-03-11T12:27:50+08:00 level=info ClientIP=172.17.0.1 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/favicon.ico Request=&{GET /favicon.ico HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081//api/user/login] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:59772 /favicon.ico <nil> <nil> <nil> 0xc000032040} Keys=map[github.com/wangyysde/sysadmSessions:0xc000380050]
+time=2022-03-11T12:27:55+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc0003800a0] ClientIP=172.17.0.1 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/api/user/login Request=&{GET /api/user/login HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:59772 /api/user/login <nil> <nil> <nil> 0xc000032180}
+time=2022-03-11T12:28:42+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T12:29:34+08:00 level=info ErrorMessage="" BodySize=-1 Path=/api/v1.0/user/login Request=&{GET /api/v1.0/user/login HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:51033 /api/v1.0/user/login <nil> <nil> <nil> 0xc0004201c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003800a0] ClientIP=172.17.0.1 Method=GET StatusCode=404
+time=2022-03-11T12:33:43+08:00 level=info BodySize=-1 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[4571ec38-b5a0-42ed-a981-8131e9e7c8cc] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:64640 /api/v1.0/user/login <nil> <nil> <nil> 0xc000420180} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003800a0] ClientIP=172.17.0.1 Method=POST StatusCode=200 ErrorMessage=""
+time=2022-03-11T12:34:57+08:00 level=info Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[614d906f-79c3-4ad7-a9d4-f62c79e2f237] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:64640 /api/v1.0/user/login <nil> <nil> <nil> 0xc000032040} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a0a0] ClientIP=172.17.0.1 Method=POST StatusCode=200 ErrorMessage="" BodySize=-1
+time=2022-03-11T14:28:53+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T14:29:38+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T14:31:53+08:00 level=info BodySize=-1 Path=/api/v1.0user/login Request=&{POST /api/v1.0user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0003d1240 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45466 /api/v1.0user/login <nil> <nil> <nil> 0xc0003d1280} Keys=map[github.com/wangyysde/sysadmSessions:0xc000372c80] ClientIP=172.17.0.4 Method=POST StatusCode=404 ErrorMessage=""
+time=2022-03-11T15:13:35+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T15:14:51+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T15:15:43+08:00 level=info BodySize=-1 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc00040c280 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45656 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040c2c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc000414140] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage=""
+time=2022-03-11T15:41:36+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T15:42:08+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0003a8700 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45774 /api/v1.0/user/login <nil> <nil> <nil> 0xc0003a8740} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a140] ClientIP=172.17.0.4 Method=POST
+time=2022-03-11T15:56:16+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T15:56:42+08:00 level=info ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000366080 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45846 /api/v1.0/user/login <nil> <nil> <nil> 0xc0003660c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc000380050] ClientIP=172.17.0.4 Method=POST StatusCode=200
+time=2022-03-11T15:58:12+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=90 Path=/api/v1.0/user/login?username=admin&password=admin Request=&{POST /api/v1.0/user/login?username=admin&password=admin HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[abba7c1b-0251-421e-9928-da0a3053acfa] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:53625 /api/v1.0/user/login?username=admin&password=admin <nil> <nil> <nil> 0xc000032040} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a140] ClientIP=172.17.0.1 Method=POST
+time=2022-03-11T15:59:26+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc0003800a0] ClientIP=172.17.0.1 Method=GET StatusCode=404 ErrorMessage="" BodySize=-1 Path=/api/v1.0/user/login?username=admin&password=admin Request=&{GET /api/v1.0/user/login?username=admin&password=admin HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:53776 /api/v1.0/user/login?username=admin&password=admin <nil> <nil> <nil> 0xc00040c140}
+time=2022-03-11T16:03:16+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-11T16:03:35+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c4140] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000a2500 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:45888 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000a2540}
+time=2022-03-11T16:03:58+08:00 level=info ClientIP=172.17.0.1 Method=POST StatusCode=200 ErrorMessage="" BodySize=90 Path=/api/v1.0/user/login?username=admin&password=admin Request=&{POST /api/v1.0/user/login?username=admin&password=admin HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[8131b48c-6c1c-4e87-8613-4312f098dc7f] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:54015 /api/v1.0/user/login?username=admin&password=admin <nil> <nil> <nil> 0xc0000a26c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c4190]
+time=2022-03-12T21:54:44+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-12T21:55:48+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-12T21:56:23+08:00 level=info Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000326240 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:52428 /api/v1.0/user/login <nil> <nil> <nil> 0xc000326280} Keys=map[github.com/wangyysde/sysadmSessions:0xc00042a230] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=102
+time=2022-03-12T22:05:31+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login?username=admin&password=admin Request=&{POST /api/v1.0/user/login?username=admin&password=admin HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[4cbd34c2-d52e-47d1-89be-93bccf7619f8] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:54624 /api/v1.0/user/login?username=admin&password=admin <nil> <nil> <nil> 0xc00040e380} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a0f0] ClientIP=172.17.0.1 Method=POST
+time=2022-03-13T16:01:49+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-13T16:02:15+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-13T16:02:47+08:00 level=info Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc00040c740 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:40706 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040c780} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a1e0] ClientIP=172.17.0.4
+time=2022-03-13T16:23:25+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc00040c100 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:40800 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040c140} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a050] ClientIP=172.17.0.4 Method=POST
+time=2022-03-13T21:08:36+08:00 level=info BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc00040c100 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:41916 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040c140} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a050] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage=""
+time=2022-03-13T21:44:30+08:00 level=info ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000be000 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42068 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000be040} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a050] ClientIP=172.17.0.4 Method=POST StatusCode=200
+time=2022-03-13T21:46:06+08:00 level=info Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc00040c180 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42086 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040c1c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a1e0] ClientIP=172.17.0.4
+time=2022-03-13T21:48:57+08:00 level=info Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000be000 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42110 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000be040} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043a050] ClientIP=172.17.0.4
+time=2022-03-13T21:54:50+08:00 level=info BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000be000 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42148 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000be040} Keys=map[github.com/wangyysde/sysadmSessions:0xc0000ca0f0] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage=""
+time=2022-03-13T22:01:10+08:00 level=info ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000be100 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42184 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000be140} Keys=map[github.com/wangyysde/sysadmSessions:0xc0000ca0f0] ClientIP=172.17.0.4 Method=POST StatusCode=200
+time=2022-03-13T22:04:43+08:00 level=info ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000be100 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42210 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000be140} Keys=map[github.com/wangyysde/sysadmSessions:0xc0000ca0f0]
+time=2022-03-13T22:10:41+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-13T22:10:56+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a140] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000032280 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42248 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000322c0}
+time=2022-03-13T22:14:46+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-13T22:14:58+08:00 level=info Method=POST StatusCode=200 ErrorMessage="" BodySize=102 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[27] User-Agent:[Go-http-client/1.1]] 0xc0003ff880 <nil> 27 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42278 /api/v1.0/user/login <nil> <nil> <nil> 0xc0003ff8c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c2cd0] ClientIP=172.17.0.4
+time=2022-03-13T22:19:47+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-13T22:19:57+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0003a8880 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42312 /api/v1.0/user/login <nil> <nil> <nil> 0xc0003a88c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c4190] ClientIP=172.17.0.4 Method=POST
+time=2022-03-13T22:22:41+08:00 level=info Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000408340 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:42334 /api/v1.0/user/login <nil> <nil> <nil> 0xc000408380} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a0f0] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login
+time=2022-03-14T10:58:03+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-14T10:58:30+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-14T11:00:18+08:00 level=info Method=POST StatusCode=200 ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc000368180 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:52906 /api/v1.0/user/login <nil> <nil> <nil> 0xc0003681c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003800f0] ClientIP=172.17.0.4
+time=2022-03-14T13:53:23+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-14T13:56:33+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc00041a140] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[32] User-Agent:[Go-http-client/1.1]] 0xc00040a300 <nil> 32 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:35572 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040a340}
+time=2022-03-14T14:08:41+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-14T14:11:28+08:00 level=info ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[32] User-Agent:[Go-http-client/1.1]] 0xc00040a180 <nil> 32 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:44888 /api/v1.0/user/login <nil> <nil> <nil> 0xc00040a1c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003a40f0] ClientIP=172.17.0.4 Method=POST StatusCode=200
+time=2022-03-14T14:22:43+08:00 level=info ClientIP=172.17.0.1 Method=POST StatusCode=404 ErrorMessage="" BodySize=-1 Path=//api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST //api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[0923da46-fe4c-423c-b074-c0b2839a9b13] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 //api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc00040a180} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003a4050]
+time=2022-03-14T14:22:56+08:00 level=info msg=[Recovery] 2022/03/14 - 14:22:56 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 4df254b3-8e63-4f8c-8f14-2e78b9662a8e
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:22:56+08:00 level=info ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[4df254b3-8e63-4f8c-8f14-2e78b9662a8e] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc00039e000} Keys=map[github.com/wangyysde/sysadmSessions:0xc00034e000] ClientIP=172.17.0.1 Method=POST StatusCode=500
+time=2022-03-14T14:23:06+08:00 level=info msg=[Recovery] 2022/03/14 - 14:23:06 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 560f515f-9a98-4f4f-8916-f2189946f71e
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:23:06+08:00 level=info ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[560f515f-9a98-4f4f-8916-f2189946f71e] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc000368000} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043c0a0] ClientIP=172.17.0.1 Method=POST StatusCode=500
+time=2022-03-14T14:23:08+08:00 level=info msg=[Recovery] 2022/03/14 - 14:23:08 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 1835ad23-2cab-401f-9860-d339744d42f1
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:23:08+08:00 level=info StatusCode=500 ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[1835ad23-2cab-401f-9860-d339744d42f1] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc0003680c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043c0f0] ClientIP=172.17.0.1 Method=POST
+time=2022-03-14T14:23:48+08:00 level=info msg=[Recovery] 2022/03/14 - 14:23:48 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 0e15c3ce-aeb0-4d88-8fea-f2f2ce8cf32c
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:23:48+08:00 level=info ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[0e15c3ce-aeb0-4d88-8fea-f2f2ce8cf32c] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc000368180} Keys=map[github.com/wangyysde/sysadmSessions:0xc00043c190] ClientIP=172.17.0.1 Method=POST StatusCode=500
+time=2022-03-14T14:47:34+08:00 level=info msg=[Recovery] 2022/03/14 - 14:47:34 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 58193124-8088-4451-b3d6-720fd94edb57
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:47:34+08:00 level=info BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[58193124-8088-4451-b3d6-720fd94edb57] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61694 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc00040a180} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003a4050] ClientIP=172.17.0.1 Method=POST StatusCode=500 ErrorMessage=""
+time=2022-03-14T14:49:45+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-14T14:49:51+08:00 level=info msg=[Recovery] 2022/03/14 - 14:49:51 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache
+Connection: keep-alive
+Content-Length: 0
+Postman-Token: 5a95a6fe-6dec-4e88-89d8-85ee1173e2f1
+User-Agent: PostmanRuntime/7.29.0
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: dbPassword := row["password"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-14T14:49:51+08:00 level=info StatusCode=500 ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Cache-Control:[no-cache] Connection:[keep-alive] Content-Length:[0] Postman-Token:[5a95a6fe-6dec-4e88-89d8-85ee1173e2f1] User-Agent:[PostmanRuntime/7.29.0]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:51446 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc0003de100} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003bc050] ClientIP=172.17.0.1 Method=POST
+time=2022-03-15T10:15:45+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T10:16:22+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T10:20:17+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T10:20:40+08:00 level=info ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=75 Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000a8340 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:43412 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000a8440} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c40f0]
+time=2022-03-15T11:04:55+08:00 level=info Path=/api/v1.0/user/login Request=&{POST /api/v1.0/user/login HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[29] User-Agent:[Go-http-client/1.1]] 0xc0000a82c0 <nil> 29 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:44848 /api/v1.0/user/login <nil> <nil> <nil> 0xc0000a8300} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c40f0] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage="" BodySize=75
+time=2022-03-15T11:17:28+08:00 level=info msg=[Recovery] 2022/03/15 - 11:17:28 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept-Encoding: gzip
+Authorization: *
+Content-Length: 0
+User-Agent: Go-http-client/1.1
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:122 (0x942a1b)
+	User.loginHandler: salt := strings.TrimSpace(row["salt"].(string))
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:42 (0x946329)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-15T11:17:28+08:00 level=info ClientIP=172.17.0.4 Method=POST StatusCode=500 ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[0] User-Agent:[Go-http-client/1.1]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:52688 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc0000a82c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0000ae230]
+time=2022-03-15T11:28:11+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T11:28:23+08:00 level=info msg=[Recovery] 2022/03/15 - 11:28:23 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept-Encoding: gzip
+Authorization: *
+Content-Length: 0
+User-Agent: Go-http-client/1.1
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:121 (0x942b4f)
+	User.loginHandler: salt := row["salt"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:41 (0x946469)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-15T11:28:23+08:00 level=info ErrorMessage="" BodySize=0 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[0] User-Agent:[Go-http-client/1.1]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:59502 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc00043e140} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004000a0] ClientIP=172.17.0.4 Method=POST StatusCode=500
+time=2022-03-15T11:29:33+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T11:29:49+08:00 level=info msg=[Recovery] 2022/03/15 - 11:29:49 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept-Encoding: gzip
+Authorization: *
+Content-Length: 0
+User-Agent: Go-http-client/1.1
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:121 (0x942b4f)
+	User.loginHandler: salt := row["salt"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:41 (0x946469)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-15T11:29:49+08:00 level=info Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[0] User-Agent:[Go-http-client/1.1]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:60442 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc000032400} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c41e0] ClientIP=172.17.0.4 Method=POST StatusCode=500 ErrorMessage="" BodySize=0
+time=2022-03-15T11:32:13+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T11:32:23+08:00 level=info msg=[Recovery] 2022/03/15 - 11:32:23 panic recovered:
+POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1
+Host: 172.17.0.4:8081
+Accept-Encoding: gzip
+Authorization: *
+Content-Length: 0
+User-Agent: Go-http-client/1.1
+
+
+interface conversion: interface {} is nil, not string
+/usr/local/go/src/runtime/iface.go:261 (0x40bf34)
+	panicdottypeE: panic(&TypeAssertionError{iface, have, want, ""})
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:121 (0x942b4f)
+	User.loginHandler: salt := row["salt"].(string)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api_user.go:41 (0x946469)
+	User.ActionHanderCaller: u.loginHandler(c)
+/data/host/code/golang/bzhyProjects/sysadm/sysadm/server/api.go:76 (0x941042)
+	apiHandlers: mI.ActionHanderCaller(action,c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x93f44c)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!sessions@v0.0.0-20211222125714-def5d4b4f078/sessions.go:54 (0x93f438)
+	Sessions.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8eae1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x8eae06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8e8c01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x8e8bea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x8f139d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x8f1025)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x8f0b84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x6d125a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x6cc907)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-15T11:32:23+08:00 level=info Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[0] User-Agent:[Go-http-client/1.1]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:33824 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc000408140} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004e6190] ClientIP=172.17.0.4 Method=POST StatusCode=500 ErrorMessage="" BodySize=0
+time=2022-03-15T14:04:51+08:00 level=info msg=We are listen to 0.0.0.0:8081,port:8081
+time=2022-03-15T14:05:03+08:00 level=info BodySize=38 Path=/api/v1.0/user/login?username=admin&password=Zaq12wsX Request=&{POST /api/v1.0/user/login?username=admin&password=Zaq12wsX HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic c3lzYWRtX3JlZ2lzdHJ5X3VzZXI6c3lzYWRtX3JlZ2lzdHJ5X3Bhc3N3b3Jk] Content-Length:[0] User-Agent:[Go-http-client/1.1]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.4:44364 /api/v1.0/user/login?username=admin&password=Zaq12wsX <nil> <nil> <nil> 0xc00040c240} Keys=map[github.com/wangyysde/sysadmSessions:0xc000424140] ClientIP=172.17.0.4 Method=POST StatusCode=200 ErrorMessage=""
+time=2022-03-15T14:51:38+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c000] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=10376 Path=/ Request=&{GET / HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 / <nil> <nil> <nil> 0xc000402330}
+time=2022-03-15T14:51:38+08:00 level=info Path=/forms/login Request=&{GET /forms/login HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 /forms/login <nil> <nil> <nil> 0xc000032040} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004240f0] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=3241
+time=2022-03-15T14:51:38+08:00 level=info Path=/css/style.css Request=&{GET /css/style.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/forms/login] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 /css/style.css <nil> <nil> <nil> 0xc00031e000} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c6050] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=5405
+time=2022-03-15T14:51:38+08:00 level=info ErrorMessage="" BodySize=89501 Path=/js/jquery-3.6.0.min.js Request=&{GET /js/jquery-3.6.0.min.js HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/forms/login] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /js/jquery-3.6.0.min.js <nil> <nil> <nil> 0xc00049a900} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c280] ClientIP=172.17.0.1 Method=GET StatusCode=200
+time=2022-03-15T14:51:38+08:00 level=info Method=GET StatusCode=200 ErrorMessage="" BodySize=5807 Path=/images/user.png Request=&{GET /images/user.png HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/css/style.css] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61183 /images/user.png <nil> <nil> <nil> 0xc00040c300} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a0f0] ClientIP=172.17.0.1
+time=2022-03-15T14:51:38+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=16843 Path=/images/admin_big.png Request=&{GET /images/admin_big.png HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/css/style.css] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 /images/admin_big.png <nil> <nil> <nil> 0xc00040c140} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a050] ClientIP=172.17.0.1 Method=GET
+time=2022-03-15T14:51:38+08:00 level=info BodySize=129029 Path=/images/1.jpg Request=&{GET /images/1.jpg HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/css/style.css] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /images/1.jpg <nil> <nil> <nil> 0xc00031f180} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c60a0] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage=""
+time=2022-03-15T14:51:39+08:00 level=info Request=&{GET /images/passwd.PNG HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/css/style.css] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /images/passwd.PNG <nil> <nil> <nil> 0xc000032700} Keys=map[github.com/wangyysde/sysadmSessions:0xc000424230] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=5450 Path=/images/passwd.PNG
+time=2022-03-15T14:51:39+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=4318 Path=/images/logo.png Request=&{GET /images/logo.png HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436] Referer:[http://172.17.0.4:8081/forms/login] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /images/logo.png <nil> <nil> <nil> 0xc00031f1c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c6140] ClientIP=172.17.0.1 Method=GET
+time=2022-03-15T14:51:42+08:00 level=info Request=&{POST /forms/login HTTP/1.1 1 1 map[Accept:[application/json, text/javascript, */*; q=0.01] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Content-Length:[35] Content-Type:[application/x-www-form-urlencoded; charset=UTF-8] Cookie:[_ga=GA1.1.124321240.1617960436] Origin:[http://172.17.0.4:8081] Referer:[http://172.17.0.4:8081/forms/login] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36] X-Requested-With:[XMLHttpRequest]] 0xc00049a980 <nil> 35 [] false 172.17.0.4:8081 map[password:[Sysadm12345] username:[admin]] map[password:[Sysadm12345] username:[admin]] <nil> map[] 172.17.0.1:61182 /forms/login <nil> <nil> <nil> 0xc00060e0c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c690] ClientIP=172.17.0.1 Method=POST StatusCode=200 ErrorMessage="" BodySize=37 Path=/forms/login
+time=2022-03-15T14:51:42+08:00 level=info Method=GET StatusCode=200 ErrorMessage="" BodySize=10328 Path=/ Request=&{GET / HTTP/1.1 1 1 map[Accept:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/forms/login] Upgrade-Insecure-Requests:[1] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 / <nil> <nil> <nil> 0xc000099b60} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004242d0] ClientIP=172.17.0.1
+time=2022-03-15T14:51:43+08:00 level=info Path=/css/google-fonts.css Request=&{GET /css/google-fonts.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61191 /css/google-fonts.css <nil> <nil> <nil> 0xc0003a00c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc00035c000] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=14332
+time=2022-03-15T14:51:43+08:00 level=info ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=39715 Path=/css/font-awesome.css Request=&{GET /css/font-awesome.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61183 /css/font-awesome.css <nil> <nil> <nil> 0xc000032e00} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004244b0]
+time=2022-03-15T14:51:43+08:00 level=info Path=/css/ionicons.css Request=&{GET /css/ionicons.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 /css/ionicons.css <nil> <nil> <nil> 0xc00031f240} Keys=map[github.com/wangyysde/sysadmSessions:0xc0003c61e0] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=58673
+time=2022-03-15T14:51:43+08:00 level=info Request=&{GET /css/skins/skin-blue.min.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61190 /css/skins/skin-blue.min.css <nil> <nil> <nil> 0xc0006400c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc000662000] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=3156 Path=/css/skins/skin-blue.min.css
+time=2022-03-15T14:51:43+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=116595 Path=/css/AdminLTE.css Request=&{GET /css/AdminLTE.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61189 /css/AdminLTE.css <nil> <nil> <nil> 0xc00040c500} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a190] ClientIP=172.17.0.1 Method=GET
+time=2022-03-15T14:51:43+08:00 level=info Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c780] ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=152713 Path=/css/bootstrap.css Request=&{GET /css/bootstrap.css HTTP/1.1 1 1 map[Accept:[text/css,*/*;q=0.1] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /css/bootstrap.css <nil> <nil> <nil> 0xc00049ad80}
+time=2022-03-15T14:51:43+08:00 level=info ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=86929 Path=/js/jquery-3.3.1.min.js Request=&{GET /js/jquery-3.3.1.min.js HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61191 /js/jquery-3.3.1.min.js <nil> <nil> <nil> 0xc0003a01c0} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c000]
+time=2022-03-15T14:51:43+08:00 level=info ErrorMessage="" BodySize=29599 Path=/js/adminlte.min.js Request=&{GET /js/adminlte.min.js HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61183 /js/adminlte.min.js <nil> <nil> <nil> 0xc00040c140} Keys=map[github.com/wangyysde/sysadmSessions:0xc00007a050] ClientIP=172.17.0.1 Method=GET StatusCode=200
+time=2022-03-15T14:51:43+08:00 level=info ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=6806 Path=/images/sysadm_red_20201216_50_50.png Request=&{GET /images/sysadm_red_20201216_50_50.png HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61190 /images/sysadm_red_20201216_50_50.png <nil> <nil> <nil> 0xc0003a0240} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c140]
+time=2022-03-15T14:51:43+08:00 level=info StatusCode=200 ErrorMessage="" BodySize=72084 Path=/js/bootstrap.min.js Request=&{GET /js/bootstrap.min.js HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61181 /js/bootstrap.min.js <nil> <nil> <nil> 0xc000032040} Keys=map[github.com/wangyysde/sysadmSessions:0xc0004240f0] ClientIP=172.17.0.1 Method=GET
+time=2022-03-15T14:51:43+08:00 level=info Method=GET StatusCode=200 ErrorMessage="" BodySize=17364 Path=/images/sysadm20201215_300_75.png Request=&{GET /images/sysadm20201215_300_75.png HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61182 /images/sysadm20201215_300_75.png <nil> <nil> <nil> 0xc0003a0280} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c230] ClientIP=172.17.0.1
+time=2022-03-15T14:51:43+08:00 level=info ErrorMessage="" BodySize=19059 Path=/images/user.jfif Request=&{GET /images/user.jfif HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61189 /images/user.jfif <nil> <nil> <nil> 0xc00049a440} Keys=map[github.com/wangyysde/sysadmSessions:0xc00035c140] ClientIP=172.17.0.1 Method=GET StatusCode=200
+time=2022-03-15T14:51:43+08:00 level=info ClientIP=172.17.0.1 Method=GET StatusCode=200 ErrorMessage="" BodySize=77160 Path=/fonts/fontawesome-webfont.woff2 Request=&{GET /fonts/fontawesome-webfont.woff2 HTTP/1.1 1 1 map[Accept:[*/*] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Origin:[http://172.17.0.4:8081] Referer:[http://172.17.0.4:8081/css/bootstrap.css] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61189 /fonts/fontawesome-webfont.woff2 <nil> <nil> <nil> 0xc0003a0300} Keys=map[github.com/wangyysde/sysadmSessions:0xc00049c280]
+time=2022-03-15T14:51:44+08:00 level=info ErrorMessage="" BodySize=-1 Path=/favicon.ico Request=&{GET /favicon.ico HTTP/1.1 1 1 map[Accept:[image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8] Accept-Encoding:[gzip, deflate] Accept-Language:[zh-CN,zh;q=0.9] Connection:[keep-alive] Cookie:[_ga=GA1.1.124321240.1617960436; sysadm=MTY0NzMyNzEwMnxEdi1CQkFFQ180SUFBUkFCRUFBQUhfLUNBQUVHYzNSeWFXNW5EQWtBQjJselRHOW5hVzRFWW05dmJBSUNBQUU9fBWDu6rFUp3G6T8UzKRuKXLHQaN8Ji9q_pcY1ZhABEF0] Referer:[http://172.17.0.4:8081/] User-Agent:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36]] {} <nil> 0 [] false 172.17.0.4:8081 map[] map[] <nil> map[] 172.17.0.1:61189 /favicon.ico <nil> <nil> <nil> 0xc00049a540} Keys=map[github.com/wangyysde/sysadmSessions:0xc00035c2d0] ClientIP=172.17.0.1 Method=GET StatusCode=404

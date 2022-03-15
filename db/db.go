@@ -62,16 +62,29 @@ import (
 	OpenDbConnect() ([]sysadmerror.Sysadmerror)
 	CloseDB()([]sysadmerror.Sysadmerror)
 	InsertData(string,FieldData) (int, []sysadmerror.Sysadmerror)
+	QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
  }
+
 
 // key is the filed name and value is the value that will be set to the field.
  type FieldData map[string]interface{}
 
-// Checking database parametes and initating an instance 
-// return DbConfig and sysadmerror.Sysadmerror. 
-// the error level will be set to warning if any of certification files is not exist and  slmode is not disable,
-// then set sslmode to disable.
-// cmdRunPath: the path of executeable file 
+  type SelectData struct {
+	Tb []string
+	OutFeilds []string
+	Where map[string]string
+	Order []string
+	Group []string 
+	Limit []int
+ }
+
+/*
+  Checking database parametes and initating an instance 
+  return DbConfig and sysadmerror.Sysadmerror. 
+  the error level will be set to warning if any of certification files is not exist and  slmode is not disable,
+  then set sslmode to disable.
+  cmdRunPath: the path of executeable file 
+*/
  func InitDbConfig(config *DbConfig,cmdRunPath string) (*DbConfig, []sysadmerror.Sysadmerror) {
 	// Checking the type of DB
 	// Initating an entity if type is valid otherwise return fatal error

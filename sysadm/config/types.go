@@ -44,6 +44,9 @@ type User struct {
 }
 
 type DB struct {
+	// DB type One of postgre,mysql.If type is not set, then postgre will be set to it. But postgre is available only now TODO MySQL ....
+	Type string `json:"type"`
+	// DB host address. Normalll,it is either IP adress or hostname of DB server.
 	Host string `json:"host"`
 	Port int `json:"port"`
 	User string `json:"user"`
@@ -87,6 +90,7 @@ var defaultConfig Config = Config{
 		DefaultPassword: DefaultPasswd,
 	},
 	DB: DB{
+		Type: DefaultDBType,
 		Host: DefaultDbHost,
 		Port: DefaultDbPort,
 		User: DefaultDbUser,

@@ -22,150 +22,112 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"syscall"
 	"path/filepath"
+	"syscall"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/sysadm/config"
-	"github.com/wangyysde/sysadmServer"
-	log "github.com/wangyysde/sysadmLog"
 	sysadmDB "github.com/wangyysde/sysadm/db"
+	"github.com/wangyysde/sysadm/sysadm/config"
 	"github.com/wangyysde/sysadm/sysadmerror"
-
+	log "github.com/wangyysde/sysadmLog"
+	"github.com/wangyysde/sysadmServer"
 )
 
-type StartParameters struct {
-	// Point to configuration file path of server 
-	ConfigPath  string 		
-	OldConfigPath string
-	accessLogFp *os.File
-	errorLogFp *os.File
-	sysadmRootPath string
-}
-
-var StartData = &StartParameters{
-	ConfigPath: "",
-	OldConfigPath: "",
-	accessLogFp: nil,
-	errorLogFp: nil,
-	sysadmRootPath: "",
-}
-
-var definedConfig *config.Config 
 var err error
 var exitChan chan os.Signal
 
 func DaemonStart(cmd *cobra.Command, cmdPath string){
-	definedConfig, err = config.HandleConfig(StartData.ConfigPath,cmdPath)
+	var definedConfig *config.Config 
+	// parsing the configurations and get configurations from environment, then set them to definedConfig after checked.
+	definedConfig, err = config.HandleConfig(CliData.ConfigPath, cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","error:%s",err)
 		os.Exit(1)
 	}
-	
+	RuntimeData.RuningParas.DefinedConfig = definedConfig
+
+	// Get the install dir path of  sysadm 
 	if _,err = getSysadmRootPath(cmdPath); err != nil {
 		sysadmServer.Logf("error","error:%s",err)
 		os.Exit(2)
 	}
+
+	// set loggers according to the configurations.
 	setLogger()
 	defer closeLogger()
-	r := sysadmServer.New()
-	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
-    
-	if err = initSession(r); err != nil {
-		sysadmServer.Logf("error","error:%s",err)
-		os.Exit(3)
-	}
 
-	dbConf := sysadmDB.DbConfig {
-		Type: "postgre",
-		Host: config.ConfigDefined.DB.Host, 
-		Port: config.ConfigDefined.DB.Port, 
-		User: config.ConfigDefined.DB.User,
-		Password: config.ConfigDefined.DB.Password,
-		DbName: config.ConfigDefined.DB.Dbname,
-		SslMode: "disable",
-		SslCa: "",
-		SslCert: "",
-		SslKey: "",
-		MaxOpenConns: 50,
-		MaxIdleConns: 20,
-	}
-	dbConfig,errs := sysadmDB.InitDbConfig(&dbConf,cmdPath)
+	// building configuration of DB , checking the configurations are available, instance DB instance
+	dbConfig,errs := buildDBConfig(definedConfig, cmdPath)	
 	if len(errs) >0 {
 		logErrors(errs)
 	}
-
-	dbEntity := dbConfig.Entity
-	if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
-		errs := dbEntity.OpenDbConnect()
-		if len(errs) >0 {
-			logErrors(errs)
-		}
-		if sysadmerror.GetMaxLevel(errs) < sysadmerror.GetLevelNum("fatal") {
-			dbData := sysadmDB.FieldData {
-				"username": "test3User",
-      			"email": "test3User@bzhy.com",
-      			"password": "123456",
-      			"realname": "Real Name",
-			}
-			rows,e := dbEntity.InsertData("test_user",dbData)
-			if len(e) >0 {
-				logErrors(e)
-			} else {
-				sysadmServer.Logf("info","rows %d data have be inserted",rows)
-			}
-		}
-
-	}
-
-	if err = ininDBConnect(); err != nil {
-		sysadmServer.Logf("error","Open connection to postgre error:%s",err)
+	RuntimeData.RuningParas.DBConfig = dbConfig
+	
+	// open a DB connection
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	errs = dbEntity.OpenDbConnect()
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
 		os.Exit(4)
 	}
-	defer dbConnect.Close()
+	
+	defer dbEntity.CloseDB()
 
+	// newing an instance of sysadmServer
+	r := sysadmServer.New()
+	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
+    
+	// initating session
+	if err = initSession(r); err != nil {
+		sysadmServer.Logf("error","error:%s",err)
+		os.Exit(5)
+	}
+
+	// adding all handlers
 	err = addFormHandler(r,cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","error:%s",err)
-		os.Exit(1)
+		os.Exit(6)
 	}
-	// Define handlers
-  //  r.GET("/", func(c *sysadmServer.Context) {
-  //      c.String(http.StatusOK, "Hello World!")
-  //  })  
 	
+	// adding Root handlers
 	err = addRootHandler(r,cmdPath)
 	if err != nil {
 		sysadmServer.Logf("error","error:%s",err)
-		os.Exit(1)
+		os.Exit(7)
 	}
 	
-    r.GET("/ping", func(c *sysadmServer.Context) {
-        c.String(http.StatusOK, "echo ping message")
-    })  
-
+	// adding static handlers
 	if err = addStaicRoute(r,cmdPath); err != nil {
 		sysadmServer.Logf("error","%s",err)
-		os.Exit(2)
+		os.Exit(8)
 	}
 
+	addApiHandler(r,cmdPath)
+
+	// setting channel for passing signal to other process
 	exitChan = make(chan os.Signal)
 	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill)
+
+	//removeSocketFile deleting the socket file when server exit
 	go removeSocketFile()
-    // Listen and serve on defined port
-	if definedConfig.Server.Socket !=  "" {
+   
+	// Listen and serve on defined socket
+	if RuntimeData.RuningParas.DefinedConfig.Server.Socket !=  "" {
 		go func (sock string){
 			err := r.RunUnix(sock)
 			if err != nil {
 				sysadmServer.Logf("error","We can not listen to %s, error: %s", sock, err)
-				os.Exit(3)
+				os.Exit(10)
 			}
 			defer removeSocketFile()
-		}(definedConfig.Server.Socket)
+		}(RuntimeData.RuningParas.DefinedConfig.Server.Socket)
 	}
+
+	// starting listening
 	defer removeSocketFile()
-	liststr := fmt.Sprintf("%s:%d",definedConfig.Server.Address,definedConfig.Server.Port)
-	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
+	liststr := fmt.Sprintf("%s:%d",RuntimeData.RuningParas.DefinedConfig.Server.Address ,RuntimeData.RuningParas.DefinedConfig.Server.Port)
+	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,RuntimeData.RuningParas.DefinedConfig.Server.Port)
     r.Run(liststr)
 
 }
@@ -173,40 +135,40 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 // removeSocketFile deleting the socket file when server exit
 func removeSocketFile(){
 	<-exitChan
-	_,err := os.Stat(definedConfig.Server.Socket)
+	_,err := os.Stat(RuntimeData.RuningParas.DefinedConfig.Server.Socket)
 	if err == nil {
-		os.Remove(definedConfig.Server.Socket)
+		os.Remove(RuntimeData.RuningParas.DefinedConfig.Server.Socket)
 	}
 
-	os.Exit(1)
+	os.Exit(9)
 }
 
 // set parameters to accessLogger and errorLooger
 func setLogger(){
-	sysadmServer.SetLoggerKind(definedConfig.Log.Kind)
-	sysadmServer.SetLogLevel(definedConfig.Log.Level)
-	sysadmServer.SetTimestampFormat(definedConfig.Log.TimeStampFormat)
-	if definedConfig.Log.AccessLog != ""{
-		_,fp,err := sysadmServer.SetAccessLogFile(definedConfig.Log.AccessLog)
+	sysadmServer.SetLoggerKind(RuntimeData.RuningParas.DefinedConfig.Log.Kind)
+	sysadmServer.SetLogLevel(RuntimeData.RuningParas.DefinedConfig.Log.Level)
+	sysadmServer.SetTimestampFormat(RuntimeData.RuningParas.DefinedConfig.Log.TimeStampFormat)
+	if RuntimeData.RuningParas.DefinedConfig.Log.AccessLog != ""{
+		_,fp,err := sysadmServer.SetAccessLogFile(RuntimeData.RuningParas.DefinedConfig.Log.AccessLog)
 		if err != nil {
 			sysadmServer.Logf("error","%s",err)
 		}else{
-			StartData.accessLogFp = fp
+			 RuntimeData.RuningParas.AccessLogFp = fp
 		}
 		
 	}
 
-	if definedConfig.Log.SplitAccessAndError && definedConfig.Log.ErrorLog != "" {
-		_,fp, err := sysadmServer.SetErrorLogFile(definedConfig.Log.ErrorLog)
+	if RuntimeData.RuningParas.DefinedConfig.Log.SplitAccessAndError && RuntimeData.RuningParas.DefinedConfig.Log.ErrorLog != "" {
+		_,fp, err := sysadmServer.SetErrorLogFile(RuntimeData.RuningParas.DefinedConfig.Log.ErrorLog)
 		if err != nil {
 			sysadmServer.Logf("error","%s",err)
 		}else{
-			StartData.errorLogFp = fp
+			RuntimeData.RuningParas.ErrorLogFp  = fp
 		}
 	}
-	sysadmServer.SetIsSplitLog(definedConfig.Log.SplitAccessAndError)
+	sysadmServer.SetIsSplitLog(RuntimeData.RuningParas.DefinedConfig.Log.SplitAccessAndError)
 	
-	level, e := log.ParseLevel(definedConfig.Log.Level)
+	level, e := log.ParseLevel(RuntimeData.RuningParas.DefinedConfig.Log.Level)
 	if e != nil {
 		sysadmServer.SetMode(sysadmServer.DebugMode)
 	}else {
@@ -221,15 +183,15 @@ func setLogger(){
 // close access log file descriptor and error log file descriptor
 // set AccessLogger  and ErrorLogger to nil
 func closeLogger(){
-	if StartData.accessLogFp != nil {
-		fp := StartData.accessLogFp 
+	if RuntimeData.RuningParas.AccessLogFp != nil {
+		fp := RuntimeData.RuningParas.AccessLogFp 
 		fp.Close()
 		sysadmServer.LoggerConfigVar.AccessLogger = nil
 		sysadmServer.LoggerConfigVar.AccessLogFile = ""
 	}
 
-	if StartData.errorLogFp != nil {
-		fp := StartData.errorLogFp 
+	if RuntimeData.RuningParas.ErrorLogFp != nil {
+		fp := RuntimeData.RuningParas.ErrorLogFp 
 		fp.Close()
 		sysadmServer.LoggerConfigVar.ErrorLogger = nil
 		sysadmServer.LoggerConfigVar.ErrorLogFile = ""
@@ -244,22 +206,23 @@ func getSysadmRootPath(cmdPath string) (string,error){
 	}
 	 
 	dir = filepath.Join(dir,"../")
-	StartData.sysadmRootPath = dir
+	RuntimeData.StartParas.SysadmRootPath  = dir
 
 	return dir, nil
 }
 
+// addRootHandler adding handler for root path
 func addRootHandler(r *sysadmServer.Engine,cmdRunPath string) error {
 	if r == nil {
 		return fmt.Errorf("router is nil.")
 	}
 
 	r.Any("/",handleRootPath)
-//	r.POST("/",handleRootPath)
 
 	return nil
 }
 
+// handleRootPath is the handler for root path
 func handleRootPath(c *sysadmServer.Context){
 	isLogin,_ := getSessionValue(c,"isLogin")
 	if isLogin == nil  {
@@ -274,6 +237,7 @@ func handleRootPath(c *sysadmServer.Context){
 	c.HTML(http.StatusOK, "index.html", tplData)
 }
 
+// logging all logs in errs to access log file or error log file
 func logErrors(errs []sysadmerror.Sysadmerror){
 
 	for _,e := range errs {
@@ -283,4 +247,27 @@ func logErrors(errs []sysadmerror.Sysadmerror){
 	}
 	
 	return
+}
+
+// buildDBConfig getting the configuratios of DB from sysadm configuration and checking the validity of them.
+func buildDBConfig(definedConfig *config.Config, cmdPath string)(*sysadmDB.DbConfig,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs,sysadmerror.NewErrorWithStringLevel(100001,"debug","try to build DB configurations"))
+	dbConf := sysadmDB.DbConfig {
+		Type: definedConfig.DB.Type,
+		Host: definedConfig.DB.Host, 
+		Port: definedConfig.DB.Port, 
+		User: definedConfig.DB.User,
+		Password: definedConfig.DB.Password,
+		DbName: definedConfig.DB.Dbname,
+		SslMode: definedConfig.DB.Sslmode,
+		SslCa: definedConfig.DB.Sslrootcert,
+		SslCert: definedConfig.DB.Sslcert,
+		SslKey: definedConfig.DB.Sslkey,
+		MaxOpenConns: definedConfig.DB.DbMaxConnect,
+		MaxIdleConns: definedConfig.DB.DbIdleConnect,
+	}
+	dbConfig,errs := sysadmDB.InitDbConfig(&dbConf,cmdPath)
+	
+	return dbConfig,errs
 }
