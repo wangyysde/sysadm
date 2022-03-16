@@ -26,6 +26,10 @@ type Server struct {
 	Address string `json:"address"`
 	Port int `json:"port"`
 	Socket string `json:"socket"`
+	Tls bool `json:"tls"`
+	Ca string `json:"ca"`
+	Cert string `json:"cert"`
+	Key string `json:"key"`
 }
 
 //Defining log configuration 
@@ -76,6 +80,10 @@ var defaultConfig Config = Config{
 		Address: DefaultIP,
 		Port: DefaultPort,
 		Socket: DefaultSocket,
+		Tls: DefaultTls,
+		Ca: DefaultCa,
+		Cert: DefaultCert,
+		Key: DefaultKey,
 	},
 	Log: Log{
 		AccessLog: DefaultAccessLog,

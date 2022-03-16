@@ -15,17 +15,23 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
- package server
+package server
 
-import(
-	"fmt"
-	"net/http"
-	"strings"
+import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strconv"
+	"strings"
 
+	"github.com/wangyysde/sysadm/httpclient"
+	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
+
+// ErrorCode: 105xxxx
 
 type formDataStruct struct{
 	htmlTitle string
@@ -111,25 +117,22 @@ func loginHandler(c *sysadmServer.Context) {
 	}
 	password := strings.TrimSpace(value)
 
-	if strings.ToLower(username) == strings.ToLower(RuntimeData.RuningParas.DefinedConfig.User.DefaultUser ) && 
-		md5Encrypt(strings.ToLower(password),"") == md5Encrypt(strings.ToLower(RuntimeData.RuningParas.DefinedConfig.User.DefaultPassword),""){
-			if err := setSessionValue(c,"isLogin",true); err != nil {
-				c.JSON(http.StatusOK, sysadmServer.H{"errCode": 102, "msg": err})
-				return 	
-			} else {
-				c.JSON(http.StatusOK, sysadmServer.H{"errCode": 0, "msg": "登录成功！"})
-				return 
-			}
-	} 
+	if loginWithDB(username,password) {
+		c.JSON(http.StatusOK, sysadmServer.H{"errCode": 0, "msg": "登录成功！"})
+		return
+	}
 
-	c.JSON(http.StatusOK, sysadmServer.H{"errCode": 103, "msg": "用户名或密码错误！"})
+	c.JSON(http.StatusOK, sysadmServer.H{"errCode": 102, "msg": "用户名或密码错误！"})
 	return 
 }
 
 
-// encrypt data with md5 
-// if the length is zero ,then return ""
-// otherwise return encrypted data`
+/*
+  encrypt data with md5 
+  if the length is zero ,then return ""
+  otherwise return encrypted data`
+
+*/
 func md5Encrypt(data string, salt string) string{
 	if len(data) < 1 {
 		return ""
@@ -142,4 +145,66 @@ func md5Encrypt(data string, salt string) string{
 	cipherStr := md5Ctx.Sum(nil)
 	encryptedData := hex.EncodeToString(cipherStr)
 	return encryptedData
+}
+
+// TODO: 
+// we are plan to cut user as an independent module, so user login in sysadm should call API 
+func loginWithDB(username string, password string) bool {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050001,"debug","now checking the user is login"))
+	if username == "" && password == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050002,"error","username and password are empty."))
+		logErrors(errs)
+		return false
+	}
+
+	var reqUrl string = ""
+	m := Modules
+	
+	if RuntimeData.RuningParas.DefinedConfig.Server.Tls {
+		if  RuntimeData.RuningParas.DefinedConfig.Server.Port  == 443 {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
+		} else {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
+		}
+	}else {
+		if RuntimeData.RuningParas.DefinedConfig.Server.Port == 80 {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion  + "/" + m["user"].Path +"/login"
+		} else {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion +  "/" + m["user"].Path +"/login"
+		}
+	}
+
+	var requestParams httpclient.RequestParams = httpclient.RequestParams{}
+	requestParams.Url = reqUrl
+	requestParams.Method = "POST"
+	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestParams{Key: "username", Value: username})
+	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestParams{Key: "password", Value: password})
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050002,"debug","try to execute the request with:%s",reqUrl))
+	body,err := httpclient.SendRequest(&requestParams)
+	errs = append(errs, err...)
+
+	if len(body) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050003,"error","the response from  the server is empty"))
+		logErrors(errs)
+		return false
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050004,"debug","got response body is: %s",string(body)))
+	ret := &ApiResponseStatus{}
+	e := json.Unmarshal(body,ret)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050005,"error","can not parsing reponse body to json. error: %s",e))
+		logErrors(errs)
+		return false
+	}
+
+	if ret.Errorcode  != 0 || ret.Message  != "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050006,"debug","can not login with errorcode: %d message: %s",ret.Errorcode,ret.Message))
+		logErrors(errs)
+		return false
+	}
+	
+	logErrors(errs)
+	return ret.Status
 }

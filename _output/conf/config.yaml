@@ -3,6 +3,10 @@ server:
   address: 0.0.0.0
   port: 8081
   socket: "/var/run/sysadm.sock"
+  tls: false
+  ca: ""
+  cert: ""
+  key: "" 
 log:
   accessLog: "logs/sysadm-access.log"
   errorLog: "logs/sysadm-error.log"

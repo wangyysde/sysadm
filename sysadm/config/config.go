@@ -314,6 +314,91 @@ func getSockFile(confContent *Config,  cmdRunPath string) (string, error) {
 	return "",fmt.Errorf("we can not open socket file (%s): %s .",defaultConfig.Server.Socket,err)
 }
 
+// Getting the tls value for sysadm server from environment and checking the validity of it
+// return the tls if it is valid ,otherwise getting the value from 
+// configuration file and checking the validity of it. return the it if it is valid.
+// otherwise return the default value.
+func getSysadmTls(confContent *Config) bool{
+	tls := os.Getenv("SYSADMSERVER_TLS")
+	if strings.ToLower(tls) == "true" || strings.ToLower(tls) == "false" {
+		if strings.ToLower(tls) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Server.Tls
+	}
+
+	return defaultConfig.Server.Tls
+}
+
+/* 
+  Getting ca of sysadm server  from environment and checking the validity of it
+  return the ca if it is valid ,otherwise getting ca of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getSysadmCa(confContent *Config) string{
+	ca := os.Getenv("SYSADMSERVER_CA")
+	if ca != ""{
+		return ca
+	}
+
+	if confContent != nil  {
+		if confContent.Server.Ca != "" {
+			return confContent.Server.Ca
+		}
+	}
+
+	return defaultConfig.Server.Ca
+}
+
+/* 
+  Getting cert of sysadm server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getSysadmCert(confContent *Config) string{
+	cert := os.Getenv("SYSADMSERVER_CERT")
+	if cert != ""{
+		return cert
+	}
+
+	if confContent != nil  {
+		if confContent.Server.Cert != "" {
+			return confContent.Server.Cert
+		}
+	}
+
+	return defaultConfig.Server.Cert
+}
+
+/* 
+  Getting key of sysadm server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getSysadmKey(confContent *Config) string{
+	key := os.Getenv("SYSADMSERVER_KEY")
+	if key != ""{
+		return key
+	}
+
+	if confContent != nil  {
+		if confContent.Server.Key != "" {
+			return confContent.Server.Key
+		}
+	}
+
+	return defaultConfig.Server.Key
+}
+
+
 // Try to get access log file  from one of  SYSADMSERVER_ACCESSLOG,configuration file or default value.
 // The order for getting access log file is SYSADMSERVER_ACCESSLOG,configuration file and default value.
 func getAccessLogFile(confContent *Config,  cmdRunPath string) string {
@@ -821,6 +906,31 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 	if err != nil {
 		return nil,err
 	}
+	ConfigDefined.Server.Tls = getSysadmTls(confContent)
+	if ConfigDefined.Server.Tls {
+		caFile := getSysadmCa(confContent)
+		if caFile == "" || !checkFileExists(ConfigDefined.Server.Ca, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But CA(%s) can not be found. We will try to set Tls to false",confContent.Server.Ca)
+			 ConfigDefined.Server.Tls =false
+		}
+	}
+
+	if ConfigDefined.Server.Tls {
+		certFile := getSysadmCert(confContent)
+		if certFile == "" || !checkFileExists(ConfigDefined.Server.Cert, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Cert(%s) can not be found. We will try to set Tls to false",confContent.Server.Cert)
+			 ConfigDefined.Server.Tls =false
+		}
+	}
+
+	if ConfigDefined.Server.Tls {
+		keyFile := getSysadmCert(confContent)
+		if keyFile == "" || !checkFileExists(ConfigDefined.Server.Key, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Key(%s) can not be found. We will try to set Tls to false",confContent.Server.Key)
+			 ConfigDefined.Server.Tls =false
+		}
+	}
+
 	ConfigDefined.Log.AccessLog = getAccessLogFile(confContent,cmdRunPath)
 	ConfigDefined.Log.ErrorLog = getErrorLogFile(confContent,cmdRunPath)
 	ConfigDefined.Log.Kind = getLogKind(confContent)

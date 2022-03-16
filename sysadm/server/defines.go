@@ -26,5 +26,6 @@ package server
  var sessionName = "sysadm"
  var sessionDomain = "sysadm"
  var sessionAge = 100
+ var apiVersion = "v1.0"
 
  
