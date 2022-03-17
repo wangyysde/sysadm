@@ -41,7 +41,7 @@ type formDataStruct struct{
 }
 
 var formsData = map[string] formDataStruct {
-	"login": formDataStruct {
+	"login":  {
 		htmlTitle: "请你登录",
 		formTemplateName: "login.html",
 		formUri: "login",
@@ -118,6 +118,7 @@ func loginHandler(c *sysadmServer.Context) {
 	password := strings.TrimSpace(value)
 
 	if loginWithDB(username,password) {
+		_ = setSessionValue(c,"isLogin",true)
 		c.JSON(http.StatusOK, sysadmServer.H{"errCode": 0, "msg": "登录成功！"})
 		return
 	}
@@ -178,8 +179,8 @@ func loginWithDB(username string, password string) bool {
 	var requestParams httpclient.RequestParams = httpclient.RequestParams{}
 	requestParams.Url = reqUrl
 	requestParams.Method = "POST"
-	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestParams{Key: "username", Value: username})
-	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestParams{Key: "password", Value: password})
+	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestData{Key: "username", Value: username})
+	requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestData{Key: "password", Value: password})
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050002,"debug","try to execute the request with:%s",reqUrl))
 	body,err := httpclient.SendRequest(&requestParams)
 	errs = append(errs, err...)

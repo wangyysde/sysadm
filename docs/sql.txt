@@ -79,3 +79,30 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.test_user
     OWNER to sysadm;
+    
+    
+    
+CREATE TABLE IF NOT EXISTS public."registries"
+(
+    userid integer NOT NULL DEFAULT nextval('user_userid_seq'::regclass),
+    username character varying(255) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default",
+    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
+    realname character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    comment character varying(30) COLLATE pg_catalog."default",
+    deleted boolean NOT NULL DEFAULT false,
+    reset_uuid character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    salt character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    sysadmin_flag boolean NOT NULL DEFAULT false,
+    creation_time timestamp without time zone DEFAULT now(),
+    update_time timestamp without time zone DEFAULT now(),
+    password_version character varying(16) COLLATE pg_catalog."default" DEFAULT 'sha256'::character varying,
+    CONSTRAINT user_pkey PRIMARY KEY (userid),
+    CONSTRAINT user_email_key UNIQUE (email),
+    CONSTRAINT user_username_key UNIQUE (username)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."user"
+    OWNER to sysadm;

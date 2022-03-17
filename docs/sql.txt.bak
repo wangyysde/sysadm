@@ -1,0 +1,81 @@
+CREATE TABLE IF NOT EXISTS public.user
+(
+    userid integer NOT NULL DEFAULT nextval('user_userid_seq'::regclass),
+    username character varying(255) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default",
+    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
+    realname character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    comment character varying(30) COLLATE pg_catalog."default",
+    deleted boolean NOT NULL DEFAULT false,
+    reset_uuid character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    salt character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    sysadmin_flag boolean NOT NULL DEFAULT false,
+    creation_time timestamp without time zone DEFAULT now(),
+    update_time timestamp without time zone DEFAULT now(),
+    password_version character varying(16) COLLATE pg_catalog."default" DEFAULT 'sha256'::character varying,
+    CONSTRAINT user_pkey PRIMARY KEY (userid),
+    CONSTRAINT user_email_key UNIQUE (email),
+    CONSTRAINT user_username_key UNIQUE (username)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.user
+    OWNER to sysadm;
+
+-- SEQUENCE: public.user_userid_seq
+
+-- DROP SEQUENCE IF EXISTS public.user_userid_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.user_userid_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1
+    OWNED BY artifact_blob.creation_time;
+
+ALTER SEQUENCE public.user_userid_seq
+    OWNER TO sysadm;
+
+
+
+	================testing =========================
+-- SEQUENCE: public.test_user_userid_seq
+
+-- DROP SEQUENCE IF EXISTS public.test_user_userid_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.test_user_userid_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.test_user_userid_seq
+    OWNER TO sysadm;	
+
+CREATE TABLE IF NOT EXISTS public.test_user
+(
+    userid integer NOT NULL DEFAULT nextval('test_user_userid_seq'::regclass),
+    username character varying(255) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default",
+    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
+    realname character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    comment character varying(30) COLLATE pg_catalog."default",
+    deleted boolean NOT NULL DEFAULT false,
+    reset_uuid character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    salt character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+    sysadmin_flag boolean NOT NULL DEFAULT false,
+    creation_time timestamp without time zone DEFAULT now(),
+    update_time timestamp without time zone DEFAULT now(),
+    password_version character varying(16) COLLATE pg_catalog."default" DEFAULT 'sha256'::character varying,
+    CONSTRAINT test_user_pkey PRIMARY KEY (userid),
+    CONSTRAINT test_user_email_key UNIQUE (email),
+    CONSTRAINT test_user_username_key UNIQUE (username)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.test_user
+    OWNER to sysadm;
