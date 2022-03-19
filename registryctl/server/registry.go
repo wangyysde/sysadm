@@ -26,7 +26,6 @@ import (
 	"net/http"
 	"strconv"
 
-	sysadmApi "github.com/wangyysde/sysadm/sysadm/server"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 
@@ -39,12 +38,6 @@ type BodyError struct {
 	Detail string `json:"detail"`
 }
 
-type apiResponseForBool struct {
-	status bool `json:"status"`
-	errorcode string `json:"error"`
-	message string `json:"message"`
-}
-
 type ReponseError struct {
 	Errors []BodyError `json:"errors"`
 }
@@ -52,6 +45,7 @@ type ReponseError struct {
 func getRepositories()([]sysadmerror.Sysadmerror){
 	var requestParams requestParams = requestParams{}
 	var regUrl string = ""
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
 	if definedConfig.Registry.Server.Tls {
 		if definedConfig.Registry.Server.Port == 443 {
 			regUrl = "https://" + definedConfig.Registry.Server.Host + "/v2/_catalog"
@@ -76,10 +70,9 @@ func getRepositories()([]sysadmerror.Sysadmerror){
 }
 
 
-func addRegistryV2RootHandler()(([]sysadmerror.Sysadmerror)){
+func addRegistryV2RootHandler(r *sysadmServer.Engine)(([]sysadmerror.Sysadmerror)){
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030001,"debug","now adding /v2 handler"))
-	r := StartData.router
 	if r == nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030002,"fatal","we can not add handler to a nil router."))
 		return errs
@@ -125,7 +118,7 @@ func handerRootV2(c *sysadmServer.Context) {
 	c.JSON(http.StatusOK,  sysadmServer.H{})
 	
 	logErrors(errs)
-	return 
+
 }
 
 func isLogin(username string, password string) bool {
@@ -139,7 +132,7 @@ func isLogin(username string, password string) bool {
 
 	var reqUrl string = ""
 	m := sysadm.Modules
-	
+	definedConfig := RuntimeData.RuningParas.DefinedConfig 
 	if definedConfig.Sysadm.Server.Tls {
 		if definedConfig.Sysadm.Server.Port == 443 {
 			reqUrl = "https://" + definedConfig.Sysadm.Server.Host + "/api/" + definedConfig.Sysadm.ApiVerion + "/" + m["user"].Path +"/login" 
@@ -170,7 +163,7 @@ func isLogin(username string, password string) bool {
 	}
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030007,"debug","got response body is: %s",string(body)))
-	ret := &sysadmApi.ApiResponseStatus{}
+	ret := &sysadm.ApiResponseStatus{}
 	e := json.Unmarshal(body,ret)
 	if e != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030009,"error","can not parsing reponse body to json. error: %s",e))

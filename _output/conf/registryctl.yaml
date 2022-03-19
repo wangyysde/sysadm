@@ -14,9 +14,9 @@ user:
   defaultUser: "registryctl_user"
   defaultPassword: "registryctl_password"
 DB: 
-  type: "postgre"
+  type: "mysql"
   host: "localhost"
-  port: 30432
+  port: 30306
   user: sysadm
   password: "Zaq12wsX"
   dbname: "sysadm"

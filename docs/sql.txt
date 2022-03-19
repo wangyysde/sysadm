@@ -1,3 +1,21 @@
+create table user
+(
+  userid int(10) not null auto_increment primary key comment "userid identified a user",
+  username varchar(255)not null comment "user account", 
+  email varchar(255) comment "user email address",
+  password varchar(40) not null comment "user password",
+  realname varchar(255) not null comment "user's real name",
+  comment varchar(255) comment "description of a user",
+  delete bool default false comment "the value is true if a user has be deleted", 
+  reset_uuid int(10) comment "userid who reset the user's password",
+  salt varchar(40) comment "salt of the userpassword",
+  sysadmin_flag bool default false comment "the user is an administor of the system if this value is ture",
+  creation_time timestamp default now() comment "the time when the user has be create",
+  update_time timestamp default now() comment "the time when the user has be create"
+) engine=myisam; 
+  
+   
+
 CREATE TABLE IF NOT EXISTS public.user
 (
     userid integer NOT NULL DEFAULT nextval('user_userid_seq'::regclass),
@@ -38,71 +56,55 @@ CREATE SEQUENCE IF NOT EXISTS public.user_userid_seq
 ALTER SEQUENCE public.user_userid_seq
     OWNER TO sysadm;
 
+=======
 
+-- SEQUENCE: public.project_project_id_seq
 
-	================testing =========================
--- SEQUENCE: public.test_user_userid_seq
+-- DROP SEQUENCE IF EXISTS public.project_project_id_seq;
 
--- DROP SEQUENCE IF EXISTS public.test_user_userid_seq;
-
-CREATE SEQUENCE IF NOT EXISTS public.test_user_userid_seq
+CREATE SEQUENCE IF NOT EXISTS public.project_project_id_seq
     INCREMENT 1
     START 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
 
-ALTER SEQUENCE public.test_user_userid_seq
-    OWNER TO sysadm;	
+ALTER SEQUENCE public.project_project_id_seq
+    OWNER TO postgres;
+    
+    
+-- Table: public.project
 
-CREATE TABLE IF NOT EXISTS public.test_user
+-- DROP TABLE IF EXISTS public.project;
+
+CREATE TABLE IF NOT EXISTS public.project
 (
-    userid integer NOT NULL DEFAULT nextval('test_user_userid_seq'::regclass),
-    username character varying(255) COLLATE pg_catalog."default",
-    email character varying(255) COLLATE pg_catalog."default",
-    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
-    realname character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    comment character varying(30) COLLATE pg_catalog."default",
-    deleted boolean NOT NULL DEFAULT false,
-    reset_uuid character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
-    salt character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
-    sysadmin_flag boolean NOT NULL DEFAULT false,
+    project_id integer NOT NULL DEFAULT nextval('project_project_id_seq'::regclass),
+    owner_id integer NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
     creation_time timestamp without time zone DEFAULT now(),
     update_time timestamp without time zone DEFAULT now(),
-    password_version character varying(16) COLLATE pg_catalog."default" DEFAULT 'sha256'::character varying,
-    CONSTRAINT test_user_pkey PRIMARY KEY (userid),
-    CONSTRAINT test_user_email_key UNIQUE (email),
-    CONSTRAINT test_user_username_key UNIQUE (username)
+    deleted boolean NOT NULL DEFAULT false,
+    registry_id integer default 1,
+    CONSTRAINT project_pkey PRIMARY KEY (project_id),
+    CONSTRAINT project_name_key UNIQUE (name),
+    CONSTRAINT project_owner_id_fkey FOREIGN KEY (owner_id)
+        REFERENCES public.user (userid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.test_user
-    OWNER to sysadm;
-    
-    
-    
-CREATE TABLE IF NOT EXISTS public."registries"
-(
-    userid integer NOT NULL DEFAULT nextval('user_userid_seq'::regclass),
-    username character varying(255) COLLATE pg_catalog."default",
-    email character varying(255) COLLATE pg_catalog."default",
-    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
-    realname character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    comment character varying(30) COLLATE pg_catalog."default",
-    deleted boolean NOT NULL DEFAULT false,
-    reset_uuid character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
-    salt character varying(40) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
-    sysadmin_flag boolean NOT NULL DEFAULT false,
-    creation_time timestamp without time zone DEFAULT now(),
-    update_time timestamp without time zone DEFAULT now(),
-    password_version character varying(16) COLLATE pg_catalog."default" DEFAULT 'sha256'::character varying,
-    CONSTRAINT user_pkey PRIMARY KEY (userid),
-    CONSTRAINT user_email_key UNIQUE (email),
-    CONSTRAINT user_username_key UNIQUE (username)
-)
+ALTER TABLE IF EXISTS public.project
+    OWNER to postgres;
 
-TABLESPACE pg_default;
+-- Trigger: project_update_time_at_modtime
 
-ALTER TABLE IF EXISTS public."user"
-    OWNER to sysadm;
+-- DROP TRIGGER IF EXISTS project_update_time_at_modtime ON public.project;
+
+CREATE TRIGGER project_update_time_at_modtime
+    BEFORE UPDATE 
+    ON public.project
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_update_time_at_column();

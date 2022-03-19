@@ -278,3 +278,96 @@ time=2022-03-15T11:32:23+08:00 level=info Keys=map[] ClientIP=172.17.0.4 Method=
 time=2022-03-15T11:32:23+08:00 level=info Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=401 ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:59996 /v2/ <nil> <nil> <nil> 0xc0000a0500}
 time=2022-03-15T14:05:03+08:00 level=info Method=GET StatusCode=401 ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:42302 /v2/ <nil> <nil> <nil> 0xc000032100} Keys=map[] ClientIP=172.17.0.4
 time=2022-03-15T14:05:04+08:00 level=info Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:42304 /v2/ <nil> <nil> <nil> 0xc0000327c0} Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=200 ErrorMessage="" BodySize=2 Path=/v2/
+time=2022-03-19T14:50:34+08:00 level=info msg=We are listen to 0.0.0.0:5001,port:5001
+time=2022-03-19T15:14:00+08:00 level=info Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=401 ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:34190 /v2/ <nil> <nil> <nil> 0xc0003fe200}
+time=2022-03-19T15:14:00+08:00 level=info msg=[Recovery] 2022/03/19 - 15:14:00 panic recovered:
+GET /v2/ HTTP/1.1
+Host: 172.17.0.4:5001
+Connection: close
+Accept-Encoding: gzip
+Authorization: *
+Connection: close
+User-Agent: docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))
+
+
+runtime error: invalid memory address or nil pointer dereference
+/usr/local/go/src/runtime/panic.go:221 (0x44acc6)
+	panicmem: panic(memoryError)
+/usr/local/go/src/runtime/signal_unix.go:735 (0x44ac96)
+	sigpanic: panicmem()
+/data/host/code/golang/bzhyProjects/sysadm/registryctl/server/registry.go:143 (0x9a1537)
+	isLogin: if definedConfig.Sysadm.Server.Tls {
+/data/host/code/golang/bzhyProjects/sysadm/registryctl/server/registry.go:102 (0x9a0dce)
+	handerRootV2: ok := isLogin(username,password)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x96dd1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x96dd06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x96bb01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x96baea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x97429d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x973f25)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x973a84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x77023a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x76b8e7)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-19T15:14:00+08:00 level=info Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=500 ErrorMessage="" BodySize=0 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:34194 /v2/ <nil> <nil> <nil> 0xc0003fe6c0}
+time=2022-03-19T15:14:53+08:00 level=info BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:34518 /v2/ <nil> <nil> <nil> 0xc0003fe180} Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=401 ErrorMessage=""
+time=2022-03-19T15:14:53+08:00 level=info msg=[Recovery] 2022/03/19 - 15:14:53 panic recovered:
+GET /v2/ HTTP/1.1
+Host: 172.17.0.4:5001
+Connection: close
+Accept-Encoding: gzip
+Authorization: *
+Connection: close
+User-Agent: docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))
+
+
+runtime error: invalid memory address or nil pointer dereference
+/usr/local/go/src/runtime/panic.go:221 (0x44acc6)
+	panicmem: panic(memoryError)
+/usr/local/go/src/runtime/signal_unix.go:735 (0x44ac96)
+	sigpanic: panicmem()
+/data/host/code/golang/bzhyProjects/sysadm/registryctl/server/registry.go:143 (0x9a1537)
+	isLogin: if definedConfig.Sysadm.Server.Tls {
+/data/host/code/golang/bzhyProjects/sysadm/registryctl/server/registry.go:102 (0x9a0dce)
+	handerRootV2: ok := isLogin(username,password)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x96dd1a)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/recovery.go:92 (0x96dd06)
+	CustomRecoveryWithWriter.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x96bb01)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/logger.go:520 (0x96baea)
+	Logger.func1: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/context.go:178 (0x97429d)
+	(*Context).Next: c.handlers[c.index](c)
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:551 (0x973f25)
+	(*Engine).handleHTTPRequest: c.Next()
+/data/code/golang/pkg/mod/github.com/wangyysde/sysadm!server@v0.0.0-20220123085218-e23ac4a4232c/sysadmServer.go:507 (0x973a84)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:2878 (0x77023a)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:1929 (0x76b8e7)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1581 (0x465940)
+	goexit: BYTE	$0x90	// NOP
+
+time=2022-03-19T15:14:53+08:00 level=info BodySize=0 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic G1tBYWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:34520 /v2/ <nil> <nil> <nil> 0xc0004081c0} Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=500 ErrorMessage=""
+time=2022-03-19T15:28:14+08:00 level=info msg=We are listen to 0.0.0.0:5001,port:5001
+time=2022-03-19T15:28:21+08:00 level=info Method=GET StatusCode=401 ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:39416 /v2/ <nil> <nil> <nil> 0xc00040e480} Keys=map[] ClientIP=172.17.0.4
+time=2022-03-19T15:28:21+08:00 level=info Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:39418 /v2/ <nil> <nil> <nil> 0xc0000a2640} Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=200 ErrorMessage="" BodySize=2
+time=2022-03-19T15:28:24+08:00 level=info ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:39444 /v2/ <nil> <nil> <nil> 0xc00040e9c0} Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=401
+time=2022-03-19T15:28:24+08:00 level=info Method=GET StatusCode=200 ErrorMessage="" BodySize=2 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:39446 /v2/ <nil> <nil> <nil> 0xc000328200} Keys=map[] ClientIP=172.17.0.4
+time=2022-03-19T16:56:49+08:00 level=info msg=We are listen to 0.0.0.0:5001,port:5001
+time=2022-03-19T16:57:59+08:00 level=info Method=GET StatusCode=401 ErrorMessage="" BodySize=86 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:43754 /v2/ <nil> <nil> <nil> 0xc0000a29c0} Keys=map[] ClientIP=172.17.0.4
+time=2022-03-19T16:57:59+08:00 level=info Keys=map[] ClientIP=172.17.0.4 Method=GET StatusCode=200 ErrorMessage="" BodySize=2 Path=/v2/ Request=&{GET /v2/ HTTP/1.1 1 1 map[Accept-Encoding:[gzip] Authorization:[Basic YWRtaW46WmFxMTJ3c1g=] Connection:[close] User-Agent:[docker/19.03.6 go/go1.12.16 git-commit/369ce74a3c kernel/3.10.0-1062.12.1.el7.x86_64 os/linux arch/amd64 UpstreamClient(Docker-Client/19.03.6 \(linux\))]] {} <nil> 0 [] true 172.17.0.4:5001 map[] map[] <nil> map[] 172.17.0.4:43756 /v2/ <nil> <nil> <nil> 0xc00040bb40}

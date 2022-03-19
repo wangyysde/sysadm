@@ -29,9 +29,9 @@ import (
   
  var SupportDBs = []string{
     "postgre",
+	"mysql",
 	/* =============================
 	TODO:
-    "mysql",
     "info",
     "warning",
     "error",
@@ -92,11 +92,10 @@ import (
 
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(100001,"debug","Now checking database configurations."))
-	if strings.ToLower(config.Type) != "postgre" {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100002,"fatal","We can only use postgre now."))
+	if !IsSupportedDB(config.Type) {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100002,"fatal","DB type %s not be suupported.",config.Type))
 		return config, errs
 	}
-	config.Type="postgre"
 	switch strings.ToLower(config.Type) {
 	case "postgre":
 		config.Entity = Postgre{
@@ -104,7 +103,7 @@ import (
 		}
 	case "mysql":
 		//TODO 
-		config.Entity = Postgre{
+		config.Entity = MySQL{
 			Config: config,
 		}
 	}

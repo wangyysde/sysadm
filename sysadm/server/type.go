@@ -24,26 +24,33 @@ import (
 	"github.com/wangyysde/sysadm/sysadm/config"
 )
 
+//
 type StartParas struct {
 	// Point to configuration file path of server 
-	ConfigPath  string 		
-	AccessLogFp *os.File
-	ErrorLogFp *os.File
+	ConfigPath  string 
 	// root path of sysadm executeable package
 	SysadmRootPath string
 }
 
 type RunningParas struct {
+	// descriptor of access log file which will be used to close logger when system exit
 	AccessLogFp *os.File
+	// descriptor of error log file which will be used to close logger when system exit
 	ErrorLogFp *os.File
+	// the configurations what have been parsed. these configurations come from environment, configure file or default value
 	DefinedConfig *config.Config
+	// the DB configurations what have been parsed. these configurations come from environment, configure file or default value
 	DBConfig *sysadmDB.DbConfig
 }
 
 type RuningData struct {
+	// the start parameters of program such as configuration file , root path of program 
 	StartParas *StartParas
+	// the runing parameters of program what come from environment, configure file or default value 
 	RuningParas *RunningParas
+	// the old start parameters of program after the program reload or restart  
 	OldStartParas *StartParas
+	// the old runing parameters of program after the program reload or restart
 	OldRunningParas *RunningParas
 }
 

@@ -18,9 +18,9 @@ user:
   defaultUser: "admin"
   defaultPassword: "Sysadm12345"
 DB:
-  type: "postgre" 
+  type: "mysql" 
   host: "172.17.0.4"
-  port: 30432
+  port: 30306
   user: sysadm
   password: "Zaq12wsX"
   dbname: "sysadm"

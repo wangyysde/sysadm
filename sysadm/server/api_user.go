@@ -71,8 +71,8 @@ func (u User) loginHandler(c *sysadmServer.Context){
 	// Qeurying data from DB
 	selectData := db.SelectData{
 		Tb: []string{"user"},
-		OutFeilds: []string{"userid","username","password","deleted","salt",},
-		Where: map[string]string{"username": "= '" + username + "'"},
+		OutFeilds: []string{"userid","username","password","salt",},
+		Where: map[string]string{"username": "='" + username + "' and deleted=0"},
 	}
 	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
 	retData,err := dbEntity.QueryData(&selectData)
@@ -103,8 +103,8 @@ func (u User) loginHandler(c *sysadmServer.Context){
 	
 	// checking password 
 	row := retData[0]
-	dbPassword := row["password"].(string)
-	salt := row["salt"].(string)
+	dbPassword := string(row["password"].([]uint8))
+	salt := string(row["salt"].([]uint8))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040007,"debug","dbpassword %s.",dbPassword))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040008,"debug","password %s.",password))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040009,"debug","salt %s.",salt))

@@ -26,21 +26,22 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	sysadmDB "github.com/wangyysde/sysadm/db"
 	"github.com/wangyysde/sysadm/registryctl/config"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	log "github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )
 
+/*
+
 type StartParameters struct {
-	// Point to configuration file path of server 
-	ConfigPath  string 		
+	// Point to configuration file path of server
+	ConfigPath  string
 	OldConfigPath string
 	accessLogFp *os.File
 	errorLogFp *os.File
 	sysadmRootPath string
-	dbConfig *sysadmDB.DbConfig 
+	dbConfig *sysadmDB.DbConfig
 	router *sysadmServer.Engine
 }
 
@@ -53,81 +54,61 @@ var StartData = &StartParameters{
 	dbConfig: nil,
 	router: nil,
 }
+*/
 
-var definedConfig *config.Config 
-var err error
+//var definedConfig *config.Config
 var exitChan chan os.Signal
-var entity sysadmDB.DbEntity
 
 func DaemonStart(cmd *cobra.Command, cmdPath string){
 	var errs []sysadmerror.Sysadmerror
-	
-	// handling configurations 
-	definedConfig, errs = config.HandleConfig(StartData.ConfigPath,cmdPath)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202001,"debug","try to start registyctl server"))
+
+	// parsing the configurations and get configurations from environment, then set them to definedConfig after checked.
+	definedConfig, err := config.HandleConfig(CliData.ConfigPath,cmdPath)
+	errs = append(errs,err...)
 	maxLevel := sysadmerror.GetMaxLevel(errs)
 	fatalLevel := sysadmerror.GetLevelNum("fatal")
-	if maxLevel >= fatalLevel {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202003,"debug","configurations have been handled.but the configuration is not valid"))
-	} else {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202004,"debug","configurations have been handled and it is ok"))
-	}
-
+	if maxLevel >= fatalLevel || definedConfig == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202003,"error","configurations have been handled.but the configuration is not valid"))
+		logErrors(errs)
+		os.Exit(2020001)
+	} 
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202004,"debug","configurations have been handled and it is ok"))
+	RuntimeData.RuningParas.DefinedConfig = definedConfig
+	
 	// setting logger according the configurations
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202005,"debug","try to setting logger..."))
-	e := setLogger()
-	defer closeLogger()
-	if len(e) > 0 {
-		errs = appendErrs(errs,e)
-	}
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202006,"debug","loggers have been set"))
+	err = setLogger(definedConfig)
+	errs = append(errs,err...)
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202007,"debug","fatal(or higher level) error(s) occurred. we will exit."))
 		logErrors(errs)
-		os.Exit(202002)
+		os.Exit(2020002)
 	}
-	if len(errs) > 0 {
-		logErrors(errs)
-	}
+	defer closeLogger()
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202006,"debug","loggers have been set"))
+	// try to logging logs to logfile
+	logErrors(errs)
+	//errs =errs[0:0]
 
 	// getting program root path	
-	if _,err = getSysadmRootPath(cmdPath); err != nil {
-		sysadmServer.Logf("fatal","erroCode: 202003 Msg: can not get the root path of the program,err:%s ",err)
+	if _,e := getSysadmRootPath(cmdPath); err != nil {
+		sysadmServer.Logf("fatal","erroCode: 202003 Msg: can not get the root path of the program,err:%s ",e)
 		os.Exit(202003)
 	}
 	
 	// handing DB configuration,initating an entity, open an connection to DB server according to the configuration
-	dbConfig := initDBConfig(definedConfig)
-	StartData.dbConfig = &dbConfig
-	entity,errs = initDBEntity(&dbConfig)
-	maxLevel = sysadmerror.GetMaxLevel(errs)
-	if maxLevel >= fatalLevel {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202012,"fatal","fatal(or higher level) error(s) occurred. we will exit."))
+	entity,errs := initDB(definedConfig,cmdPath)
+	if entity == nil {
 		logErrors(errs)
 		os.Exit(202013)
 	}
-	if len(errs) > 0 {
-		logErrors(errs)
-	}
-	dbConfig.Entity = entity
-	errs = openDBConnection(StartData.dbConfig)
-	maxLevel = sysadmerror.GetMaxLevel(errs)
-	if maxLevel >= fatalLevel {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202014,"debug","fatal(or higher level) error(s) occurred. we will exit."))
-		logErrors(errs)
-		os.Exit(202015)
-	}
-	defer closeDBConnection(StartData.dbConfig)
-	if len(errs) > 0 {
-		logErrors(errs)
-	}
+	defer entity.CloseDB()
 
-	e = getRepositories()
-	errs = e
+	// initating server
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
-	StartData.router = r
-	e = addRegistryV2RootHandler()
+	e := addRegistryV2RootHandler(r)
 	errs = appendErrs(errs,e)
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
@@ -169,8 +150,8 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
         c.String(http.StatusOK, "echo ping message")
     })  
 	exitChan = make(chan os.Signal)
-	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,os.Kill, syscall.SIGKILL)
-	go removeSocketFile()
+	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,syscall.SIGTERM)
+	go removeSocketFile(definedConfig)
     // Listen and serve on defined port
 	if definedConfig.Server.Socket !=  "" {
 		go func (sock string){
@@ -179,10 +160,10 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 				sysadmServer.Logf("error","We can not listen to %s, error: %s", sock, err)
 				os.Exit(3)
 			}
-			defer removeSocketFile()
+			defer removeSocketFile(definedConfig)
 		}(definedConfig.Server.Socket)
 	}
-	defer removeSocketFile()
+	defer removeSocketFile(definedConfig)
 	liststr := fmt.Sprintf("%s:%d",definedConfig.Server.Address,definedConfig.Server.Port)
 	sysadmServer.Logf("info","We are listen to %s,port:%d", liststr,definedConfig.Server.Port)
     r.Run(liststr)
@@ -190,7 +171,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 }
 
 // removeSocketFile deleting the socket file when server exit
-func removeSocketFile(){
+func removeSocketFile(definedConfig *config.Config){
 	<-exitChan
 	_,err := os.Stat(definedConfig.Server.Socket)
 	if err == nil {
@@ -201,7 +182,7 @@ func removeSocketFile(){
 }
 
 // set parameters to accessLogger and errorLooger
-func setLogger()([]sysadmerror.Sysadmerror){
+func setLogger(definedConfig *config.Config)([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	sysadmServer.SetLoggerKind(definedConfig.Log.Kind)
 	sysadmServer.SetLogLevel(definedConfig.Log.Level)
@@ -211,7 +192,7 @@ func setLogger()([]sysadmerror.Sysadmerror){
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(202000,"error","can not set access log file(%s) error: %s",definedConfig.Log.AccessLog,err))
 		}else{
-			StartData.accessLogFp = fp
+			RuntimeData.RuningParas.AccessLogFp = fp
 		}
 		
 	}
@@ -221,7 +202,7 @@ func setLogger()([]sysadmerror.Sysadmerror){
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(202001,"error","can not set error log file(%s) error: %s",definedConfig.Log.ErrorLog,err))
 		}else{
-			StartData.errorLogFp = fp
+			RuntimeData.RuningParas.ErrorLogFp = fp
 		}
 	}
 	sysadmServer.SetIsSplitLog(definedConfig.Log.SplitAccessAndError)
@@ -243,15 +224,15 @@ func setLogger()([]sysadmerror.Sysadmerror){
 // close access log file descriptor and error log file descriptor
 // set AccessLogger  and ErrorLogger to nil
 func closeLogger(){
-	if StartData.accessLogFp != nil {
-		fp := StartData.accessLogFp 
+	if RuntimeData.RuningParas.AccessLogFp != nil {
+		fp := RuntimeData.RuningParas.AccessLogFp 
 		fp.Close()
 		sysadmServer.LoggerConfigVar.AccessLogger = nil
 		sysadmServer.LoggerConfigVar.AccessLogFile = ""
 	}
 
-	if StartData.errorLogFp != nil {
-		fp := StartData.errorLogFp 
+	if RuntimeData.RuningParas.ErrorLogFp != nil {
+		fp := RuntimeData.RuningParas.ErrorLogFp 
 		fp.Close()
 		sysadmServer.LoggerConfigVar.ErrorLogger = nil
 		sysadmServer.LoggerConfigVar.ErrorLogFile = ""
@@ -266,7 +247,7 @@ func getSysadmRootPath(cmdPath string) (string,error){
 	}
 	 
 	dir = filepath.Join(dir,"../")
-	StartData.sysadmRootPath = dir
+	RuntimeData.StartParas.SysadmRootPath = dir
 
 	return dir, nil
 }

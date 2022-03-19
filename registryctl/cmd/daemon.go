@@ -38,17 +38,14 @@ var startCmd =  &cobra.Command{
 	Use: "start",
 	Short: "Start the daemon of registryctl server",
 	Run: func(cmd *cobra.Command, args []string){
-		if server.StartData.ConfigPath != "" {
-			server.StartData.OldConfigPath = server.StartData.ConfigPath
-		} else {
-			server.StartData.OldConfigPath = ""
+		if server.RuntimeData.StartParas != nil {
+			server.RuntimeData.OldStartParas = server.RuntimeData.StartParas
 		}
-		server.StartData.ConfigPath = cfgFile
-		
+		server.CliData.ConfigPath = cfgFile
 		config.SysadmVersion = sysadmcmd.SysadmVer
 		config.RegistryctlVer = registryctlVer
 		config.RegistryApiVer = registryApiVer 
-		server.DaemonStart(cmd, os.Args[0])
+		server.DaemonStart(cmd, os.Args[0])		
 	},
 	Args: cobra.NoArgs,
 

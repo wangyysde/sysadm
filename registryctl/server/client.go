@@ -35,7 +35,6 @@ import (
 // TODO: the following parameters should be configurable in the future.
 var (
 	timeout time.Duration = 30 
-	localAddr net.Addr = nil // Ref https://pkg.go.dev/net#Addr
 	keepAlive time.Duration = 30
 	tlshandshaketimeout time.Duration = 10
 	disableKeepAlives bool = false
@@ -114,6 +113,7 @@ func addReqestHeader(r *requestParams,req *http.Request)([]sysadmerror.Sysadmerr
 
 func setBasicAuth(req *http.Request)([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202018,"debug","setting authorization for the request"))
 	if req == nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202019,"fatal","can not setting authorization for nil request"))

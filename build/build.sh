@@ -69,7 +69,6 @@ function create::build::infofile(){
 	echo "var compiler = \"${COMPILER}\"" >> "${build_file}"
 	echo "var arch = \"${ARCH}\"" >> "${build_file}"
 	echo "var hostos = \"${OS}\"" >> "${build_file}"
-
 	return 0
 }
 
@@ -82,7 +81,8 @@ function build::package(){
 
 	cd "${SYSADM_ROOT}" 
 	goFiles="$(ls ${package_name}/*.go |tr "\n" " ")"
-	echo -n "Now building ${package_name} package. ${package_name} binary file will be placed into ${SYSADM_OUTPUT}/....."
+	echo  "Now building ${package_name} package. ${package_name} binary file will be placed into ${SYSADM_OUTPUT}/....."
+    echo -n "go build -o ${SYSADM_OUTPUT}/${package_name} ${goFiles}"
 	go build -o "${SYSADM_OUTPUT}/${package_name}" ${goFiles}
 	[ $? -eq 0 ] && echo "[ Success ]" || echo "[ False ]"
 }
