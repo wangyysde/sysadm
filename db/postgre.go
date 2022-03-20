@@ -216,11 +216,15 @@ func (p Postgre)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerro
 	first = true
 	for _,key := range sd.Order {
 		if first {
-			querySQL = querySQL + " order by " + key 
-			first = false
-		} else {
-			querySQL = querySQL + "," + key 
-		}
+			querySQL = querySQL + " order by " + key.Key
+			if key.Order == 0 {
+				querySQL =querySQL + " ASC"
+			}else {
+				querySQL =querySQL + " DESC"
+			} 
+			// Because postgre can not execute the statement with multiple order fields, so break here
+			break
+		} 
 	}
 
 	if len(sd.Limit) == 1 {

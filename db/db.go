@@ -68,12 +68,15 @@ import (
 
 // key is the filed name and value is the value that will be set to the field.
  type FieldData map[string]interface{}
-
+ type OrderData struct {
+	Key string
+	Order int
+ }
   type SelectData struct {
 	Tb []string
 	OutFeilds []string
 	Where map[string]string
-	Order []string
+	Order []OrderData
 	Group []string 
 	Limit []int
  }

@@ -18,7 +18,7 @@
 package server
 
 import (
-	"encoding/json"
+	//	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -53,8 +53,8 @@ func apiHandlers(c *sysadmServer.Context){
 			Errorcode: 1030002,
 			Message: fmt.Sprintf("parameters error.module %s not found", module),
 		}
-		respBody,_ := json.Marshal(ret)
-		c.JSON(http.StatusOK, respBody)
+		//respBody,_ := json.Marshal(ret)
+		c.JSON(http.StatusOK, ret)
 		return 
 	}
 
@@ -63,11 +63,11 @@ func apiHandlers(c *sysadmServer.Context){
 		logErrors(errs)
 		ret := ApiResponseStatus {
 			Status: false,
-			Errorcode: 1030002,
+			Errorcode: 1030003,
 			Message: fmt.Sprintf("parameters error.action %s not found", action),
 		}
-		respBody,_ := json.Marshal(ret)
-		c.JSON(http.StatusOK, respBody)
+		//respBody,_ := json.Marshal(ret)
+		c.JSON(http.StatusOK, ret)
 		return 
 	}
 

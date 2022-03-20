@@ -224,10 +224,20 @@ func (p MySQL)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
 	first = true
 	for _,key := range sd.Order {
 		if first {
-			querySQL = querySQL + " order by " + key 
+			querySQL = querySQL + " order by " + key.Key
+			if key.Order == 0 {
+				querySQL =querySQL + " ASC"
+			}else {
+				querySQL =querySQL + " DESC"
+			}
 			first = false
 		} else {
-			querySQL = querySQL + "," + key 
+			querySQL = querySQL + "," + key.Key
+			 if key.Order == 0 {
+				querySQL =querySQL + " ASC"
+			}else {
+				querySQL =querySQL + " DESC"
+			}
 		}
 	}
 

@@ -23,7 +23,7 @@
 	//"github.com/wangyysde/sysadm/sysadmerror"
  )
 
- func (s Sysadm) Name()string{
+ func (s Sysadm) ModuleName()string{
 	return "sysadm"
 }
 func (s Sysadm) ActionHanderCaller(action string, c *sysadmServer.Context){

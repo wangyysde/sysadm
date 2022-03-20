@@ -21,7 +21,7 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
- func (r Registry) Name()string{
+ func (r Registry) ModuleName()string{
 	return "registry"
 }
 

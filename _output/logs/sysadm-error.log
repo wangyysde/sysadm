@@ -5511,3 +5511,306 @@ time=2022-03-19T16:59:27+08:00 level=debug msg=erroCode: 106001 Msg: now handlin
 time=2022-03-19T16:59:27+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
 time=2022-03-19T16:59:27+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
 time=2022-03-19T16:59:27+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":true,"error":0,"message":""}
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.17.0.4 is right.
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-03-20T14:06:22+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.17.0.4 and Port: 30306. successful
+time=2022-03-20T14:06:22+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+	- index.html
+	- login.html
+
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-03-20T14:06:22+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-03-20T14:12:56+08:00 level=debug msg=erroCode: 1030001 Msg: now handling the request for module project with action list.
+time=2022-03-20T14:12:56+08:00 level=error msg=erroCode: 1030003 Msg:  parameters error. action list was not found in module project.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.17.0.4 is right.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-03-20T14:22:30+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.17.0.4 and Port: 30306. successful
+time=2022-03-20T14:22:30+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+	- index.html
+
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-03-20T14:22:30+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-03-20T14:23:34+08:00 level=debug msg=erroCode: 1080001 Msg: now handling project list handler through api.
+time=2022-03-20T14:23:34+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T14:23:34+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select [projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where =0 
+time=2022-03-20T14:23:34+08:00 level=error msg=erroCode: 107022 Msg: SQL query error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[projectid,ownerid,name,comment,deleted,creation_time,update_time from `project`' at line 1
+time=2022-03-20T14:28:39+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-03-20T14:28:39+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-03-20T14:28:39+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.17.0.4 is right.
+time=2022-03-20T14:28:39+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-03-20T14:28:39+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-03-20T14:28:40+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-03-20T14:28:40+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.17.0.4 and Port: 30306. successful
+time=2022-03-20T14:28:40+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- 
+	- index.html
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-03-20T14:28:40+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-03-20T14:28:46+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T14:28:46+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where deleted=0 
+time=2022-03-20T14:34:01+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T14:34:01+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where deleted=0 
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.17.0.4 is right.
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-03-20T14:39:29+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.17.0.4 and Port: 30306. successful
+time=2022-03-20T14:39:29+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=Loaded HTML Templates (6): 
+	- index.html
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- 
+
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-03-20T14:39:29+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-03-20T14:40:10+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T14:40:10+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where deleted=0 
+time=2022-03-20T15:01:49+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T15:01:49+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where projectid=1 and deleted=0 
+time=2022-03-20T15:02:41+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T15:02:41+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select projectid,ownerid,name,comment,deleted,creation_time,update_time from `project` where projectid=1
+time=2022-03-20T15:25:06+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select userid,username,password,salt from `user` where username='admin' and deleted=0
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 1050001 Msg: now checking the user is login
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 1050002 Msg: try to execute the request with:http://0.0.0.0:8081/api/v1.0/user/login
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106010 Msg: now handling the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106007 Msg: now handling the data for the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106009 Msg: adding key: username value admin to the data of the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106009 Msg: adding key: password value Zaq12wsX to the data of the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":false,"error":1040008,"message":"username or password incorrect"}
+time=2022-03-20T15:25:10+08:00 level=debug msg=erroCode: 1050006 Msg: can not login with errorcode: 1040008 message: username or password incorrect
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select userid,username,password,salt from `user` where username='admin' and deleted=0
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 1050001 Msg: now checking the user is login
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 1050002 Msg: try to execute the request with:http://0.0.0.0:8081/api/v1.0/user/login
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106010 Msg: now handling the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106007 Msg: now handling the data for the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106009 Msg: adding key: username value admin to the data of the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106009 Msg: adding key: password value Sysadm12345 to the data of the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-03-20T15:25:19+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":true,"error":0,"message":""}

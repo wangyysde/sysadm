@@ -31,7 +31,7 @@ type apiUserHandler func (u User)(c *sysadmServer.Context)
 var  userActions = []string{"login"}
 
 
- func (u User) Name()string{
+ func (u User) ModuleName()string{
 	return "user"
 }
 

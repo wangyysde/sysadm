@@ -1,4 +1,3 @@
-
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
@@ -18,15 +17,14 @@
 
 package server
 
-import(
-
+import (
 	"github.com/wangyysde/sysadmServer"
 )
 
 type ApiResponseStatus struct {
 	Status bool `json:"status"`
 	Errorcode int `json:"error"`
-	Message string `json:"message"`
+	Message interface{} `json:"message"`
 }
 
 type apiHander func (c *sysadmServer.Context)
@@ -40,8 +38,18 @@ type Module struct {
  type User struct {}
  type Registry struct {}
  type Sysadm struct {}
+ type Project struct {
+	Projectid int `json:"projectid"`
+	Ownerid int `json:"ownerid"`
+	Name string `json:"name"`
+	Comment string `json:"comment"`
+	Deleted bool `json:"deleted"`
+	Creation_time int `json:"creation_time"`
+	Update_time int `json:"update_time"`
+ }
+
  type ModuleInterface interface {
-	Name() string
+	ModuleName() string
 	ActionHanderCaller(action string, c *sysadmServer.Context)
  }
 
@@ -62,5 +70,11 @@ var Modules = map[string]Module{
 		Name: "sysadm",
 		Path: "sysadm",
 		Instance: Sysadm{},
+	},
+	"project": {
+		Name: "project",
+		Path: "project",
+		Instance: Project{},
+		Actions: projectActions,
 	},
  }
