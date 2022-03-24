@@ -19,11 +19,16 @@ package server
 
 import (
 	//	"encoding/json"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
+	"github.com/wangyysde/sysadm/httpclient"
 	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -104,3 +109,85 @@ func foundAction(m string, action string)bool{
 	return found
 }
 
+func buildApiRequestParameters(module string,action string, data map[string] string,headers map[string]string,basicAuthData map[string]string)(*httpclient.RequestParams){
+	var reqUrl string = ""
+	m := Modules
+	
+	if RuntimeData.RuningParas.DefinedConfig.Server.Tls {
+		if  RuntimeData.RuningParas.DefinedConfig.Server.Port  == 443 {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion + "/" + m[module].Path +"/" + action 
+		} else {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion + "/" + m[module].Path +"/" + action
+		}
+	}else {
+		if RuntimeData.RuningParas.DefinedConfig.Server.Port == 80 {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion  + "/" + m[module].Path + "/" + action		
+		} else {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion +  "/" + m[module].Path + "/" + action
+		}
+	}
+	var requestParams httpclient.RequestParams = httpclient.RequestParams{}
+	requestParams.Url = reqUrl
+	requestParams.Method = "POST"
+	for k,v := range data {
+		requestParams.QueryData = append(requestParams.QueryData,&httpclient.RequestData{Key: k, Value: v})
+	}
+
+	if headers != nil  {
+		for k,v := range headers {
+			requestParams.Headers  = append(requestParams.Headers,httpclient.RequestData{Key: k, Value: v})
+		}
+	} 
+
+	if basicAuthData != nil {
+		requestParams.BasicAuthData = basicAuthData
+	}else {
+		requestParams.BasicAuthData = nil
+	}
+	
+	return &requestParams
+}
+
+func ParseResponseBody(body []byte)([]map[string]string, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030004,"debug","try to parsing body %s",body))
+	if len(body) < 1 {
+		
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030005,"error","the response from  the server is empty"))
+		return nil, errs
+	}
+
+	res := &ApiResponseStatus{}
+	e := json.Unmarshal(body,res)
+
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030006,"error","can not parsing reponse body to json. error: %s",e))
+		return nil , errs
+	}
+
+	if !res.Status {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(res.Errorcode,"error","we got an error: %s",res.Message.(string)))
+		return nil , errs
+	}
+	
+	var rets []map[string]string
+	iData := res.Message.([]interface {})
+	for _,iLine := range iData {
+		d := iLine.(map[string]interface{})
+		ret := make(map[string]string)
+		for k,v := range d {
+			vDecode, err := base64.StdEncoding.DecodeString(v.(string))
+			if err != nil { 
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030007,"error","decode field(%s)'s content error: %s",k,err))
+				return nil,errs
+			}
+			ret[k] = utils.Bytes2str(vDecode)
+
+		}
+		rets = append(rets, ret)
+	}
+
+	return rets,errs
+
+}

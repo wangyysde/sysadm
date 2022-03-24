@@ -18,7 +18,7 @@ DB:
   host: "localhost"
   port: 30306
   user: sysadm
-  password: "Zaq12wsX"
+  password: "Sysadm12345"
   dbname: "sysadm"
   sslmode: "disable"
   sslrootcert: ""

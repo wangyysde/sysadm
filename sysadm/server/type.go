@@ -24,7 +24,7 @@ import (
 	"github.com/wangyysde/sysadm/sysadm/config"
 )
 
-//
+// Start parameters of the program
 type StartParas struct {
 	// Point to configuration file path of server 
 	ConfigPath  string 

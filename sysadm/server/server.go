@@ -77,6 +77,19 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
     
+	// loading template files from the system.
+	tmplPath := RuntimeData.StartParas.SysadmRootPath + "/tmpls/*.html" 
+	r.LoadHTMLGlob(tmplPath)
+	r.Delims(templateDelimLeft,templateDelimRight)
+
+	/*
+	r.SetFuncMap(template.FuncMap{
+        "safe": func(str string) template.HTML {
+            return template.HTML(str)
+        },
+    })
+	*/
+
 	// initating session
 	if err = initSession(r); err != nil {
 		sysadmServer.Logf("error","error:%s",err)
@@ -89,7 +102,15 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		sysadmServer.Logf("error","error:%s",err)
 		os.Exit(6)
 	}
-	
+	addApiHandler(r,cmdPath)
+
+	// adding project handlers
+	errs = addProjectsHandler(r,cmdPath) 
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+		os.Exit(9)
+	}
+
 	// adding Root handlers
 	err = addRootHandler(r,cmdPath)
 	if err != nil {
@@ -102,8 +123,6 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		sysadmServer.Logf("error","%s",err)
 		os.Exit(8)
 	}
-
-	addApiHandler(r,cmdPath)
 
 	// setting channel for passing signal to other process
 	exitChan = make(chan os.Signal)

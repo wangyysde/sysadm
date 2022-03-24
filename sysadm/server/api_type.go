@@ -21,6 +21,7 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
+type ApiResponseBodyData map[string] string
 type ApiResponseStatus struct {
 	Status bool `json:"status"`
 	Errorcode int `json:"error"`

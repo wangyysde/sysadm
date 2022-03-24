@@ -70,11 +70,6 @@ func addFormHandler(r *sysadmServer.Engine,cmdRunPath string) error {
 		}
 	}
 
-	r.Delims(templateDelimLeft,templateDelimRight)
-
-	formTmplPath := RuntimeData.StartParas.SysadmRootPath + "/" + formTemplateDir +"*.html" 
-	r.LoadHTMLGlob(formTmplPath)
-
 	addForms(r)
 
 	return nil

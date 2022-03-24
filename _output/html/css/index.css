@@ -1,0 +1,63 @@
+.table-top {
+    position: relative;
+    border-radius: 0;
+    width: 100%;
+    height: 50px;
+    border: 0px;
+    top: 30px;
+    left: 10px;
+    font-size: 18px;
+    color: #000;
+}
+
+.table-top button {
+    position: relative;
+    width: 100px;
+    height: 40px;
+    left: 30px;
+    border: 1px solid #4CAF50;
+    background-color: #3c8dbc;
+    font-size: 18px;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+}
+
+.list-table {
+    position: relative;
+    border-radius: 0;
+    width: 100%;
+    border-width: 1px;
+    border-color: #3c8dbc;
+    border-style: solid;
+    top: 30px;
+    left: 10px;
+    font-size: 12px;
+    color: #000;
+    padding: 5px;
+}
+
+.list-table th {
+    position: relative;
+    align-items: center;
+    border-radius: 0;
+    font-size: 14px;
+    background-color: #3c8dbc;
+    color: #fff;
+    text-align: center;
+}
+
+.list-table td {
+    position: relative;
+    align-items: center;
+    border-width: 1px;
+    border-color: #3c8dbc;
+    border-style: solid;
+    padding: 5px;
+}
+
+.td-foot {
+    position: relative;
+    text-align: right;
+    padding: 5px;
+}

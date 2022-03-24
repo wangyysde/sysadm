@@ -30,7 +30,6 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
-type apiProjectHandler func (p Project)(c *sysadmServer.Context)
 
 var  projectActions = []string{"list"}
 
@@ -45,7 +44,6 @@ func (p Project) ActionHanderCaller(action string, c *sysadmServer.Context){
 			p.listHandler(c)
 	}
 	
-	return
 }
 
 /* 
@@ -130,7 +128,7 @@ func (p Project) listHandler(c *sysadmServer.Context){
 	// no project has be queried. 
 	if len(retData) < 1 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1080002,"debug","no project has be queried."))
-		logErrors(err)
+		logErrors(errs)
 		ret := ApiResponseStatus {
 			Status: true,
 			Errorcode: 1080002,
@@ -141,7 +139,7 @@ func (p Project) listHandler(c *sysadmServer.Context){
 	}
 	
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1080003,"debug","send response data to the client."))
-	logErrors(err)
+	logErrors(errs)
 /*
 	retJson, e := json.Marshal(retData)
 	if e != nil {
@@ -162,8 +160,6 @@ func (p Project) listHandler(c *sysadmServer.Context){
 	}
 	c.JSON(http.StatusOK, ret)
 	
-	return 
-
 }
 
 func (p Project) isField(name string) bool {
