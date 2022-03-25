@@ -177,13 +177,17 @@ func ParseResponseBody(body []byte)([]map[string]string, []sysadmerror.Sysadmerr
 		d := iLine.(map[string]interface{})
 		ret := make(map[string]string)
 		for k,v := range d {
-			vDecode, err := base64.StdEncoding.DecodeString(v.(string))
-			if err != nil { 
-				errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030007,"error","decode field(%s)'s content error: %s",k,err))
-				return nil,errs
+			value,ok := v.(string)
+			if !ok {
+				ret[k] = ""
+			} else {
+				vDecode, err := base64.StdEncoding.DecodeString(value)
+				if err != nil { 
+					errs = append(errs, sysadmerror.NewErrorWithStringLevel(1030007,"error","decode field(%s)'s content error: %s",k,err))
+					return nil,errs
+				}
+				ret[k] = utils.Bytes2str(vDecode)
 			}
-			ret[k] = utils.Bytes2str(vDecode)
-
 		}
 		rets = append(rets, ret)
 	}

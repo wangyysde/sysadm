@@ -80,7 +80,15 @@ func addProjectsHandler(r *sysadmServer.Engine,cmdRunPath string) ([]sysadmerror
 	return errs
 }
 
-// handler for handling login form.
+/*
+	handler for handling list of the project
+	Query parameters of request are below: 
+	conditionKey: key name for DB query ,such as projectid, ownerid,name....
+	conditionValue: the value of the conditionKey.for projectid, ownereid using =, for name, comment using like.
+	deleted: 0 :normarl 1: deleted
+	start: start number of the result will be returned.
+	num: lines of the result will be returned.
+*/
 func projectListHandler(c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(110004,"debug","now handling project list"))
@@ -132,13 +140,55 @@ func projectListHandler(c *sysadmServer.Context) {
 	ret, errs := ParseResponseBody(body)
 	logErrors(errs)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("error"){
-		tplData := map[string] string{
-			"noprojectinfo": "No Project or have an error",
+		var respHMTL string = "<div class=\"table-top\"> No Project or have an error </div>\n"
+		tplData := map[string] interface{}{
+			"noprojectinfo": template.HTML(respHMTL),
 		}
 		c.HTML(http.StatusOK,projectTemplates["list"], tplData)
 		return 
 	}
 
+	var userIdListStr = ""
+	first := true 
+	for _,v := range ret {
+		if first {
+			userIdListStr += v["ownerid"]
+		}else {
+			userIdListStr = userIdListStr + "," + v["ownerid"]
+		}
+	}
+	if userIdListStr == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(110004,"error","ownerid of project no found"))
+		logErrors(errs)
+		tplData := map[string] interface{}{
+			"noprojectinfo": template.HTML("<div class=\"table-top\">No Project or have an error</div>"),
+		}
+		c.HTML(http.StatusOK,projectTemplates["list"], tplData)
+		return 
+	}
+
+	userQuerydata := make(map[string]string)
+	userQuerydata["userid"] = userIdListStr
+	requestParams = buildApiRequestParameters("user","getinfo",userQuerydata,nil,nil)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(110005,"debug","try to execute the request with:%s",requestParams.Url))
+	userbody,err := httpclient.SendRequest(requestParams)
+	errs = append(errs, err...)
+	logErrors(errs)
+	userRet, errs := ParseResponseBody(userbody)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("error"){
+		tplData := map[string] interface{}{
+			"noprojectinfo": template.HTML("<div class=\"table-top\"> No Project or have an error</div>"),
+		}
+		c.HTML(http.StatusOK,projectTemplates["list"], tplData)
+		return 
+	}
+
+	usernames := make(map[string]string)
+	for _,v := range userRet {
+		usernames[v["userid"]] = v["username"]
+	}
+	
 	var htmlData string = ""
 	htmlData = htmlData + "<table class=\"list-table\">\n"
 	htmlData = htmlData + "<tr>\n"
@@ -154,7 +204,12 @@ func projectListHandler(c *sysadmServer.Context) {
 		htmlData = htmlData + "<tr>\n"
 		htmlData += "<td width=\"5%\">	<input type=\"checkbox\" id=\"projectid[]\" name=\"projectid[]\"></td>\n"
 		htmlData += "<td>" + v["name"]+"</td>\n"
-		htmlData += "<td>" +v["ownerid"]+"</td>\n"
+		username,ok := usernames[v["ownerid"]]
+		if ok {
+			htmlData += "<td>" + username + "</td>\n"
+		} else {
+			htmlData += "<td>  </td>\n"
+		}
 		deleted = ""
 		if v["deleted"] == "1" {
 			deleted = "删除"
