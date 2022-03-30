@@ -27,7 +27,6 @@
     position: relative;
     border-radius: 0;
     width: 100%;
-    border-width: 1px;
     border-color: #3c8dbc;
     border-style: solid;
     top: 30px;
@@ -35,6 +34,7 @@
     font-size: 12px;
     color: #000;
     padding: 5px;
+    padding-bottom: 50px;
 }
 
 .list-table th {
@@ -56,8 +56,138 @@
     padding: 5px;
 }
 
-.td-foot {
+.foot-table {
     position: relative;
-    text-align: right;
+    border-radius: 0;
+    width: 100%;
+    top: 30px;
+    left: 10px;
+    font-size: 12px;
+    color: #000;
     padding: 5px;
+    padding-bottom: 50px;
+}
+
+.foot-table td {
+    position: relative;
+    padding: 5px;
+}
+
+.div-foot {
+    text-align: right;
+    padding-bottom: 50px;
+    border-width: 0px;
+}
+
+.pop-form {
+    display: none;
+    position: absolute;
+    left: 400px;
+    top: 100px;
+    width: 500px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #045283;
+    font-size: 12px;
+    border: 1px solid #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 50px;
+}
+
+.popform-title {
+    position: relative;
+    border-radius: 0;
+    width: 100%;
+    border-width: 0px;
+    top: 20px;
+    padding-bottom: 30px;
+    left: 15px;
+    font-size: 18px;
+    color: #fff;
+    padding: 5px;
+    text-align: left;
+}
+
+.popform-item {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    top: 30px;
+    left: 30px;
+}
+
+.popform-item input {
+    width: 60%;
+    height: 20px;
+    padding-left: 5px;
+    font-size: 14px;
+    border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    color: #fff;
+    background-color: transparent;
+    outline: none;
+}
+
+.popform-button {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    top: 70px;
+    text-align: center;
+}
+
+.popform-button button {
+    width: 100px;
+    height: 30px;
+    border: 0;
+    font-size: 18px;
+    color: #045283;
+    outline: none;
+    cursor: pointer;
+    background-color: #fff;
+    align-self: center;
+}
+
+.form-item input#username {
+    background: url("../images/user.png") 0px 0px no-repeat;
+}
+
+.form-item input#password {
+    background: url("../images/passwd.PNG") 0px 0px no-repeat;
+}
+
+.maskLayer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    opacity: 0.7;
+    z-Index: 0;
+}
+
+.tip {
+    display: none;
+    position: absolute;
+    left: 600px;
+    top: 10px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #ff0000;
+    font-size: 18px;
+    border: 1px solid #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    z-Index: 2000;
 }

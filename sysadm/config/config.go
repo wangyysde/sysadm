@@ -26,9 +26,10 @@ import (
 	"strconv"
 	"strings"
 
+	sysadmDB "github.com/wangyysde/sysadm/db"
+	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
-	sysadmDB "github.com/wangyysde/sysadm/db"
 )
 
 var ConfigDefined Config = Config{}
@@ -73,7 +74,7 @@ func getConfigPath(configPath string, cmdRunPath string) (string, error) {
 // Or returning an error and nil
 func getConfigContent(configPath string) (*Config, error) {
 	if configPath == "" {
-		return nil, fmt.Errorf("The configration file path must not empty")
+		return nil, fmt.Errorf("the configration file path must not empty")
 	}
 
 	yamlContent, err := ioutil.ReadFile(configPath) 
@@ -874,6 +875,185 @@ func getPostgreSslcert(confContent *Config) string{
 	return defaultConfig.DB.Sslcert
 }
 
+/*
+  Try to get ApiServer IP from one of  SYSADMAPISERVER_IP,configuration file or default value.
+  The order for getting  ApiServer IP is SYSADMAPISERVER_IP,configuration file and default value.
+*/
+func getApiServerAddress(confContent *ApiServer) string{
+	address := os.Getenv("SYSADMAPISERVER_IP")
+	if address != "" {
+		ip, err := utils.CheckIpAddress(address,false) 
+		if ip != nil {
+			return address
+		}
+		sysadmServer.Logf("warning","We have found environment variable SYSADMAPISERVER_IP: %s,but the value of SYSADMAPISERVER_IP is not a valid server IP(%s)",address,err)
+	}
+
+	if confContent != nil {
+		ip,_ := utils.CheckIpAddress(confContent.Address,false)
+		if ip != nil {
+			return confContent.Address
+		}
+		sysadmServer.Logf("warning","We have found server address(%s) from configuration file,but the value of server address is not a valid server IP(%s).default value of server address:%s will be used.",confContent.Address,defaultConfig.ApiServer.Address)
+	}
+
+	return defaultConfig.ApiServer.Address
+}
+
+/* 
+   Try to get listenPort from one of  SYSADMAPISERVER_PORT,configuration file or default value.
+   The order for getting listenPort is SYSADMAPISERVER_PORT,configuration file and default value.
+*/
+func getApiServerPort(confContent *ApiServer) int{
+	port := os.Getenv("SYSADMAPISERVER_PORT")
+	if port != "" {
+		p, err := strconv.Atoi(port)
+		if err != nil {
+			sysadmServer.Logf("warning","We have found environment variable SYSADMAPISERVER_PORT: %s,but the value of SYSADMAPISERVER_PORT is not a valid server port(%s)",port,err)
+		}else{
+			tmpPort, _ := utils.CheckPort(p)
+			if tmpPort != 0 {
+				return p
+			}
+			sysadmServer.Logf("warning","We have found environment variable SYSADMAPISERVER_PORT: %d,but the value of SYSADMAPISERVER_PORT is not a valid server port",p)
+		}
+	}
+
+	if confContent != nil {
+		tmpPort,_ := utils.CheckPort(confContent.Port)
+		if tmpPort != 0 {
+			return confContent.Port
+		}
+		sysadmServer.Logf("warning","We have found api server port(%d) from configuration file,but the value of api server port is not a valid server port.default value of server port:%s will be used.",confContent.Port,defaultConfig.ApiServer.Port)
+	}
+
+	return defaultConfig.ApiServer.Port
+}
+
+// Getting the tls value for api server from environment and checking the validity of it
+// return the tls if it is valid ,otherwise getting the value from 
+// configuration file and checking the validity of it. return the it if it is valid.
+// otherwise return the default value.
+func getApiServerTls(confContent *ApiServer) bool{
+	tls := os.Getenv("SYSADMAPISERVER_TLS")
+	if strings.ToLower(tls) == "true" || strings.ToLower(tls) == "false" {
+		if strings.ToLower(tls) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Tls 
+	}
+
+	return defaultConfig.ApiServer.Tls
+}
+
+/* 
+  Getting ca of api server  from environment and checking the validity of it
+  return the ca if it is valid ,otherwise getting ca of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getApiServerCa(confContent *ApiServer) string{
+	ca := os.Getenv("SYSADMAPISERVER_CA")
+	if ca != ""{
+		return ca
+	}
+
+	if confContent != nil  {
+		if confContent.Ca != "" {
+			return confContent.Ca
+		}
+	}
+
+	return defaultConfig.ApiServer.Ca 
+}
+
+/* 
+  Getting cert of API server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getApiServerCert(confContent *ApiServer) string{
+	cert := os.Getenv("SYSADMAPISERVER_CERT")
+	if cert != ""{
+		return cert
+	}
+
+	if confContent != nil  {
+		if confContent.Cert != "" {
+			return confContent.Cert
+		}
+	}
+
+	return defaultConfig.ApiServer.Cert
+}
+
+/* 
+  Getting key of API server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getApiServerKey(confContent *ApiServer) string{
+	key := os.Getenv("SYSADMAPISERVER_KEY")
+	if key != ""{
+		return key
+	}
+
+	if confContent != nil  {
+		if confContent.Key != "" {
+			return confContent.Key
+		}
+	}
+
+	return defaultConfig.ApiServer.Key
+}
+
+/* 
+  get configurations of API server from environment, configuration or default values
+  set them to definedConfig if them have passed checked.
+*/
+func handleApiServerConfig(apiConfig *ApiServer,cmdRunPath string){
+	ConfigDefined.ApiServer.Address  = getApiServerAddress(apiConfig)
+	ConfigDefined.ApiServer.Port = getApiServerPort(apiConfig) 
+	ConfigDefined.ApiServer.Tls = getApiServerTls(apiConfig)
+	if ConfigDefined.ApiServer.Tls {
+		caFile := getApiServerCa(apiConfig)
+		if caFile == "" || !checkFileExists(caFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Api server has be set to true But CA(%s) can not be found. We will try to set Tls to false",caFile)
+			 ConfigDefined.ApiServer.Tls =false
+		}else{
+			ConfigDefined.ApiServer.Ca = caFile
+		}
+	}
+
+	if ConfigDefined.ApiServer.Tls {
+		certFile := getApiServerCert(apiConfig)
+		if certFile == "" || !checkFileExists(certFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of API server  has be set to true But Cert(%s) can not be found. We will try to set Tls to false",certFile)
+			ConfigDefined.ApiServer.Tls = false
+		}else{
+			ConfigDefined.ApiServer.Cert = certFile
+		}
+	}
+
+	if ConfigDefined.ApiServer.Tls {
+		keyFile := getApiServerKey(apiConfig)
+		if keyFile == "" || !checkFileExists(keyFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Key(%s) can not be found. We will try to set Tls to false",keyFile)
+			ConfigDefined.ApiServer.Tls = false
+		}else{
+			ConfigDefined.ApiServer.Key = keyFile
+		}
+	}
+}
+
+
 // Try to get the values of items of configuration from OS variables ,configuratio file or default value.
 // The value of a item will be come from OS variables first ,then come from configuration file and last come from default value.
 // All the values of items should be passed check when set it to ConfigDefined
@@ -910,27 +1090,34 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 	if ConfigDefined.Server.Tls {
 		caFile := getSysadmCa(confContent)
 		if caFile == "" || !checkFileExists(ConfigDefined.Server.Ca, cmdRunPath) {
-			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But CA(%s) can not be found. We will try to set Tls to false",confContent.Server.Ca)
-			 ConfigDefined.Server.Tls =false
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But CA(%s) can not be found. We will try to set Tls to false",caFile)
+			ConfigDefined.Server.Tls =false
+		}else{
+			ConfigDefined.Server.Ca = caFile
 		}
 	}
 
 	if ConfigDefined.Server.Tls {
 		certFile := getSysadmCert(confContent)
 		if certFile == "" || !checkFileExists(ConfigDefined.Server.Cert, cmdRunPath) {
-			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Cert(%s) can not be found. We will try to set Tls to false",confContent.Server.Cert)
-			 ConfigDefined.Server.Tls =false
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Cert(%s) can not be found. We will try to set Tls to false",certFile)
+			ConfigDefined.Server.Tls =false
+		}else{
+			ConfigDefined.Server.Cert = certFile
 		}
 	}
 
 	if ConfigDefined.Server.Tls {
 		keyFile := getSysadmCert(confContent)
 		if keyFile == "" || !checkFileExists(ConfigDefined.Server.Key, cmdRunPath) {
-			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Key(%s) can not be found. We will try to set Tls to false",confContent.Server.Key)
-			 ConfigDefined.Server.Tls =false
+			sysadmServer.Logf("warning","Tls of Sysadm server  has be set to true But Key(%s) can not be found. We will try to set Tls to false",keyFile)
+			ConfigDefined.Server.Tls =false
+		} else {
+			ConfigDefined.Server.Key = keyFile
 		}
 	}
 
+	handleApiServerConfig(&confContent.ApiServer,cmdRunPath)
 	ConfigDefined.Log.AccessLog = getAccessLogFile(confContent,cmdRunPath)
 	ConfigDefined.Log.ErrorLog = getErrorLogFile(confContent,cmdRunPath)
 	ConfigDefined.Log.Kind = getLogKind(confContent)

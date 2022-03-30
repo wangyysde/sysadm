@@ -33,6 +33,7 @@
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+    <div class="maskLayer" id="maskLayer"></div>
     <div class="wrapper">
 
         <!-- Main Header -->
@@ -225,6 +226,7 @@
             <!-- Content Header (Page header) -->
             <div id="container">
                 <section class="content-header">
+
                     <h1>
                         Page Header
                         <small>Optional description</small>
@@ -240,7 +242,7 @@
                     <div>
                         中文不能显示吗？this is contentet
                     </div>
-
+                    1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>
                     <!--------------------------
               | Your Page Content Here |
               -------------------------->
@@ -252,14 +254,14 @@
         <!-- /.content-wrapper -->
 
         <!-- Main Footer -->
-        <footer class="main-footer">
+        <div class="main-footer">
             <!-- To the right -->
             <!-- <div class="pull-right hidden-xs"> -->
             Powered By <a href="https://www.sysadm.cn">Sysadm.cn </a>版权所有 © 2004-2022, All right reserved.
             <!-- </div> -->
             <!-- Default to the left -->
             <!-- <strong> </strong>  -->
-        </footer>
+        </div>
 
 
         <!-- Add the sidebar's background. This div must be placed
@@ -289,10 +291,14 @@
                 var url = $(this).attr('data');
                 //  console.log(url);
                 $('#container').load(url);
+
             });
         })
     </script>
 
+    <div class="tip" id="tip">
+        &nbsp;&nbsp;
+    </div>
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->

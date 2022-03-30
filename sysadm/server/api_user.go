@@ -107,6 +107,7 @@ func (u User) loginHandler(c *sysadmServer.Context){
 	row := retData[0]
 	dbPassword := string(row["password"].([]uint8))
 	salt := string(row["salt"].([]uint8))
+	userid := string(row["userid"].([]uint8))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040007,"debug","dbpassword %s.",dbPassword))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040008,"debug","password %s.",password))
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040009,"debug","salt %s.",salt))
@@ -116,7 +117,7 @@ func (u User) loginHandler(c *sysadmServer.Context){
 		ret := ApiResponseStatus {
 			Status: true,
 			Errorcode: 0,
-			Message: "",
+			Message: userid,
 		}
 		c.JSON(http.StatusOK, ret)
 		return 
@@ -220,9 +221,9 @@ func (u User) getInfoHandler(c *sysadmServer.Context){
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040015,"debug","no data",username,username))
 		logErrors(err)
 		ret := ApiResponseStatus {
-			Status: true,
+			Status: false,
 			Errorcode: 1040015,
-			Message: "[]",
+			Message: "no user",
 		}
 		c.JSON(http.StatusOK, ret)
 		return 

@@ -271,3 +271,14 @@ func (p Postgre)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerro
 	
 	return resData, errs
 }
+
+/*
+   execute a DB query according selectdata I
+   return a set of the result and []sysadmerror.Sysadmerror if teh SQL statement is be execute successful.
+   Or return nil and []sysadmerror.Sysadmerror
+   TODO
+*/
+func (p Postgre)DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	return 0, errs
+}

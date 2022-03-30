@@ -1,45 +1,216 @@
-<div class="table-top">
-    <button id="addproject">添加项目</button>
-    <button id="delproject">删除项目</button>
+<script type="text/javascript">
+    function addProjectJS() {
+        var ownerid = document.getElementById("ownerid");
+        if (ownerid.value == "") {
+            alert("添加项目信息需要登录到系统!");
+            return
+        }
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 2000
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "block";
+        addProjectForm.style.zIndex = 2100;
+        addProjectForm.focus();
+
+    }
+
+    function cancelAddProject() {
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "none";
+        addProjectForm.style.zIndex = 0;
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 0
+    }
+
+    function refreshPage() {
+        $('#container').load("/project/list");
+    }
+
+    function changePage(urlparas) {
+        var url = "/project/list" + urlparas;
+        $('#container').load(url);
+    }
+
+    function selectAllCheckbox() {
+        var thCheckBox = document.getElementById("projectidth");
+        if (thCheckBox.checked) {
+            var chklist = document.getElementsByName('projectid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                chklist[i].checked =
+                    chklist[i].checked = true;
+            }
+
+        } else {
+            var chklist = document.getElementsByName('projectid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                chklist[i].checked =
+                    chklist[i].checked = false;
+            }
+        }
+    }
+
+    function submitAddProject() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{.addProjectFormUrl}}",
+            data: $('#addProject').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                cancelAddProject();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                cancelAddProject();
+                if (result.errorcode == 0) {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    tip.innerHTML = msg;
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+
+                    //window.location.href = "/";
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+    }
+
+    function delProjectJS() {
+        if (ownerid.value == "") {
+            alert("添加项目信息需要登录到系统!");
+            return
+        }
+        var delProject = document.getElementById("delProject");
+        if (!delProject) {
+            alert("没有项目信息可以删除!");
+            return
+        }
+        var ok = confirm("确认需要删除这些项目信息吗？");
+        if (!ok) {
+            return
+        }
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{.delProjectFormUrl}}",
+            data: $('#delProject').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                if (result.errorcode == 0) {
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.innerHTML = msg;
+                    // tip.innerHTML = result.Message;
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+
+                    //window.location.href = "/";
+                } else {
+                    var messageArray = result.essage;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+
+    }
+</script>
+
+<div class="pop-form" id="addform">
+    <form id="addProject" method="post" target="_self" onsubmit="return false">
+        <div class="popform-title">新建项目</div>
+        <div class="popform-item">
+            项目名称： <input id="name" type="text" name="name">
+        </div>
+        <div class="popform-item">
+            项目描述： <input id="comment" type="text" name="comment">
+            <input id="ownerid" type="hidden" name="ownerid" value="{{.userid}}">
+        </div>
+        <div class=" popform-button ">
+            <button id="add " onclick="submitAddProject() ">确定</button>
+            <button id="cacel " onclick="cancelAddProject() ">关闭</button>
+        </div>
+    </form>
+</div>
+
+<div class=" table-top ">
+    <button id="buttonAdd" onclick="addProjectJS() ">添加项目</button>
+    <button id="buttonDel" onclick="delProjectJS() ">删除项目</button>
 </div>
 
 {{.noprojectinfo }} {{.projectinfo }}
-<!-- <table class="list-table">
-    <tr>
-        <th width="5%" align="left"> <input type="checkbox" id="projectid[]" name="projectid[]"></th>
-        <th width="20%"> 项目名称</th>
-        <th width="10%">所有者</th>
-        <th width="10%">删除状态</th>
-        <th width="10%">镜像数</th>
-        <th width="10%">创建时间</th>
-        <th>描述</th>
-    </tr>
-
-    <tr>
-        <td width="5%"> <input type="checkbox" id="projectid[]" name="projectid[]"></td>
-        <td>111111</td>
-        <td>222222</td>
-        <td>333333</td>
-        <td>444444</td>
-        <td>10</td>
-        <td>555555</td>
-    </tr>
-
-    <tr>
-        <td width="5%"> <input type="checkbox" id="projectid[]" name="projectid[]"></td>
-        <td>aaaaaa</td>
-        <td>bbbbbb</td>
-        <td>cccccc</td>
-        <td>dddddd</td>
-        <td>20</td>
-        <td>eeeeee</td>
-    </tr>
-
-    <tr>
-        <td colspan=8>
-            <div class="td-foot">当前 第1页 上一页 下一页 共10页</div>
-        </td>
-    </tr>
-    </table>
-
-    -->

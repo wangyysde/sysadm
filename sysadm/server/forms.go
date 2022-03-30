@@ -112,8 +112,10 @@ func loginHandler(c *sysadmServer.Context) {
 	}
 	password := strings.TrimSpace(value)
 
-	if loginWithDB(username,password) {
+	okLogin,userid := loginWithDB(username,password)
+	if okLogin {
 		_ = setSessionValue(c,"isLogin",true)
+		_ = setSessionValue(c,"userid",userid)
 		c.JSON(http.StatusOK, sysadmServer.H{"errCode": 0, "msg": "登录成功！"})
 		return
 	}
@@ -145,29 +147,29 @@ func md5Encrypt(data string, salt string) string{
 
 // TODO: 
 // we are plan to cut user as an independent module, so user login in sysadm should call API 
-func loginWithDB(username string, password string) bool {
+func loginWithDB(username string, password string) (bool,string) {
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050001,"debug","now checking the user is login"))
 	if username == "" && password == "" {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050002,"error","username and password are empty."))
 		logErrors(errs)
-		return false
+		return false,""
 	}
 
 	var reqUrl string = ""
 	m := Modules
 	
-	if RuntimeData.RuningParas.DefinedConfig.Server.Tls {
-		if  RuntimeData.RuningParas.DefinedConfig.Server.Port  == 443 {
-			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
+	if RuntimeData.RuningParas.DefinedConfig.ApiServer.Tls {
+		if  RuntimeData.RuningParas.DefinedConfig.ApiServer.Port  == 443 {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
 		} else {
-			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion + "/" + m["user"].Path +"/login" 
 		}
 	}else {
-		if RuntimeData.RuningParas.DefinedConfig.Server.Port == 80 {
-			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion  + "/" + m["user"].Path +"/login"
+		if RuntimeData.RuningParas.DefinedConfig.ApiServer.Port == 80 {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + "/api/" + apiVersion  + "/" + m["user"].Path +"/login"
 		} else {
-			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion +  "/" + m["user"].Path +"/login"
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion +  "/" + m["user"].Path +"/login"
 		}
 	}
 
@@ -183,7 +185,7 @@ func loginWithDB(username string, password string) bool {
 	if len(body) < 1 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050003,"error","the response from  the server is empty"))
 		logErrors(errs)
-		return false
+		return false,""
 	}
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050004,"debug","got response body is: %s",string(body)))
@@ -192,15 +194,15 @@ func loginWithDB(username string, password string) bool {
 	if e != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050005,"error","can not parsing reponse body to json. error: %s",e))
 		logErrors(errs)
-		return false
+		return false,""
 	}
 
-	if ret.Errorcode  != 0 || ret.Message  != "" {
+	if ret.Errorcode  != 0  {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1050006,"debug","can not login with errorcode: %d message: %s",ret.Errorcode,ret.Message))
 		logErrors(errs)
-		return false
+		return false,""
 	}
 	
 	logErrors(errs)
-	return ret.Status
+	return ret.Status,ret.Message.(string)
 }

@@ -28,6 +28,7 @@ var DefaultTls = false
 var DefaultCa = ""
 var DefaultCert = ""
 var DefaultKey = ""
+var DefaultApiServerIP = "localhost"
 var DefaultAccessLog = "logs/sysadm-access.log"
 var DefaultErrorLog = "logs/sysadm-error.log"
 var DefaultLogKind = "text"

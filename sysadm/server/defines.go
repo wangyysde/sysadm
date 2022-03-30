@@ -27,5 +27,6 @@ package server
  var sessionDomain = "sysadm"
  var sessionAge = 100
  var apiVersion = "v1.0"
+ var numPerPage = 8
 
  

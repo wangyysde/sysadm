@@ -23,8 +23,12 @@ import (
 
 type ApiResponseBodyData map[string] string
 type ApiResponseStatus struct {
+	// Status is false if this is a error response, otherwise Status is true
 	Status bool `json:"status"`
-	Errorcode int `json:"error"`
+	// Errorcode is zero if this is a successful response, otherwise Errorcode is nonzero
+	Errorcode int `json:"errorcode"`
+	// Message is the result sets if this is a successful ,otherwise Message is []map[string]string
+	// which has one rows only:["errorMsg"] = errorMsg
 	Message interface{} `json:"message"`
 }
 

@@ -113,17 +113,17 @@ func buildApiRequestParameters(module string,action string, data map[string] str
 	var reqUrl string = ""
 	m := Modules
 	
-	if RuntimeData.RuningParas.DefinedConfig.Server.Tls {
-		if  RuntimeData.RuningParas.DefinedConfig.Server.Port  == 443 {
-			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion + "/" + m[module].Path +"/" + action 
+	if RuntimeData.RuningParas.DefinedConfig.ApiServer.Tls {
+		if  RuntimeData.RuningParas.DefinedConfig.ApiServer.Port  == 443 {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address  + "/api/" + apiVersion + "/" + m[module].Path +"/" + action 
 		} else {
-			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion + "/" + m[module].Path +"/" + action
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion + "/" + m[module].Path +"/" + action
 		}
 	}else {
-		if RuntimeData.RuningParas.DefinedConfig.Server.Port == 80 {
-			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + "/api/" + apiVersion  + "/" + m[module].Path + "/" + action		
+		if RuntimeData.RuningParas.DefinedConfig.ApiServer.Port == 80 {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + "/api/" + apiVersion  + "/" + m[module].Path + "/" + action		
 		} else {
-			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.Server.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.Server.Port) + "/api/" + apiVersion +  "/" + m[module].Path + "/" + action
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion +  "/" + m[module].Path + "/" + action
 		}
 	}
 	var requestParams httpclient.RequestParams = httpclient.RequestParams{}
@@ -167,7 +167,15 @@ func ParseResponseBody(body []byte)([]map[string]string, []sysadmerror.Sysadmerr
 	}
 
 	if !res.Status {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(res.Errorcode,"error","we got an error: %s",res.Message.(string)))
+		retMsgArray := res.Message.([]interface {})
+		if len(retMsgArray) > 0 {
+			errMsgMap := retMsgArray[0].(map[string]interface {})
+			errMsg := errMsgMap["errorMsg"].(string)
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(res.Errorcode,"error","we got an error: %s",errMsg))
+		}else{
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(res.Errorcode,"error","we got an unknow error"))
+		}
+
 		return nil , errs
 	}
 	
@@ -194,4 +202,45 @@ func ParseResponseBody(body []byte)([]map[string]string, []sysadmerror.Sysadmerr
 
 	return rets,errs
 
+}
+
+func buildApiRequestUrl(module string,action string )(string){
+	var reqUrl string = ""
+	m := Modules
+	
+	if RuntimeData.RuningParas.DefinedConfig.ApiServer.Tls {
+		if  RuntimeData.RuningParas.DefinedConfig.ApiServer.Port  == 443 {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + "/api/" + apiVersion + "/" + m[module].Path +"/" + action 
+		} else {
+			reqUrl = "https://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion + "/" + m[module].Path +"/" + action
+		}
+	}else {
+		if RuntimeData.RuningParas.DefinedConfig.ApiServer.Port == 80 {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + "/api/" + apiVersion  + "/" + m[module].Path + "/" + action		
+		} else {
+			reqUrl = "http://" + RuntimeData.RuningParas.DefinedConfig.ApiServer.Address + ":" + strconv.Itoa(RuntimeData.RuningParas.DefinedConfig.ApiServer.Port) + "/api/" + apiVersion +  "/" + m[module].Path + "/" + action
+		}
+	}
+
+	return reqUrl
+}
+
+/* 
+	status is false if this is a error response, otherwise Status is true
+	errorCode is zero if this is a successful response, otherwise Errorcode is nonzero
+	// Message is the result sets if this is a successful ,otherwise Message is []map[string]string
+	// which has one rows only:["errorMsg"] = errorMsg
+*/
+func buildResponse(errorCode int, status bool,errMsg string)(ApiResponseStatus){
+	var errMapArray []map[string]string
+	msgMap := make(map[string]string)
+	msgMap["errorMsg"] = errMsg
+	errMapArray = append(errMapArray,msgMap)
+	ret := ApiResponseStatus {
+		Status: status,  
+		Errorcode: errorCode,
+		Message: errMapArray,
+	}
+
+	return ret
 }

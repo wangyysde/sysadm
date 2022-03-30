@@ -32,6 +32,16 @@ type Server struct {
 	Key string `json:"key"`
 }
 
+//Defining ApiServer configuration
+type ApiServer struct {
+	Address string `json:"address"`
+	Port int `json:"port"`
+	Tls bool `json:"tls"`
+	Ca string `json:"ca"`
+	Cert string `json:"cert"`
+	Key string `json:"key"`
+}
+
 //Defining log configuration 
 type Log struct {
 	AccessLog string `json:"accessLog"`
@@ -67,6 +77,7 @@ type DB struct {
 type Config struct {
 	Version string `json:"version"`
 	Server Server `json:"server"`
+	ApiServer ApiServer `json:"apiServer"`
 	Log Log `json:"log"`
 	User User `json:"user"`
 	DB DB `json:"db"`
@@ -80,6 +91,14 @@ var defaultConfig Config = Config{
 		Address: DefaultIP,
 		Port: DefaultPort,
 		Socket: DefaultSocket,
+		Tls: DefaultTls,
+		Ca: DefaultCa,
+		Cert: DefaultCert,
+		Key: DefaultKey,
+	},
+	ApiServer: ApiServer {
+		Address: DefaultApiServerIP,
+		Port: DefaultPort,
 		Tls: DefaultTls,
 		Ca: DefaultCa,
 		Cert: DefaultCert,
