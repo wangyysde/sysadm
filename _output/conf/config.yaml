@@ -26,7 +26,7 @@ user:
   defaultPassword: "Sysadm12345"
 DB:
   type: "mysql" 
-  host: "172.17.0.4"
+  host: "172.28.1.10"
   port: 30306
   user: sysadm
   password: "Sysadm12345"

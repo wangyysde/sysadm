@@ -1,0 +1,22 @@
+GET /v2/
+HEAD /v2/etcd/blobs/sha256:12201bf2f59f92bf10ba37c2d3d185897458c6a7e5c275724a75fa7a7f391356
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:12201bf2f59f92bf10ba37c2d3d185897458c6a7e5c275724a75fa7a7f391356
+HEAD /v2/etcd/blobs/sha256:677a5c6b24cf219a2b636472d07277458d4082ad35302a2e2e52d70dc9da63fa
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:677a5c6b24cf219a2b636472d07277458d4082ad35302a2e2e52d70dc9da63fa
+HEAD /v2/etcd/blobs/sha256:ea2d08d270747e0bb42a6789e6b9e0c01af1ca98a598dc2a84ef7a1e97c59476
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:ea2d08d270747e0bb42a6789e6b9e0c01af1ca98a598dc2a84ef7a1e97c59476
+HEAD /v2/etcd/blobs/sha256:f19a5990e7570f9e3fff6e7d7e72b4eed0b53a10a43ed46b13c4db48915c4506
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:f19a5990e7570f9e3fff6e7d7e72b4eed0b53a10a43ed46b13c4db48915c4506
+HEAD /v2/etcd/blobs/sha256:5dea5ec2316d4a067b946b15c3c4f140b4f2ad607e73e9bc41b673ee5ebb99a3
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:5dea5ec2316d4a067b946b15c3c4f140b4f2ad607e73e9bc41b673ee5ebb99a3
+HEAD /v2/etcd/blobs/sha256:0048118155842e4c91f0498dd298b8e93dc3aecc7052d9882b76f48e311a76ba
+POST /v2/etcd/blobs/uploads/
+HEAD /v2/etcd/blobs/sha256:0048118155842e4c91f0498dd298b8e93dc3aecc7052d9882b76f48e311a76ba
+PUT /v2/etcd/manifests/3.5.0-0
+
+mage infro: map[string]server.image{"storage-provisioner":server.image{name:"", size:9056744, tag:"", blobs:[]server.blob{server.blob{digest:"sha256:157dd68f5e48851dbe73eac195683d9fa0c015bf556c2940bcacbe0d917454e4", size:9055947}, server.blob{digest:"sha256:6e38f40d628db3002f5617342c8872c935de530d867d0f709a2fbda1a302a562", size:797}}}} 

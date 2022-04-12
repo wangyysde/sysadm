@@ -1113,7 +1113,6 @@ func handlerConfForSysadm(confContent *Config)([]sysadmerror.Sysadmerror){
 func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.Sysadmerror) {
 	var confContent *Config = nil
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201035,"debug","try to handling configurations....."))
 	cfgFile,temperrs := getConfigPath(configPath,cmdRunPath)
 	errs = appendErrs(errs,temperrs)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201036,"debug","got configuration file path is: %s",cfgFile))
@@ -1132,8 +1131,7 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 			}
 		}
 	}
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201037,"debug","read the content of the configuration file"))
-
+	
 	address,err := getServerAddress(confContent)
 	ConfigDefined.Server.Address = address
 	ConfigDefined.SysadmVersion = SysadmVersion

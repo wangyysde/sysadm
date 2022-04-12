@@ -114,7 +114,7 @@ var defaultConfig Config = Config{
 		AccessLog: DefaultAccessLog,
 		ErrorLog: DefaultErrorLog,
 		Kind: DefaultLogKind,
-		Level: DefaultLogLevel,
+		Level: DefaultLogLevel, 
 		SplitAccessAndError: true,
 		TimeStampFormat: sysadmServer.TimestampFormat["DateTime"],
 	},

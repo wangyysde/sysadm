@@ -33,7 +33,7 @@ import (
 )
 
 
-var  projectActions = []string{"list","add","getcount","del"}
+var  projectActions = []string{"list","add","getcount","del","getinfo"}
 
 
  func (p Project)ModuleName()string{
@@ -50,6 +50,8 @@ func (p Project) ActionHanderCaller(action string, c *sysadmServer.Context){
 			p.getCountHandler(c)
 		case "del":
 			p.delHandler(c)
+		case "getinfo":
+			p.getInfoHandler(c)
 	}
 	
 }
@@ -363,5 +365,113 @@ func (p Project) delHandler(c *sysadmServer.Context){
 	logErrors(errs)
 	retNum := strconv.Itoa(int(retData))
 	ret := buildResponse(0,true, retNum + "个项目信息已被删除")
+	c.JSON(http.StatusOK, ret)
+}
+
+/* 
+	getInfoHandler get a project information according projectid or project name
+*/
+func (p Project) getInfoHandler(c *sysadmServer.Context){
+	var errs []sysadmerror.Sysadmerror
+		   
+	projectid,okProjectid := c.GetQuery("id")
+	projectname,okProjectname := c.GetQuery("name")
+
+	if (projectid == "" || !okProjectid ) && (projectname == "" || !okProjectname) {
+		ret := ApiResponseStatus {
+			Status: false,
+			Errorcode: 1080014,
+			Message: "projectid and project name are both empty or invalid",
+		}
+		c.JSON(http.StatusOK, ret)
+		return 
+	}
+
+	// Qeurying data from DB
+	whereMap :=  make(map[string]string,0)
+	if projectid != "" {
+		var ids = ""
+		projectids := strings.Split(projectid, ",")
+		if len(projectids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range projectids {
+				if first {
+					ids += id
+					first = false
+				} else {
+					ids = ids + "," +id
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + " =" + projectid
+		}
+		whereMap["projectid"] = ids
+	}
+
+	if projectname != "" {
+		var names = ""
+		projectnames := strings.Split(projectname, ",")
+		if len(projectnames)>1 {
+			names = " in ("
+			first := true
+			for _,p := range projectnames {
+				if first {
+					names = names + "'" + p + "'"
+					first = false
+				} else {
+					names = names + ",'" + p + "'"
+				}
+			}
+			names += ")"
+		} else {
+			names = names + "='"+projectname+"'"
+		}
+		whereMap["name"] = names
+	} 
+
+	selectData := db.SelectData{
+		Tb: []string{"project"},
+		OutFeilds: []string{"projectid","ownerid","name", "comment","deleted","creation_time","update_time"},
+		Where: whereMap,
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	retData,err := dbEntity.QueryData(&selectData)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error"){
+		errs = append(errs,err...)
+		logErrors(errs)
+		ret := ApiResponseStatus {
+			Status: false,
+			Errorcode: 1080015,
+			Message: "database query error",
+		}
+		c.JSON(http.StatusOK, ret)
+		return 
+	} 
+
+	// if the project is not exist in DB 
+	if len(retData) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1080016,"debug","no data"))
+		logErrors(err)
+		ret := ApiResponseStatus {
+			Status: false,
+			Errorcode: 1080016,
+			Message: "no project",
+		}
+		c.JSON(http.StatusOK, ret)
+		return 
+	}
+	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1080017,"debug","send response data to the client."))
+	logErrors(errs)
+
+	ret := ApiResponseStatus {
+		Status: true,
+		Errorcode: 1080017,
+		Message: retData,
+	}
+
 	c.JSON(http.StatusOK, ret)
 }

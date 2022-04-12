@@ -21,15 +21,18 @@ package server
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/wangyysde/sysadm/registryctl/config"
 	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadmServer"
 )
 
 // TODO: the following parameters should be configurable in the future.
@@ -44,6 +47,8 @@ var (
 	maxConnsPerHost int = 0
 	idleConnTimeout time.Duration = 90
 )
+
+var roundTripper http.RoundTripper = nil
 
 type httpHeader struct {
 	key string
@@ -62,6 +67,15 @@ type requestParams struct {
 	url string
 }
 
+type proxyParams struct {
+	header http.Header
+	method string
+	url *url.URL
+	contentLength int64
+	transferEncoding []string
+	host string
+	trailer http.Header
+}
 var headers []httpHeader
 var defaultHeaders []httpHeader = []httpHeader{
 	{
@@ -222,4 +236,332 @@ func sendRequest(r *requestParams)([]byte, []sysadmerror.Sysadmerror){
 	}
 
 	return body,errs
+}
+
+func getRegistryUrl(c *sysadmServer.Context) string {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202029,"debug","preparing registry root url"))
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	registryHost := definedConfig.Registry.Server.Host
+	registryPort := definedConfig.Registry.Server.Port
+	registryTls := definedConfig.Registry.Server.Tls
+	var regUrlRoot string = ""
+	if registryTls {
+		if  registryPort  == 443 {
+			regUrlRoot = "https://" + registryHost
+		} else {
+			regUrlRoot = "https://" + registryHost + ":" + strconv.Itoa(registryPort)
+		}
+	}else {
+		if registryPort == 80 {
+			regUrlRoot = "http://" + registryHost 	
+		} else {
+			regUrlRoot = "http://" + registryHost + ":" + strconv.Itoa(registryPort) 
+		}
+	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202030,"debug","got registry root url is :%s",regUrlRoot))
+	r := c.Request
+	requestURI := r.RequestURI
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202031,"debug","got request uri is :%s",requestURI))
+	registryURL := regUrlRoot +  requestURI
+	logErrors(errs)
+	return registryURL
+}
+
+func setProxyHeader(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202032,"debug","setting headers for requesting registry server"))
+
+	r := c.Request
+	p.header = r.Header
+	logErrors(errs)
+}
+
+func setProxyMethod(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202033,"debug","setting method for requesting registry server"))
+
+	r := c.Request
+	method := r.Method
+	if strings.TrimSpace(method) == "" {
+		method = "GET"
+	}
+
+	p.method = method
+	logErrors(errs)
+}
+
+func setProxyURL(c *sysadmServer.Context, p *proxyParams) error {
+	var errs []sysadmerror.Sysadmerror
+	rawURL := getRegistryUrl(c)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202034,"debug","setting URL(%s) for requesting registry server",rawURL))
+	url,err := url.Parse(rawURL)
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202035,"error","parse proxy url(%s) error: %s",rawURL,err))
+		logErrors(errs)
+		return err
+	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","URL: %#v",url))
+	p.url= url
+	logErrors(errs)
+	return nil
+}
+
+func setContentLength(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","setting ContentLength for requesting registry server"))
+
+	r := c.Request
+	p.contentLength = r.ContentLength
+	logErrors(errs)
+}
+
+func settransferEncoding(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","setting TransferEncoding for requesting registry server"))
+	r := c.Request
+	p.transferEncoding  = r.TransferEncoding
+	logErrors(errs)
+}
+
+func setHost(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202037,"debug","setting host for requesting registry server"))
+
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	registryHost := definedConfig.Registry.Server.Host
+	registryPort := definedConfig.Registry.Server.Port
+	host := registryHost + ":" + strconv.Itoa(registryPort)
+	p.host = host
+	logErrors(errs)
+
+}
+
+func setTrailer(c *sysadmServer.Context, p *proxyParams){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202038,"debug","setting trailer for requesting registry server"))
+
+	r := c.Request
+	p.trailer = r.Trailer
+	logErrors(errs)
+}
+
+func buildRoundTripper(){
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202038,"debug","building RoundTripper for requesting registry server"))
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+
+	var transport http.RoundTripper = &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   timeout * time.Second,
+			KeepAlive: keepAlive * time.Second,
+		}).DialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          maxIdleConns,
+		IdleConnTimeout:       idleConnTimeout * time.Second,
+		TLSHandshakeTimeout:   tlshandshaketimeout * time.Second,
+		DisableKeepAlives: disableKeepAlives,
+		DisableCompression: disableCompression,
+		MaxIdleConnsPerHost: maxIdleConnsPerHost,
+		MaxConnsPerHost: maxConnsPerHost,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: definedConfig.Registry.Server.InsecureSkipVerify,
+		},
+	}
+
+	roundTripper = transport
+}
+
+func buildReverseProxyDirector(c *sysadmServer.Context)(func(r *http.Request)) {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","building proxy request parameters."))
+	
+	p := proxyParams{}
+	setProxyHeader(c,&p)
+	setProxyMethod(c,&p)
+	err := setProxyURL(c,&p)
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"error","set proxy url error %s.",err))
+		logErrors(errs)
+		return nil
+	}
+	setContentLength(c,&p)
+	settransferEncoding(c,&p)
+	size := c.GetHeader("Content-Length")
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202041,"error","Content-Length %s.",size))
+	logErrors(errs)
+	setHost(c,&p)
+	setTrailer(c,&p)
+	return func(r *http.Request) {
+		errs := setBasicAuth(r)
+		logErrors(errs)
+		r.Host = p.host
+		r.URL = p.url
+	}
+}
+
+func buildModifyReponse(c *sysadmServer.Context)(func(r *http.Response) error){
+	return func(r *http.Response) error {
+		var errs []sysadmerror.Sysadmerror
+		header := r.Header
+		//r.StatusCode = http.StatusOK
+	//	body,_ := ioutil.ReadAll(r.Body)
+	//	ret := &ReponseError{}
+	//	_ = json.Unmarshal(body,ret)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","reponse header: %+v",header))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","reponse StatusCode: %+v",r.StatusCode))
+	//	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","reponse body: %+v",ret))
+
+		logErrors(errs)
+		
+		return nil
+	}
+}
+
+/*
+	modifyReponseForCheckBlobExist: recording the infromation of blob ,such as digest, size to global variable processImages
+	imageName: the name of image
+	digest: the digest of a blob
+*/
+func modifyReponseForCheckBlobExist(c *sysadmServer.Context,imageName string,digest string)(func(r *http.Response) error){
+	return func(r *http.Response) error {
+		var errs []sysadmerror.Sysadmerror
+
+		if r.StatusCode == http.StatusOK {
+			recordBlob(imageName,digest)
+			image := processImages[imageName]
+			blobs := image.blobs
+			for k,blob := range blobs {
+				d := blob.digest
+				if strings.TrimSpace(strings.ToLower(d)) == strings.TrimSpace(strings.ToLower(digest)){
+					header := r.Header
+					contentLength := header.Get("Content-Length")
+
+					contentLengthInt,_ := strconv.Atoi(contentLength)
+					blob.size = int64(contentLengthInt)
+					blobs[k] = blob
+					errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","record the information of  blob %s size exceeded%d ",digest,contentLengthInt))
+				}
+			}
+
+			image.blobs = blobs 
+			processImages[imageName] = image
+			
+		}
+
+		logErrors(errs)
+		return nil
+	}
+}
+
+
+
+func putManifestsResponse(c *sysadmServer.Context)(func(r *http.Response) error){
+	// get the name of the image from path
+	path := c.Param("path")
+	pathArray := strings.Split(path,"/")
+	arrayLen := len(pathArray)
+	// gets image name  from RequestURI
+	var imageName string =""
+	for i := 1; i< arrayLen-2; i++ {
+		if imageName == "" {
+			imageName = pathArray[i]
+		}else{
+			imageName = imageName + "/" + pathArray[i]
+		}
+	}
+	reference := pathArray[(arrayLen - 1)]
+	image := processImages[imageName]
+
+	// sum the size of the all blobs of the image and set the information to the image
+	var size int64 = 0
+	for _,blob := range image.blobs {
+		size += blob.size
+	}
+	image.size = size
+	processImages[imageName] = image
+
+
+	return func(r *http.Response) error {
+		var errs []sysadmerror.Sysadmerror
+
+		if r.StatusCode == http.StatusCreated {
+			manifest := getManifests(imageName,reference)
+			if manifest != nil {
+				image := processImages[imageName]
+				image.name = imageName
+				image.tag = manifest.Tag
+				image.architecture = manifest.Architecture
+				processImages[imageName] = image
+			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","image information: %#v",processImages))
+			logErrors(errs)
+		}
+		updataImage(imageName)
+		delete(processImages,imageName)
+		return nil
+	}
+}
+
+
+func getManifests(name string, reference string ) *Manifest{
+	var ret *Manifest = nil
+	var errs []sysadmerror.Sysadmerror
+
+	if strings.TrimSpace(name) == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"error","image name is empty, can not get the manifest for empty name of image"))
+		logErrors(errs)
+		return ret
+	}
+	if strings.TrimSpace(reference) == "" {
+		reference = "lastest"
+	}
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","building proxy request parameters."))
+
+	// gets the configurations from RuntimeData
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	registryHost := definedConfig.Registry.Server.Host
+	registryPort := definedConfig.Registry.Server.Port
+	registryTls := definedConfig.Registry.Server.Tls
+	var urlStr string = ""
+	if registryTls {
+		if  registryPort  == 443 {
+			urlStr = "https://" + registryHost
+		} else {
+			urlStr = "https://" + registryHost + ":" + strconv.Itoa(registryPort)
+		}
+	}else {
+		if registryPort == 80 {
+			urlStr = "http://" + registryHost 	
+		} else {
+			urlStr = "http://" + registryHost + ":" + strconv.Itoa(registryPort) 
+		}
+	}
+
+	urlStr = urlStr + "/v2/" + name + "/manifests/" + reference
+
+	var requestParams requestParams = requestParams{}
+	requestParams.url = urlStr
+	requestParams.method = "GET"
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","try to execute the request with url :%s",urlStr))
+	body,err := sendRequest(&requestParams)
+	errs = append(errs, err...)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202041,"debug","got the reponse body is: %s",body))
+
+	if len(body) < 1 {
+		logErrors(errs)
+		return ret
+	}
+
+	ret = &Manifest{}
+	e := json.Unmarshal(body,ret)
+	if e != nil { 
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202041,"error","can not unmarshal body: %s",e))
+		logErrors(errs)
+		return nil
+	}
+
+	return ret
 }

@@ -1,0 +1,6 @@
+1. registry API reference:  https://docs.docker.com/registry/spec/api/
+2. registry API: https://github.com/distribution/distribution
+3. registry API: https://pkg.go.dev/github.com/docker/distribution/registry/api/v2
+4. distribution Docs: https://pkg.go.dev/github.com/docker/distribution#section-readme
+5. https://pkg.go.dev/net/http/httputil
+6. gin: https://pkg.go.dev/github.com/gin-gonic/gin

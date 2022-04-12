@@ -50,4 +50,52 @@ CREATE TABLE `project` (
   CONSTRAINT `FK_project` FOREIGN KEY (`ownerid`) REFERENCES `user` (`userid`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `image` (
+  `imageid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'imageid identified a container image',
+  `projectid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'the project of the image. ',
+  `name` varchar(255) NOT NULL COMMENT 'image name. it must be a string in english. Is is the uri of image.',
+  `ownerid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'the owner of the project. owner is the user who created the project normally',
+  `description` varchar(255) DEFAULT NULL COMMENT 'the description of a image.',
+  `tagsnum` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'total number of tags of the image',
+  `lasttag` varchar(255) NOT NULL COMMENT 'the last tag of the image',
+  `architecture` varchar(255) NOT NULL COMMENT 'architecture of the image',
+  `pulltimes` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'total times of the image has be pulled',
+  `creation_time` int(11) NOT NULL COMMENT 'the time when the project has be create',
+  `update_time` int(11) NOT NULL COMMENT 'the time when the project has be update',
+  `size` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'the size of the image',
+  PRIMARY KEY (`imageid`),
+  KEY `FK_projectr` (`projectid`),
+  KEY `FK_user` (`ownerid`),
+  CONSTRAINT `FK_projectr` FOREIGN KEY (`projectid`) REFERENCES `project` (`projectid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_user` FOREIGN KEY (`ownerid`) REFERENCES `user` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
+
+create table `tag` (
+	`tagid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'tagid identified a tag of a image',
+	`imageid` INT(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'imageid identified a container image',
+	`name` VARCHAR(255) NOT NULL COMMENT 'tag name. it must be a string in english. Is is a part of the uri of image.',
+	`description` VARCHAR(255)  COMMENT 'the description of a tag.',
+	`pulltimes` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'total times of the tag has be pulled',
+	`ownerid` INT(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'the owner of the tag. owner is the user who pushed the image normally',
+	`creation_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed',
+  `update_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed lastly',
+  `size` INT(16) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'the size of the  tag',
+	PRIMARY KEY (`tagid`),
+	KEY `FK_image` (`imageid`),
+	KEY `FK_taguser` (`ownerid`),
+    CONSTRAINT `FK_image` FOREIGN KEY (`imageid`) REFERENCES `image` (`imageid`) ON DELETE NO ACTION ON UPDATE CASCADE,
+	CONSTRAINT `FK_taguser` FOREIGN KEY (`ownerid`) REFERENCES `user` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+create table `blob` (
+	`blobid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'blobid identified a blob of a tag',
+	`tagid` INT(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'tagid identified a container image',
+	`digest` VARCHAR(255) NOT NULL COMMENT 'digest of blog. it must be a string in english.',
+	`size` INT(16) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'the size of the  blob',
+	`creation_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed',
+    `update_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed lastly',
+	PRIMARY KEY (`blobid`),
+	KEY `FK_tag` (`tagid`),
+	CONSTRAINT `FK_tag` FOREIGN KEY (`tagid`) REFERENCES `tag` (`tagid`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;

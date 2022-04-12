@@ -24,8 +24,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadm/utils"
 )
 
 type MySQL struct {
@@ -88,7 +88,6 @@ func (p MySQL)OpenDbConnect() []sysadmerror.Sysadmerror {
 func (p MySQL)InsertData(tb string,data FieldData) (int, []sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107005,"debug","Checking insert data is valid."))
 	if len(tb) < 1 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107006,"error","Table name(%s) is not valid.",tb))
 		return 0, errs
@@ -99,7 +98,6 @@ func (p MySQL)InsertData(tb string,data FieldData) (int, []sysadmerror.Sysadmerr
 		return 0, errs
 	}
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107008,"debug","Preparing insert SQL for inert into table (%s).",tb))
     insertStr := "INSERT INTO `" + tb + "`("
     valueStr := "Values ("
       i := 1
@@ -117,29 +115,24 @@ func (p MySQL)InsertData(tb string,data FieldData) (int, []sysadmerror.Sysadmerr
     insertStr = insertStr + ") "
     valueStr = valueStr + ")"
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107009,"debug","Insert SQL: %s.",(insertStr + valueStr)))
-
 	dbConnect := p.Config.Connect
     stmt, err := dbConnect.Prepare((insertStr + valueStr))
     if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107011,"error","Prepare SQL error: %s.",err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107011,"error","Prepare SQL(%s) error: %s.",err,(insertStr + valueStr)))
 		return 0, errs
     }
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107012,"debug","Prepare SQL ok."))
     res, err := stmt.Exec()
    if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107013,"error","exec SQL error: %s.",err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107013,"error","exec SQL(%s) error: %s.",err,(insertStr + valueStr)))
 		return 0, errs
     }
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107014,"debug","execute SQL query ok."))
-
     id, err := res.RowsAffected()
     if err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107015,"error","fetch rows of affected error: %s.",err))
         return 0, errs
     }
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107016,"debug","fetch rows of affected ok."))
 
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107016,"debug","exec SQL(%s) successful.",(insertStr + valueStr)))
     return int(id), errs
 }
 
@@ -282,6 +275,64 @@ func (p MySQL)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
 	_ = rows.Close()
 	
 	return resData, errs
+}
+
+
+/*
+   UpdateData: update data (map[string] interface{}) into the database according where(map[string]string)
+   return affectRows and []sysadmerror.Sysadmerror if teh SQL statement is be execute successful.
+   Or return 0 and []sysadmerror.Sysadmerror
+*/
+func (p MySQL)UpdateData(tb string, data FieldData, where map[string]string) (int, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	
+	if tb == ""  || len(data) <1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107032,"error","tables or feilds which will be update is empty"))
+		return 0,errs
+	}
+	
+	querySQL := "update `" + tb + "` set "
+	first := true
+	for key,value := range data {
+		if first {
+			querySQL = querySQL + "`" + key +"`=" + utils.Interface2String(value) + ""
+			first = false
+		} else {
+			querySQL = querySQL + "," + "`" + key +"`=" + utils.Interface2String(value) + ""
+		}
+	}
+
+	first = true
+	for key,value := range where {
+		if first {
+			querySQL = querySQL + " where " + key + value
+			first = false
+		} else {
+			querySQL = querySQL + " and " + key + value
+		}
+	}
+
+	dbConnect := p.Config.Connect
+	stmt, err := dbConnect.Prepare(querySQL)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1070333,"debug","try to execute SQL:%s",querySQL))
+    if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107034,"error","Prepare SQL %s  error: %s.",querySQL,err))
+		return 0, errs
+    }
+	
+    res, err := stmt.Exec()
+   if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107035,"error","exec SQL error: %s.",err))
+		return 0, errs
+    }
+	
+	ret,err := res.RowsAffected()
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107036,"error","can not get rowsaffected: %s.",err))
+		return 0, errs
+    }
+
+	return int(ret), errs
 }
 
 

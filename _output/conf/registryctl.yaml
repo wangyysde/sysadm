@@ -15,7 +15,7 @@ user:
   defaultPassword: "registryctl_password"
 DB: 
   type: "mysql"
-  host: "localhost"
+  host: "172.28.1.10"
   port: 30306
   user: sysadm
   password: "Sysadm12345"

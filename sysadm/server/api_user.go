@@ -234,7 +234,7 @@ func (u User) getInfoHandler(c *sysadmServer.Context){
 
 	ret := ApiResponseStatus {
 		Status: true,
-		Errorcode: 1040017,
+		Errorcode: 0,
 		Message: retData,
 	}
 

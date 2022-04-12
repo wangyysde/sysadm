@@ -64,5 +64,7 @@ func initDB(definedConfig *config.Config,cmdRunPath string)(sysadmDB.DbEntity,[]
 		return nil,err
 	}
 
+	RuntimeData.RuningParas.DBConfig = newDBConf
+
 	return entity,errs
 }

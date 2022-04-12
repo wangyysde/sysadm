@@ -108,8 +108,10 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	// initating server
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
-	e := addRegistryV2RootHandler(r)
+	//e := addRegistryV2RootHandler(r)
+	e := addRegistryHandlers(r)
 	errs = appendErrs(errs,e)
+//	errs = append(errs,e1...)
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202015,"fatal","fatal(or higher level) error(s) occurred. we will exit."))
@@ -119,6 +121,8 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 	if len(errs) > 0 {
 		logErrors(errs)
 	}
+
+
 	/*
 	
 	err = addFormHandler(r,cmdPath)

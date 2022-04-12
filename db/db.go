@@ -64,6 +64,7 @@ import (
 	InsertData(string,FieldData) (int, []sysadmerror.Sysadmerror)
 	QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
 	DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror)
+	UpdateData(string, FieldData, map[string]string) (int, []sysadmerror.Sysadmerror)
  }
 
 
