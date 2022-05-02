@@ -454,7 +454,7 @@ func (p Project) getInfoHandler(c *sysadmServer.Context){
 	// if the project is not exist in DB 
 	if len(retData) < 1 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1080016,"debug","no data"))
-		logErrors(err)
+		logErrors(errs)
 		ret := ApiResponseStatus {
 			Status: false,
 			Errorcode: 1080016,

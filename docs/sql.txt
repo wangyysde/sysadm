@@ -71,22 +71,23 @@ CREATE TABLE `image` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 
-create table `tag` (
-	`tagid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'tagid identified a tag of a image',
-	`imageid` INT(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'imageid identified a container image',
-	`name` VARCHAR(255) NOT NULL COMMENT 'tag name. it must be a string in english. Is is a part of the uri of image.',
-	`description` VARCHAR(255)  COMMENT 'the description of a tag.',
-	`pulltimes` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'total times of the tag has be pulled',
-	`ownerid` INT(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'the owner of the tag. owner is the user who pushed the image normally',
-	`creation_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed',
-  `update_time` INT(11) NOT NULL COMMENT 'the time when the tag has be pushed lastly',
-  `size` INT(16) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'the size of the  tag',
-	PRIMARY KEY (`tagid`),
-	KEY `FK_image` (`imageid`),
-	KEY `FK_taguser` (`ownerid`),
-    CONSTRAINT `FK_image` FOREIGN KEY (`imageid`) REFERENCES `image` (`imageid`) ON DELETE NO ACTION ON UPDATE CASCADE,
-	CONSTRAINT `FK_taguser` FOREIGN KEY (`ownerid`) REFERENCES `user` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+CREATE TABLE `tag` (
+  `tagid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'tagid identified a tag of a image',
+  `imageid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'imageid identified a container image',
+  `name` varchar(255) NOT NULL COMMENT 'tag name. it must be a string in english. Is is a part of the uri of image.',
+  `description` varchar(255) DEFAULT NULL COMMENT 'the description of a tag.',
+  `pulltimes` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'total times of the tag has be pulled',
+  `ownerid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'the owner of the tag. owner is the user who pushed the image normally',
+  `creation_time` int(11) NOT NULL COMMENT 'the time when the tag has be pushed',
+  `update_time` int(11) NOT NULL COMMENT 'the time when the tag has be pushed lastly',
+  `size` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'the size of the  tag',
+  `digest` varchar(255) DEFAULT NULL COMMENT 'the digest of the tag ',
+  PRIMARY KEY (`tagid`),
+  KEY `FK_image` (`imageid`),
+  KEY `FK_taguser` (`ownerid`),
+  CONSTRAINT `FK_image` FOREIGN KEY (`imageid`) REFERENCES `image` (`imageid`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `FK_taguser` FOREIGN KEY (`ownerid`) REFERENCES `user` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 create table `blob` (
 	`blobid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'blobid identified a blob of a tag',
@@ -99,3 +100,59 @@ create table `blob` (
 	KEY `FK_tag` (`tagid`),
 	CONSTRAINT `FK_tag` FOREIGN KEY (`tagid`) REFERENCES `tag` (`tagid`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `os` (
+  `osID` INT(3) NOT NULL COMMENT 'pecify the yum for which OS distrubition,such as centos,readhat, ubantu',
+  `name` VARCHAR(10) NOT NULL COMMENT 'distribution name.such as centos,redhat. this field must be unique',
+  `description` VARCHAR(255) DEFAULT NULL COMMENT 'distribution description',
+  PRIMARY KEY (`osID`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `os` (
+  `osID` int(3) NOT NULL COMMENT 'pecify the yum for which OS distrubition,such as centos,readhat, ubantu',
+  `name` varchar(10) NOT NULL COMMENT 'distribution name.such as centos,redhat. this field must be unique',
+  `description` varchar(255) DEFAULT NULL COMMENT 'distribution description',
+  PRIMARY KEY (`osID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `type` (
+  `typeID` int(3) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `comment` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`typeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `version` (
+  `versionID` int(11) NOT NULL COMMENT 'version id identified a version ',
+  `name` varchar(255) CHARACTER SET latin1 NOT NULL COMMENT 'version name',
+  `osid` int(11) DEFAULT NULL COMMENT 'for which OS.PK of distribution ID',
+  `typeID` int(11) DEFAULT NULL COMMENT 'the version for which type of type id',
+  `description` varchar(255) CHARACTER SET latin1 DEFAULT NULL COMMENT 'description of the version',
+  PRIMARY KEY (`versionID`),
+  KEY `FK_os` (`osid`),
+  KEY `FK_type` (`typeID`),
+  CONSTRAINT `FK_os` FOREIGN KEY (`osid`) REFERENCES `os` (`osID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_type` FOREIGN KEY (`typeID`) REFERENCES `type` (`typeID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
+CREATE TABLE `yum` (
+  `yumid` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'yumid identified a yum configuration ',
+  `name` varchar(255) NOT NULL COMMENT 'yum name. it must be a string in english. Is is the block name of yum configuration.',
+  `osid` int(11) NOT NULL COMMENT 'specify the yum for which OS distrubition,such as centos,readhat, ubantu....',
+  `versionid` int(11) DEFAULT NULL COMMENT 'which version of the OS is for by this yum. normally this is the value of $releasever',
+  `typeid` int(11) NOT NULL COMMENT 'what type of the yum is it,such as os, docker, kubernetes,......',
+  `catalog` varchar(11) DEFAULT NULL COMMENT 'which catalog  of the yum is it,such as base, update,plus,......',
+  `kind` varchar(11) DEFAULT NULL COMMENT 'kind of the yum,such as local,remote.',
+  `base_url` varchar(11) DEFAULT NULL COMMENT 'the url of yum if its kind is remote',
+  `enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'whether enabled this yum. 1 for enabled, otherwise for disabled',
+  `gpgcheck` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'whether gpg check. 1 for check, otherwise for not check',
+  `gpgkey` varchar(11) DEFAULT NULL COMMENT 'the path of the gpgkey file for local, the url of the gpgkey file for remote',
+  PRIMARY KEY (`yumid`),
+  KEY `FK_yumos` (`osid`),
+  KEY `FK_yumtype` (`typeid`),
+  KEY `FK_yumversion` (`versionid`),
+  CONSTRAINT `FK_yumos` FOREIGN KEY (`osid`) REFERENCES `os` (`osID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_yumtype` FOREIGN KEY (`typeid`) REFERENCES `type` (`typeID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_yumversion` FOREIGN KEY (`versionid`) REFERENCES `version` (`versionID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC

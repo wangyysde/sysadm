@@ -1,0 +1,188 @@
+{
+   "schemaVersion": 1,
+   "name": "test/tomcat",
+   "tag": "v1",
+   "architecture": "amd64",
+   "fsLayers": [
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:8db51a0119f4602976d9695ebcb1ceefc2d452f4a8ddfaf009cb499e7ba61ad4"
+      },
+      {
+         "blobSum": "sha256:efe57b7441f629df34eefb7aa380144f4d6827847e22e33c3b2a40fefcfd7081"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:dc655e69dd903f41365e3ebbecbca7fb1fdc1d14cfd16836da83908407345928"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:612cf131e4880254616bc7da37ab4270993efc252ffbe022f98c49b6b64841b4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:24e7c71ec633cf1303e720faf8462da622fe499c4f5a44c0a01cc01a3aeaacc1"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:43c0aceedb57f6288702dbed4b3a98c5274bc4c3fd4ed116f2d2489e3164012f"
+      },
+      {
+         "blobSum": "sha256:b19a994f6d4cdbb620339bd2e4ad47b229f14276b542060622ae447649294e5d"
+      },
+      {
+         "blobSum": "sha256:6ade5c59e324bd7cf369c72ad781c23d37e8fb48c9bbb4abbecafafd9be4cc35"
+      },
+      {
+         "blobSum": "sha256:9baf437a1badb6aad2dae5f2cd4a7b53a6c7ab6c14cba1ed1ecb42b4822b0e87"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:dbba69284b2786013fe94fefe0c2e66a7d3cecbb20f6d691d71dac891ee37be5"
+      }
+   ],
+   "history": [
+      {
+         "v1Compatibility": "{\"architecture\":\"amd64\",\"config\":{\"Hostname\":\"\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"8080/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/tomcat/bin:/usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"JAVA_HOME=/usr/local/openjdk-11\",\"LANG=C.UTF-8\",\"JAVA_VERSION=11.0.14.1\",\"CATALINA_HOME=/usr/local/tomcat\",\"TOMCAT_NATIVE_LIBDIR=/usr/local/tomcat/native-jni-lib\",\"LD_LIBRARY_PATH=/usr/local/tomcat/native-jni-lib\",\"GPG_KEYS=A9C5DF4D22E99998D9875A5110C01C5A2F6059E7\",\"TOMCAT_MAJOR=10\",\"TOMCAT_VERSION=10.0.20\",\"TOMCAT_SHA512=53bfdbac2e6af5cca97dc01fffb0428380fbe21d8375f45d015c16a57017ff946fdc555ebad9e9fcbcb97b438c4f6daf3aa39d36ca79fd5a372cfc1a80b7117f\"],\"Cmd\":[\"catalina.sh\",\"run\"],\"Image\":\"sha256:2702bf7dce4dbc79a072525b5c20838f918d95da51ab3426b416d2c87cada2b5\",\"Volumes\":null,\"WorkingDir\":\"/usr/local/tomcat\",\"Entrypoint\":null,\"OnBuild\":null,\"Labels\":null},\"container\":\"f3487ee860578646e86f13a8dcf89b61228310ef2cac9aa8a4b237993d23107d\",\"container_config\":{\"Hostname\":\"f3487ee86057\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"8080/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/tomcat/bin:/usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\"JAVA_HOME=/usr/local/openjdk-11\",\"LANG=C.UTF-8\",\"JAVA_VERSION=11.0.14.1\",\"CATALINA_HOME=/usr/local/tomcat\",\"TOMCAT_NATIVE_LIBDIR=/usr/local/tomcat/native-jni-lib\",\"LD_LIBRARY_PATH=/usr/local/tomcat/native-jni-lib\",\"GPG_KEYS=A9C5DF4D22E99998D9875A5110C01C5A2F6059E7\",\"TOMCAT_MAJOR=10\",\"TOMCAT_VERSION=10.0.20\",\"TOMCAT_SHA512=53bfdbac2e6af5cca97dc01fffb0428380fbe21d8375f45d015c16a57017ff946fdc555ebad9e9fcbcb97b438c4f6daf3aa39d36ca79fd5a372cfc1a80b7117f\"],\"Cmd\":[\"/bin/sh\",\"-c\",\"#(nop) \",\"CMD [\\\"catalina.sh\\\" \\\"run\\\"]\"],\"Image\":\"sha256:2702bf7dce4dbc79a072525b5c20838f918d95da51ab3426b416d2c87cada2b5\",\"Volumes\":null,\"WorkingDir\":\"/usr/local/tomcat\",\"Entrypoint\":null,\"OnBuild\":null,\"Labels\":{}},\"created\":\"2022-04-01T19:34:19.759553163Z\",\"docker_version\":\"20.10.12\",\"id\":\"78f553a6d6a28098d78b048881460bb6e8a2060fa9a0fa562c410ce22d49e3bf\",\"os\":\"linux\",\"parent\":\"423b3d0503e7c900e78a09b5e0ece232fe9a9ffd0d5e95c60bb60bcdbcff4ddc\",\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"423b3d0503e7c900e78a09b5e0ece232fe9a9ffd0d5e95c60bb60bcdbcff4ddc\",\"parent\":\"126841dcd30c4a5b846386bff9c39771d87be8a6950d7146e69fbd37dba13b4b\",\"created\":\"2022-04-01T19:34:19.662647529Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  EXPOSE 8080\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"126841dcd30c4a5b846386bff9c39771d87be8a6950d7146e69fbd37dba13b4b\",\"parent\":\"ac5b61797dccce5eff69644fcb7ce87eae826642dfea327309c793796e1bd6d4\",\"created\":\"2022-04-01T19:34:19.568929624Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -eux; \\tnativeLines=\\\"$(catalina.sh configtest 2\\u003e\\u00261)\\\"; \\tnativeLines=\\\"$(echo \\\"$nativeLines\\\" | grep 'Apache Tomcat Native')\\\"; \\tnativeLines=\\\"$(echo \\\"$nativeLines\\\" | sort -u)\\\"; \\tif ! echo \\\"$nativeLines\\\" | grep -E 'INFO: Loaded( APR based)? Apache Tomcat Native library' \\u003e\\u00262; then \\t\\techo \\u003e\\u00262 \\\"$nativeLines\\\"; \\t\\texit 1; \\tfi\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"ac5b61797dccce5eff69644fcb7ce87eae826642dfea327309c793796e1bd6d4\",\"parent\":\"7c8f930f379577da1a45fb188da9f58094c2f33b5af8d07708f552740d9fa00c\",\"created\":\"2022-04-01T19:34:17.997774083Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -eux; \\t\\tsavedAptMark=\\\"$(apt-mark showmanual)\\\"; \\tapt-get update; \\tapt-get install -y --no-install-recommends \\t\\tca-certificates \\t\\tcurl \\t\\tdirmngr \\t\\tgnupg \\t; \\t\\tddist() { \\t\\tlocal f=\\\"$1\\\"; shift; \\t\\tlocal distFile=\\\"$1\\\"; shift; \\t\\tlocal mvnFile=\\\"${1:-}\\\"; \\t\\tlocal success=; \\t\\tlocal distUrl=; \\t\\tfor distUrl in \\t\\t\\t\\\"https://www.apache.org/dyn/closer.cgi?action=download\\u0026filename=$distFile\\\" \\t\\t\\t\\\"https://downloads.apache.org/$distFile\\\" \\t\\t\\t\\\"https://www-us.apache.org/dist/$distFile\\\" \\t\\t\\t\\\"https://www.apache.org/dist/$distFile\\\" \\t\\t\\t\\\"https://archive.apache.org/dist/$distFile\\\" \\t\\t\\t${mvnFile:+\\\"https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/$mvnFile\\\"} \\t\\t; do \\t\\t\\tif curl -fL -o \\\"$f\\\" \\\"$distUrl\\\" \\u0026\\u0026 [ -s \\\"$f\\\" ]; then \\t\\t\\t\\tsuccess=1; \\t\\t\\t\\tbreak; \\t\\t\\tfi; \\t\\tdone; \\t\\t[ -n \\\"$success\\\" ]; \\t}; \\t\\tddist 'tomcat.tar.gz' \\\"tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz\\\" \\\"$TOMCAT_VERSION/tomcat-$TOMCAT_VERSION.tar.gz\\\"; \\techo \\\"$TOMCAT_SHA512 *tomcat.tar.gz\\\" | sha512sum --strict --check -; \\tddist 'tomcat.tar.gz.asc' \\\"tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz.asc\\\" \\\"$TOMCAT_VERSION/tomcat-$TOMCAT_VERSION.tar.gz.asc\\\"; \\texport GNUPGHOME=\\\"$(mktemp -d)\\\"; \\tfor key in $GPG_KEYS; do \\t\\tgpg --batch --keyserver keyserver.ubuntu.com --recv-keys \\\"$key\\\"; \\tdone; \\tgpg --batch --verify tomcat.tar.gz.asc tomcat.tar.gz; \\ttar -xf tomcat.tar.gz --strip-components=1; \\trm bin/*.bat; \\trm tomcat.tar.gz*; \\tcommand -v gpgconf \\u0026\\u0026 gpgconf --kill all || :; \\trm -rf \\\"$GNUPGHOME\\\"; \\t\\tmv webapps webapps.dist; \\tmkdir webapps; \\t\\tnativeBuildDir=\\\"$(mktemp -d)\\\"; \\ttar -xf bin/tomcat-native.tar.gz -C \\\"$nativeBuildDir\\\" --strip-components=1; \\tapt-get install -y --no-install-recommends \\t\\tdpkg-dev \\t\\tgcc \\t\\tlibapr1-dev \\t\\tlibssl-dev \\t\\tmake \\t; \\t( \\t\\texport CATALINA_HOME=\\\"$PWD\\\"; \\t\\tcd \\\"$nativeBuildDir/native\\\"; \\t\\tgnuArch=\\\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\\\"; \\t\\taprConfig=\\\"$(command -v apr-1-config)\\\"; \\t\\t./configure \\t\\t\\t--build=\\\"$gnuArch\\\" \\t\\t\\t--libdir=\\\"$TOMCAT_NATIVE_LIBDIR\\\" \\t\\t\\t--prefix=\\\"$CATALINA_HOME\\\" \\t\\t\\t--with-apr=\\\"$aprConfig\\\" \\t\\t\\t--with-java-home=\\\"$JAVA_HOME\\\" \\t\\t\\t--with-ssl=yes \\t\\t; \\t\\tnproc=\\\"$(nproc)\\\"; \\t\\tmake -j \\\"$nproc\\\"; \\t\\tmake install; \\t); \\trm -rf \\\"$nativeBuildDir\\\"; \\trm bin/tomcat-native.tar.gz; \\t\\tapt-mark auto '.*' \\u003e /dev/null; \\t[ -z \\\"$savedAptMark\\\" ] || apt-mark manual $savedAptMark \\u003e /dev/null; \\tfind \\\"$TOMCAT_NATIVE_LIBDIR\\\" -type f -executable -exec ldd '{}' ';' \\t\\t| awk '/=\\u003e/ { print $(NF-1) }' \\t\\t| xargs -rt readlink -e \\t\\t| sort -u \\t\\t| xargs -rt dpkg-query --search \\t\\t| cut -d: -f1 \\t\\t| sort -u \\t\\t| tee \\\"$TOMCAT_NATIVE_LIBDIR/.dependencies.txt\\\" \\t\\t| xargs -r apt-mark manual \\t; \\t\\tapt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \\trm -rf /var/lib/apt/lists/*; \\t\\tfind ./bin/ -name '*.sh' -exec sed -ri 's|^#!/bin/sh$|#!/usr/bin/env bash|' '{}' +; \\t\\tchmod -R +rX .; \\tchmod 777 logs temp work; \\t\\tcatalina.sh version\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"7c8f930f379577da1a45fb188da9f58094c2f33b5af8d07708f552740d9fa00c\",\"parent\":\"55d8114c5c1a5b086f37d5e9223aa6fc85cc12cb9b387df1af5bbfe7dbf4be15\",\"created\":\"2022-04-01T19:33:56.771722907Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV TOMCAT_SHA512=53bfdbac2e6af5cca97dc01fffb0428380fbe21d8375f45d015c16a57017ff946fdc555ebad9e9fcbcb97b438c4f6daf3aa39d36ca79fd5a372cfc1a80b7117f\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"55d8114c5c1a5b086f37d5e9223aa6fc85cc12cb9b387df1af5bbfe7dbf4be15\",\"parent\":\"f0f9c516427525a05c4dec6ee413cf48e81c66506b442909bb6badab6f65bb02\",\"created\":\"2022-04-01T19:33:56.675208003Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV TOMCAT_VERSION=10.0.20\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"f0f9c516427525a05c4dec6ee413cf48e81c66506b442909bb6badab6f65bb02\",\"parent\":\"50047bc2c98558f675444d48ad1959e3062cae07595c7f1edb05171c2e094dab\",\"created\":\"2022-03-30T05:14:57.725277245Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV TOMCAT_MAJOR=10\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"50047bc2c98558f675444d48ad1959e3062cae07595c7f1edb05171c2e094dab\",\"parent\":\"ba89ee8cfc1e2dcc30ec047b666e396ea21d064fca588ec91cb82ae357551290\",\"created\":\"2022-03-30T05:14:57.634189649Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV GPG_KEYS=A9C5DF4D22E99998D9875A5110C01C5A2F6059E7\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"ba89ee8cfc1e2dcc30ec047b666e396ea21d064fca588ec91cb82ae357551290\",\"parent\":\"478960ca60bb3b346e66d60dcd9339396887ef4c43bb73876a4c86d45f18f475\",\"created\":\"2022-03-30T05:14:57.541931538Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV LD_LIBRARY_PATH=/usr/local/tomcat/native-jni-lib\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"478960ca60bb3b346e66d60dcd9339396887ef4c43bb73876a4c86d45f18f475\",\"parent\":\"8eee347cc284266edb1248e1e85e5465152e71fa34c239278eac274087b3c84f\",\"created\":\"2022-03-30T05:14:57.452465842Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV TOMCAT_NATIVE_LIBDIR=/usr/local/tomcat/native-jni-lib\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"8eee347cc284266edb1248e1e85e5465152e71fa34c239278eac274087b3c84f\",\"parent\":\"90353ba18bb37405592011dcc763ca7e52d0f714b1c380e31c27367587d0a56a\",\"created\":\"2022-03-30T05:14:57.362091624Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) WORKDIR /usr/local/tomcat\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"90353ba18bb37405592011dcc763ca7e52d0f714b1c380e31c27367587d0a56a\",\"parent\":\"53641fa64b4a7d137c78820304e73a3c228b068d07bb1dbe126662e50e53eb9b\",\"created\":\"2022-03-30T05:14:57.259398685Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c mkdir -p \\\"$CATALINA_HOME\\\"\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"53641fa64b4a7d137c78820304e73a3c228b068d07bb1dbe126662e50e53eb9b\",\"parent\":\"b97e89937404068e6197ed6e48dd4beade44d129e464c336568b20b7cc58b03d\",\"created\":\"2022-03-30T05:14:56.739564705Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV PATH=/usr/local/tomcat/bin:/usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"b97e89937404068e6197ed6e48dd4beade44d129e464c336568b20b7cc58b03d\",\"parent\":\"fea5a258f3ef8b63f6f1217fcfb7f364da9277c13444fe07fdebafa8e49f8526\",\"created\":\"2022-03-30T05:14:56.645026118Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV CATALINA_HOME=/usr/local/tomcat\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"fea5a258f3ef8b63f6f1217fcfb7f364da9277c13444fe07fdebafa8e49f8526\",\"parent\":\"9dc8e43047531014813096c7e8b9975ce6b4b8eaeb72527e9beb60979935571f\",\"created\":\"2022-03-29T23:11:28.379768133Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  CMD [\\\"jshell\\\"]\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"9dc8e43047531014813096c7e8b9975ce6b4b8eaeb72527e9beb60979935571f\",\"parent\":\"240a69eac56106e7e6c5f57e3a9c97cc1811eed234984006be84e6390980128a\",\"created\":\"2022-03-29T23:11:27.621958357Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -eux; \\t\\tarch=\\\"$(dpkg --print-architecture)\\\"; \\tcase \\\"$arch\\\" in \\t\\t'amd64') \\t\\t\\tdownloadUrl='https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.14.1%2B1/OpenJDK11U-jdk_x64_linux_11.0.14.1_1.tar.gz'; \\t\\t\\t;; \\t\\t'arm64') \\t\\t\\tdownloadUrl='https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.14.1%2B1/OpenJDK11U-jdk_aarch64_linux_11.0.14.1_1.tar.gz'; \\t\\t\\t;; \\t\\t*) echo \\u003e\\u00262 \\\"error: unsupported architecture: '$arch'\\\"; exit 1 ;; \\tesac; \\t\\twget --progress=dot:giga -O openjdk.tgz \\\"$downloadUrl\\\"; \\twget --progress=dot:giga -O openjdk.tgz.asc \\\"$downloadUrl.sign\\\"; \\t\\texport GNUPGHOME=\\\"$(mktemp -d)\\\"; \\tgpg --batch --keyserver keyserver.ubuntu.com --recv-keys EAC843EBD3EFDB98CC772FADA5CD6035332FA671; \\tgpg --batch --keyserver keyserver.ubuntu.com --keyserver-options no-self-sigs-only --recv-keys CA5F11C6CE22644D42C6AC4492EF8D39DC13168F; \\tgpg --batch --list-sigs --keyid-format 0xLONG CA5F11C6CE22644D42C6AC4492EF8D39DC13168F \\t\\t| tee /dev/stderr \\t\\t| grep '0xA5CD6035332FA671' \\t\\t| grep 'Andrew Haley'; \\tgpg --batch --verify openjdk.tgz.asc openjdk.tgz; \\tgpgconf --kill all; \\trm -rf \\\"$GNUPGHOME\\\"; \\t\\tmkdir -p \\\"$JAVA_HOME\\\"; \\ttar --extract \\t\\t--file openjdk.tgz \\t\\t--directory \\\"$JAVA_HOME\\\" \\t\\t--strip-components 1 \\t\\t--no-same-owner \\t; \\trm openjdk.tgz*; \\t\\t{ \\t\\techo '#!/usr/bin/env bash'; \\t\\techo 'set -Eeuo pipefail'; \\t\\techo 'trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth \\\"$JAVA_HOME/lib/security/cacerts\\\"'; \\t} \\u003e /etc/ca-certificates/update.d/docker-openjdk; \\tchmod +x /etc/ca-certificates/update.d/docker-openjdk; \\t/etc/ca-certificates/update.d/docker-openjdk; \\t\\tfind \\\"$JAVA_HOME/lib\\\" -name '*.so' -exec dirname '{}' ';' | sort -u \\u003e /etc/ld.so.conf.d/docker-openjdk.conf; \\tldconfig; \\t\\tjava -Xshare:dump; \\t\\tfileEncoding=\\\"$(echo 'System.out.println(System.getProperty(\\\"file.encoding\\\"))' | jshell -s -)\\\"; [ \\\"$fileEncoding\\\" = 'UTF-8' ]; rm -rf ~/.java; \\tjavac --version; \\tjava --version\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"240a69eac56106e7e6c5f57e3a9c97cc1811eed234984006be84e6390980128a\",\"parent\":\"6bd6e026af692d8a5a022f8997e8cd3485d55bd290b957ef4fdb0414a32126eb\",\"created\":\"2022-03-29T23:11:16.02687531Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV JAVA_VERSION=11.0.14.1\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"6bd6e026af692d8a5a022f8997e8cd3485d55bd290b957ef4fdb0414a32126eb\",\"parent\":\"6923ae75f637d5ccf5952396b6517dbdb7d49107bce2592c2ee22cd19c2d376b\",\"created\":\"2022-03-29T23:11:15.940772318Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV LANG=C.UTF-8\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"6923ae75f637d5ccf5952396b6517dbdb7d49107bce2592c2ee22cd19c2d376b\",\"parent\":\"511dbc968b9148e8a9b281e5f39c4129633d723a30401181cd3cc4170518a485\",\"created\":\"2022-03-29T23:11:15.849593398Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV PATH=/usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"511dbc968b9148e8a9b281e5f39c4129633d723a30401181cd3cc4170518a485\",\"parent\":\"3e9f8d0f6b2771fe74169a0aea94d839b42a38e6c3f8bc06f2d59f0f6607e24e\",\"created\":\"2022-03-29T23:11:15.750124254Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c { echo '#/bin/sh'; echo 'echo \\\"$JAVA_HOME\\\"'; } \\u003e /usr/local/bin/docker-java-home \\u0026\\u0026 chmod +x /usr/local/bin/docker-java-home \\u0026\\u0026 [ \\\"$JAVA_HOME\\\" = \\\"$(docker-java-home)\\\" ] # backwards compatibility\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"3e9f8d0f6b2771fe74169a0aea94d839b42a38e6c3f8bc06f2d59f0f6607e24e\",\"parent\":\"3b183d5f1cf39625338ebb007593b9055f8887165ce55303da86c35118e47c5f\",\"created\":\"2022-03-29T23:11:15.200196802Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  ENV JAVA_HOME=/usr/local/openjdk-11\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"3b183d5f1cf39625338ebb007593b9055f8887165ce55303da86c35118e47c5f\",\"parent\":\"c387ad4c528bcdc9d7ef8ecfa5e6c323e5a2eb6caa34f88b6768acfc40082d21\",\"created\":\"2022-03-29T23:11:15.062345556Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -eux; \\tapt-get update; \\tapt-get install -y --no-install-recommends \\t\\tbzip2 \\t\\tunzip \\t\\txz-utils \\t\\t\\t\\tfontconfig libfreetype6 \\t\\t\\t\\tca-certificates p11-kit \\t; \\trm -rf /var/lib/apt/lists/*\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"c387ad4c528bcdc9d7ef8ecfa5e6c323e5a2eb6caa34f88b6768acfc40082d21\",\"parent\":\"68fc1ef7925fbe5e45a02eacc831e280ec770d07bd69321733342c4d053e3e49\",\"created\":\"2022-03-29T17:30:02.752451271Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c apt-get update \\u0026\\u0026 apt-get install -y --no-install-recommends \\t\\tgit \\t\\tmercurial \\t\\topenssh-client \\t\\tsubversion \\t\\t\\t\\tprocps \\t\\u0026\\u0026 rm -rf /var/lib/apt/lists/*\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"68fc1ef7925fbe5e45a02eacc831e280ec770d07bd69321733342c4d053e3e49\",\"parent\":\"8962357a90f0cdc9b7111536f5ef9568f4d431c2046122b74c3f6cdf9a54c4cb\",\"created\":\"2022-03-29T17:29:47.275546886Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -ex; \\tif ! command -v gpg \\u003e /dev/null; then \\t\\tapt-get update; \\t\\tapt-get install -y --no-install-recommends \\t\\t\\tgnupg \\t\\t\\tdirmngr \\t\\t; \\t\\trm -rf /var/lib/apt/lists/*; \\tfi\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"8962357a90f0cdc9b7111536f5ef9568f4d431c2046122b74c3f6cdf9a54c4cb\",\"parent\":\"8b19ab3ad3de0deda65b97edb1e7155cf72467b7e96643006b5f267afc53b3f1\",\"created\":\"2022-03-29T17:29:41.799951147Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -eux; \\tapt-get update; \\tapt-get install -y --no-install-recommends \\t\\tca-certificates \\t\\tcurl \\t\\tnetbase \\t\\twget \\t; \\trm -rf /var/lib/apt/lists/*\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"8b19ab3ad3de0deda65b97edb1e7155cf72467b7e96643006b5f267afc53b3f1\",\"parent\":\"6e5e5441d628bfce6089e0f8ee795986289b15fcfa39648110e416708dbb056d\",\"created\":\"2022-03-29T00:22:08.59162551Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop)  CMD [\\\"bash\\\"]\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"6e5e5441d628bfce6089e0f8ee795986289b15fcfa39648110e416708dbb056d\",\"created\":\"2022-03-29T00:22:07.981868354Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:e8d512b08fe2ddc6f2c85831c73e4c72b9c850fa428913d19da4bb1a34f84cf2 in / \"]}}"
+      }
+   ],
+   "signatures": [
+      {
+         "header": {
+            "jwk": {
+               "crv": "P-256",
+               "kid": "YHUL:R5SY:5PIG:E74A:7BWJ:YCL6:VZPS:7CCB:XXIQ:POXF:7YYH:A7EA",
+               "kty": "EC",
+               "x": "ZmuZcQNB8dB0tjSqK7QLWfd2pydULqM5OIDhpzAWsTU",
+               "y": "7E5E1Z74FLer330FZSQLpe03RfSkGaxOBqLj6FPYJK4"
+            },
+            "alg": "ES256"
+         },
+         "signature": "ujRX8nf7OaupWWpgOF2B0DarQcq9TDBKGDLBfO-Y4lGwMq3r2MlJwdTtEaZoDdYCFEWt9byd7gbo6_OZvKxi2g",
+         "protected": "eyJmb3JtYXRMZW5ndGgiOjIxOTU4LCJmb3JtYXRUYWlsIjoiQ24wIiwidGltZSI6IjIwMjItMDQtMjVUMTQ6MjA6MzBaIn0"
+      }
+   ]
+}

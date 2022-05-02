@@ -61,7 +61,7 @@ func updataImage(imageName string){
 		userid = 1
 	}
 	
-	imgSets,err := getImageInfoFromDB("","",imageName,"")
+	imgSets,err := getImageInfoFromDB("","",imageName,"",0,0)
 	imageID := 0
 	errs = append(errs,err...)
 	// if the image named imageName is not exist, then add it into the DB
@@ -92,7 +92,7 @@ func updataImage(imageName string){
 		}
 	} else {			// if the image named imageName is exist, then update the information for the image
 		img := imgSets[0]
-		imageIDStr := img["imageid"]
+		imageIDStr := utils.Interface2String(img["imageid"])
 		id,e := strconv.Atoi(imageIDStr)
 		if e != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(2022002,"error","can not get image ID %s",e))
@@ -134,6 +134,50 @@ func updataImage(imageName string){
 	for _,b := range blobs {
 		_ = addBlobToDB(b,lastTagId)
 	}
+}
+
+func updatePulltimesForImage(imageid string,imageName string)  {
+	var errs []sysadmerror.Sysadmerror
+
+	where := make(map[string]string,0)
+	if strings.TrimSpace(imageid) != "" {
+		where["imageid"] = "=" + imageid
+	}
+
+	if strings.TrimSpace(imageName) != "" {
+		where["name"] = "=" + imageName
+	}
+
+	data := make(db.FieldData,0)
+	data["pulltimes"] = "pulltimes + 1"
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	_,err := dbEntity.UpdateData("image",data,where)
+	errs = append(errs,err...)
+	logErrors(errs)
+	
+}
+	
+func updatePulltimesForTag(tagid string, digest string)  {
+	var errs []sysadmerror.Sysadmerror
+
+	where := make(map[string]string,0)
+	if strings.TrimSpace(tagid) != "" {
+		where["tagid"] = "=" + tagid
+	}
+
+	if strings.TrimSpace(digest) != "" {
+		where["digest"] = "=" + digest
+	}
+
+	data := make(db.FieldData,0)
+	data["pulltimes"] = "pulltimes + 1"
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	_,err := dbEntity.UpdateData("tag",data,where)
+	errs = append(errs,err...)
+	logErrors(errs)
+	
 }
 
 /* 
@@ -240,9 +284,9 @@ func addProject(tls bool, address string, port int, apiVersion string,name strin
 	getImageInfoFromDB: get image information from DB server accroding to imageid,projectid,name, ownerid 
 	return []map[string]string and []sysadmerror.Sysadmerror
 */
-func getImageInfoFromDB(imageid string, projectid string, name string,ownerid string)([]map[string]string,[]sysadmerror.Sysadmerror){
+func getImageInfoFromDB(imageid string, projectid string, name string,ownerid string,start int, num int)([]map[string]interface{},[]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
-	var rets []map[string]string
+	var rets []map[string]interface{}
 
 	// Qeurying data from DB
 	whereMap :=  make(map[string]string,0)
@@ -289,7 +333,7 @@ func getImageInfoFromDB(imageid string, projectid string, name string,ownerid st
 	}
 
 	if name != "" {
-		whereMap["name"] = "=\"" + name +"\""
+		whereMap["name"] = " like \"%" + name +"%\""
 	}
 
 	if ownerid != "" {
@@ -312,10 +356,127 @@ func getImageInfoFromDB(imageid string, projectid string, name string,ownerid st
 		}
 		whereMap["ownerid"] = ids
 	}
+	
+	var limit []int
+	if num > 0 {
+		if start < 0 {
+			start = 0
+		}
+		limit = append(limit,start)
+		limit = append(limit,num)
+	}
 
 	selectData := db.SelectData{
 		Tb: []string{"image"},
 		OutFeilds: []string{"imageid","projectid","name", "ownerid","description","tagsnum","lasttag","architecture","pulltimes","creation_time","update_time","size"},
+		Where: whereMap,
+		Limit: limit,
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	retData,err := dbEntity.QueryData(&selectData)
+	errs = append(errs,err...)
+	if retData == nil {
+		return rets,errs
+		
+	} 
+
+	
+	for _,line := range retData {
+		lineData := make(map[string]interface{},0)
+		for k,v := range line {
+			//value := utils.Interface2String(v)
+			lineData[k] = v
+		}
+
+		rets = append(rets,lineData)
+
+	}
+
+	return rets,errs
+}
+
+/* 
+	getImageInfoFromDB: get image information from DB server accroding to imageid,projectid,name, ownerid 
+	return []map[string]string and []sysadmerror.Sysadmerror
+*/
+func getImageCountFromDB(imageid string, projectid string, name string,ownerid string)([]map[string]interface{},[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	var rets []map[string]interface{}
+
+	// Qeurying data from DB
+	whereMap :=  make(map[string]string,0)
+	if imageid != "" {
+		var ids = ""
+		imageids := strings.Split(imageid, ",")
+		if len(imageids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range imageids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" + id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + imageid + "\""
+		}
+		whereMap["imageid"] = ids
+	}
+
+	if projectid != "" {
+		var ids = ""
+		projectids := strings.Split(projectid, ",")
+		if len(projectids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range projectids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\""+ id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + projectid + "\""
+		}
+		whereMap["projectid"] = ids
+	}
+
+	if name != "" {
+		whereMap["name"] = " like\" %" + name +"%\""
+	}
+
+	if ownerid != "" {
+		var ids = ""
+		ownerids := strings.Split(ownerid, ",")
+		if len(ownerids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range ownerids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" + id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + ownerid + "\""
+		}
+		whereMap["ownerid"] = ids
+	}
+	
+
+	selectData := db.SelectData{
+		Tb: []string{"image"},
+		OutFeilds: []string{"count(imageid) as num"},
 		Where: whereMap,
 	}
 
@@ -327,28 +488,30 @@ func getImageInfoFromDB(imageid string, projectid string, name string,ownerid st
 		
 	} 
 
-
+	
 	for _,line := range retData {
-		lineData := make(map[string]string,0)
+		lineData := make(map[string]interface{},0)
 		for k,v := range line {
-			value := utils.Interface2String(v)
-			lineData[k] = value
+			//value := utils.Interface2String(v)
+			lineData[k] = v
 		}
 
 		rets = append(rets,lineData)
 
 	}
-	
+
 	return rets,errs
 }
+
+
 
 /* 
 	getTagInfoFromDB: get tag information from DB server accroding to tagid, imageid,name, ownerid 
 	return []map[string]string and []sysadmerror.Sysadmerror
 */
-func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string)([]map[string]string,[]sysadmerror.Sysadmerror){
+func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string,digest string, start int, num int)([]map[string]interface{},[]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
-	var rets []map[string]string
+	var rets []map[string]interface{}
 
 	// Qeurying data from DB
 	whereMap :=  make(map[string]string,0)
@@ -394,8 +557,30 @@ func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string)([]
 		whereMap["imageid"] = ids
 	}
 
+	
+	if digest != "" {
+		var ids = ""
+		digests := strings.Split(digest, ",")
+		if len(digests) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range digests {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else { 
+					ids = ids + ",\"" +id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + " =\"" + digest + "\""
+		}
+		whereMap["digest"] = ids
+	}
+
 	if name != "" {
-		whereMap["name"] = "name=\"" + name +"\""
+		whereMap["name"] = " like \"%" + name +"%\""
 	}
 
 	if ownerid != "" {
@@ -419,13 +604,23 @@ func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string)([]
 		whereMap["ownerid"] = ids
 	}
 
+	var limit []int
+	if num > 0 {
+		if start < 0 {
+			start = 0
+		}
+		limit = append(limit,start)
+		limit = append(limit,num)
+	}
+
 	var order []db.OrderData 
 	order = append(order, db.OrderData{Key: "name", Order: 1})
 	selectData := db.SelectData{
 		Tb: []string{"tag"},
-		OutFeilds: []string{"tagid","imageid","name", "description","description","pulltimes","ownerid","creation_time","update_time","size"},
+		OutFeilds: []string{"tagid","imageid","name", "description","description","pulltimes","ownerid","creation_time","update_time","size","digest"},
 		Where: whereMap,
 		Order: order,
+		Limit: limit,
 	}
 
 	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
@@ -441,10 +636,10 @@ func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string)([]
 		return rets,errs
 	}
 	for _,line := range retData {
-		lineData := make(map[string]string,0)
+		lineData := make(map[string]interface{},0)
 		for k,v := range line {
-			value := utils.Interface2String(v)
-			lineData[k] = value
+		//	value := utils.Interface2String(v)
+			lineData[k] = v
 		}
 
 		rets = append(rets,lineData)
@@ -453,6 +648,106 @@ func getTagInfoFromDB(tagid string,imageid string,name string,ownerid string)([]
 	
 	return rets,errs
 
+}
+
+func getBlobInfoFromDB(blobid string, tagid string,digest string)([]map[string]interface{},[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	var rets []map[string]interface{}
+
+	// Qeurying data from DB
+	whereMap :=  make(map[string]string,0)
+	if blobid != "" {
+		var ids = ""
+		blobids := strings.Split(blobid, ",")
+		if len(blobids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range blobids {
+				if first {
+					ids += id
+					first = false
+				} else {
+					ids = ids + "," +id
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + " =" + blobid
+		}
+		whereMap["blobid"] = ids
+	}
+
+	if tagid != "" {
+		var ids = ""
+		tagids := strings.Split(tagid, ",")
+		if len(tagids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range tagids {
+				if first {
+					ids += id
+					first = false
+				} else {
+					ids = ids + "," +id
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + " =" + tagid
+		}
+		whereMap["tagid"] = ids
+	}
+	
+	if digest != "" {
+		var ids = ""
+		digests := strings.Split(digest, ",")
+		if len(digests) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range digests {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" +id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + digest + "\""
+		}
+		whereMap["digest"] = ids
+	}
+
+	selectData := db.SelectData{
+		Tb: []string{"blob"},
+		OutFeilds: []string{"blobid","tagid","digest", "size","creation_time","update_time"},
+		Where: whereMap,
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	retData,err := dbEntity.QueryData(&selectData)
+	errs = append(errs,err...)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error"){
+		return rets,errs
+	} 
+
+	// if the blob is not exist in DB 
+	if len(retData) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1040015,"debug","no data"))
+		return rets,errs
+	}
+	for _,line := range retData {
+		lineData := make(map[string]interface{},0)
+		for k,v := range line {
+			lineData[k] = v
+		}
+
+		rets = append(rets,lineData)
+
+	}
+	
+	return rets,errs	
 }
 
 /*
@@ -503,13 +798,14 @@ func addTagsToDB(imageName string, imageId int, ownerid int)(int){
 	data["imageid"] = imageId
 	data["name"] = image.tag 
 	data["description"] = ""
-	data["pulltimes"] = 0
+	data["pulltimes"] = 1
 	data["ownerid"] = ownerid
 	creation_time := time.Now().Unix()
 	update_time := creation_time
 	data["creation_time"] = creation_time
 	data["update_time"] = update_time
 	data["size"] = image.size
+	data["digest"] = image.digest
 
 	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
 	rows,err := dbEntity.InsertData("tag",data)
@@ -547,6 +843,58 @@ func addBlobToDB(blob blob, tagid int)int{
 	}
 
 	return rows
+}
+
+/*
+	delImagesFromDB: delete images from DB according  to imageid  or imageName
+	return affected rows if executation is successful, otherwise returns zero
+*/
+func delImagesFromDB(imageid string, imageName string,)(int) {
+	var errs []sysadmerror.Sysadmerror
+
+	// Qeurying data from DB
+	whereMap :=  make(map[string]string,0)
+	if imageid != "" {
+		var ids = ""
+		imageids := strings.Split(imageid, ",")
+		if len(imageids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range imageids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" +id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + imageid + "\""
+		}
+		whereMap["imageid"] = ids
+	}
+
+	// preparing tag name for where options
+	if imageName != "" {
+		whereMap["name"] = "=\"" + imageName + "\""
+	}
+
+	delData := db.SelectData{
+		Tb: []string{"image"},
+		OutFeilds: []string{},
+		Where: whereMap,
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	rows,err := dbEntity.DeleteData(&delData)
+	errs = append(errs, err...)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("error"){
+		rows = 0
+	}
+
+	return int(rows)
 }
 
 /*
@@ -640,6 +988,98 @@ func delTagsFromDB(tagid string, tagname string, imageid string)(int) {
 
 	return int(rows)
 }
+
+/*
+	delBlobFromDB: delete the layers of a image from DB according  to (blobid,tagid,or digest)
+	both blobid,tagid and digest can be a string joined with ","
+	return affected rows if executation is successful, otherwise returns zero
+*/
+func delBlobFromDB(blobid string, tagid string, digest string)(int) {
+	var errs []sysadmerror.Sysadmerror
+
+	// Qeurying data from DB
+	whereMap :=  make(map[string]string,0) 
+	if blobid != "" {
+		var ids = ""
+		blobids := strings.Split(blobid, ",")
+		if len(blobids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range blobids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" +id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + blobid + "\""
+		}
+		whereMap["blobid"] = ids
+	}
+
+	if tagid != "" {
+		var ids = ""
+		tagids := strings.Split(tagid, ",")
+		if len(tagids) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range tagids {
+				if first {
+					ids = ids + "\"" + id + "\""
+					first = false
+				} else {
+					ids = ids + ",\"" +id + "\""
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + tagid + "\""
+		}
+		whereMap["tagid"] = ids
+	}
+
+	// preparing tag name for where options
+	if digest != "" {
+		var ids = ""
+		digests := strings.Split(digest, ",")
+		if len(digests) >1 {
+			ids = " in ("
+			first := true
+			for _,id := range digests {
+				if first {
+					ids = ids + "\"" + id + "\"" 
+					first = false
+				} else {
+					ids = ids + ",\"" + id + "\"" 
+				}
+			}
+			ids += ")"
+		} else {
+			ids = ids + "=\"" + digest + "\"" 
+		}
+		whereMap["digest"] = ids
+	}
+
+	delData := db.SelectData{
+		Tb: []string{"blob"},
+		OutFeilds: []string{},
+		Where: whereMap,
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	rows,err := dbEntity.DeleteData(&delData)
+	errs = append(errs, err...)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("error"){
+		rows = 0
+	}
+
+	return int(rows)
+}
+
 
 /*
 	getObjectMaxID: get maxid of the object from DB.

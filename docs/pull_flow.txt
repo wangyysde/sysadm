@@ -1,0 +1,21 @@
+Ref: https://docs.docker.com/registry/spec/api/#pulling-an-image
+a.a JSON manifest
+b. individual layer files
+1. retrieve the manifes
+	GET /v2/<name>/manifests/<reference>
+	a.The reference may include a tag or digest.
+	b. The client should include an Accept header indicating which manifest content types it supports. 
+		image manifest v2 schema 1: https://docs.docker.com/registry/spec/manifest-v2-1/
+		image manifest v2 schema 2: https://docs.docker.com/registry/spec/manifest-v2-2/
+	c.the Content-Type header will indicate which manifest type is being returned.
+	d.A 404 Not Found response will be returned if the image is unknown to the registry.	
+name:	The name of the image.
+tag:	The tag for this version of the image.
+fsLayers:	A list of layer descriptors (including digest)
+signature: 	A JWS used to verify the manifest content
+manifest format: https://github.com/moby/moby/issues/8093
+2. verify the signature to ensure the names and layers are valid
+3.use the digests to download the individual layers
+	GET /v2/<name>/blobs/<digest>
+	a. This endpoint may issue a 307 (302 for <HTTP 1.1) redirect to another service for downloading the layer and clients should be prepared to handle redirects.
+	

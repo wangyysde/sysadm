@@ -134,6 +134,21 @@
     outline: none;
 }
 
+.popform-textarea {
+    width: 90%;
+    padding-left: 5px;
+    font-size: 14px;
+    border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    color: #fff;
+    background-color: #045283;
+    outline: none;
+}
+
+
 .popform-button {
     position: relative;
     width: 100%;
@@ -191,3 +206,155 @@
     padding-bottom: 5px;
     z-Index: 2000;
 }
+
+.selectForm {
+	position: relative;
+	top: 10px;
+	left:10px;
+	float: left;
+}
+
+.selectForm select {
+	top: 10px;
+	left:10px;
+	width: 200px;
+    height: 30px;
+	border:1px solid; 
+	border-bottom-width: 1px;
+    border-color: #045283;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+	background-color: transparent;
+}
+
+.selectForm button#buttonAdd {
+	border-radius: 5px;
+	width: 100px;
+    height: 40px;
+	border:1px solid; 
+	color: #fff;
+	font-size: 14px;
+	font-style: solid;
+	font-weight: bold;
+	border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+	border-bottom-width: 1px;
+	background-color: #3c8dbc;
+}
+
+.selectForm button#buttonDel {
+	border-radius: 5px;
+	width: 100px;
+    height: 40px;
+	border:1px solid; 
+	color: #3c8dbc;
+	font-size: 14px;
+	font-style: solid;
+	font-weight: bold;
+	border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+	border-bottom-width: 1px;
+	background-color: #cbd8df;
+	
+}
+
+
+.buttonDel {
+	border-radius: 5px;
+	width: 100px;
+    height: 40px;
+	border:1px solid; 
+	color: #3c8dbc;
+	font-size: 14px;
+	font-style: solid;
+	font-weight: bold;
+	border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+	border-bottom-width: 1px;
+	background-color: #cbd8df;
+}
+
+
+.buttonAdd {
+	position: relative;
+	top: 10px;
+	border-radius: 5px;
+	width: 100px;
+    height: 40px;
+	border:1px solid; 
+	color: #fff;
+	font-size: 14px;
+	font-style: solid;
+	font-weight: bold;
+	border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+	border-bottom-width: 1px;
+	background-color: #3c8dbc;
+}
+
+
+.div-addDescription {
+    text-align: left;
+    padding-bottom: 50px;
+    border-width: 0px;
+}
+
+.searchForm {
+	float: right;
+	position: relative;
+	top: 10px;
+	right:10px;
+}
+
+.searchForm input {
+	top: 10px;
+	right:10px;
+	width: 200px;
+    height: 30px;
+	border:1px solid; 
+	border-bottom-width: 1px;
+    border-color: #045283;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+	background-color: transparent;
+}
+
+.messageBox {
+    position: relative;
+	top: 100px;
+	left: 200px;
+    width: 500px;
+	height: 300px;
+    font-size: 12px;
+   	background-color: #3c8dbc;
+    border: 0px solid #ff0000;
+    padding-right: 10px;
+    padding-left: 30px;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.messageBox span {
+	position: relative;
+	top: 10px;
+	left: 10px;
+	font-size: 18px;
+	text-align: center;
+	color: #f00000;
+	font-weight: bold;
+}
+

@@ -21,6 +21,7 @@ package utils
 
 import (
 	"net"
+	"strings"
 
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
@@ -240,4 +241,25 @@ func GetRequestDataMap(c *sysadmServer.Context, keys []string)(map[string]map[st
 	}
 
 	return ret, errs
+}
+
+/*
+	check the existence of key in dataSet, return the value of the dataSet[key] with trimspaced if the key is exist in dataSet 
+	otherwrise return ""  
+*/
+func GetKeyData(dataSet map[string]string, key string)string{
+	ret := ""
+
+	if strings.TrimSpace(key) == "" {
+		return ""
+	}
+
+	value, ok := dataSet[key]
+	if !ok {
+		ret = value
+	} else {
+		ret = strings.TrimSpace(value)
+	}
+
+	return ret
 }

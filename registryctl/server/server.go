@@ -32,29 +32,6 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
-/*
-
-type StartParameters struct {
-	// Point to configuration file path of server
-	ConfigPath  string
-	OldConfigPath string
-	accessLogFp *os.File
-	errorLogFp *os.File
-	sysadmRootPath string
-	dbConfig *sysadmDB.DbConfig
-	router *sysadmServer.Engine
-}
-
-var StartData = &StartParameters{
-	ConfigPath: "",
-	OldConfigPath: "",
-	accessLogFp: nil,
-	errorLogFp: nil,
-	sysadmRootPath: "",
-	dbConfig: nil,
-	router: nil,
-}
-*/
 
 //var definedConfig *config.Config
 var exitChan chan os.Signal
@@ -122,34 +99,11 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		logErrors(errs)
 	}
 
+	// add handlers for add
+	e = addYumHandlers(r)
+	errs = append(errs, e...)
+    logErrors(errs)
 
-	/*
-	
-	err = addFormHandler(r,cmdPath)
-	if err != nil {
-		sysadmServer.Logf("error","error:%s",err)
-		os.Exit(1)
-	}
-	// Define handlers
-  //  r.GET("/", func(c *sysadmServer.Context) {
-  //      c.String(http.StatusOK, "Hello World!")
-  //  })  
-	
-	err = addRootHandler(r,cmdPath)
-	if err != nil {
-		sysadmServer.Logf("error","error:%s",err)
-		os.Exit(1)
-	}
-	
-    r.GET("/ping", func(c *sysadmServer.Context) {
-        c.String(http.StatusOK, "echo ping message")
-    })  
-
-	if err = addStaicRoute(r,cmdPath); err != nil {
-		sysadmServer.Logf("error","%s",err)
-		os.Exit(2)
-	}
-*/
 	r.GET("/ping", func(c *sysadmServer.Context) {
         c.String(http.StatusOK, "echo ping message")
     })  

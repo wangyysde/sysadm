@@ -21,6 +21,7 @@ package server
 
 import (
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net"
@@ -32,6 +33,7 @@ import (
 
 	"github.com/wangyysde/sysadm/registryctl/config"
 	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -67,15 +69,6 @@ type requestParams struct {
 	url string
 }
 
-type proxyParams struct {
-	header http.Header
-	method string
-	url *url.URL
-	contentLength int64
-	transferEncoding []string
-	host string
-	trailer http.Header
-}
 var headers []httpHeader
 var defaultHeaders []httpHeader = []httpHeader{
 	{
@@ -128,7 +121,7 @@ func addReqestHeader(r *requestParams,req *http.Request)([]sysadmerror.Sysadmerr
 func setBasicAuth(req *http.Request)([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	definedConfig := RuntimeData.RuningParas.DefinedConfig
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202018,"debug","setting authorization for the request"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202018,"debug"," the request"))
 	if req == nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202019,"fatal","can not setting authorization for nil request"))
 		return errs
@@ -268,87 +261,30 @@ func getRegistryUrl(c *sysadmServer.Context) string {
 	return registryURL
 }
 
-func setProxyHeader(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202032,"debug","setting headers for requesting registry server"))
-
-	r := c.Request
-	p.header = r.Header
-	logErrors(errs)
-}
-
-func setProxyMethod(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202033,"debug","setting method for requesting registry server"))
-
-	r := c.Request
-	method := r.Method
-	if strings.TrimSpace(method) == "" {
-		method = "GET"
-	}
-
-	p.method = method
-	logErrors(errs)
-}
-
-func setProxyURL(c *sysadmServer.Context, p *proxyParams) error {
-	var errs []sysadmerror.Sysadmerror
-	rawURL := getRegistryUrl(c)
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202034,"debug","setting URL(%s) for requesting registry server",rawURL))
-	url,err := url.Parse(rawURL)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202035,"error","parse proxy url(%s) error: %s",rawURL,err))
-		logErrors(errs)
-		return err
-	}
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","URL: %#v",url))
-	p.url= url
-	logErrors(errs)
-	return nil
-}
-
-func setContentLength(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","setting ContentLength for requesting registry server"))
-
-	r := c.Request
-	p.contentLength = r.ContentLength
-	logErrors(errs)
-}
-
-func settransferEncoding(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202036,"debug","setting TransferEncoding for requesting registry server"))
-	r := c.Request
-	p.transferEncoding  = r.TransferEncoding
-	logErrors(errs)
-}
-
-func setHost(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202037,"debug","setting host for requesting registry server"))
-
+func getRegistryRootUrl(c *sysadmServer.Context) string {
 	definedConfig := RuntimeData.RuningParas.DefinedConfig
 	registryHost := definedConfig.Registry.Server.Host
 	registryPort := definedConfig.Registry.Server.Port
-	host := registryHost + ":" + strconv.Itoa(registryPort)
-	p.host = host
-	logErrors(errs)
-
-}
-
-func setTrailer(c *sysadmServer.Context, p *proxyParams){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202038,"debug","setting trailer for requesting registry server"))
-
-	r := c.Request
-	p.trailer = r.Trailer
-	logErrors(errs)
+	registryTls := definedConfig.Registry.Server.Tls
+	var regUrlRoot string = ""
+	if registryTls {
+		if  registryPort  == 443 {
+			regUrlRoot = "https://" + registryHost
+		} else {
+			regUrlRoot = "https://" + registryHost + ":" + strconv.Itoa(registryPort)
+		}
+	}else {
+		if registryPort == 80 {
+			regUrlRoot = "http://" + registryHost 	
+		} else {
+			regUrlRoot = "http://" + registryHost + ":" + strconv.Itoa(registryPort) 
+		}
+	}
+	
+	return regUrlRoot
 }
 
 func buildRoundTripper(){
-	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202038,"debug","building RoundTripper for requesting registry server"))
 	definedConfig := RuntimeData.RuningParas.DefinedConfig
 
 	var transport http.RoundTripper = &http.Transport{
@@ -376,48 +312,132 @@ func buildRoundTripper(){
 
 func buildReverseProxyDirector(c *sysadmServer.Context)(func(r *http.Request)) {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","building proxy request parameters."))
-	
-	p := proxyParams{}
-	setProxyHeader(c,&p)
-	setProxyMethod(c,&p)
-	err := setProxyURL(c,&p)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"error","set proxy url error %s.",err))
-		logErrors(errs)
-		return nil
-	}
-	setContentLength(c,&p)
-	settransferEncoding(c,&p)
-	size := c.GetHeader("Content-Length")
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202041,"error","Content-Length %s.",size))
-	logErrors(errs)
-	setHost(c,&p)
-	setTrailer(c,&p)
+
 	return func(r *http.Request) {
-		errs := setBasicAuth(r)
+		definedConfig := RuntimeData.RuningParas.DefinedConfig
+		authStr := strings.TrimSpace(definedConfig.Registry.Credit.Username)+":"+strings.TrimSpace(definedConfig.Registry.Credit.Password)
+		authEncode := base64.StdEncoding.EncodeToString(utils.Str2bytes(authStr))
+		r.Header.Set("Authorization", ("Basic "+ authEncode))
+		auth := r.Header.Get("Authorization")
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202042,"debug","auth info: %s.",auth))
+		
+		rawURL := getRegistryUrl(c)
+		url,_ := url.Parse(rawURL)
+		r.URL = url
 		logErrors(errs)
-		r.Host = p.host
-		r.URL = p.url
+		r.Host = definedConfig.Registry.Server.Host + ":" + strconv.Itoa(definedConfig.Registry.Server.Port)
+		
 	}
 }
 
+/*
+	buildModifyReponse: modifies the location field value of headers of response come from registry server 
+*/
 func buildModifyReponse(c *sysadmServer.Context)(func(r *http.Response) error){
 	return func(r *http.Response) error {
-		var errs []sysadmerror.Sysadmerror
-		header := r.Header
-		//r.StatusCode = http.StatusOK
-	//	body,_ := ioutil.ReadAll(r.Body)
-	//	ret := &ReponseError{}
-	//	_ = json.Unmarshal(body,ret)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202039,"debug","reponse header: %+v",header))
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","reponse StatusCode: %+v",r.StatusCode))
-	//	errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","reponse body: %+v",ret))
+		locationUrl := r.Header.Get("Location")
+		if locationUrl != "" {
+			pUrl, _ := url.Parse(locationUrl)
+			uri := pUrl.RequestURI()
+			definedConfig := RuntimeData.RuningParas.DefinedConfig
+			urlRoot := "http://" + definedConfig.Server.Address + ":" + strconv.Itoa(definedConfig.Server.Port)
+			newUrl := urlRoot + uri
+			r.Header.Set("Location",newUrl)
+			
+		}
 
-		logErrors(errs)
-		
+		if r.StatusCode == http.StatusOK {
+			return verifyManifestAndLayerWithDB(r)
+		}
 		return nil
 	}
+}
+
+func verifyManifestAndLayerWithDB(r *http.Response) error{
+	uri := r.Request.RequestURI
+	if strings.TrimSpace(uri) != "" {
+		uriArray := strings.Split(uri, "/")
+		uriLen := len(uriArray)
+		if strings.ToLower(uriArray[(uriLen - 2)]) == "manifests" {    // pull manifests of a image by a client
+			// Get imageName form uri
+			imageName := ""
+			for i := 2; i< (uriLen - 2); i++ {
+				if imageName == "" {
+					imageName = uriArray[i]
+				} else {
+					imageName = imageName + "/" + uriArray[i]
+				}
+			}
+
+			imgSets,_ := getImageInfoFromDB("","",imageName,"",0,0)
+			if len(imgSets) < 1 {   // if there is not the information of the image for imageName in DB
+				reference := uriArray[(uriLen - 1)]
+				manifest := getManifests(imageName,reference)
+				username,_,_ := r.Request.BasicAuth()
+				if username == "" {
+					username = "admin"
+				}
+				image := image{
+					username: username,
+					name: imageName,
+					size: 0,
+					tag: manifest.Tag,
+					architecture: manifest.Architecture,
+					digest: "",
+					blobs: []blob{},
+				}
+
+				processImages[imageName] = image
+				updataImage(imageName)
+				delete(processImages, imageName)
+				return nil
+			}else {
+				imgLine := imgSets[0]
+				imageid := utils.Interface2String(imgLine["imageid"])
+				updatePulltimesForImage(imageid,"")
+				reference := uriArray[(uriLen - 1)]
+				manifest := getManifests(imageName,reference)
+				tagSets, errs := getTagInfoFromDB("",imageid,manifest.Tag,"","",0,0)
+				logErrors(errs)
+				if len(tagSets) < 1 {
+					username,_,_ := r.Request.BasicAuth()
+					if username == "" {
+						username = "admin"
+					}
+					image := image{
+						username: username,
+						name: imageName,
+						size: 0,
+						tag: manifest.Tag,
+						architecture: manifest.Architecture,
+						digest: "",
+						blobs: []blob{},
+					}
+					definedConfig := RuntimeData.RuningParas.DefinedConfig 
+					apiServerTls := definedConfig.Sysadm.Server.Tls
+					apiServerAddress := definedConfig.Sysadm.Server.Host
+					apiServerPort := definedConfig.Sysadm.Server.Port
+					apiVersion := definedConfig.Sysadm.ApiVerion
+					userid,_ := getUserIdByUsername(apiServerTls,apiServerAddress,apiServerPort,apiVersion,username)
+					if userid == 0 {
+						userid = 1
+					}
+					processImages[imageName] = image
+					imageID,_ := strconv.Atoi(imageid)
+					_ = addTagsToDB(imageName,imageID,userid)
+					delete(processImages, imageName)
+				}else {
+					tagLine := tagSets[0]
+					tagid := utils.Interface2String(tagLine["tagid"])
+					updatePulltimesForTag(tagid,"")
+				}
+				return nil 
+			}
+
+		}
+
+	}
+	return nil
 }
 
 /*
@@ -489,11 +509,13 @@ func putManifestsResponse(c *sysadmServer.Context)(func(r *http.Response) error)
 
 		if r.StatusCode == http.StatusCreated {
 			manifest := getManifests(imageName,reference)
+			digest := r.Header.Get("Docker-Content-Digest")
 			if manifest != nil {
 				image := processImages[imageName]
 				image.name = imageName
 				image.tag = manifest.Tag
 				image.architecture = manifest.Architecture
+				image.digest = digest
 				processImages[imageName] = image
 			}
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(202040,"debug","image information: %#v",processImages))

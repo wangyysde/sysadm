@@ -32,42 +32,7 @@ import (
 	"github.com/wangyysde/sysadm/sysadmerror"
 )
 
-// TODO: the following parameters should be configurable in the future.
-var (
-	timeout time.Duration = 30 
-	localAddr net.Addr = nil // Ref https://pkg.go.dev/net#Addr
-	keepAlive time.Duration = 30
-	tlshandshaketimeout time.Duration = 10
-	disableKeepAlives bool = false
-	disableCompression bool = false
-	maxIdleConns int = 10 
-	maxIdleConnsPerHost int = http.DefaultMaxIdleConnsPerHost
-	maxConnsPerHost int = 0
-	idleConnTimeout time.Duration = 90
-	httpClientVer = "v1.0"
-)
 
-
-type RequestData struct {
-	Key string
-	Value string
-}
-
-type RequestParams struct {
-	Headers []RequestData
-	QueryData []*RequestData
-	BasicAuthData map[string]string
-	Method string
-	Url string
-}
-
-var headers []RequestData
-var defaultHeaders []RequestData = []RequestData{
-	{
-		Key: "User-Agent", 
-		Value: ("sysadmHttpClient-"+httpClientVer),
-	},
-}
 
 
 // Ref: https://pkg.go.dev/net/http#Transport
@@ -161,7 +126,6 @@ func handleQueryData(r *RequestParams)(string,[]sysadmerror.Sysadmerror){
 func SendRequest(r *RequestParams)([]byte, []sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	var body []byte
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106010,"debug","now handling the request"))
 	if r == nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106011,"fatal","can not handling a nil request"))
 		return body, errs
@@ -226,4 +190,110 @@ func SendRequest(r *RequestParams)([]byte, []sysadmerror.Sysadmerror){
 	}
 
 	return body,errs
+}
+
+func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
+	var transport http.RoundTripper
+	if data == nil {
+		transport = &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			DialContext: (&net.Dialer{
+				Timeout:   defaultTimeout * time.Second,
+				KeepAlive: defaultKeepAlive * time.Second,
+			}).DialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          defaultMaxIdleConns,
+			IdleConnTimeout:       defaultIdleConnTimeout * time.Second,
+			TLSHandshakeTimeout:   defaultTlshandshaketimeout * time.Second,
+			DisableKeepAlives: defaultDisableKeepAlives,
+			DisableCompression: defaultDisableCompression,
+			MaxIdleConnsPerHost: defaultMaxIdleConnsPerHost,
+			MaxConnsPerHost: defaultMaxConnsPerHost,
+			ExpectContinueTimeout: 1 * time.Second,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: defaultInsecureSkipVerify,
+			},
+		}
+	}else {
+		transport = &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			DialContext: (&net.Dialer{
+				Timeout:   data.Timeout * time.Second,
+				KeepAlive: data.KeepAlive * time.Second,
+			}).DialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          data.MaxIdleConns, 
+			IdleConnTimeout:       data.IdleConnTimeout * time.Second,
+			TLSHandshakeTimeout:   data.Tlshandshaketimeout * time.Second,
+			DisableKeepAlives: 	   data.DisableKeepAlives,
+			DisableCompression:  data.DisableCompression, 
+			MaxIdleConnsPerHost: data.MaxIdleConnsPerHost, 
+			MaxConnsPerHost: data.MaxConnsPerHost,
+			ExpectContinueTimeout: 1 * time.Second,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: data.InsecureSkipVerify,
+			},
+		}
+	}
+
+	return transport
+}
+
+
+func AddHeaders(rp *RequestParams,key string, value string)(*RequestParams,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	header := rp.Headers
+	if strings.TrimSpace(key) != ""{
+		data := RequestData{
+			Key:key,
+			Value: value,
+		}
+		header = append(header,data)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106015,"debug","add key %s value %s to headers",key,value))
+	}
+
+	rp.Headers = header
+
+	return rp, errs
+}
+
+
+func AddQueryData(rp *RequestParams,key string, value string)(*RequestParams,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	queryData := rp.QueryData
+	if strings.TrimSpace(key) != "" {
+		data := &RequestData{
+			Key:key,
+			Value: value,
+		}
+		queryData = append(queryData,data)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106016,"debug","add key %s value %s to query data",key,value))
+	}
+
+	rp.QueryData = queryData
+	return rp, errs
+}
+
+func AddBasicAuthData(rp *RequestParams,isBasicAuth bool, username string, password string)(*RequestParams,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	var data map[string]string
+	if isBasicAuth && strings.TrimSpace(username) != "" && strings.TrimSpace(password) != ""{
+		data = map[string]string {
+			"isBasicAuth": "true",
+			"username": username,
+			"password": password,
+		}
+	} else {
+		data = map[string]string {
+			"isBasicAuth": "false",
+			"username": "",
+			"password": "",
+		}
+	}
+
+	rp.BasicAuthData = data
+	return rp, errs
 }

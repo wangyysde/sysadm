@@ -1,0 +1,222 @@
+<script type="text/javascript">
+    
+    function refreshImagePage() {
+        $('#container').load("/registryctl/imagelist");
+    }
+
+	function refreshPage() {
+		var imageIDObj = document.getElementById("imageid");
+		var imageid = imageIDObj.value;
+		var params = "?imageid=" + imageid
+		var url = "/registryctl/taglist" + params;
+		$('#container').load(url);
+	}
+
+    function selectAllCheckbox() {
+        var thCheckBox = document.getElementById("tagidth");
+        if (thCheckBox.checked) {
+            var chklist = document.getElementsByName('tagid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = true;
+            }
+			var buttonAdd = document.getElementById("delTagButton")
+			buttonAdd.style.color = "#ffffff";
+			buttonAdd.style.background = "#3c8dbc";
+			buttonAdd.disabled = false;
+        } else {
+            var chklist = document.getElementsByName('tagid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = false;
+            }
+			var buttonAdd = document.getElementById("delTagButton")
+			buttonAdd.style.color = "#3c8dbc";
+			buttonAdd.style.background = "#cbd8df";
+			buttonAdd.disabled = true;
+        }
+    }
+
+	function selectCheckbox() {
+		var chklist = document.getElementsByName('tagid[]');
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if(chklist[i].checked){
+				checkedItem = checkedItem + 1; 
+			}
+		}
+		if(checkedItem == 0) {
+			var buttonAdd = document.getElementById("delTagButton")
+			buttonAdd.style.color = "#3c8dbc";
+			buttonAdd.style.background = "#cbd8df";
+			buttonAdd.disabled = true;
+		}else{
+			var buttonAdd = document.getElementById("delTagButton")
+			buttonAdd.style.color = "#ffffff";
+			buttonAdd.style.background = "#3c8dbc";
+			buttonAdd.disabled = false;
+		}
+	}
+
+    function delTagJS() {
+        if (ownerid.value == "") {
+            alert("删除镜像需要登录到系统!");
+            return
+        }
+		var chklist = document.getElementsByName('tagid[]');
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if (chklist[i].checked) {
+				checkedItem = checkedItem + 1;
+			}
+		}
+
+        if (checkedItem == 0) {
+            alert("没有Tag可以删除!");
+            return
+        }
+        var ok = confirm("确认需要删除这些Tag信息吗？");
+        if (!ok) {
+            return
+        }
+        $.ajax({
+			statusCode: {
+				500: function () {
+					refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				501: function () {
+					refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				502: function() {
+					refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				
+			},
+            type: "POST",
+            dataType: "json",
+            url: "/api/v1.0/registryctl/tagdel",
+            data: $('#delTag').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                if (result.status) {
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    // tip.innerHTML = result.Message;
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+
+    }
+
+	
+</script>
+
+<section class="content-header">
+	<h1>
+		{{ .imagename }}
+		<small>tag信息列表</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> 介质管理</a></li>
+		<li><a href="javascript:void(0)" onclick='refreshImagePage()'>镜像仓库</a></li>
+		<li class="active">{{ .imagename }}</li>
+	</ol>
+</section>
+
+<div>
+	<div class="selectForm">
+			<button id="delTagButton" class="buttonDel" onclick="delTagJS() "> X 删除Tag</button>
+	</div>
+</div>
+	<form id="delTag" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			<th width="5%" align="left"> 
+				<input type="checkbox" id="tagidth" name="tagid[]" onclick='selectAllCheckbox()'>
+			</th>
+			<th width="10%">Tag名称</th>
+			<th width="5%" >拉取次数</th>
+			<th width="10%">推送时间</th>
+			<th width="10%">更新时间</th>
+			<th width="5%">大小</th>
+			<th >Digest</th>
+		</tr>
+		{{range $index,$line := .taglist}}
+			<tr>
+		   <td width="5%"> <input type="checkbox" id="tagid[]" name="tagid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
+			<td > {{ $line.Name }} </td>
+			<td> {{ $line.Pulltimes }}</td> 
+			<td> {{ $line.CreateTime }} </td>
+			<td> {{ $line.UpdateTime }} </td>
+			<td> {{ $line.Size }} </td>
+			<td> {{ $line.Digest }} </td>
+			</tr>
+		{{end}}
+	</table>
+
+		
+</form>
+

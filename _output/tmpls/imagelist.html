@@ -1,0 +1,364 @@
+<script type="text/javascript">
+    function addProjectJS() {
+        var ownerid = document.getElementById("ownerid");
+        if (ownerid.value == "") {
+            alert("添加项目信息需要登录到系统!");
+            return
+        }
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 2000
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "block";
+        addProjectForm.style.zIndex = 2100;
+        addProjectForm.focus();
+
+    }
+
+    function cancelAddProject() {
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "none";
+        addProjectForm.style.zIndex = 0;
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 0
+    }
+
+    function refreshProjectPage() {
+        $('#container').load("/project/list");
+    }
+
+	function refreshPage() {
+		$('#container').load("/registryctl/imagelist");
+	}
+
+    function changePage(urlparas) {
+        var url = "/registryctl/imagelist" + urlparas;
+        $('#container').load(url);
+    }
+
+	function taglist(imageid) {
+		    var params = "?imageid=" + imageid
+			var url = "/registryctl/taglist" + params;
+			$('#container').load(url);
+		}
+    function selectAllCheckbox() {
+        var thCheckBox = document.getElementById("imageidth");
+        if (thCheckBox.checked) {
+            var chklist = document.getElementsByName('imageid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = true;
+            }
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#ffffff";
+			buttonDel.style.background = "#3c8dbc";
+        } else {
+            var chklist = document.getElementsByName('imageid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = false;
+            }
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#3c8dbc";
+			buttonDel.style.background = "#cbd8df";
+        }
+    }
+
+	function selectCheckbox() {
+		var chklist = document.getElementsByName('imageid[]');
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if(chklist[i].checked){
+				checkedItem = checkedItem + 1; 
+			}
+		}
+		if(checkedItem == 0) {
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#3c8dbc";
+			buttonDel.style.background = "#cbd8df";
+		}else{
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#ffffff";
+			buttonDel.style.background = "#3c8dbc";
+		}
+	}
+
+
+    function submitAddProject() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/api/v1.0/project/add",
+            data: $('#addProject').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                cancelAddProject();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                cancelAddProject();
+                if (result.errorcode == 0) {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    tip.innerHTML = msg;
+                    refreshProjectPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+
+                    //window.location.href = "/";
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = msgLine["errorMsg"];
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+    }
+
+    function delImageJS() {
+        if (ownerid.value == "") {
+            alert("删除镜像需要登录到系统!");
+            return
+        }
+		var chklist = document.getElementsByName('imageid[]');
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if (chklist[i].checked) {
+				checkedItem = checkedItem + 1;
+			}
+		}
+
+        if (checkedItem == 0) {
+            alert("没有镜像可以删除!");
+            return
+        }
+        var ok = confirm("确认需要删除这些镜像信息吗？");
+        if (!ok) {
+            return
+        }
+        $.ajax({
+			statusCode: {
+				500: function () {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				501: function () {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				502: function() {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				
+			},
+            type: "POST",
+            dataType: "json",
+            url: "/api/v1.0/registryctl/imagedel",
+            data: $('#delImage').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                if (result.status) {
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    // tip.innerHTML = result.Message;
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+
+                    //window.location.href = "/";
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+
+    }
+
+	function projectChanged(projectid) {
+		var urlParam = "?projectid="+projectid;
+		changePage(urlParam);
+	}
+
+	function doSearch(searchKey) {
+		var urlParam = "?searchKey=" + searchKey;
+		changePage(urlParam);
+	}
+
+</script>
+
+<section class="content-header">
+	<h1>
+		镜像仓库
+		<small>镜像信息列表</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> 介质管理</a></li>
+		<li class="active">镜像仓库</li>
+	</ol>
+</section>
+
+{{ $haveSelectProject := .selectedprojectid }}
+<div>
+	<div class="selectForm">
+		<form id="projectSelect" name="projectSelect" method="post" target="_self" onsubmit="return false">
+			<select name="projectid" onChange="projectChanged(this.options[this.options.selectedIndex].value)">
+				{{range $index,$line := .projectinfo}}
+				{{range $id, $name := $line}}
+				{{if eq $haveSelectProject $id }}
+					<option value="{{ $id }}" selected> {{ $name }} </option>
+				{{else}}
+					<option value="{{ $id }}" > {{ $name }} </option>
+				{{end}}
+				{{end}}
+				{{end}}
+			</select> &nbsp;
+			<button id="buttonAdd" onclick="addProjectJS() "> + 添加项目</button>&nbsp;
+			<button id="buttonDel" onclick="delImageJS() " > X 删除镜像</button>
+		</form>
+	</div>
+	<div class="searchForm">
+		<form id="searchForm" name="search" method="post" target="_self" onsubmit="return false">
+			<input type="text" name="searchKey" placeholder="Search..." autocomplete="off" onblur="doSearch(this.value)" />
+		</form>
+	</div>
+</div>
+
+	<form id="delImage" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			<th width="5%" align="left"> 
+				<input type="checkbox" id="imageidth" name="imageid[]" onclick='selectAllCheckbox()'>
+			</th>
+			<th width="10%">所属项目</th>
+			<th width="30%" >镜像名称</th>
+			<th width="10%">最新版本</th>
+			<th width="5%">下载次数</th>
+			<th width="20%">更新时间</th>
+			<th>镜像大小</th>
+		</tr>
+		{{range $index,$line := .imagelist}}
+			<tr>
+		   <td width="5%"> <input type="checkbox" id="imageid[]" name="imageid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
+			<td > {{ $line.ProjectName }} </td>
+			<td> <a href="javascript:void(0)" onclick='taglist("{{ $line.Id }}")'> {{ $line.ImageName }} </a></td> 
+			<td> {{ $line.LastTag }} </td>
+			<td> {{ $line.PullTimes }} </td>
+			<td> {{ $line.UpdateTime }} </td>
+			<td> {{ $line.Size }} </td>
+			</tr>
+		{{end}}
+	</table>
+</form>
+
+<table class="foot-table">
+	<tr>
+		<td>
+			<div class="div-foot">当前第{{ .currentpage }}页 {{ .prepage }} {{ .nextpage }} 共{{ .totalpage }}页 </div>
+		</td>
+	</tr>
+</table>	
+
+<div class="pop-form" id="addform">
+	<form id="addProject" method="post" target="_self" onsubmit="return false">
+		<div class="popform-title">新建项目</div>
+		<div class="popform-item">
+			项目名称： <input id="name" type="text" name="name">
+		</div>
+		<div class="popform-item">
+			项目描述： <input id="comment" type="text" name="comment">
+			<input id="ownerid" type="hidden" name="ownerid" value="{{.userid}}">
+		</div>
+		<div class=" popform-button ">
+			<button id="add " onclick="submitAddProject() ">确定</button>
+			<button id="cacel " onclick="cancelAddProject() ">关闭</button>
+		</div>
+	</form>
+</div>

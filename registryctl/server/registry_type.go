@@ -31,6 +31,7 @@ type image struct {
 	size int64
 	tag string
 	architecture string
+	digest string
 	blobs []blob
 }
 
@@ -51,3 +52,7 @@ type Manifest struct {
 	FsLayers []FsLayer `json:"fsLayers"`
 	History []History `json:"history"`
 }
+
+type RegistryCtl struct {}
+
+var  registryctlActions = []string{"imagelist","getcount","taglist"}

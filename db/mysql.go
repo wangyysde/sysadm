@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/wangyysde/sysadm/sysadmerror"
@@ -393,4 +394,33 @@ func (p MySQL)DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror){
     }
 
 	return ret, errs
+}
+
+/*
+   BuildWhereFieldExact build the value of Where Field for key with value. 
+*/
+func (m MySQL)BuildWhereFieldExact(value string) string{
+	if strings.TrimSpace(value) == ""{
+		return ""
+	}
+
+	var ret = ""
+	valueArray := strings.Split(value, ",")
+	if len(valueArray) >1 {
+		ret = " in ("
+		first := true
+		for _,v := range valueArray {
+			if first {
+				ret = ret + "\"" + v + "\""
+				first = false
+			} else {
+				ret = ret + ",\"" + v + "\""
+			}
+		}
+		ret += ")"
+	} else {
+		ret = ret + "=\"" + value + "\""
+	}
+	
+	return ret
 }

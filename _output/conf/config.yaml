@@ -8,6 +8,7 @@ server:
   cert: ""
   key: "" 
 apiServer:
+  apiVersion: "v1.0"
   address: "172.17.0.4"
   port: 8081
   tls: false
@@ -35,3 +36,11 @@ DB:
   sslrootcert: ""
   sslkey: ""
   sslcert: ""
+registryctl:
+  apiVersion: "v1.0"
+  address: "172.17.0.4"
+  port: 5001
+  tls: false
+  ca: ""
+  cert: ""
+  key: ""

@@ -27,5 +27,5 @@
 	return "sysadm"
 }
 func (s Sysadm) ActionHanderCaller(action string, c *sysadmServer.Context){
-	return
+
 }

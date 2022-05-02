@@ -22,6 +22,7 @@ import (
 
 	sysadmDB "github.com/wangyysde/sysadm/db"
 	"github.com/wangyysde/sysadm/sysadm/config"
+	"github.com/wangyysde/sysadmServer"
 )
 
 // Start parameters of the program
@@ -52,6 +53,13 @@ type RuningData struct {
 	OldStartParas *StartParas
 	// the old runing parameters of program after the program reload or restart
 	OldRunningParas *RunningParas
+}
+
+type actionHandler struct {
+	name string
+	templateFile string 
+	handler sysadmServer.HandlerFunc
+	method []string
 }
 
 var RuntimeData RuningData = RuningData{StartParas: &StartParas{}, RuningParas: &RunningParas{},OldStartParas:nil,OldRunningParas:nil}

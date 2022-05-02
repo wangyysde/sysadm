@@ -875,6 +875,44 @@ func getPostgreSslcert(confContent *Config) string{
 	return defaultConfig.DB.Sslcert
 }
 
+/* 
+   Try to get listenPort from one of  SYSADMAPISERVER_APIVERSION,configuration file or default value.
+   The order for getting listenPort is SYSADMAPISERVER_APIVERSION,configuration file and default value.
+*/
+func getApiServerApiVersion(confContent *ApiServer) string{
+	apiVersion := os.Getenv("SYSADMAPISERVER_APIVERSION")
+	if apiVersion != "" {
+		return apiVersion
+	}
+
+	if confContent != nil {
+		if confContent.ApiVersion != "" {
+			return confContent.ApiVersion
+		}
+	}
+
+	return defaultConfig.ApiServer.ApiVersion
+}
+
+/* 
+   Try to get listenPort from one of  REGISTRYCTL_APIVERSION,configuration file or default value.
+   The order for getting listenPort is REGISTRYCTL_APIVERSION,configuration file and default value.
+*/
+func getRegistryCtlServerApiVersion(confContent *ApiServer) string{
+	apiVersion := os.Getenv("REGISTRYCTL_APIVERSION")
+	if apiVersion != "" {
+		return apiVersion
+	}
+
+	if confContent != nil {
+		if confContent.ApiVersion != "" {
+			return confContent.ApiVersion
+		}
+	}
+
+	return defaultConfig.Registryctl.ApiVersion
+}
+
 /*
   Try to get ApiServer IP from one of  SYSADMAPISERVER_IP,configuration file or default value.
   The order for getting  ApiServer IP is SYSADMAPISERVER_IP,configuration file and default value.
@@ -898,6 +936,31 @@ func getApiServerAddress(confContent *ApiServer) string{
 	}
 
 	return defaultConfig.ApiServer.Address
+}
+
+/*
+  Try to get Registryctl Server IP from one of  REGISTRYCTL_IP,configuration file or default value.
+  The order for getting  ApiServer IP is REGISTRYCTL_IP,configuration file and default value.
+*/
+func getRegistryctlServerAddress(confContent *ApiServer) string{
+	address := os.Getenv("REGISTRYCTL_IP")
+	if address != "" {
+		ip, err := utils.CheckIpAddress(address,false) 
+		if ip != nil {
+			return address
+		}
+		sysadmServer.Logf("warning","We have found environment variable REGISTRYCTL_IP: %s,but the value of REGISTRYCTL_IP is not a valid server IP(%s)",address,err)
+	}
+
+	if confContent != nil {
+		ip,_ := utils.CheckIpAddress(confContent.Address,false)
+		if ip != nil {
+			return confContent.Address
+		}
+		sysadmServer.Logf("warning","We have found server address(%s) from configuration file,but the value of server address is not a valid server IP(%s).default value of server address:%s will be used.",confContent.Address,defaultConfig.Registryctl.Address)
+	}
+
+	return defaultConfig.Registryctl.Address
 }
 
 /* 
@@ -930,6 +993,36 @@ func getApiServerPort(confContent *ApiServer) int{
 	return defaultConfig.ApiServer.Port
 }
 
+/* 
+   Try to get listenPort from one of  REGISTRYCTL_PORT,configuration file or default value.
+   The order for getting listenPort is REGISTRYCTL_PORT,configuration file and default value.
+*/
+func getRegistryCtlServerPort(confContent *ApiServer) int{
+	port := os.Getenv("REGISTRYCTL_PORT")
+	if port != "" {
+		p, err := strconv.Atoi(port)
+		if err != nil {
+			sysadmServer.Logf("warning","We have found environment variable REGISTRYCTL_PORT: %s,but the value of REGISTRYCTL_PORT is not a valid server port(%s)",port,err)
+		}else{
+			tmpPort, _ := utils.CheckPort(p)
+			if tmpPort != 0 {
+				return p
+			}
+			sysadmServer.Logf("warning","We have found environment variable REGISTRYCTL_PORT: %d,but the value of REGISTRYCTL_PORT is not a valid server port",p)
+		}
+	}
+
+	if confContent != nil {
+		tmpPort,_ := utils.CheckPort(confContent.Port)
+		if tmpPort != 0 {
+			return confContent.Port
+		}
+		sysadmServer.Logf("warning","We have found api server port(%d) from configuration file,but the value of api server port is not a valid server port.default value of server port:%s will be used.",confContent.Port,defaultConfig.Registryctl.Port)
+	}
+
+	return defaultConfig.Registryctl.Port
+}
+
 // Getting the tls value for api server from environment and checking the validity of it
 // return the tls if it is valid ,otherwise getting the value from 
 // configuration file and checking the validity of it. return the it if it is valid.
@@ -949,6 +1042,27 @@ func getApiServerTls(confContent *ApiServer) bool{
 	}
 
 	return defaultConfig.ApiServer.Tls
+}
+
+// Getting the tls value for api server from environment and checking the validity of it
+// return the tls if it is valid ,otherwise getting the value from 
+// configuration file and checking the validity of it. return the it if it is valid.
+// otherwise return the default value.
+func getRegistryCtlServerTls(confContent *ApiServer) bool{
+	tls := os.Getenv("REGISTRYCTL_TLS")
+	if strings.ToLower(tls) == "true" || strings.ToLower(tls) == "false" {
+		if strings.ToLower(tls) == "true" {
+			return true
+		}else {
+			return false
+		}
+	}
+	
+	if confContent != nil  {
+		return confContent.Tls 
+	}
+
+	return defaultConfig.Registryctl.Tls
 }
 
 /* 
@@ -973,6 +1087,27 @@ func getApiServerTls(confContent *ApiServer) bool{
 }
 
 /* 
+  Getting ca of api server  from environment and checking the validity of it
+  return the ca if it is valid ,otherwise getting ca of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getRegistryCtlServerCa(confContent *ApiServer) string{
+	ca := os.Getenv("REGISTRYCTL_CA")
+	if ca != ""{
+		return ca
+	}
+
+	if confContent != nil  {
+		if confContent.Ca != "" {
+			return confContent.Ca
+		}
+	}
+
+	return defaultConfig.Registryctl.Ca 
+}
+
+/* 
   Getting cert of API server  from environment and checking the validity of it
   return the cert if it is valid ,otherwise getting cert of sysadm  from 
   configuration file and checking the validity of it. return the user if it is valid.
@@ -991,6 +1126,27 @@ func getApiServerTls(confContent *ApiServer) bool{
 	}
 
 	return defaultConfig.ApiServer.Cert
+}
+
+/* 
+  Getting cert of RegistryCtl server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getRegistryCtlServerCert(confContent *ApiServer) string{
+	cert := os.Getenv("REGISTRYCTL_CERT")
+	if cert != ""{
+		return cert
+	}
+
+	if confContent != nil  {
+		if confContent.Cert != "" {
+			return confContent.Cert
+		}
+	}
+
+	return defaultConfig.Registryctl.Cert
 }
 
 /* 
@@ -1015,10 +1171,32 @@ func getApiServerTls(confContent *ApiServer) bool{
 }
 
 /* 
+  Getting key of RegistryCtl server  from environment and checking the validity of it
+  return the cert if it is valid ,otherwise getting cert of sysadm  from 
+  configuration file and checking the validity of it. return the user if it is valid.
+  otherwise return the default ca of sysadm server.
+*/
+  func getRegistryCtlServerKey(confContent *ApiServer) string{
+	key := os.Getenv("REGISTRYCTL_KEY")
+	if key != ""{
+		return key
+	}
+
+	if confContent != nil  {
+		if confContent.Key != "" {
+			return confContent.Key
+		}
+	}
+
+	return defaultConfig.Registryctl.Key
+}
+
+/* 
   get configurations of API server from environment, configuration or default values
   set them to definedConfig if them have passed checked.
 */
 func handleApiServerConfig(apiConfig *ApiServer,cmdRunPath string){
+	ConfigDefined.ApiServer.ApiVersion = getApiServerApiVersion(apiConfig)
 	ConfigDefined.ApiServer.Address  = getApiServerAddress(apiConfig)
 	ConfigDefined.ApiServer.Port = getApiServerPort(apiConfig) 
 	ConfigDefined.ApiServer.Tls = getApiServerTls(apiConfig)
@@ -1053,6 +1231,46 @@ func handleApiServerConfig(apiConfig *ApiServer,cmdRunPath string){
 	}
 }
 
+
+/* 
+  get configurations of Registryctl server from environment, configuration or default values
+  set them to definedConfig if them have passed checked.
+*/
+func handleRegistryctlConfig(registryConfig *ApiServer,cmdRunPath string){
+	ConfigDefined.Registryctl.ApiVersion = getRegistryCtlServerApiVersion(registryConfig)
+	ConfigDefined.Registryctl.Address  = getRegistryctlServerAddress(registryConfig)
+	ConfigDefined.Registryctl.Port = getRegistryCtlServerPort(registryConfig) 
+	ConfigDefined.Registryctl.Tls = getRegistryCtlServerTls(registryConfig)
+	if ConfigDefined.Registryctl.Tls {
+		caFile := getRegistryCtlServerCa(registryConfig)
+		if caFile == "" || !checkFileExists(caFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Registryctl server has be set to true But CA(%s) can not be found. We will try to set Tls to false",caFile)
+			 ConfigDefined.Registryctl.Tls =false
+		}else{
+			ConfigDefined.Registryctl.Ca = caFile
+		}
+	}
+
+	if ConfigDefined.Registryctl.Tls {
+		certFile := getRegistryCtlServerCert(registryConfig)
+		if certFile == "" || !checkFileExists(certFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of RegistryCtl server  has be set to true But Cert(%s) can not be found. We will try to set Tls to false",certFile)
+			ConfigDefined.Registryctl.Tls = false
+		}else{
+			ConfigDefined.Registryctl.Cert = certFile
+		}
+	}
+
+	if ConfigDefined.Registryctl.Tls {
+		keyFile := getRegistryCtlServerKey(registryConfig)
+		if keyFile == "" || !checkFileExists(keyFile, cmdRunPath) {
+			sysadmServer.Logf("warning","Tls of Registryctl has be set to true But Key(%s) can not be found. We will try to set Tls to false",keyFile)
+			ConfigDefined.Registryctl.Tls = false
+		}else{
+			ConfigDefined.Registryctl.Key = keyFile
+		}
+	}
+}
 
 // Try to get the values of items of configuration from OS variables ,configuratio file or default value.
 // The value of a item will be come from OS variables first ,then come from configuration file and last come from default value.
@@ -1160,6 +1378,7 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,error) {
 	ConfigDefined.DB.DbMaxConnect = getDBMaxConnect(confContent)
 	ConfigDefined.DB.DbIdleConnect = getDBDbIdleConnect(confContent)
 
+	handleRegistryctlConfig(&confContent.Registryctl,cmdRunPath)
 	return &ConfigDefined,nil
 }
 

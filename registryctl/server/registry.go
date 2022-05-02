@@ -39,7 +39,6 @@ type BodyError struct {
 	Detail string `json:"detail"`
 }
 
-var step int = 1
 var RegistryErrs = map[string]BodyError{
 	"blob_unknown": {
 		Code: "BLOB_UNKNOWN",
@@ -138,6 +137,12 @@ func addRegistryHandlers(r *sysadmServer.Engine)(([]sysadmerror.Sysadmerror)){
 		return errs
 	}
 	
+	v1 := r.Group("/api/v1.0/registryctl")
+	{
+		v1.POST("/:action", apiV1PostHandlers)
+		v1.DELETE("/:action", apiV1DeleteHandlers)
+	}
+
 	r.GET("/v2/*path", getHandlers)
 	r.POST("/v2/*path", postHandlers)
 	r.HEAD("/v2/*path",headHandlers)
@@ -393,6 +398,7 @@ func v2RootGetHandler(c *sysadmServer.Context) {
 	username,password,_ := r.BasicAuth()
 	// checking user login
 	ok := isLogin(username,password)
+	
 	if !ok {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2030011,"debug","responsing to client with user has not login"))
 		c.Header("Docker-Distribution-API-Version","registry/2.0")
@@ -413,7 +419,6 @@ func v2RootGetHandler(c *sysadmServer.Context) {
 		return 
 	}
 
-	// redirect to the registry server
 	reverseProxyDirector := buildReverseProxyDirector(c)
 	if reverseProxyDirector == nil {
 		responseErrorToClient("internal_error",c)
@@ -432,6 +437,7 @@ func v2RootGetHandler(c *sysadmServer.Context) {
 	}
 
 	registryProxy.ServeHTTP(c.Writer,c.Request)
+
 	
 }
 
@@ -514,10 +520,12 @@ func passProxy(c *sysadmServer.Context) {
 		buildRoundTripper()
 	}
 
+	modifyResponse :=  buildModifyReponse(c)
 	// set ReverseProxy
 	registryProxy := httputil.ReverseProxy{
 		Director: reverseProxyDirector,
 		Transport: roundTripper,
+		ModifyResponse: modifyResponse,
 	}
 
 	registryProxy.ServeHTTP(c.Writer,c.Request)
@@ -543,7 +551,9 @@ func responseErrorToClient(errorCode string,c *sysadmServer.Context){
 	c.Header("Docker-Distribution-API-Version","registry/2.0")
 	c.Header("WWW-Authenticate","Basic realm=\"basic-realm\"")
 	reponseBody,_ := json.Marshal(retErr)
-	c.JSON(http.StatusUnauthorized,reponseBody)
+	//c.JSON(http.StatusUnauthorized,reponseBody)
+	c.JSON(http.StatusOK,reponseBody)
+	
 }
 
 func checkManifestsExist(imageName string, c *sysadmServer.Context) []sysadmerror.Sysadmerror{

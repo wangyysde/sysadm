@@ -32,7 +32,6 @@ type ApiResponseStatus struct {
 	Message interface{} `json:"message"`
 }
 
-type apiHander func (c *sysadmServer.Context)
 type Module struct {
 	Name string
 	Path string
@@ -41,7 +40,7 @@ type Module struct {
  }
 
  type User struct {}
- type Registry struct {}
+ type Registryctl struct {}
  type Sysadm struct {}
  type Project struct {
 	Projectid int `json:"projectid"`
@@ -66,10 +65,11 @@ var Modules = map[string]Module{
 		Instance: User{},
 		Actions: userActions,
 	},
-	"registry": {
-		Name: "registry",
-		Path: "registry",
-		Instance: Registry{},
+	"registryctl": {
+		Name: "registryctl",
+		Path: "registryctl",
+		Instance: Registryctl{},
+		Actions: registryctlActions,
 	},
 	"sysadm": {
 		Name: "sysadm",

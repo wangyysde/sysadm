@@ -34,6 +34,7 @@ type Server struct {
 
 //Defining ApiServer configuration
 type ApiServer struct {
+	ApiVersion string `json:"apiVersion"`
 	Address string `json:"address"`
 	Port int `json:"port"`
 	Tls bool `json:"tls"`
@@ -56,6 +57,7 @@ type User struct {
 	DefaultUser string `json:"defaultUser"`
 	DefaultPassword string `json:"defaultPassword"`
 }
+
 
 type DB struct {
 	// DB type One of postgre,mysql.If type is not set, then postgre will be set to it. But postgre is available only now TODO MySQL ....
@@ -81,6 +83,7 @@ type Config struct {
 	Log Log `json:"log"`
 	User User `json:"user"`
 	DB DB `json:"db"`
+	Registryctl ApiServer `json:"registryctl"`
 }
 
 var DefinedConfig Config = Config{}
@@ -97,6 +100,7 @@ var defaultConfig Config = Config{
 		Key: DefaultKey,
 	},
 	ApiServer: ApiServer {
+		ApiVersion: DefaultApiVersion,
 		Address: DefaultApiServerIP,
 		Port: DefaultPort,
 		Tls: DefaultTls,
@@ -129,5 +133,14 @@ var defaultConfig Config = Config{
 		Sslrootcert: DefaltDbSslrootcert,
 		Sslkey: DefaultDbSslkey,
 		Sslcert: DefaultDbSslcert,
+	},
+	Registryctl: ApiServer {
+		ApiVersion: DefaultApiVersion,
+		Address: DefaultApiServerIP,
+		Port: DefaultPort,
+		Tls: DefaultTls,
+		Ca: DefaultCa,
+		Cert: DefaultCert,
+		Key: DefaultKey,
 	},
 }

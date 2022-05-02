@@ -292,3 +292,13 @@ func (p Postgre)UpdateData(tb string, data FieldData, where map[string]string) (
 	var errs []sysadmerror.Sysadmerror
 	return 0, errs
 }
+
+
+/*
+   BuildWhereFieldExact build the value of Where Field for key with value. 
+   
+   TODO
+*/
+func (p Postgre)BuildWhereFieldExact(value string) string{
+	return ""
+}

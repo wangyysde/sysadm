@@ -80,7 +80,6 @@ func apiHandlers(c *sysadmServer.Context){
 	mI := Modules[module].Instance
 	mI.ActionHanderCaller(action,c)
 
-	return 
 }
 
 func foundModule(module string) bool {
