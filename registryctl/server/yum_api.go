@@ -77,6 +77,12 @@ func apiV1YumPostHandlers(c *sysadmServer.Context){
 	case "getcount":
 		err := entity.getYumCountHandler(c)
 		errs = append(errs, err...)	
+	case "add":
+		err := entity.addYumHandler(c)
+		errs = append(errs, err...)	
+	case "del":
+		err := entity.delYumHandler(c)
+		errs = append(errs, err...)	
 	default:
 		err := apiutils.ActionNotFound(c,"yum",action,http.MethodPost)
 		errs = append(errs,err...)
@@ -279,7 +285,8 @@ func getYumListFromDB(yumid string, name string, osid string,typeid string,kind 
 	var errs []sysadmerror.Sysadmerror
 	var rets []map[string]interface{}
 
-	whereMap := prepareWhereForListFromDB(yumid,name,osid,typeid,kind,enabled)
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	whereMap := prepareWhereForListFromDB(dbEntity,yumid,name,osid,typeid,kind,enabled)
 
 	var limit []int
 	if strings.TrimSpace(num) != "" {
@@ -305,7 +312,6 @@ func getYumListFromDB(yumid string, name string, osid string,typeid string,kind 
 		Limit: limit,
 	}
 
-	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
 	retData,err := dbEntity.QueryData(&selectData)
 	errs = append(errs,err...)
 	if retData == nil {
@@ -331,32 +337,32 @@ func getYumListFromDB(yumid string, name string, osid string,typeid string,kind 
 	prepareWhereForListFromDB: prepare where field for query yum infromation from DB accroding to yumid string, name string, osid string,typeid string,kind string, enabled string 
 	return []map[string]string and []sysadmerror.Sysadmerror
 */
-func prepareWhereForListFromDB(yumid string, name string, osid string,typeid string,kind string, enabled string )(map[string]string){
+func prepareWhereForListFromDB(dbEntity db.DbEntity, yumid string, name string, osid string,typeid string,kind string, enabled string )(map[string]string){
 	
 	whereMap :=  make(map[string]string,0)
 	if strings.TrimSpace(yumid) != "" {
-		whereMap["yumid"] = db.BuildWhereFieldExact(yumid)
+		whereMap["yumid"] = dbEntity.BuildWhereFieldExact(yumid)
 	}
 
 	if strings.TrimSpace(name) != "" {
-		whereMap["name"] = db.BuildWhereFieldExact(name)
+		whereMap["name"] = dbEntity.BuildWhereFieldExact(name)
 	}
 
 	if strings.TrimSpace(osid) != "" {
-		whereMap["osid"] = db.BuildWhereFieldExact(osid)
+		whereMap["osid"] = dbEntity.BuildWhereFieldExact(osid)
 	}
 
 	if strings.TrimSpace(typeid) != "" {
-		whereMap["typeid"] = db.BuildWhereFieldExact(typeid)
+		whereMap["typeid"] = dbEntity.BuildWhereFieldExact(typeid)
 	}
 
 	if strings.TrimSpace(kind) != "" {
-		whereMap["kind"] = db.BuildWhereFieldExact(kind)
+		whereMap["kind"] = dbEntity.BuildWhereFieldExact(kind)
 	}
 
 	whereMap["a.osid"] = "=b.osID"
 	whereMap["a.versionid"] = "=c.versionID"
-	whereMap["a.typedid"] = "=d.typeID"
+	whereMap["a.typeid"] = "=d.typeID"
 
 	if strings.TrimSpace(enabled) != "" {
 		if strings.ToLower(strings.TrimSpace(enabled)) == "true" || strings.ToLower(strings.TrimSpace(enabled)) == "yes" || strings.ToLower(strings.TrimSpace(enabled)) == "1" {
@@ -377,7 +383,8 @@ func getCountFromDB(yumid string, name string, osid string,typeid string,kind st
 	var errs []sysadmerror.Sysadmerror
 	var rets []map[string]interface{}
 
-	whereMap := prepareWhereForListFromDB(yumid,name,osid,typeid,kind,enabled)
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	whereMap := prepareWhereForListFromDB(dbEntity, yumid,name,osid,typeid,kind,enabled)
 
 	selectData := db.SelectData{
 		Tb: []string{"yum a","os b","version c","type d"},
@@ -385,7 +392,6 @@ func getCountFromDB(yumid string, name string, osid string,typeid string,kind st
 		Where: whereMap,
 	}
 
-	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
 	retData,err := dbEntity.QueryData(&selectData)
 	errs = append(errs,err...)
 	if retData == nil {
@@ -404,4 +410,88 @@ func getCountFromDB(yumid string, name string, osid string,typeid string,kind st
 	}
 
 	return rets,errs
+}
+
+/*
+	addYumHandler get the data on the request, and then insert them into DB.
+*/
+func (y Yum)addYumHandler(c *sysadmServer.Context) ([]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	dataMap,err := utils.GetRequestData(c,[]string{"typeid","name","osid","osversionid","catalog","kind","base_url","enabled","gpgcheck","gpgkey"})
+	errs = append(errs,err...)
+
+	insertData := make(db.FieldData,10)
+	insertData["typeid"] = utils.GetKeyData(dataMap, "typeid")
+	insertData["name"] = utils.GetKeyData(dataMap, "name")
+	insertData["osid"] = utils.GetKeyData(dataMap, "osid")
+	insertData["versionid"] = utils.GetKeyData(dataMap, "osversionid")
+	insertData["catalog"] = utils.GetKeyData(dataMap, "catalog")
+	insertData["kind"] = utils.GetKeyData(dataMap, "kind")
+	insertData["base_url"] = utils.GetKeyData(dataMap, "base_url")
+	insertData["enabled"] = utils.GetKeyData(dataMap, "enabled")
+	insertData["gpgcheck"] = utils.GetKeyData(dataMap, "gpgcheck")
+	insertData["gpgkey"] = utils.GetKeyData(dataMap, "gpgkey")
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	_,err = dbEntity.InsertData("yum",insertData)
+	errs = append(errs,err...)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error"){
+		var headers map[string][]string
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",2040005,"Insert data into DB error") 
+		errs = append(errs,err...)
+		return errs
+	}
+
+	var headers map[string][]string
+	err = apiutils.NewSendResponseForSuccessMessage(c,headers,http.StatusOK,"json","Add yum infromation successfule.") 
+	errs = append(errs,err...)
+
+	return errs
+}
+
+/*
+	delYumHandler get the data on the request, and then insert them into DB.
+*/
+func (y Yum)delYumHandler(c *sysadmServer.Context) ([]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	dataMap,err := utils.GetRequestData(c,[]string{"yumid"})
+	errs = append(errs,err...)
+
+	yumid,ok := dataMap["yumid"]
+	if !ok {
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(2040005,"error","parameters are error."))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",2040005,"parameters are error.") 
+		errs = append(errs,err...)
+		return errs
+	}
+
+	dbEntity := RuntimeData.RuningParas.DBConfig.Entity
+	whereMap :=  make(map[string]string,0)
+	if strings.TrimSpace(yumid) != "" {
+		whereMap["yumid"] = dbEntity.BuildWhereFieldExact(yumid)
+	}
+	selectData := db.SelectData{
+		Tb: []string{"yum"},
+		OutFeilds: []string{},
+		Where: whereMap,
+	}
+
+	_,err = dbEntity.DeleteData(&selectData)
+	errs = append(errs,err...)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error"){
+		var headers map[string][]string
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",2040006,"Delete data from DB error") 
+		errs = append(errs,err...)
+		return errs
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(2040007,"debug","delete yum information successfully."))
+	var headers map[string][]string
+	err = apiutils.NewSendResponseForSuccessMessage(c,headers,http.StatusOK,"json","delete yum information successfully.") 
+	errs = append(errs,err...)
+
+	return errs
 }

@@ -226,3 +226,16 @@ func IsSupportedDB(t string) bool {
 
 	return false
 }
+
+func CheckIdentifier(dbType string, identifier string) bool {
+	switch strings.ToLower(dbType) {
+	case "postgre":
+		entity := Postgre{}
+		return entity.Identifier(identifier)
+	case "mysql":
+		entity := MySQL{}
+		return entity.Identifier(identifier)
+	default:
+		return false
+	}
+}

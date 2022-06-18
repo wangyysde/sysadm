@@ -52,3 +52,56 @@ func CheckFileExists(f string,cmdRunPath string ) (bool,[]sysadmerror.Sysadmerro
 
 	return true,errs
 }
+
+/*
+  Converting relative path to absolute path of  file(such as socket, accesslog, errorlog) and return the  file path
+  return "" and error if  file can not opened .
+  Or return string and nil.
+*/
+func CheckFileRW(f string,cmdRunPath string, isRmTest bool)(string,error){
+	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
+	if error != nil {
+		return "",error
+	}
+
+	if ! filepath.IsAbs(f) {
+		tmpDir := filepath.Join(dir,"../")
+		f = filepath.Join(tmpDir,f)
+	}
+
+	fp, err := os.OpenFile(f, os.O_CREATE|os.O_RDWR|os.O_APPEND,os.ModeAppend|os.ModePerm)
+	if err != nil {
+		return "",err
+	}
+	fp.Close()
+	if isRmTest {
+		_ = os.Remove(f)
+	}
+	return f,nil
+}
+
+/*
+  Converting relative path to absolute path of file(such as socket, accesslog, errorlog) and return the  file path
+  return "" and error if  file can not opened .
+  Or return string and nil.
+*/
+func CheckFileIsRead(f string,cmdRunPath string)(string,error){
+	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
+	if error != nil {
+		return "",error
+	}
+
+	if ! filepath.IsAbs(f) {
+		tmpDir := filepath.Join(dir,"../")
+		f = filepath.Join(tmpDir,f)
+	}
+
+	fp, err := os.Open(f)
+	if err != nil {
+		return "",err
+	}
+	fp.Close()
+
+	return f,nil
+}
+

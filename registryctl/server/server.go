@@ -236,6 +236,7 @@ func handleRootPath(c *sysadmServer.Context){
 	c.HTML(http.StatusOK, "index.html", tplData)
 }
 */
+
 func logErrors(errs []sysadmerror.Sysadmerror){
 
 	for _,e := range errs {

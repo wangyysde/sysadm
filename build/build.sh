@@ -21,8 +21,9 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm registryctl"
+PACKAGE_LIST="sysadm registryctl infrastructure"
 
+echo "getting build information......"
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SYSADM_OUTPUT="${SYSADM_ROOT}/_output/bin"
 GIT_COMMITID="$(git log --pretty=format:"%H" -1)"

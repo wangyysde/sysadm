@@ -529,7 +529,7 @@ func ParseResponseBody(body []byte)(ApiResponseData, []sysadmerror.Sysadmerror) 
 func ActionNotFound(c *sysadmServer.Context,module string, action string, method string) ([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	
-	errs = NewSendResponseForErrorMessage(c,make(map[string][]string,0),http.StatusNotFound,"json",800010023,"request data error: module %s has not action %s with %s method",module,action,method)
+	errs = NewSendResponseForErrorMessage(c,make(map[string][]string,0),http.StatusNotFound,"json",800010023,"request data error: module %s has not action  %s with %s method",module,action,method)
 
 	return errs
 }

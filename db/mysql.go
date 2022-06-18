@@ -23,6 +23,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"regexp"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/wangyysde/sysadm/sysadmerror"
@@ -185,11 +186,19 @@ func (p MySQL)QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
 
 	first = true
 	for _,t := range sd.Tb {
+		tArray := strings.Split(t, " ")
+		tbStr := ""
+		if len(tArray) > 1 {
+			tbStr = "`" + tArray[0] + "` " + tArray[1]
+		} else {
+			tbStr = "`" + tArray[0] + "`" 
+		}
+
 		if first {
-			querySQL = querySQL + "`" + t + "`"
+			querySQL = querySQL + tbStr
 			first = false
 		} else {
-			querySQL = querySQL + "," + "`" + t + "`"
+			querySQL = querySQL + "," + tbStr
 		}
 	}
 
@@ -423,4 +432,13 @@ func (m MySQL)BuildWhereFieldExact(value string) string{
 	}
 	
 	return ret
+}
+
+func (m MySQL)Identifier(identifier string) bool{
+	matched,err := regexp.MatchString("^[a-zA-Z0-9]{1,64}",identifier)
+	if !matched || err != nil {
+		return false
+	}
+
+	return matched
 }

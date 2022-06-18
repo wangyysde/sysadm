@@ -171,6 +171,77 @@
     align-self: center;
 }
 
+.yum-add {
+    display: none;
+    position: absolute;
+    left: 400px;
+    top: 100px;
+    width: 600px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #045283;
+    font-size: 12px;
+    border: 1px solid #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 50px;
+}
+
+.yum-add #osSelect {
+	padding-right: 70px;
+	float: right;
+}
+
+.yum-add select {
+	top: 5px;
+	left:10px;
+	width: 100px;
+    height: 20px;
+	border:1px solid; 
+	color: #fff;
+	border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+	background-color: transparent;
+}
+
+
+.yum-item {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    top: 30px;
+    left: 30px;
+}
+
+.yum-item input {
+    width: 30%;
+    height: 20px;
+    padding-left: 5px;
+    font-size: 14px;
+    border-bottom-width: 1px;
+    border-color: #fff;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    color: #fff;
+    background-color: transparent;
+    outline: none;
+}
+
+.yum-radio {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    top: 30px;
+    left: 30px;
+}
+
 .form-item input#username {
     background: url("../images/user.png") 0px 0px no-repeat;
 }

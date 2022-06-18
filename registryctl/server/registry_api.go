@@ -384,7 +384,7 @@ func (r RegistryCtl)tagList(c *sysadmServer.Context) ([]sysadmerror.Sysadmerror)
 func (r RegistryCtl)ActionNotFound(c *sysadmServer.Context,action string) ([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	
-	msg := "request data error: module registryctl has not action " + action + "with POST method"
+	msg := "request data error: module registryctl has not action " + action + " with POST method"
 	errs = apiutils.SendResponseForErrorMessage(c,20600002,msg)
 
 	return errs

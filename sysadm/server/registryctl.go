@@ -20,10 +20,12 @@
 package server
 
 import (
+	"encoding/base64"
 	"fmt"
 	"html/template"
 	"math"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -47,6 +49,9 @@ func addRegistryctlHandler(r *sysadmServer.Engine,cmdRunPath string) ([]sysadmer
 	registryctlActionsHandlers = []actionHandler{
 		{name: "imagelist", templateFile: "imagelist.html", handler: imageListHandler,method: []string{"GET", "POST"}},
 		{name: "taglist", templateFile: "taglist.html", handler: tagListHandler,method: []string{"GET"}},
+		{name: "yumlist", templateFile: "yumlist.html", handler: yumListHandler,method: []string{"GET"}},
+		{name: "yumadd", templateFile: "", handler: yumAddHandler,method: []string{"POST"}},
+		{name: "yumdel", templateFile: "", handler: yumDelHandler,method: []string{"POST"}},
 	}
 	
 	if RuntimeData.StartParas.SysadmRootPath  == "" {
@@ -592,5 +597,543 @@ func tagListHandler(c *sysadmServer.Context) {
 	}
 
 	c.HTML(http.StatusOK,templateFile, tplData)
+	
+}
+
+
+/*
+	handler for handling list of the Yum
+	Query parameters of request are below: 
+	conditionKey: key name for DB query ,such as projectid, ownerid,name....
+	conditionValue: the value of the conditionKey.for projectid, ownereid using =, for name, comment using like.
+	deleted: 0 :normarl 1: deleted
+	start: start number of the result will be returned.
+	num: lines of the result will be returned.
+*/
+func yumListHandler(c *sysadmServer.Context) {
+	var errs []sysadmerror.Sysadmerror
+
+	// get template file name 
+	templateFile := ""
+	for _,v := range registryctlActionsHandlers {
+		if v.name == "yumlist" {
+			templateFile = v.templateFile
+		}
+	}	
+	
+	// get userid
+	userid,e := getSessionValue(c, "userid")
+	if e != nil || userid == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101016,"error","user should login %s",e))
+		logErrors(errs)
+		tplData := map[string] interface{}{
+			"errormessage": "user should login",
+		}
+		templateFile = "showmessage.html"
+		c.HTML(http.StatusOK,templateFile, tplData)
+		return 
+	}
+
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	apiVersion := definedConfig.Registryctl.ApiVersion 
+	tls := definedConfig.Registryctl.Tls
+	address := definedConfig.Registryctl.Address
+	port := definedConfig.Registryctl.Port
+	ca := definedConfig.Registryctl.Ca
+	cert := definedConfig.Registryctl.Cert
+	key := definedConfig.Registryctl.Key
+	moduleName := "yum"
+	actionName := "getobject"
+	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ := apiutils.BuildApiUrl(apiServerData)
+
+	requestParas :=  httpclient.RequestParams{}
+	requestParas.Url = urlRaw
+	requestParas.Method = http.MethodPost
+	
+	body,err := httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err := apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+	if !ret.Status {
+		message := ret.Message
+		messageLine := message[0]
+		msg := utils.Interface2String(messageLine["msg"])
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101017,"error","get object list error %s",msg))
+		logErrors(errs)
+		tplData := map[string] interface{}{
+			"errormessage": msg,
+		}
+		templateFile = "showmessage.html"
+		c.HTML(http.StatusOK,templateFile, tplData)
+		return 
+	}
+
+	var objList []map[string]string
+	for _,line := range ret.Message {
+		objLine := make(map[string]string,0)
+		for k,v := range line {
+			objLine[k] = utils.Interface2String(v)
+		}
+
+		objList = append(objList, objLine)
+	}
+
+	tplData := make(map[string]interface{},0)
+	tplData["ojbList"] = objList
+
+	moduleName = "yum"
+	actionName = "getosversion"
+	apiServerData = apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ = apiutils.BuildApiUrl(apiServerData)
+	requestParas.Url = urlRaw
+	body,err = httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err = apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+	if !ret.Status {
+		message := ret.Message
+		messageLine := message[0]
+		msg := messageLine["msg"]
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101018,"error","get os version list error %s",msg))
+		logErrors(errs)
+		tplData := map[string] interface{}{
+			"errormessage": msg,
+		}
+		templateFile = "showmessage.html"
+		c.HTML(http.StatusOK,templateFile, tplData)
+		return 
+	}
+	var javascriptVersionStr []template.JS
+	var osList []map[string]string
+	for _,line := range ret.Message {
+		vers := line["vers"].([]interface{})
+		if len(vers) > 0 {
+			subElement := "["
+			first := true
+			for _, v := range vers {
+				vArray := v.(map[string]interface{})
+				versionid,_ := base64.StdEncoding.DecodeString(utils.Interface2String(vArray["versionID"]))
+				versionname,_ := base64.StdEncoding.DecodeString(utils.Interface2String(vArray["name"]))
+				versionidStr := string(versionid)
+				versionnameStr := string(versionname)
+				if first {
+					subElement = subElement + "[" + versionidStr + ", '" + versionnameStr + "']"
+					first = false
+				}else {
+					subElement = subElement + ",[" + versionidStr + ", '" + versionnameStr + "']"
+				}
+			}
+			subElement = subElement + "]"
+			javascriptVersionStr = append(javascriptVersionStr, template.JS(fmt.Sprintf("osVerList[%s] = %s;", utils.Interface2String(line["osID"]),subElement)))
+			osLine := make(map[string]string,0)
+			osLine["osid"] = utils.Interface2String(line["osID"])
+			osLine["osname"] = utils.Interface2String(line["name"])
+			osList = append(osList, osLine)
+		}
+	}
+	tplData["osVerList"] = javascriptVersionStr
+	tplData["osList"] = osList
+
+	moduleName = "yum"
+	actionName = "getcount"
+	apiServerData = apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ = apiutils.BuildApiUrl(apiServerData)
+	requestParas.Url = urlRaw
+	
+	// get parameters on connection 
+	queryData, _ := utils.GetRequestData(c,[]string{"osid","typeid","enabled","start","numPerPage"})
+	pageInfoParas := ""
+	osid,okOsid :=queryData["osid"]
+	if okOsid {
+		requestParasPr,err := httpclient.AddQueryData(&requestParas,"osid",osid)
+		errs = append(errs,err...)
+		requestParas = *requestParasPr
+		pageInfoParas = "osid="+osid
+		tplData["selectedOsid"] = osid
+	}
+
+	typeid,okTypid := queryData["typeid"]
+	if okTypid {
+		requestParasPr,err := httpclient.AddQueryData(&requestParas,"typeid",typeid)
+		errs = append(errs,err...)
+		requestParas = *requestParasPr
+		if pageInfoParas == "" {
+			pageInfoParas = "typeid="+typeid
+		}else{
+			pageInfoParas = "&typeid="+typeid
+		}
+		tplData["selectedTypeid"] = typeid
+	}
+
+	enabled,okEnabled := queryData["enabled"]
+	if okEnabled {
+		requestParasPr,err := httpclient.AddQueryData(&requestParas,"enabled",enabled)
+		errs = append(errs,err...)
+		requestParas = *requestParasPr
+		if pageInfoParas == "" {
+			pageInfoParas = "enabled="+enabled
+		}else{
+			pageInfoParas = "&enabled="+enabled
+		}
+		tplData["selectedEnabled"] = enabled
+	}
+
+	startStr := ""
+	startStr,okStartStr := queryData["start"]
+	if !okStartStr {
+		startStr = "0"
+	}
+	start,_ := strconv.Atoi(startStr)
+
+	body,err = httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err = apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+
+	if !ret.Status {
+		errCode := ret.ErrorCode
+		msgLines := ret.Message
+		msgLine := msgLines[0]
+		errMsg := msgLine["msg"].(string)
+		tplData := map[string] interface{}{
+			"errormessage": fmt.Sprintf("errorCode: %d Msg: %s",errCode,errMsg),
+		}
+		templateFile = "showmessage.html"
+		c.HTML(http.StatusOK,templateFile, tplData)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(errCode,"error","get total number of yum information error",errMsg))
+		logErrors(errs)
+		return 
+	}
+
+	msg := ret.Message
+	line := msg[0]
+	numInterface,_ := line["num"]
+
+	// get total number and calculate total paget number
+	numStr := utils.Interface2String(numInterface)
+	num,_ := strconv.Atoi(numStr)
+	if num < 1 {
+		num = 0
+	}
+	totalPages := int(math.Ceil(float64(num) / float64(numPerPage)))
+	currentPage := 1
+	currentPage = int(math.Ceil(float64(start + 1) / float64(numPerPage)))
+	currentPageHTML := strconv.Itoa(currentPage)
+	totalPageHTML := strconv.Itoa(totalPages)
+	prePageHTML := ""
+	if currentPage <= 1{
+		prePageHTML = " 上一页 "
+	}else {
+		preNum := start - numPerPage
+		prePage := fmt.Sprintf("?start=%d&numPerPage=%d&%s",preNum,numPerPage,pageInfoParas)
+		prePageHTML = "<a href=\"javascript:void(0)\" onclick='changePage(\"" + prePage + "\")'>上一页</a>"
+	}
+
+	nextPageHTML := ""
+	if currentPage >= totalPages{
+		nextPageHTML = "下一页 "
+	}else{
+		nextNum := start + numPerPage
+		nextPage := fmt.Sprintf("?start=%d&num=%d&%s",nextNum,numPerPage,pageInfoParas)
+		nextPageHTML = "<a href=\"javascript:void(0)\" onclick='changePage(\"" + nextPage + "\")'>下一页</a>"
+	}
+	tplData["currentpage"] = currentPageHTML
+	tplData["totalpage"] = totalPageHTML
+	tplData["prepage"] = template.HTML(prePageHTML)
+	tplData["nextpage"] = template.HTML(nextPageHTML)
+
+	moduleName = "yum"
+	actionName = "yumlist"
+	apiServerData = apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ = apiutils.BuildApiUrl(apiServerData)
+	requestParas.Url = urlRaw
+	requestParasPr,err := httpclient.AddQueryData(&requestParas,"start",startStr)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"numperpage",strconv.Itoa(numPerPage))
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	body,err = httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err = apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+	
+	if !ret.Status {
+		errCode := ret.ErrorCode
+		msgLines := ret.Message
+		msgLine := msgLines[0]
+		errMsg := msgLine["msg"].(string)
+		tplData := map[string] interface{}{
+			"errormessage": fmt.Sprintf("errorCode: %d Msg: %s",errCode,errMsg),
+		}
+		templateFile = "showmessage.html"
+		c.HTML(http.StatusOK,templateFile, tplData)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(errCode,"error","get yum list error %s",errMsg))
+		logErrors(errs)
+		return 
+	}
+	
+	type yumData struct {
+		Id string
+		YumName string
+		Osid string
+		OsName string
+		Versionid string
+		VersionName string
+		Typeid string
+		TypeName string
+		Catalog string
+		Kind string
+		Base_url string
+		Enabled string
+		Gpgcheck string
+		Gpgkey string
+	}
+
+	msg = ret.Message
+	var yumList []yumData
+	for  _,lineMap := range msg {
+		lineData := yumData{
+			Id: utils.Interface2String(lineMap["yumid"]),
+			YumName: utils.Interface2String(lineMap["name"]),
+			Osid: utils.Interface2String(lineMap["osid"]),
+			OsName: utils.Interface2String(lineMap["osName"]),
+			Versionid: utils.Interface2String(lineMap["versionid"]),
+			VersionName: utils.Interface2String(lineMap["versionName"]),
+			Typeid: utils.Interface2String(lineMap["typeid"]),
+			TypeName: utils.Interface2String(lineMap["typeName"]),
+			Catalog: utils.Interface2String(lineMap["catalog"]),
+			Kind: utils.Interface2String(lineMap["kind"]),
+			Base_url: utils.Interface2String(lineMap["base_url"]),
+			Enabled: utils.Interface2String(lineMap["enabled"]),
+			Gpgkey: utils.Interface2String(lineMap["gpgkey"]),
+			Gpgcheck: utils.Interface2String(lineMap["gpgcheck"]),
+		}
+		
+		yumList = append(yumList, lineData)
+	}
+
+	tplData["yumlist"] = yumList
+	tplData["userid"] = template.HTML(userid.(string))
+
+	c.HTML(http.StatusOK,templateFile, tplData)
+	logErrors(errs)
+}
+
+/*
+	yumAddHandler called with /registryctl/yumadd
+	check validating of parameters and then call the method add of yum module. 
+	response error message to client if the checks is fails,
+	otherwrise response success message to the client.
+*/
+func yumAddHandler(c *sysadmServer.Context) {
+	var errs []sysadmerror.Sysadmerror
+
+		// get userid
+	userid,e := getSessionValue(c, "userid")
+	if e != nil || userid == nil {
+		msg := "user should login for adding yum information" 
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101017,"error",msg))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101017,msg) 
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	// get parameters on connection 
+	queryData, _ := utils.GetRequestData(c,[]string{"typeid","os","osversion","name","catalog","kind","enabled","gpgcheck","base_url","gpgkey"})
+	
+	typeid,_ := queryData["typeid"]
+	os,_ := queryData["os"]
+	osversion,_ := queryData["osversion"]
+	if os == "0" || osversion == "0" {
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101018,"error","Please select OS and its version"))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101018,"Please select OS and its version") 
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+	
+	catalog,_ := queryData["catalog"]
+	name, _ := queryData["name"]
+	okCatalog,err1 := regexp.MatchString("^[a-zA-Z0-9]{1,63}",catalog)
+	okName,err2 := regexp.MatchString("^[a-zA-Z0-9]{1,63}",name)
+	if !okCatalog || !okName {
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101019,"error","Yum name and function must be match ^[a-zA-Z0-9]{1,63}%s %s",err1,err2))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101019,"Yum name and function must be match^[a-zA-Z0-9]{1,63}%s %s",err1,err2) 
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	kind,_ := queryData["kind"]
+	base_url,_ := queryData["base_url"]
+	gpgcheck,_ := queryData["gpgcheck"]
+	gpgkey,_ := queryData["gpgkey"]
+
+	if kind == "0" || kind == "1"{
+		if len(strings.TrimSpace(base_url)) < 10{
+			var headers map[string][]string
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101020,"error","Please input yum url when kind is direct or proxy %s",base_url))
+			err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101020,"Please input yum url when kind is direct or proxy%s",base_url) 
+			errs = append(errs,err...)
+			logErrors(errs)
+			return 
+		}
+	}
+	
+	if strings.TrimSpace(gpgcheck) == "1"{
+		if len(strings.TrimSpace(gpgkey)) < 5 {
+			var headers map[string][]string
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101021,"error","GPGKEY should be set when gpgcheck set to enable.%s",gpgkey))
+			err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101021,"GPGKEY should be set when gpgcheck set to enable.%s",gpgkey) 
+			errs = append(errs,err...)
+			logErrors(errs)
+			return 
+		}
+	}
+	enabled,_ := queryData["enabled"]
+
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	apiVersion := definedConfig.Registryctl.ApiVersion 
+	tls := definedConfig.Registryctl.Tls
+	address := definedConfig.Registryctl.Address
+	port := definedConfig.Registryctl.Port
+	ca := definedConfig.Registryctl.Ca
+	cert := definedConfig.Registryctl.Cert
+	key := definedConfig.Registryctl.Key
+	moduleName := "yum"
+	actionName := "add"
+	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ := apiutils.BuildApiUrl(apiServerData)
+
+	requestParas :=  httpclient.RequestParams{}
+	requestParas.Url = urlRaw
+	requestParas.Method = http.MethodPost
+	
+	requestParasPr,err := httpclient.AddQueryData(&requestParas,"typeid",typeid)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"name",name)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"osid",os)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"osversionid",osversion)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"catalog",catalog)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"kind",kind)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"base_url",base_url)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"enabled",enabled)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"gpgcheck",gpgcheck)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	requestParasPr,err = httpclient.AddQueryData(&requestParas,"gpgkey",gpgkey)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	body,err := httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err := apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+	c.JSON(http.StatusOK,ret)
+	logErrors(errs)
+}
+
+/*
+	yumAddHandler called with /registryctl/yumadd
+	check validating of parameters and then call the method add of yum module. 
+	response error message to client if the checks is fails,
+	otherwrise response success message to the client.
+*/
+func yumDelHandler(c *sysadmServer.Context) {
+	var errs []sysadmerror.Sysadmerror
+
+		// get userid
+	userid,e := getSessionValue(c, "userid")
+	if e != nil || userid == nil {
+		msg := "user should login for deling yum information" 
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101021,"error",msg))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101021,msg) 
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	// get parameters on connection 
+	queryData, err := utils.GetRequestDataArray(c,[]string{"yumid[]"})
+	errs = append(errs,err...)
+	data,okdata := queryData["yumid[]"]
+	if !okdata || len(data) <1 {
+		var headers map[string][]string
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101022,"error","parameters are error."))
+		err := apiutils.NewSendResponseForErrorMessage(c,headers,http.StatusOK,"json",1101021,"parameters are error.") 
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	yumidStr :=""
+	for _,v := range data {
+		if yumidStr == "" {
+			yumidStr = v
+		} else {
+			yumidStr = yumidStr + "," + v
+		}
+	}
+
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	apiVersion := definedConfig.Registryctl.ApiVersion 
+	tls := definedConfig.Registryctl.Tls
+	address := definedConfig.Registryctl.Address
+	port := definedConfig.Registryctl.Port
+	ca := definedConfig.Registryctl.Ca
+	cert := definedConfig.Registryctl.Cert
+	key := definedConfig.Registryctl.Key
+	moduleName := "yum"
+	actionName := "del"
+	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	urlRaw, _ := apiutils.BuildApiUrl(apiServerData)
+
+	requestParas :=  httpclient.RequestParams{}
+	requestParas.Url = urlRaw
+	requestParas.Method = http.MethodPost
+	
+	requestParasPr,err := httpclient.AddQueryData(&requestParas,"yumid",yumidStr)
+	requestParas = *requestParasPr
+	errs=append(errs,err...)
+
+	body,err := httpclient.SendRequest(&requestParas)
+	errs = append(errs,err...)
+	ret,err := apiutils.ParseResponseBody(body)
+	errs = append(errs,err...)
+	c.JSON(http.StatusOK,ret)
+	logErrors(errs)
+
 	
 }

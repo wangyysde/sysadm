@@ -21,6 +21,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+	"regexp"
 
 	_ "github.com/lib/pq"
 
@@ -301,4 +302,18 @@ func (p Postgre)UpdateData(tb string, data FieldData, where map[string]string) (
 */
 func (p Postgre)BuildWhereFieldExact(value string) string{
 	return ""
+}
+
+/*
+   BuildWhereFieldExact build the value of Where Field for key with value. 
+   
+   TODO
+*/
+func (p Postgre)Identifier(identifier string) bool{
+	matched,err := regexp.MatchString("^[a-zA-Z0-9]{1,64}",identifier)
+	if !matched || err != nil {
+		return false
+	}
+
+	return matched
 }

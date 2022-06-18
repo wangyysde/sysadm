@@ -24,4 +24,4 @@ package server
 type Yum struct {}
 
 
-var  yumActions = []string{"getosversion","getobject"}
+var  yumActions = []string{"getosversion","getobject","yumlist","getcount","add","del"}
