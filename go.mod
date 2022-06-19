@@ -12,4 +12,5 @@ require (
 	github.com/wangyysde/sysadmServer v0.0.0-20220123085218-e23ac4a4232c
 	github.com/wangyysde/sysadmSessions v0.0.0-20211222125714-def5d4b4f078
 	github.com/wangyysde/yaml v1.4.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )

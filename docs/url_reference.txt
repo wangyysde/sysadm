@@ -4,3 +4,4 @@
 4. distribution Docs: https://pkg.go.dev/github.com/docker/distribution#section-readme
 5. https://pkg.go.dev/net/http/httputil
 6. gin: https://pkg.go.dev/github.com/gin-gonic/gin
+7. https://github.com/helloyi/go-sshclient sshclient
