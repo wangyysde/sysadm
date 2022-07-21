@@ -14902,3 +14902,475 @@ time=2022-05-07T22:02:13+08:00 level=debug msg=erroCode: 106003 Msg: adding key:
 time=2022-05-07T22:02:13+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
 time=2022-05-07T22:02:13+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":false,"errorcode":1040005,"message":"database query error"}
 time=2022-05-07T22:02:13+08:00 level=debug msg=erroCode: 1050006 Msg: can not login with errorcode: 1040005 message: database query error
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.28.1.10 is right.
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-07-19T10:05:53+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful
+time=2022-07-19T10:05:53+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-07-19T10:05:54+08:00 level=debug msg=Loaded HTML Templates (11): 
+	- 
+	- imagelist.html
+	- login.html
+	- main.html
+	- showmessage.html
+	- yumlist.html
+	- index.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- projectlist.html
+	- taglist.html
+
+
+time=2022-07-19T10:05:54+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-07-19T10:05:54+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=GET    /project/list             --> github.com/wangyysde/sysadm/sysadm/server.projectListHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=erroCode: 110001 Msg: now adding handlers for project
+time=2022-07-19T10:05:55+08:00 level=debug msg=GET    /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=POST   /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=GET    /registryctl/taglist      --> github.com/wangyysde/sysadm/sysadm/server.tagListHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=GET    /registryctl/yumlist      --> github.com/wangyysde/sysadm/sysadm/server.yumListHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=POST   /registryctl/yumadd       --> github.com/wangyysde/sysadm/sysadm/server.yumAddHandler (4 handlers)
+
+time=2022-07-19T10:05:55+08:00 level=debug msg=POST   /registryctl/yumdel       --> github.com/wangyysde/sysadm/sysadm/server.yumDelHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.28.1.10 is right.
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful
+time=2022-07-19T11:11:57+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=Loaded HTML Templates (11): 
+	- login.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- projectlist.html
+	- yumlist.html
+	- imagelist.html
+	- index.html
+	- main.html
+	- showmessage.html
+	- taglist.html
+	- 
+
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /project/list             --> github.com/wangyysde/sysadm/sysadm/server.projectListHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 110001 Msg: now adding handlers for project
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /registryctl/taglist      --> github.com/wangyysde/sysadm/sysadm/server.tagListHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /registryctl/yumlist      --> github.com/wangyysde/sysadm/sysadm/server.yumListHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /registryctl/yumadd       --> github.com/wangyysde/sysadm/sysadm/server.yumAddHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /registryctl/yumdel       --> github.com/wangyysde/sysadm/sysadm/server.yumDelHandler (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /api/1.0/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /api/0.1/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/1.0/infrastructure
+time=2022-07-19T11:11:57+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/0.1/infrastructure
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-07-19T11:11:57+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-07-19T11:12:14+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select userid,username,password,salt from `user` where username='admin' and deleted=0
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 1050001 Msg: now checking the user is login
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 1050002 Msg: try to execute the request with:http://172.28.2.4:8081/api/v1.0/user/login
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106007 Msg: now handling the data for the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106009 Msg: adding key: username value admin to the data of the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106009 Msg: adding key: password value Sysadm12345 to the data of the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-07-19T11:12:17+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":true,"errorcode":0,"message":"1"}
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 1080001 Msg: now handling project list handler through api.
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 1080003 Msg: send response data to the client.
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 1101004 Msg: now handling project list
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010005 Msg: proxy destination URL is: http://172.28.2.4:8081/api/v1.0/project/list
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010008 Msg: Unmarshal body {"status":true,"errorcode":1080006,"message":[{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0NzEyMg==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MTM=","update_time":"MTY0ODY0NzEyMg=="},{"comment":"dGhpcyBpcyB0aGUgY29tbWVudCBvZiB0ZXN0UHJvamVjdA==","creation_time":"MTY0ODY0NzE3OQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTQ=","update_time":"MTY0ODY0NzE3OQ=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0Nzc3Ng==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MTU=","update_time":"MTY0ODY0Nzc3Ng=="},{"comment":"dGVzdENvbW1lbnQ=","creation_time":"MTY0ODY0Nzg1MQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTY=","update_time":"MTY0ODY0Nzg1MQ=="},{"comment":"dGVzdENvbW1lbnQ=","creation_time":"MTY0ODY0Nzk2OQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTc=","update_time":"MTY0ODY0Nzk2OQ=="},{"comment":"dGVzdCBjb21tZW50","creation_time":"MTY0ODY0Nzk4NA==","deleted":"MA==","name":"d2FuZ3l1eWluZw==","ownerid":"MQ==","projectid":"MTg=","update_time":"MTY0ODY0Nzk4NA=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0ODA1Mw==","deleted":"MA==","name":"dGVzdFByb2plY3Q=","ownerid":"MQ==","projectid":"MTk=","update_time":"MTY0ODY0ODA1Mw=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0ODE2Ng==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MjE=","update_time":"MTY0ODY0ODE2Ng=="},{"comment":"dGVzdCBjb21tZW50","creation_time":"MTY0ODY0ODU5MA==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MjI=","update_time":"MTY0ODY0ODU5MA=="},{"comment":"YWFzZmFzZmFzZmFzZGZh","creation_time":"MTY0ODY1MDY4OQ==","deleted":"MA==","name":"dGVzdHByb2plY3Rh","ownerid":"MQ==","projectid":"MjQ=","update_time":"MTY0ODY1MDY4OQ=="},{"comment":"YWFzZmFzZmFzZmFzZGZh","creation_time":"MTY0ODY1MDgzMg==","deleted":"MA==","name":"dGVzdHByb2plY3RhYg==","ownerid":"MQ==","projectid":"MjU=","update_time":"MTY0ODY1MDgzMg=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTY0OTM1OQ==","deleted":"MA==","name":"bXlfYXBwbGljYXRpb24=","ownerid":"MQ==","projectid":"MjY=","update_time":"MTY0OTY0OTM1OQ=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTY4NTUyMA==","deleted":"MA==","name":"aGFyYm9y","ownerid":"MQ==","projectid":"Mjc=","update_time":"MTY0OTY4NTUyMA=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTczOTk2MQ==","deleted":"MA==","name":"amVua2lucw==","ownerid":"MQ==","projectid":"Mjg=","update_time":"MTY0OTczOTk2MQ=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY1MDE2Mzc3OA==","deleted":"MA==","name":"d2F5bmU=","ownerid":"MQ==","projectid":"Mjk=","update_time":"MTY1MDE2Mzc3OA=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY1MDE2MzgzMw==","deleted":"MA==","name":"dGVzdHByb2plY3RhYjQ1","ownerid":"MQ==","projectid":"MzA=","update_time":"MTY1MDE2MzgzMw=="},{"comment":"YXNkYXNkZmFz","creation_time":"MTY1MDE3NDU3Ng==","deleted":"MA==","name":"d2F5bmVhZGE=","ownerid":"MQ==","projectid":"MzE=","update_time":"MTY1MDE3NDU3Ng=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY1MDQyNTE1MA==","deleted":"MA==","name":"dGVzdA==","ownerid":"MQ==","projectid":"MzI=","update_time":"MTY1MDQyNTE1MA=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY1MDk1NjM2Ng==","deleted":"MA==","name":"djI=","ownerid":"Mg==","projectid":"MzM=","update_time":"MTY1MDk1NjM2Ng=="}]}
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647122) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(13) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647122) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(14) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647179) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(this is the comment of testProject) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647179) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(15) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647776) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647776) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(16) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647851) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testComment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647851) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647969) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testComment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647969) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(17) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(18) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647984) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test comment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647984) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wangyuying) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648053) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testProject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(19) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648053) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(21) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648166) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648166) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648590) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test comment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648590) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(aasfasfasfasdfa) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650689) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojecta) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(24) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650689) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650832) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojectab) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(25) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650832) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(aasfasfasfasdfa) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649649359) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(my_application) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(26) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649649359) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(27) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649685520) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649685520) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(harbor) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(jenkins) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(28) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649739961) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649739961) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(29) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163778) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163778) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayne) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163833) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojectab45) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(30) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163833) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(31) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650174576) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(asdasdfas) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650174576) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneada) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(32) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650425150) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650425150) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(v2) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(2) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(33) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650956366) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650956366) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 1101004 Msg: now handling project list apiutils.ApiResponseData{Status:true, ErrorCode:1080006, Message:[]map[string]interface {}{map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x32, 0x32}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x33}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x32, 0x32}}, map[string]interface {}{"comment":[]uint8{0x74, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x20, 0x6f, 0x66, 0x20, 0x74, 0x65, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x37, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x34}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x37, 0x39}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x37, 0x37, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x35}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x37, 0x37, 0x36}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x38, 0x35, 0x31}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x36}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x38, 0x35, 0x31}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x36, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x37}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x36, 0x39}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x38, 0x34}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x6e, 0x67, 0x79, 0x75, 0x79, 0x69, 0x6e, 0x67}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x38}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x38, 0x34}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x30, 0x35, 0x33}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x39}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x30, 0x35, 0x33}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x31, 0x36, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x31}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x31, 0x36, 0x36}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x35, 0x39, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x32}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x35, 0x39, 0x30}}, map[string]interface {}{"comment":[]uint8{0x61, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x36, 0x38, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x34}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x36, 0x38, 0x39}}, map[string]interface {}{"comment":[]uint8{0x61, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x38, 0x33, 0x32}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61, 0x62}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x35}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x38, 0x33, 0x32}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x34, 0x39, 0x33, 0x35, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x6d, 0x79, 0x5f, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x36}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x34, 0x39, 0x33, 0x35, 0x39}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x38, 0x35, 0x35, 0x32, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x68, 0x61, 0x72, 0x62, 0x6f, 0x72}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x37}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x38, 0x35, 0x35, 0x32, 0x30}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x37, 0x33, 0x39, 0x39, 0x36, 0x31}, "deleted":[]uint8{0x30}, "name":[]uint8{0x6a, 0x65, 0x6e, 0x6b, 0x69, 0x6e, 0x73}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x38}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x37, 0x33, 0x39, 0x39, 0x36, 0x31}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x37, 0x37, 0x38}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x39}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x37, 0x37, 0x38}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x38, 0x33, 0x33}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61, 0x62, 0x34, 0x35}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x30}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x38, 0x33, 0x33}}, map[string]interface {}{"comment":[]uint8{0x61, 0x73, 0x64, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x37, 0x34, 0x35, 0x37, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x64, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x31}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x37, 0x34, 0x35, 0x37, 0x36}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x34, 0x32, 0x35, 0x31, 0x35, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x32}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x34, 0x32, 0x35, 0x31, 0x35, 0x30}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x39, 0x35, 0x36, 0x33, 0x36, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x76, 0x32}, "ownerid":[]uint8{0x32}, "projectid":[]uint8{0x33, 0x33}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x39, 0x35, 0x36, 0x33, 0x36, 0x36}}}}
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 1101004 Msg: now handling project list
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010005 Msg: proxy destination URL is: http://172.28.2.4:8081/api/v1.0/project/list
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010008 Msg: Unmarshal body {"status":true,"errorcode":1080006,"message":[{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0NzEyMg==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MTM=","update_time":"MTY0ODY0NzEyMg=="},{"comment":"dGhpcyBpcyB0aGUgY29tbWVudCBvZiB0ZXN0UHJvamVjdA==","creation_time":"MTY0ODY0NzE3OQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTQ=","update_time":"MTY0ODY0NzE3OQ=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0Nzc3Ng==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MTU=","update_time":"MTY0ODY0Nzc3Ng=="},{"comment":"dGVzdENvbW1lbnQ=","creation_time":"MTY0ODY0Nzg1MQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTY=","update_time":"MTY0ODY0Nzg1MQ=="},{"comment":"dGVzdENvbW1lbnQ=","creation_time":"MTY0ODY0Nzk2OQ==","deleted":"MA==","name":"d2F5bmVhc2RmYXNkZmFzZGZh","ownerid":"MQ==","projectid":"MTc=","update_time":"MTY0ODY0Nzk2OQ=="},{"comment":"dGVzdCBjb21tZW50","creation_time":"MTY0ODY0Nzk4NA==","deleted":"MA==","name":"d2FuZ3l1eWluZw==","ownerid":"MQ==","projectid":"MTg=","update_time":"MTY0ODY0Nzk4NA=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0ODA1Mw==","deleted":"MA==","name":"dGVzdFByb2plY3Q=","ownerid":"MQ==","projectid":"MTk=","update_time":"MTY0ODY0ODA1Mw=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY0ODY0ODE2Ng==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MjE=","update_time":"MTY0ODY0ODE2Ng=="},{"comment":"dGVzdCBjb21tZW50","creation_time":"MTY0ODY0ODU5MA==","deleted":"MA==","name":"dGVzdHByb2plY3Q=","ownerid":"MQ==","projectid":"MjI=","update_time":"MTY0ODY0ODU5MA=="},{"comment":"YWFzZmFzZmFzZmFzZGZh","creation_time":"MTY0ODY1MDY4OQ==","deleted":"MA==","name":"dGVzdHByb2plY3Rh","ownerid":"MQ==","projectid":"MjQ=","update_time":"MTY0ODY1MDY4OQ=="},{"comment":"YWFzZmFzZmFzZmFzZGZh","creation_time":"MTY0ODY1MDgzMg==","deleted":"MA==","name":"dGVzdHByb2plY3RhYg==","ownerid":"MQ==","projectid":"MjU=","update_time":"MTY0ODY1MDgzMg=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTY0OTM1OQ==","deleted":"MA==","name":"bXlfYXBwbGljYXRpb24=","ownerid":"MQ==","projectid":"MjY=","update_time":"MTY0OTY0OTM1OQ=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTY4NTUyMA==","deleted":"MA==","name":"aGFyYm9y","ownerid":"MQ==","projectid":"Mjc=","update_time":"MTY0OTY4NTUyMA=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY0OTczOTk2MQ==","deleted":"MA==","name":"amVua2lucw==","ownerid":"MQ==","projectid":"Mjg=","update_time":"MTY0OTczOTk2MQ=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY1MDE2Mzc3OA==","deleted":"MA==","name":"d2F5bmU=","ownerid":"MQ==","projectid":"Mjk=","update_time":"MTY1MDE2Mzc3OA=="},{"comment":"MjIyMjIyMjI=","creation_time":"MTY1MDE2MzgzMw==","deleted":"MA==","name":"dGVzdHByb2plY3RhYjQ1","ownerid":"MQ==","projectid":"MzA=","update_time":"MTY1MDE2MzgzMw=="},{"comment":"YXNkYXNkZmFz","creation_time":"MTY1MDE3NDU3Ng==","deleted":"MA==","name":"d2F5bmVhZGE=","ownerid":"MQ==","projectid":"MzE=","update_time":"MTY1MDE3NDU3Ng=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY1MDQyNTE1MA==","deleted":"MA==","name":"dGVzdA==","ownerid":"MQ==","projectid":"MzI=","update_time":"MTY1MDQyNTE1MA=="},{"comment":"cHJvamVjdCBoYXMgYmUgYWRkZWQgYXV0b21hdGljIHdoZW4gY2xpZW50IHB1c2hlZCBhIGltYWdl","creation_time":"MTY1MDk1NjM2Ng==","deleted":"MA==","name":"djI=","ownerid":"Mg==","projectid":"MzM=","update_time":"MTY1MDk1NjM2Ng=="}]}
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647122) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(13) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647122) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(14) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647179) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(this is the comment of testProject) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647179) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(15) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647776) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647776) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(16) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647851) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testComment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647851) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647969) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testComment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647969) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneasdfasdfasdfa) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(17) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(18) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647984) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test comment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648647984) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wangyuying) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648053) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testProject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(19) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648053) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(21) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648166) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648166) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testproject) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648590) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test comment) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648648590) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(aasfasfasfasdfa) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650689) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojecta) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(24) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650689) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650832) for key creation_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojectab) for key name
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(25) for key projectid
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1648650832) for key update_time
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(aasfasfasfasdfa) for key comment
+time=2022-07-19T11:12:28+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649649359) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(my_application) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(26) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649649359) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(27) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649685520) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649685520) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(harbor) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(jenkins) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(28) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649739961) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1649739961) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(29) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163778) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163778) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayne) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163833) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(testprojectab45) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(30) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650163833) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(22222222) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(31) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650174576) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(asdasdfas) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650174576) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(wayneada) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(test) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(32) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650425150) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650425150) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(0) for key deleted
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(v2) for key name
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(2) for key ownerid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(33) for key projectid
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650956366) for key update_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(project has be added automatic when client pushed a image) for key comment
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010009 Msg: decode content(1650956366) for key creation_time
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 1101004 Msg: now handling project list apiutils.ApiResponseData{Status:true, ErrorCode:1080006, Message:[]map[string]interface {}{map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x32, 0x32}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x33}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x32, 0x32}}, map[string]interface {}{"comment":[]uint8{0x74, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x20, 0x6f, 0x66, 0x20, 0x74, 0x65, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x37, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x34}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x31, 0x37, 0x39}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x37, 0x37, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x35}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x37, 0x37, 0x36}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x38, 0x35, 0x31}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x36}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x38, 0x35, 0x31}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x36, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x37}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x36, 0x39}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x38, 0x34}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x6e, 0x67, 0x79, 0x75, 0x79, 0x69, 0x6e, 0x67}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x38}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x37, 0x39, 0x38, 0x34}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x30, 0x35, 0x33}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x31, 0x39}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x30, 0x35, 0x33}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x31, 0x36, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x31}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x31, 0x36, 0x36}}, map[string]interface {}{"comment":[]uint8{0x74, 0x65, 0x73, 0x74, 0x20, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x35, 0x39, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x32}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x34, 0x38, 0x35, 0x39, 0x30}}, map[string]interface {}{"comment":[]uint8{0x61, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x36, 0x38, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x34}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x36, 0x38, 0x39}}, map[string]interface {}{"comment":[]uint8{0x61, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x66, 0x61, 0x73, 0x64, 0x66, 0x61}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x38, 0x33, 0x32}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61, 0x62}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x35}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x38, 0x36, 0x35, 0x30, 0x38, 0x33, 0x32}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x34, 0x39, 0x33, 0x35, 0x39}, "deleted":[]uint8{0x30}, "name":[]uint8{0x6d, 0x79, 0x5f, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x36}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x34, 0x39, 0x33, 0x35, 0x39}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x38, 0x35, 0x35, 0x32, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x68, 0x61, 0x72, 0x62, 0x6f, 0x72}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x37}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x36, 0x38, 0x35, 0x35, 0x32, 0x30}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x37, 0x33, 0x39, 0x39, 0x36, 0x31}, "deleted":[]uint8{0x30}, "name":[]uint8{0x6a, 0x65, 0x6e, 0x6b, 0x69, 0x6e, 0x73}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x38}, "update_time":[]uint8{0x31, 0x36, 0x34, 0x39, 0x37, 0x33, 0x39, 0x39, 0x36, 0x31}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x37, 0x37, 0x38}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x32, 0x39}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x37, 0x37, 0x38}}, map[string]interface {}{"comment":[]uint8{0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x38, 0x33, 0x33}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x61, 0x62, 0x34, 0x35}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x30}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x36, 0x33, 0x38, 0x33, 0x33}}, map[string]interface {}{"comment":[]uint8{0x61, 0x73, 0x64, 0x61, 0x73, 0x64, 0x66, 0x61, 0x73}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x37, 0x34, 0x35, 0x37, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x77, 0x61, 0x79, 0x6e, 0x65, 0x61, 0x64, 0x61}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x31}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x31, 0x37, 0x34, 0x35, 0x37, 0x36}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x34, 0x32, 0x35, 0x31, 0x35, 0x30}, "deleted":[]uint8{0x30}, "name":[]uint8{0x74, 0x65, 0x73, 0x74}, "ownerid":[]uint8{0x31}, "projectid":[]uint8{0x33, 0x32}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x34, 0x32, 0x35, 0x31, 0x35, 0x30}}, map[string]interface {}{"comment":[]uint8{0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x20, 0x68, 0x61, 0x73, 0x20, 0x62, 0x65, 0x20, 0x61, 0x64, 0x64, 0x65, 0x64, 0x20, 0x61, 0x75, 0x74, 0x6f, 0x6d, 0x61, 0x74, 0x69, 0x63, 0x20, 0x77, 0x68, 0x65, 0x6e, 0x20, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x20, 0x70, 0x75, 0x73, 0x68, 0x65, 0x64, 0x20, 0x61, 0x20, 0x69, 0x6d, 0x61, 0x67, 0x65}, "creation_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x39, 0x35, 0x36, 0x33, 0x36, 0x36}, "deleted":[]uint8{0x30}, "name":[]uint8{0x76, 0x32}, "ownerid":[]uint8{0x32}, "projectid":[]uint8{0x33, 0x33}, "update_time":[]uint8{0x31, 0x36, 0x35, 0x30, 0x39, 0x35, 0x36, 0x33, 0x36, 0x36}}}}
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 800010005 Msg: proxy destination URL is: http://172.28.2.4:5001/api/v1.0/registryctl/getcount
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-07-19T11:12:29+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010001 Msg: try to start infrastructure server
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 501001 Msg: now checking IP address 0.0.0.0 
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001010 Msg: The environment variable SERVERSOCKET has be found, but the value() of SERVERSOCKET is not a valid socket file
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001012 Msg: The environment variable SERVERISTLS has be found, but the value() of SERVERISTLS is not a valid isTls
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001015 Msg: The environment variable ACCESSLOG has be found, but the value() of ACCESSLOG is not a valid log file
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001015 Msg: The environment variable ERRORLOG has be found, but the value() of ERRORLOG is not a valid log file
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001021 Msg: The environment variable ISSPLITLOG has be found, but the value() of ISSPLITLOG is not a valid isSplitLog
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001022 Msg: The environment variable LOGTIMEFORMAT has be found, but the value() of LOGTIMEFORMAT is not a valid log time format
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001031 Msg: The environment variable DBSOCKET has be found, but the value() of DBSOCKET is not a valid socket file
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001026 Msg: The environment variable DBNAME has be found, but the value(mysql) of DBNAME is not a DB name value
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 1001012 Msg: The environment variable DBISTLS has be found, but the value() of DBISTLS is not a valid isTls
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010002 Msg: configurations have been handled and it is ok
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010003 Msg: loggers have been set
+time=2022-07-19T14:58:40+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-07-19T14:58:40+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/infrastructure/server.addTestHandlers.func1 (3 handlers)
+
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.28.1.10 is right.
+time=2022-07-19T14:58:40+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/infrastructure.sock
+
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-07-19T14:58:40+08:00 level=warning msg=erroCode: 100015 Msg: the value of MaxIdleConns(Now: 2) should be set large 10 and less 2000. 
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010004 Msg: connections to DB server have be openned
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010005 Msg: handlers have be added.
+time=2022-07-19T14:58:40+08:00 level=debug msg=erroCode: 10010006 Msg: listening to 0.0.0.0:8083
+time=2022-07-19T14:58:40+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8083
+

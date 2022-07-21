@@ -1,6 +1,6 @@
 version: v21.0.0
 server:
-  address: 172.17.0.4
+  address: 172.28.2.4
   port: 5001
   socket: "/var/run/registryctl.sock"
 log:
@@ -36,7 +36,7 @@ registry:
 sysadmserver:
   apiVerion: v1.0
   server:
-    host: "172.17.0.4"
+    host: "172.28.2.4"
     port: 8081
     tls: false
     insecureSkipVerify: true

@@ -111,12 +111,20 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(9)
 	}
 
+	// adding registryctl api handlers
 	errs = addRegistryctlHandler(r,cmdPath)
 	logErrors(errs)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
-		os.Exit(9)
+		os.Exit(10)
 	}
 	
+	// adding infrastructure handlers
+	errs = AddInfrastructureHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+		os.Exit(11)
+	}
+
 	// adding Root handlers
 	err = addRootHandler(r,cmdPath)
 	if err != nil {

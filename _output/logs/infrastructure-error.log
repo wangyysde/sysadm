@@ -14,3 +14,51 @@
 {"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2022-06-14T21:48:06+08:00"}
 {"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2022-06-14T21:48:27+08:00"}
 {"level":"debug","msg":"erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful","time":"2022-06-14T21:48:27+08:00"}
+{"level":"debug","msg":"erroCode: 10010001 Msg: try to start infrastructure server","time":"2022-07-19T10:00:02+08:00"}
+{"level":"error","msg":"erroCode: 1001003 Msg: Can not open the configuration file:/data/code/golang/src/bzhyProjects/sysadm/_output/conf/infrastructure.yaml, error: open /data/code/golang/src/bzhyProjects/sysadm/_output/conf/infrastructure.yaml: no such file or directory.","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 501001 Msg: now checking IP address 127.0.0.1 ","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001010 Msg: The environment variable SERVERSOCKET has be found, but the value() of SERVERSOCKET is not a valid socket file","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable SERVERISTLS has be found, but the value() of SERVERISTLS is not a valid isTls","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ACCESSLOG has be found, but the value() of ACCESSLOG is not a valid log file","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ERRORLOG has be found, but the value() of ERRORLOG is not a valid log file","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001021 Msg: The environment variable ISSPLITLOG has be found, but the value() of ISSPLITLOG is not a valid isSplitLog","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001022 Msg: The environment variable LOGTIMEFORMAT has be found, but the value() of LOGTIMEFORMAT is not a valid log time format","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001031 Msg: The environment variable DBSOCKET has be found, but the value() of DBSOCKET is not a valid socket file","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001026 Msg: The environment variable DBNAME has be found, but the value(mysql) of DBNAME is not a DB name value","time":"2022-07-19T10:00:02+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable DBISTLS has be found, but the value() of DBISTLS is not a valid isTls","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 10010002 Msg: configurations have been handled and it is ok","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful","time":"2022-07-19T10:00:02+08:00"}
+{"level":"debug","msg":"erroCode: 10010001 Msg: try to start infrastructure server","time":"2022-07-19T14:55:01+08:00"}
+{"level":"error","msg":"erroCode: 1001003 Msg: Can not open the configuration file:/data/code/golang/src/bzhyProjects/sysadm/conf/infrastructure.yaml, error: open /data/code/golang/src/bzhyProjects/sysadm/conf/infrastructure.yaml: no such file or directory.","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 501001 Msg: now checking IP address 127.0.0.1 ","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001010 Msg: The environment variable SERVERSOCKET has be found, but the value() of SERVERSOCKET is not a valid socket file","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable SERVERISTLS has be found, but the value() of SERVERISTLS is not a valid isTls","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ACCESSLOG has be found, but the value() of ACCESSLOG is not a valid log file","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ERRORLOG has be found, but the value() of ERRORLOG is not a valid log file","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001021 Msg: The environment variable ISSPLITLOG has be found, but the value() of ISSPLITLOG is not a valid isSplitLog","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001022 Msg: The environment variable LOGTIMEFORMAT has be found, but the value() of LOGTIMEFORMAT is not a valid log time format","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001031 Msg: The environment variable DBSOCKET has be found, but the value() of DBSOCKET is not a valid socket file","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001026 Msg: The environment variable DBNAME has be found, but the value(mysql) of DBNAME is not a DB name value","time":"2022-07-19T14:55:01+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable DBISTLS has be found, but the value() of DBISTLS is not a valid isTls","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 10010002 Msg: configurations have been handled and it is ok","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful","time":"2022-07-19T14:55:01+08:00"}
+{"level":"debug","msg":"erroCode: 10010001 Msg: try to start infrastructure server","time":"2022-07-19T14:55:50+08:00"}
+{"level":"error","msg":"erroCode: 1001003 Msg: Can not open the configuration file:/data/code/golang/src/bzhyProjects/sysadm/conf/infrastructure.yaml, error: open /data/code/golang/src/bzhyProjects/sysadm/conf/infrastructure.yaml: no such file or directory.","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 501001 Msg: now checking IP address 127.0.0.1 ","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001010 Msg: The environment variable SERVERSOCKET has be found, but the value() of SERVERSOCKET is not a valid socket file","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable SERVERISTLS has be found, but the value() of SERVERISTLS is not a valid isTls","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ACCESSLOG has be found, but the value() of ACCESSLOG is not a valid log file","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001015 Msg: The environment variable ERRORLOG has be found, but the value() of ERRORLOG is not a valid log file","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001021 Msg: The environment variable ISSPLITLOG has be found, but the value() of ISSPLITLOG is not a valid isSplitLog","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001022 Msg: The environment variable LOGTIMEFORMAT has be found, but the value() of LOGTIMEFORMAT is not a valid log time format","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001031 Msg: The environment variable DBSOCKET has be found, but the value() of DBSOCKET is not a valid socket file","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001026 Msg: The environment variable DBNAME has be found, but the value(mysql) of DBNAME is not a DB name value","time":"2022-07-19T14:55:50+08:00"}
+{"level":"warning","msg":"erroCode: 1001012 Msg: The environment variable DBISTLS has be found, but the value() of DBISTLS is not a valid isTls","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 10010002 Msg: configurations have been handled and it is ok","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful","time":"2022-07-19T14:55:50+08:00"}
