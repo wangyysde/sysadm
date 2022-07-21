@@ -7,6 +7,8 @@ PRINT_HELP ?=
 PREFIX ?= /usr/local/sysadm
 REGISTRYvER ?= v2.7.0
 REGISTRYIMGVER ?= v1.0.0
+BUILD_IMAGE ?= 
+IMAGEVER ?= v1.4
 
 .PHONY: all
 ifeq ($(PRINT_HELP),y)
@@ -15,6 +17,11 @@ all:
 else
 all: 
 	build/build.sh $(WHAT)
+ifeq ($(BUILD_IMAGE),y)
+	build/build_sysadm_image.sh $(IMAGEVER)
+	build/build_infrastructure_image.sh $(IMAGEVER)
+	build/ build_registryctl_image.sh $(IMAGEVER)
+endif
 endif
 
 
@@ -22,25 +29,35 @@ endif
 sysadm:
 	$(info Now building sysadm package. sysadm binary file will be placed into "$(BIN_DIR)")
 	build/build.sh $(WHAT)
+ifeq ($(BUILD_IMAGE),y)
+	build/build_sysadm_image.sh $(IMAGEVER)
+endif
 #	go build -o $(BIN_DIR)/sysadm 
 	
 .PHONY: registryctl
 registryctl:
 	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
 	build/build.sh registryctl
-
-.PHONY: registrybinary
-registrybinary: 
-	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")
-	build/build_registry_binary.sh $(REGISTRYvER)
-
-.PHONY: registryimage
-registryimage:
-	$(info Now building registry image. registry image will be sysadm_registry:"$(BIN_DIR)")
-	build/build_registry_image.sh $(REGISTRYIMGVER)
+ifeq ($(BUILD_IMAGE),y)
+	build/build_registryctl_image.sh $(IMAGEVER)
+endif
 
 .PHONY: registry
-registry: registrybinary registryimage
+registry: 
+	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")
+	build/build_registry_binary.sh $(REGISTRYvER)
+ifeq ($(BUILD_IMAGE),y)
+	build/build_registry_image.sh $(REGISTRYvER)
+endif
+
+.PHONY: infrastructure
+infrastructure:
+	$(info Now building infrastructure package. infrastructure binary file will be placed into "$(BIN_DIR)")
+	build/build_infrastructure_image.sh 
+ifeq ($(BUILD_IMAGE),y)
+	build/build_infrastructure_image.sh $(IMAGEVER)
+endif
+
 .PHONY: install 
 install: 
 	test -d '$(PREFIX)/bin' || mkdir -p '$(PREFIX)/bin'
