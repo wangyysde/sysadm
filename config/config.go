@@ -184,8 +184,9 @@ func ValidateListenSocket(confValue string,defaultValue string, envName string,c
 			if tmpSocket != "" {
 				return tmpSocket, errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001010,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid socket file",envName,socket,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001010,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid socket file",envName,socket,envName))
+
 	}
 
 	if strings.TrimSpace(confValue) != "" {
@@ -224,8 +225,8 @@ func ValidateIsTls(confValue bool, envName string)(bool,[]sysadmerror.Sysadmerro
 			if strings.ToLower(isTls) == "false" || strings.ToLower(isTls) == "no" || strings.ToLower(isTls) == "0"{
 				return false,errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001012,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid isTls",envName,isTls,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001012,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid isTls",envName,isTls,envName))
 	}
 
 	return confValue,errs
@@ -290,8 +291,9 @@ func ValidateLogFile(confValue string,defaultValue string, envName string,cmdRun
 			if tmpLogfile != "" {
 				return tmpLogfile, errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001015,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid log file",envName,logFile,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001015,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid log file",envName,logFile,envName))
+		
 	}
 
 	if strings.TrimSpace(confValue) != "" {
@@ -401,8 +403,8 @@ func ValidateIsSplitLog(confValue bool, envName string)(bool,[]sysadmerror.Sysad
 			if strings.ToLower(isSplitLog) == "false" || strings.ToLower(isSplitLog) == "no" || strings.ToLower(isSplitLog) == "0"{
 				return false,errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001021,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid isSplitLog",envName,isSplitLog,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001021,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid isSplitLog",envName,isSplitLog,envName))
 	}
 
 	return confValue,errs
@@ -422,9 +424,9 @@ func ValidateLogTimeFormat(confValue string,defaultValue string, envName string)
 			if checkLogTimeFormat(strings.TrimSpace(format)){
 				return strings.TrimSpace(format),errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001022,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid log time format",envName,format,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001022,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid log time format",envName,format,envName))
-
+		
 	}
 
 	if strings.TrimSpace(confValue) != "" {
@@ -498,9 +500,8 @@ func ValidateDBName(confValue string,defaultValue string, envName string,dbType 
 			if db.CheckIdentifier(dbType,dbName) {
 				return strings.TrimSpace(dbType),errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001026,"warning","The environment variable %s has be found, but the value(%s) of %s is not a DB name value",envName,dbType,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001026,"warning","The environment variable %s has be found, but the value(%s) of %s is not a DB name value",envName,dbType,envName))
-
 	}
 
 	if strings.TrimSpace(confValue) != "" {
@@ -597,8 +598,8 @@ func ValidateServerSocket(confValue string,defaultValue string, envName string,c
 			if tmpSocket != "" {
 				return tmpSocket, errs
 			}
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001031,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid socket file",envName,socket,envName))
 		}
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001031,"warning","The environment variable %s has be found, but the value(%s) of %s is not a valid socket file",envName,socket,envName))
 	}
 
 	if strings.TrimSpace(confValue) != "" {
