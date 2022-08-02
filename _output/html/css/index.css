@@ -247,7 +247,7 @@
 }
 
 .form-item input#password {
-    background: url("../images/passwd.png) 0px 0px no-repeat;
+    background: url("../images/passwd.png") 0px 0px no-repeat;
 }
 
 .maskLayer {
@@ -429,3 +429,36 @@
 	font-weight: bold;
 }
 
+.addform-table {
+	position: relative;
+	border-radius: 0;
+	width: 90%;
+	border-color: #fff;
+	background-color: #045283; 
+	border-width: 1px;
+	border-style: solid;
+	top: 35px;
+	left: 0px;
+	font-size: 12px;
+	color: #fff;
+}
+
+.addform-table td {
+	background-color: #045283;
+	color: #fff;
+	border-color: #fff;
+	border-width: 1px;
+	border-style: solid;
+	align-items: center;
+	padding-left: 5px;
+}
+
+.addform-table th {
+	background-color: #045283;
+	color: #fff;
+	border-color: #fff;
+	border-width: 1px;
+	border-style: solid;
+	align-items: center;
+	text-align: center;
+}

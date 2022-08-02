@@ -21,7 +21,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm registryctl infrastructure"
+PACKAGE_LIST="sysadm,registryctl,infrastructure"
 
 echo "getting build information......"
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -89,14 +89,33 @@ function build::package(){
 }
 
 BUILD_LIST=""
-[ "X$@" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=$@
+WHAT=$1
+BUILD_IMAGE=$2
+IMAGEVER=$3
 
-for p in ${BUILD_LIST}
+
+[ "X${WHAT}" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=${WHAT}
+
+BUILD_LIST_ARRAY=(${BUILD_LIST//,/ })
+for p in ${BUILD_LIST_ARRAY}
 do
    create::build::infofile ${p}
    [ $? -eq  1 ] && exit 1
    build::package ${p}
    [ $? -eq  1 ] && exit 1
+
+  if [ "${BUILD_IMAGE}" == "y" -o "${BUILD_IMAGE}" == "Y" ]; then
+	if [ -e "${SYSADM_ROOT}/build/build_${p}_image.sh" ]; then
+		"${SYSADM_ROOT}/build/build_${p}_image.sh" ${IMAGEVER}
+		if [ $? -ne 0 ]; then
+			echo "building ${p} image error"
+			exit 1
+		fi
+	else
+		echo "${SYSADM_ROOT}/build/build_${p}_image.sh script file not exist"
+		exit 1
+	fi
+  fi		
 done
 
 exit 0

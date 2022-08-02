@@ -6,7 +6,6 @@ BIN_DIR := $(OUT_DIR)/bin
 PRINT_HELP ?=
 PREFIX ?= /usr/local/sysadm
 REGISTRYvER ?= v2.7.0
-REGISTRYIMGVER ?= v1.0.0
 BUILD_IMAGE ?= 
 IMAGEVER ?= v1.4
 
@@ -16,47 +15,33 @@ all:
 	build/help_info.sh all
 else
 all: 
-	build/build.sh $(WHAT)
-ifeq ($(BUILD_IMAGE),y)
-	build/build_sysadm_image.sh $(IMAGEVER)
-	build/build_infrastructure_image.sh $(IMAGEVER)
-	build/ build_registryctl_image.sh $(IMAGEVER)
-endif
+	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)"
 endif
 
 
 .PHONY: sysadm
 sysadm:
 	$(info Now building sysadm package. sysadm binary file will be placed into "$(BIN_DIR)")
-	build/build.sh $(WHAT)
-ifeq ($(BUILD_IMAGE),y)
-	build/build_sysadm_image.sh $(IMAGEVER)
-endif
+	build/build.sh "sysadm" "$(BUILD_IMAGE)" "$(IMAGEVER)"
 #	go build -o $(BIN_DIR)/sysadm 
 	
 .PHONY: registryctl
 registryctl:
 	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
-	build/build.sh registryctl
-ifeq ($(BUILD_IMAGE),y)
-	build/build_registryctl_image.sh $(IMAGEVER)
-endif
+	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)"
 
 .PHONY: registry
 registry: 
 	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")
 	build/build_registry_binary.sh $(REGISTRYvER)
 ifeq ($(BUILD_IMAGE),y)
-	build/build_registry_image.sh $(REGISTRYvER)
+	build/build_registry_image.sh $(IMAGEVER)
 endif
 
 .PHONY: infrastructure
 infrastructure:
 	$(info Now building infrastructure package. infrastructure binary file will be placed into "$(BIN_DIR)")
-	build/build_infrastructure_image.sh 
-ifeq ($(BUILD_IMAGE),y)
-	build/build_infrastructure_image.sh $(IMAGEVER)
-endif
+	build/build_infrastructure_image.sh "infrastructure" "$(BUILD_IMAGE)" "$(IMAGEVER)"
 
 .PHONY: install 
 install: 

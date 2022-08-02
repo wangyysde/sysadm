@@ -20,9 +20,10 @@ Errorcode: 120xxx
 package utils
 
 import (
-	"unsafe"
-	"strconv"
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"unsafe"
 )
 
 func Str2bytes(s string) []byte {
@@ -90,3 +91,64 @@ func Interface2String(value interface{}) string {
     }
     return key
 }
+
+// convert interface{} to int. return 0,error if converted with error
+// otherwise return int, nil
+func Interface2Int(value interface{}) (int,error) {
+    var ret int
+	var err error
+    if value == nil {
+        return 0, fmt.Errorf("can not convert empty value to int")
+
+	}
+    switch value.(type) {
+    case float64:
+        ft := value.(float64)
+		ret = int(ft)
+    case float32:
+        ft := value.(float32)
+		ret = int(ft)
+    case int:
+        ret = value.(int)
+    case uint:
+        it := value.(uint)
+		ret = int(it)
+    case int8:
+        it := value.(int8)
+		ret = int(it)
+    case uint8:
+        it := value.(uint8)
+		ret = int(it)
+    case int16:
+        it := value.(int16)
+		ret = int(it)
+    case uint16:
+        it := value.(uint16)
+		ret = int(it)
+    case int32:
+        it := value.(int32)
+		ret = int(it)
+    case uint32:
+        it := value.(uint32)
+		ret = int(it)
+    case int64:
+        it := value.(int64)
+		ret = int(it)
+    case uint64:
+        it := value.(uint64)
+		ret = int(it)
+    case string:
+        it := value.(string)
+		ret, err = strconv.Atoi(it)
+    case []byte:
+        key := string(value.([]byte))
+		ret, err = strconv.Atoi(key)
+    default:
+        newValue, _ := json.Marshal(value)
+        key := string(newValue)
+		ret, err = strconv.Atoi(key)
+    }
+
+    return ret,err
+}
+

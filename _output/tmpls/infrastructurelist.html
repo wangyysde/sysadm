@@ -1,0 +1,491 @@
+<script type="text/javascript">
+    function addInfrastructure() {
+        var ownerid = document.getElementById("userid");
+        if (ownerid.value == "") {
+            alert("添加节点需要登录到系统!");
+            return
+        }
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 2000
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "block";
+        addProjectForm.style.zIndex = 2100;
+        addProjectForm.focus();
+    }
+
+    function cancelAddHost() {
+        var addProjectForm = document.getElementById("addform");
+        addProjectForm.style.display = "none";
+        addProjectForm.style.zIndex = 0;
+        var maskLayer = document.getElementById("maskLayer");
+        maskLayer.style.zIndex = 0
+    }
+
+	function ChangeVersion(osid){
+		var osVerList = new Array();
+		{{range $index, $line := .osVerList }}
+		{{ $line }}
+		{{ end }}
+		var newOption;
+		var osVersion = document.getElementById("osversion");
+		osVersion.options.length = 0; 
+		
+		var selectVersionID = 0;
+		if(osid == "0") {
+			newOption = new Option("--请选择版本--", "0");
+			newOption.style.backgroundColor = "#045283";
+			osVersion.options.add(newOption);
+		} else {
+			for (var j in osVerList[osid]) {
+				if(j == 0 ){
+					selectVersionID = osVerList[osid][j][0];
+				}
+
+				newOption = new Option(osVerList[osid][j][1], osVerList[osid][j][0]);
+				newOption.style.backgroundColor = "#045283";
+				osVersion.options.add(newOption);
+			}
+		}
+		ChangeYumList(selectVersionID); 
+	}
+
+	function ChangeYumList(versionid){
+		{{range $index,$line := .yumList }}
+		{{$line}}
+		{{end}}
+
+		var tableObj = document.getElementById("yumlist");
+		var rowscount = tableObj.rows.length;
+
+		for(i=rowscount - 1;i>0; i--){
+			tableObj.deleteRow(i);
+		}
+
+
+		var osSelected = document.getElementById("os");
+		var index = osSelected.selectedIndex;
+		var osID = osSelected.options[index].value
+		if(versionid !=0 ){
+			var yl = yumList[osID][versionid]
+			for (var i in yl){
+				var yumID = yl[i][0]
+				var yumName = yl[i][1]
+				var yumTypeName = yl[i][2]
+				var yumCatalog = yl[i][3]
+
+				var trObj = document.createElement("tr");
+				var tdObj0 = document.createElement("td");
+				var inputObj = document.createElement("input");
+				inputObj.type = "checkbox";
+				inputObj.id = "yumid[]";
+				inputObj.name = "yumid[]";
+				inputObj.value = yumID;
+				tdObj0.appendChild(inputObj)
+				trObj.appendChild(tdObj0);
+
+				var tdObj = document.createElement("td");
+				tdObj.textContent = yumName;
+				trObj.appendChild(tdObj);
+
+				var tdSec = document.createElement("td");
+				tdSec.textContent = yumTypeName;
+				trObj.appendChild(tdSec);
+
+				var tdThree = document.createElement("td");
+				tdThree.textContent = yumCatalog;
+				trObj.appendChild(tdThree);
+
+				tableObj.append(trObj)
+			} 
+		}	
+	}
+
+
+	function refreshPage() {
+		$('#container').load("/registryctl/yumlist");
+	}
+
+    function changePage(urlparas) {
+        var url = "/registryctl/imagelist" + urlparas;
+        $('#container').load(url);
+    }
+
+	function taglist(imageid) {
+		    var params = "?imageid=" + imageid
+			var url = "/registryctl/taglist" + params;
+			$('#container').load(url);
+		}
+    function selectAllCheckbox() {
+        var thCheckBox = document.getElementById("yumidth");
+        if (thCheckBox.checked) {
+            var chklist = document.getElementsByName('yumid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = true;
+            }
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#ffffff";
+			buttonDel.style.background = "#3c8dbc";
+			buttonDel.disabled = false;
+        } else {
+            var chklist = document.getElementsByName('yumid[]');
+            for (var i = 0; i < chklist.length; i++) {
+                    chklist[i].checked = false;
+            }
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#3c8dbc";
+			buttonDel.style.background = "#cbd8df";
+			buttonDel.disabled = true;
+        }
+    }
+
+	function selectCheckbox() {
+		var chklist = document.getElementsByName('yumid[]');
+		var thCheckBox = document.getElementById("yumidth");
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if(chklist[i].checked){
+				checkedItem = checkedItem + 1; 
+			}
+		}
+		if(checkedItem == 0) {
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#3c8dbc";
+			buttonDel.style.background = "#cbd8df";
+			thCheckBox.checked = false;
+			buttonDel.disabled = true;
+		}else{
+			var buttonDel = document.getElementById("buttonDel")
+			buttonDel.style.color = "#ffffff";
+			buttonDel.style.background = "#3c8dbc";
+			thCheckBox.checked = true; 
+			buttonDel.disabled = false;
+		}
+	}
+
+
+    function submitAddHost() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/infrastructure/add",
+            data: $('#addYum').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                cancelAddYum();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                cancelAddYum();
+                if (result.errorCode == 0) {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    tip.innerHTML = msg;
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+
+                    //window.location.href = "/";
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+    }
+
+    function delYumJS() {
+        if (ownerid.value == "") {
+            alert("删除镜像需要登录到系统!");
+            return
+        }
+		var chklist = document.getElementsByName('yumid[]');
+		var checkedItem = 0
+		for (var i = 0; i < chklist.length; i++) {
+			if (chklist[i].checked) {
+				checkedItem = checkedItem + 1;
+			}
+		}
+
+        if (checkedItem == 0) {
+            alert("没有Yum信息可以删除!");
+            return
+        }
+        var ok = confirm("确认需要删除这些Yum信息吗？");
+        if (!ok) {
+            return
+        }
+        $.ajax({
+			statusCode: {
+				500: function () {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				501: function () {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				502: function() {
+				//	refreshPage();
+					var tip = document.getElementById("tip");
+					tip.innerHTML = "出现服务器端错误，请稍后再试";
+					tip.style.display = "block";
+					setTimeout(function () {
+						var tip = document.getElementById("tip");
+						tip.style.display = "none";
+					}, 5000);
+				},
+				
+			},
+            type: "POST",
+            dataType: "json",
+            url: "/registryctl/yumdel",
+            data: $('#delYum').serialize(), // 你的formid
+            //async: false,
+            error: function(xmlObj, request) {
+                var errMsg = "";
+                if (xmlObj.responseText == null) {
+                    errMsg = "Connection error";
+                } else {
+                    errMsg = xmlObj.responseText;
+                }
+                var tip = document.getElementById("tip");
+                tip.innerHTML = errMsg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            success: function(result) {
+                var tip = document.getElementById("tip");
+                if (result.status) {
+                    tip.style.display = "block";
+                    tip.style.backgroundColor = "#1f6f4a";
+                    tip.style.display = "block";
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+
+                    refreshPage();
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                } else {
+                    var messageArray = result.message;
+                    var msg = "未知错误";
+                    if (messageArray[0]) {
+                        var msgLine = messageArray[0];
+                        msg = window.atob(msgLine["msg"]);
+
+                    }
+                    tip.innerHTML = msg;
+                    tip.style.display = "block";
+                    setTimeout(function() {
+                        var tip = document.getElementById("tip");
+                        tip.style.display = "none";
+                    }, 5000);
+                }
+            }
+        });
+
+    }
+
+	function doSearch(searchKey) {
+		var urlParam = "?searchKey=" + searchKey;
+		changePage(urlParam);
+	}
+
+</script>
+
+<section class="content-header">
+	<h1>
+		节点信息
+		<small>节点信息列表</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> 集群管理</a></li>
+		<li class="active">节点管理</li>
+	</ol>
+</section>
+
+{{ $haveSelectProject := .selectedprojectid }}
+<div>
+	<div class="selectForm">
+		<form id="InfrastructureAdd" name="InfrastructureAdd" method="post" target="_self" onsubmit="return false">
+			<button id="buttonAdd" onclick="addInfrastructure() "> + 添加节点</button>&nbsp;
+			<button id="buttonDel" onclick="delInfrastructure() " disabled> X 删除节点</button>
+		</form>
+	</div>
+</div>
+
+	<form id="delYum" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			<th width="5%" align="left"> 
+			<!--	<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'> -->
+			</th>
+			<th width="10%">名称</th>
+			<th width="10%" >操作系统</th>
+			<th width="5%">版本</th>
+			<th width="10%">类别</th>
+			<th width="10%">用途</th>
+			<th width="5%">类型</th>
+			<th width="5%">状态</th>
+			<th >地址</th>
+		</tr>
+		{{range $index,$line := .yumlist}}
+			<tr>
+		   <td width="5%"> <input type="checkbox" id="yumid[]" name="yumid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
+			<td > {{ $line.YumName }} </td>
+			<td> {{ $line.OsName }} </td> 
+			<td> {{ $line.VersionName }} </td>
+			<td> {{ $line.TypeName }} </td>
+			<td> {{ $line.Catalog }} </td>
+			<td>
+				{{ if eq $line.Kind "0"}}
+				直连
+				{{ else if eq $line.Kind "1"}}
+				代理
+				{{ else }}
+				本地
+				{{ end }}
+			</td>
+			<td>
+				{{ if eq $line.Enabled "0"}}
+				禁用
+				{{ else }}
+				启用
+				{{ end }}
+			</td>
+			<td>
+				{{ $line.Base_url }}
+			</td>
+			</tr>
+		{{end}}
+	</table>
+</form>
+
+<table class="foot-table">
+	<tr>
+		<td>
+			<div class="div-foot">当前第{{ .currentpage }}页 {{ .prepage }} {{ .nextpage }} 共{{ .totalpage }}页 </div>
+		</td>
+	</tr>
+</table>	
+
+<div class="yum-add" id="addform">
+	<form id="addInfrastructure" method="post" target="_self" onsubmit="return false">
+		<div class="popform-title">添加新节点</div>
+		<div class="yum-item">
+			IP地址： <input id="ip" type="text" name="ip"> *被添加节点用于管理的IP地址或主机名。
+			<input id="userid" type="hidden" name="userid" value="{{.userid}}">
+		</div>
+		<div class="yum-radio">
+			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
+		<div class="yum-item">
+			系统帐号： <input id="user" type="text" name="user"> *被添加节点上用于远程管理的系统帐号。
+		</div>
+		<div class="yum-item">
+			用户密码： <input id="password" type="password" name="password"> *被添加节点上用于远程管理的系统帐号密码。
+		</div>
+		<div class="yum-item">
+			重复用户密码： <input id="repassword" type="password" name="repassword"> 
+		</div>
+		<div class="yum-item">
+			操作系统：
+			<select name="os" id="os" onChange="ChangeVersion(this.options[this.options.selectedIndex].value)" >
+				<option value="0" style="background-color: #045283;"> --请选择系统 --</option>
+				{{range $index,$line := .osList}}
+				<option value="{{ $line.osid }}" style="background-color: #045283;"> {{ $line.osname }} </option>
+				{{end}}
+			</select>
+			版本：
+			<select name="osversion" id="osversion" onChange="ChangeYumList(this.options[this.options.selectedIndex].value)" >
+				<option value="0" style="background-color: #045283;">--请选择版本--</option>
+			</select>
+		</div>
+		<div class="yum-item">
+			选择添加到主机上的Yum信息：
+		</div>
+		<div >
+			<table width="100%" align="center" id="yumlist" class="addform-table">
+				<th width="10%" align="left">
+					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'>
+				</th>
+				<th width="50%">名称</th>
+				<th width="20%">类别</th>
+				<th width="20%">用途</th>
+				<tr>
+					<td type="checkbox" id="yumid" name="yumid[]" onclick='selectCheckbox()'>aaa</td>
+					<td>bbb</td>
+					<td>ccc</td>
+					<td>ddd</td>
+				</tr>
+				<tr>
+					<td>aaa</td>
+					<td>bbb</td>
+					<td>ccc</td>
+					<td>ddd</td>
+				</tr>
+			</table>
+		</div>
+		<div class=" popform-button ">
+			<button id="add " onclick="submitAddHost() ">确定</button>
+			<button id="cacel " onclick="cancelAddHost() ">关闭</button>
+		</div>
+	</form>
+</div>

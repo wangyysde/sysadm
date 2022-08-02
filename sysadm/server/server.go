@@ -125,6 +125,13 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(11)
 	}
 
+	// adding infrastructure ui handlers
+	errs = addInfrastructureUIHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+		os.Exit(12)
+	}
+
 	// adding Root handlers
 	err = addRootHandler(r,cmdPath)
 	if err != nil {
