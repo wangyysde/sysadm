@@ -18,7 +18,6 @@
 package db
 
 import (
-	"database/sql"
 	"net"
 	"os"
 	"path/filepath"
@@ -39,50 +38,6 @@ import (
     "panic",
 	*/
 }
-
- type DbConfig struct {
-	Type string `json:"type"`
-	Host string `json:"host"`
-	HostIP net.IP `json:"hostIP"`
-	Port int `json:"port"`
-	User string `json:"user"`
-	Password string `json:"password"`
-	DbName string `json:"dbname"`
-	SslMode string `json:"sslmode"`
-	SslCa string `json:"sslca"`
-	SslCert string `json:"sslcert"`
-	SslKey string `json:"sslkey"`
-	MaxOpenConns int `json:"maxopenconns"`
-	MaxIdleConns int `json:"maxidleconns"`
-	Connect *sql.DB `json:"connect"`
-	Entity DbEntity `json:"entity"`
- }
-
- type DbEntity interface {
-	OpenDbConnect() ([]sysadmerror.Sysadmerror)
-	CloseDB()([]sysadmerror.Sysadmerror)
-	InsertData(string,FieldData) (int, []sysadmerror.Sysadmerror)
-	QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
-	DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror)
-	UpdateData(string, FieldData, map[string]string) (int, []sysadmerror.Sysadmerror)
-	BuildWhereFieldExact(string) (string)
- }
-
-
-// key is the filed name and value is the value that will be set to the field.
- type FieldData map[string]interface{}
- type OrderData struct {
-	Key string
-	Order int
- }
-  type SelectData struct {
-	Tb []string
-	OutFeilds []string
-	Where map[string]string
-	Order []OrderData
-	Group []string 
-	Limit []int
- }
 
 /*
   Checking database parametes and initating an instance 
@@ -239,3 +194,4 @@ func CheckIdentifier(dbType string, identifier string) bool {
 		return false
 	}
 }
+

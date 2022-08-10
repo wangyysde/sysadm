@@ -20,8 +20,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
 	"regexp"
+	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -316,4 +316,48 @@ func (p Postgre)Identifier(identifier string) bool{
 	}
 
 	return matched
+}
+
+/* 
+  BuildInsertQuery  build insert SQL statement according to tb and data.
+  return string what can be execute query  and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+
+  TODO
+*/
+func (p Postgre)BuildInsertQuery(tb string,data FieldData) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	return "", errs
+}
+
+/*
+  BuildUpdateQuery build update SQL statement according to tb and data.
+  return string what can be execute query and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+
+  TODO
+*/
+func (p Postgre)BuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	return "", errs
+}
+
+/*
+  BuildDeleteQuery build update SQL statement according to dd .
+  return string what can be execute query and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+*/
+func (p Postgre)BuildDeleteQuery(dd *SelectData) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	return "", errs
+}
+
+/*
+	Get the DBConfig
+*/
+func (p Postgre)GetDbConfig()(*DbConfig){
+	return p.Config
 }

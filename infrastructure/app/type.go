@@ -157,6 +157,12 @@ type ApiHost struct {
 	// ip address for connecting to 
 	Ip string `form:"ip" json:"ip" xml:"ip"`
 
+	// ip type 4 for ipv4 6 for ipv6
+	Iptype string `form:"iptype" json:"iptype" xml:"iptype"`
+
+	// identifying whether the ssh public key has be upload onto a node
+	PubkeyUploaded bool `form:"pubkeyUploaded" json:"pubkeyUploaded" xml:"pubkeyUploaded"`
+
 	// ssh service port on a host
 	Port int `form:"port" json:"port" xml:"port"`
 
@@ -165,4 +171,19 @@ type ApiHost struct {
 
 	// user password on a host 
 	Password string `form:"password" json:"password" xml:"password"`
+
+	// user password again on a host 
+	RePassword string `form:"repassword" json:"repassword" xml:"repassword"`
+
+	// which os has be installed on a node. the value of osid is reference to table os in DB
+	OsID int  `form:"osid" json:"osid" xml:"osid"`
+	
+	// which version of os has be installed on a node. the value of osversionid is reference to table version in DB
+	OsVersionID int  `form:"osversionid" json:"osversionid" xml:"osversionid"`
+
+	// which yum information should be deploy on a node. the value of yumid is reference to table yum in DB
+	YumID []string  `form:"yumid[]" json:"yumid[]" xml:"yumid[]"`
+
+	// operator userid what used to check permissions
+	Userid int  `form:"userid" json:"userid" xml:"userid"`
 }

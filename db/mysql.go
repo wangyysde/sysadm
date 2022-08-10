@@ -20,10 +20,10 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	"regexp"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/wangyysde/sysadm/sysadmerror"
@@ -441,4 +441,125 @@ func (m MySQL)Identifier(identifier string) bool{
 	}
 
 	return matched
+}
+
+/* 
+  BuildInsertQuery  build insert SQL statement according to tb and data.
+  return string what can be execute query  and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+*/
+func (p MySQL)BuildInsertQuery(tb string,data FieldData) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	if len(tb) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107032,"error","Table name(%s) is not valid.",tb))
+		return "", errs
+	}
+	
+	if len(data) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107033,"error","Can not insert empty data into table."))
+		return "", errs
+	}
+
+    insertStr := "INSERT INTO `" + tb + "`("
+    valueStr := "Values ("
+    i := 1
+    for key,value := range data {
+        if i == 1 {
+           insertStr = insertStr + "`" + key + "`"
+		   valueStr = valueStr + "\""  + utils.Interface2String(value) + "\""
+
+        } else {
+           insertStr = insertStr + ",`" + key + "`"
+           valueStr = valueStr + ",\""  +utils.Interface2String(value) + "\""
+        }
+        i = i + 1
+    }
+    insertStr = insertStr + ") "
+    valueStr = valueStr + ")"
+
+    return (insertStr + valueStr), errs
+}
+
+/*
+  BuildUpdateQuery build update SQL statement according to tb and data.
+  return string what can be execute query and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+*/
+func (p MySQL)BuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	
+	if tb == ""  || len(data) <1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107034,"error","tables or feilds which will be update is empty"))
+		return "",errs
+	}
+	
+	querySQL := "update `" + tb + "` set "
+	first := true
+	for key,value := range data {
+		if first {
+			querySQL = querySQL + "`" + key +"`=" + utils.Interface2String(value) + ""
+			first = false
+		} else {
+			querySQL = querySQL + "," + "`" + key +"`=" + utils.Interface2String(value) + ""
+		}
+	}
+
+	first = true
+	for key,value := range where {
+		if first {
+			querySQL = querySQL + " where " + key + value
+			first = false
+		} else {
+			querySQL = querySQL + " and " + key + value
+		}
+	}
+
+	return querySQL, errs
+	
+}
+
+/*
+  BuildDeleteQuery build update SQL statement according to dd .
+  return string what can be execute query and []sysadmerror.Sysadmerror if without error .
+  Or return "" and []sysadmerror.Sysadmerror
+*/
+func (p MySQL)BuildDeleteQuery(dd *SelectData) (string, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107035,"debug","now preparing db query."))
+	if len(dd.Tb) <1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107036,"error","tables is empty"))
+		return "",errs
+	}
+	
+	querySQL := "delete from "
+	first := true
+	for _,t := range dd.Tb {
+		if first {
+			querySQL = querySQL + "`" + t + "`"
+			first = false
+		} else {
+			querySQL = querySQL + "," + "`" + t + "`"
+		}
+	}
+
+	first = true
+	for key,value := range dd.Where {
+		if first {
+			querySQL = querySQL + " where " + key + value
+			first = false
+		} else {
+			querySQL = querySQL + " and " + key + value
+		}
+	}
+
+	return querySQL,errs
+}
+
+/*
+	Get the DBConfig
+*/
+func (m MySQL)GetDbConfig()(*DbConfig){
+	return m.Config
 }

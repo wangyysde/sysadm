@@ -17,7 +17,7 @@
 
 package server
 
-import(
+import (
 	"fmt"
 	"os"
 	"path/filepath"
@@ -33,10 +33,10 @@ func addStaicRoute(r *sysadmServer.Engine,cmdRunPath string) error {
 		return fmt.Errorf("route is nil.")
 	}
 
-	// Index page
-	path,err := getStaticPath(config.DefaultPath,cmdRunPath)
-	if err != nil {
-		return err
+	// favicon.ico
+	path,err := getStaticPath(config.FaviconFile,cmdRunPath)
+	if err == nil {
+		r.Static("/favicon.ico", path)
 	}
 	
 	// images directory

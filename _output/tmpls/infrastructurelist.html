@@ -102,9 +102,10 @@
 
 
 	function refreshPage() {
-		$('#container').load("/registryctl/yumlist");
+		$('#container').load("/infrastructure/list");
 	}
 
+/*
     function changePage(urlparas) {
         var url = "/registryctl/imagelist" + urlparas;
         $('#container').load(url);
@@ -161,14 +162,67 @@
 			buttonDel.disabled = false;
 		}
 	}
+*/
 
+	function changePubkey(){
+		var updatedKey = document.getElementById("pubkeyUploaded");
+		var password = document.getElementById("password");
+		var repassword = document.getElementById("repassword");
+		
+		if(updatedKey.checked){
+			password.disabled = true;
+			repassword.disabled = true;
+		} else {
+			password.disabled = false;
+			repassword.disabled = false;
+		}
+	}
 
+	function checkData(){
+		var ipAdd = document.getElementById("ip").value;
+
+		if(ipAdd.length < 7){
+			alert("You input ip address " + ipAdd + "is not valid");
+			return false;
+		}
+
+		var user = document.getElementById("user").value;
+		if(user.length < 1){
+			alert("user name should be input");
+			return false;
+		}
+
+		var updatedKey = document.getElementById("pubkeyUploaded");
+		if(!updatedKey.checked){
+			var password = document.getElementById("password").value;
+			var repassword = document.getElementById("repassword").value;
+			if(password.length < 1 || password != repassword){
+				alert("password for the user should be input if you have not updated public key onto node");
+				return false;	
+			}
+		}
+		
+		var osVersionSelected = document.getElementById("osversion");
+		var index = osVersionSelected.selectedIndex;
+		var osVersion = osVersionSelected.options[index].value
+		if(osVersion == 0){
+			alert("Please select OS and its version");
+			return false;
+		}
+
+		return true;
+	}
+	
     function submitAddHost() {
+		if(!checkData()){
+			return false;
+		}
+
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "/infrastructure/add",
-            data: $('#addYum').serialize(), // 你的formid
+            url: "/api/1.0/infrastructure/add",
+            data: $('#addInfrastructure').serialize(), // 你的formid
             //async: false,
             error: function(xmlObj, request) {
                 var errMsg = "";
@@ -177,7 +231,7 @@
                 } else {
                     errMsg = xmlObj.responseText;
                 }
-                cancelAddYum();
+                cancelAddHost();
                 var tip = document.getElementById("tip");
                 tip.innerHTML = errMsg;
                 tip.style.display = "block";
@@ -188,7 +242,7 @@
             },
             success: function(result) {
                 var tip = document.getElementById("tip");
-                cancelAddYum();
+                cancelAddHost();
                 if (result.errorCode == 0) {
                     var messageArray = result.message;
                     var msg = "未知错误";
@@ -207,7 +261,6 @@
                         tip.style.display = "none";
                     }, 5000);
 
-                    //window.location.href = "/";
                 } else {
                     var messageArray = result.message;
                     var msg = "未知错误";
@@ -387,7 +440,7 @@
 		</tr>
 		{{range $index,$line := .yumlist}}
 			<tr>
-		   <td width="5%"> <input type="checkbox" id="yumid[]" name="yumid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
+		   <td width="5%"> <input type="checkbox"  name="yumid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
 			<td > {{ $line.YumName }} </td>
 			<td> {{ $line.OsName }} </td> 
 			<td> {{ $line.VersionName }} </td>
@@ -429,12 +482,16 @@
 	<form id="addInfrastructure" method="post" target="_self" onsubmit="return false">
 		<div class="popform-title">添加新节点</div>
 		<div class="yum-item">
-			IP地址： <input id="ip" type="text" name="ip"> *被添加节点用于管理的IP地址或主机名。
+			节点主机名： <input id="hostname" type="text" name="hostname"> 用于节点管理和识别的主机名
 			<input id="userid" type="hidden" name="userid" value="{{.userid}}">
+		</div>
+		<div class="yum-item">
+			IP地址： <input id="ip" type="text" name="ip"> *被添加节点用于管理的IP地址或主机名。
 		</div>
 		<div class="yum-radio">
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
-			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="pubkeyUploaded" id="pubkeyUploaded" value="1" onclick="changePubkey()"> 公钥已上传&nbsp;&nbsp;&nbsp;&nbsp; 
+			<input id="port" type="text" name="port" value="22"> 节点SSH服务端口号，默认是22
 		</div>
 		<div class="yum-item">
 			系统帐号： <input id="user" type="text" name="user"> *被添加节点上用于远程管理的系统帐号。
@@ -447,14 +504,14 @@
 		</div>
 		<div class="yum-item">
 			操作系统：
-			<select name="os" id="os" onChange="ChangeVersion(this.options[this.options.selectedIndex].value)" >
+			<select name="osid" id="os" onChange="ChangeVersion(this.options[this.options.selectedIndex].value)" >
 				<option value="0" style="background-color: #045283;"> --请选择系统 --</option>
 				{{range $index,$line := .osList}}
 				<option value="{{ $line.osid }}" style="background-color: #045283;"> {{ $line.osname }} </option>
 				{{end}}
 			</select>
 			版本：
-			<select name="osversion" id="osversion" onChange="ChangeYumList(this.options[this.options.selectedIndex].value)" >
+			<select name="osversionid" id="osversion" onChange="ChangeYumList(this.options[this.options.selectedIndex].value)" >
 				<option value="0" style="background-color: #045283;">--请选择版本--</option>
 			</select>
 		</div>
@@ -469,18 +526,6 @@
 				<th width="50%">名称</th>
 				<th width="20%">类别</th>
 				<th width="20%">用途</th>
-				<tr>
-					<td type="checkbox" id="yumid" name="yumid[]" onclick='selectCheckbox()'>aaa</td>
-					<td>bbb</td>
-					<td>ccc</td>
-					<td>ddd</td>
-				</tr>
-				<tr>
-					<td>aaa</td>
-					<td>bbb</td>
-					<td>ccc</td>
-					<td>ddd</td>
-				</tr>
 			</table>
 		</div>
 		<div class=" popform-button ">
