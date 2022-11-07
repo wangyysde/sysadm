@@ -19,7 +19,7 @@
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SYSADM_VER="1.0"
-REGISTRY_URL="harbor.bzhy.com/sysadm/"
+REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
 BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
 EMAIL="net_use@bzhy.com"

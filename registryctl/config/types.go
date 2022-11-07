@@ -91,6 +91,9 @@ type Config struct {
 	SysadmVersion string 
 	RegistryctlVer string `json:"version"`
 	RegistryApiVer string `json:"ApiVer"`
+	// registry url address. we should specify a url for registry server if registryctl  running behind a proxy 
+	// its value will be set to request url if this value not set.
+	RegistryUrl string `form:"registryUrl" json:"registryUrl" xml:"registryUrl"`
 	Server Server `json:"server"`
 	Log Log `json:"log"`
 	User User `json:"user"`

@@ -334,14 +334,44 @@ func buildReverseProxyDirector(c *sysadmServer.Context)(func(r *http.Request)) {
 	buildModifyReponse: modifies the location field value of headers of response come from registry server 
 */
 func buildModifyReponse(c *sysadmServer.Context)(func(r *http.Response) error){
+	var errs []sysadmerror.Sysadmerror
+
 	return func(r *http.Response) error {
 		locationUrl := r.Header.Get("Location")
 		if locationUrl != "" {
+			definedConfig := RuntimeData.RuningParas.DefinedConfig
+			registryUrl := definedConfig.RegistryUrl
+			req := r.Request
+			if registryUrl == "" {
+				requestHost := req.Host
+				if strings.TrimSpace(requestHost) != "" {
+					registryUrl = requestHost
+					definedConfig.RegistryUrl = registryUrl
+				} else {
+					serverAddr := definedConfig.Server.Address
+					serverPort := strconv.Itoa(definedConfig.Server.Port)
+					registryUrl = serverAddr + ":" + serverPort
+					definedConfig.RegistryUrl = registryUrl
+				}
+			}
+
+			registryUrl = strings.ToLower(registryUrl)
+			if strings.HasPrefix(registryUrl,"http://") || strings.HasPrefix(registryUrl,"https://"){
+				if strings.HasPrefix(registryUrl,"http://") {
+					registryUrl = strings.TrimPrefix(registryUrl,"http://")
+				} else {
+					registryUrl = strings.TrimPrefix(registryUrl,"https://")
+				}
+
+				definedConfig.RegistryUrl = registryUrl
+			}
+
 			pUrl, _ := url.Parse(locationUrl)
 			uri := pUrl.RequestURI()
-			definedConfig := RuntimeData.RuningParas.DefinedConfig
-			urlRoot := "http://" + definedConfig.Server.Address + ":" + strconv.Itoa(definedConfig.Server.Port)
-			newUrl := urlRoot + uri
+			scheme := req.URL.Scheme
+			newUrl := scheme + "://" + registryUrl + uri
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(2021001,"debug","new location url: %s",newUrl))
+			logErrors(errs)
 			r.Header.Set("Location",newUrl)
 			
 		}

@@ -269,6 +269,26 @@ func getServerAddress(confContent *Config)(string,[]sysadmerror.Sysadmerror){
 	return defaultConfig.Server.Address,errs
 }
 
+// registry url address. we should specify a url for registry server if registryctl  running behind a proxy 
+// its value will be set to request url if this value not set.
+// this value will be set to "" if this value not set. then we will get the value of request URL on request as registry url .
+func getRegistryUrl(confContent *Config)(string,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+	registryUrl := os.Getenv("REGISTRY_URL")
+	if strings.TrimSpace(registryUrl) != "" {
+		return strings.TrimSpace(registryUrl),errs
+	}
+
+	if confContent != nil {
+		if strings.TrimSpace(confContent.RegistryUrl) != "" {
+			return strings.TrimSpace(confContent.RegistryUrl),errs
+		}
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(201067,"warning","can not find registry url. registry url will be get on request, but it is not safe."))
+	return "",errs
+}
+
 // Try to get listenPort from one of  SERVER_PORT,configuration file or default value.
 // The order for getting listenPort is SERVER_PORT,configuration file and default value.
 func getServerPort(confContent *Config) (int,[]sysadmerror.Sysadmerror){
@@ -1132,6 +1152,8 @@ func HandleConfig(configPath string, cmdRunPath string) (*Config,[]sysadmerror.S
 		}
 	}
 	
+	ConfigDefined.RegistryUrl,_ = getRegistryUrl(confContent)
+
 	address,err := getServerAddress(confContent)
 	ConfigDefined.Server.Address = address
 	ConfigDefined.SysadmVersion = SysadmVersion

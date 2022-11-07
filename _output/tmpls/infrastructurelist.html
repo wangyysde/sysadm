@@ -490,8 +490,8 @@
 		</div>
 		<div class="yum-radio">
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
-			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="pubkeyUploaded" id="pubkeyUploaded" value="1" onclick="changePubkey()"> 公钥已上传&nbsp;&nbsp;&nbsp;&nbsp; 
-			<input id="port" type="text" name="port" value="22"> 节点SSH服务端口号，默认是22
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="pubkeyUploaded" id="pubkeyUploaded" value="1" onclick="changePubkey()"> 公钥已上传&nbsp;&nbsp;&nbsp;&nbsp;SSH端口: 
+			<input id="port" type="text" name="port" value="22" class="sshportinput"> *默认是22
 		</div>
 		<div class="yum-item">
 			系统帐号： <input id="user" type="text" name="user"> *被添加节点上用于远程管理的系统帐号。

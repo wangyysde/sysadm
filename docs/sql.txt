@@ -164,6 +164,7 @@ CREATE TABLE `host` (
   `osID` int(3) NOT NULL COMMENT 'which OS distrubition,such as centos,readhat, ubantu',
   `versionID` int(11) NOT NULL COMMENT 'version id identified OS version ',
   `statusID` int(3) NOT NULL COMMENT 'identifying a host status',
+  `sshPort` int(5) DEFAULT '22' COMMENT 'port of ssh service',
   PRIMARY KEY (`hostid`),
   KEY `FK_status` (`statusID`),
   KEY `FK_osID` (`osID`),

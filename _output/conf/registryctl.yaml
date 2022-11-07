@@ -1,8 +1,18 @@
+# the version of registryctl component.
 version: v21.0.0
+# the version of api of registryctl component.
+apiVer: v1.0
+# registry url address. we should specify a url for registry server if registryctl  running behind a proxy 
+# its value will be set to request url if this value not set.
+registryUrl: sysadm.sysadm.cn:5001
+# configuration block for registryctl server
 server:
+  # listen address of registryctl server
   address: 172.28.2.4
-  port: 5001
+  # listen port of registryctl server
+  port: 5001 
   socket: "/var/run/registryctl.sock"
+  registryurl: "sysadm.sysadm.cn" 
 log:
   accessLog: "logs/registryctl-access.log"
   errorLog: "logs/registryctl-error.log"

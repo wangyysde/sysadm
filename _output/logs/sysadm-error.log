@@ -26730,3 +26730,142 @@ time=2022-08-06T15:26:39+08:00 level=debug msg=erroCode: 3030002 Msg: can not ge
 time=2022-08-06T15:26:39+08:00 level=debug msg=erroCode: 800010002 Msg: set successful message: host has be added successful to the client
 time=2022-08-06T15:32:18+08:00 level=debug msg=erroCode: 3030002 Msg: can not get SSH Service Port. Default port will be used
 time=2022-08-06T15:32:18+08:00 level=debug msg=erroCode: 800010002 Msg: set successful message: host has be added successful to the client
+time=2022-08-10T16:22:29+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.28.1.10 is right.
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-08-10T16:22:30+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful
+time=2022-08-10T16:22:30+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=Loaded HTML Templates (12): 
+	- imagelist.html
+	- index.html
+	- login_bak20211223.html
+	- login_bak20211226.html
+	- main.html
+	- projectlist.html
+	- yumlist.html
+	- 
+	- login.html
+	- showmessage.html
+	- taglist.html
+	- infrastructurelist.html
+
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /project/list             --> github.com/wangyysde/sysadm/sysadm/server.projectListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=erroCode: 110001 Msg: now adding handlers for project
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /registryctl/taglist      --> github.com/wangyysde/sysadm/sysadm/server.tagListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /registryctl/yumlist      --> github.com/wangyysde/sysadm/sysadm/server.yumListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /registryctl/yumadd       --> github.com/wangyysde/sysadm/sysadm/server.yumAddHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /registryctl/yumdel       --> github.com/wangyysde/sysadm/sysadm/server.yumDelHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /api/0.1/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /api/1.0/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/0.1/infrastructure
+time=2022-08-10T16:22:31+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/1.0/infrastructure
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /infrastructure/list      --> github.com/wangyysde/sysadm/sysadm/server.infrastructureListHandler (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /favicon.ico/*filepath    --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /favicon.ico/*filepath    --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2022-08-10T16:22:31+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2022-08-10T16:22:34+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select userid,username,password,salt from `user` where username='admin' and deleted=0
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 1050001 Msg: now checking the user is login
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 1050002 Msg: try to execute the request with:http://172.28.2.4:8081/api/v1.0/user/login
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106007 Msg: now handling the data for the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106009 Msg: adding key: username value admin to the data of the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106009 Msg: adding key: password value Sysadm12345 to the data of the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-08-10T16:22:37+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":true,"errorcode":0,"message":"1"}
+time=2022-08-10T16:22:39+08:00 level=debug msg=redirecting request 301: /favicon.ico/ --> /favicon.ico/
+
+time=2022-08-10T16:22:39+08:00 level=debug msg=redirecting request 301: / --> /
+
+time=2022-08-10T16:29:53+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select userid,username,password,salt from `user` where username='admin' and deleted=0
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 1050001 Msg: now checking the user is login
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 1050002 Msg: try to execute the request with:http://172.28.2.4:8081/api/v1.0/user/login
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106007 Msg: now handling the data for the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106009 Msg: adding key: username value admin to the data of the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106009 Msg: adding key: password value Sysadm12345 to the data of the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106001 Msg: now handling the headers for the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106003 Msg: adding key: User-Agent value sysadmHttpClient-v1.0 to the header of the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 106004 Msg: setting authorization for the request
+time=2022-08-10T16:29:55+08:00 level=debug msg=erroCode: 1050004 Msg: got response body is: {"status":true,"errorcode":0,"message":"1"}
+time=2022-08-10T16:29:56+08:00 level=debug msg=redirecting request 301: /favicon.ico/ --> /favicon.ico/
+
+time=2022-08-10T16:29:56+08:00 level=debug msg=redirecting request 301: / --> /
+
+time=2022-10-19T10:54:08+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2022-10-19T10:54:08+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2022-10-19T10:54:08+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 172.28.1.10 is right.
+time=2022-10-19T10:54:08+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 30306 is right.
+time=2022-10-19T10:54:08+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2022-10-19T10:54:30+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2022-10-19T10:54:30+08:00 level=debug msg=erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful

@@ -62,11 +62,11 @@ func (p MySQL)OpenDbConnect() []sysadmerror.Sysadmerror {
 	
 	dbConnect, err := sql.Open("mysql", dbDsnstr)
 	if err != nil {
-		errs = append(errs,sysadmerror.NewErrorWithStringLevel(107002,"fatal","Can not connect to postgre server with host: %s and Port: %d. error message is :%s",config.Host,config.Port,err))
+		errs = append(errs,sysadmerror.NewErrorWithStringLevel(107002,"fatal","Can not connect to DB server with host: %s and Port: %d. error message is :%s",config.Host,config.Port,err))
 		return errs
 	}
 
-	errs = append(errs,sysadmerror.NewErrorWithStringLevel(107003,"debug","Connect to postgre server with host: %s and Port: %d. successful",config.Host,config.Port))
+	errs = append(errs,sysadmerror.NewErrorWithStringLevel(107003,"debug","Connect to DB server with host: %s and Port: %d. successful",config.Host,config.Port))
 
 	p.Config.Connect = dbConnect
 	dbConnect.SetMaxOpenConns(p.Config.MaxOpenConns)
@@ -75,7 +75,7 @@ func (p MySQL)OpenDbConnect() []sysadmerror.Sysadmerror {
 
 	err = dbConnect.Ping()
 	if err != nil {
-		errs = append(errs,sysadmerror.NewErrorWithStringLevel(107004,"fatal","we can connect to the postgre server while we can not ping the server with the connection.Error is:%s",err))
+		errs = append(errs,sysadmerror.NewErrorWithStringLevel(107004,"fatal","we can connect to the DB server while we can not ping the server with the connection.Error is:%s",err))
 		return errs
 	}
 

@@ -15,7 +15,7 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
 
 ErrorCode: 500xxx
- */
+*/
 
 package utils
 
@@ -46,10 +46,13 @@ func CheckFileExists(f string,cmdRunPath string ) (bool,[]sysadmerror.Sysadmerro
 	}
 	
 	_, err := os.Stat(f)
-	if os.IsNotExist(err) {
+	if err != nil {
+		if os.IsExist(err) {
+			return true,errs
+		}
 		return false,errs
 	}
-
+	
 	return true,errs
 }
 
@@ -85,12 +88,16 @@ func CheckFileRW(f string,cmdRunPath string, isRmTest bool)(string,error){
   return "" and error if  file can not opened .
   Or return string and nil.
 */
-func CheckFileIsRead(f string,cmdRunPath string)(string,error){
-	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
-	if error != nil {
-		return "",error
+func CheckFileIsRead(f string,cmdRunPath string)(string, error){
+	var dir string = ""
+	var err error
+	if strings.TrimSpace(cmdRunPath) != ""  {
+		dir ,err = filepath.Abs(filepath.Dir(cmdRunPath))
+		if err != nil {
+			return "",err
+		}
 	}
-
+	
 	if ! filepath.IsAbs(f) {
 		tmpDir := filepath.Join(dir,"../")
 		f = filepath.Join(tmpDir,f)
