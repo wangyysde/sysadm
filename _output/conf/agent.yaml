@@ -1,0 +1,42 @@
+global:
+  # tls parameters which agent will used to connect to a server(agent send the reponses message to the server)
+  tls:
+    isTls: true
+    ca: ""
+    cert: ""
+    key: ""
+    insecureSkipVerify: true
+  # server parameters  which agent will used to connect to a server(agent send the reponses message to the server)
+  server:
+    address: "localhost"
+    port: 443
+    socket: ""
+  # where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
+  output: "server"
+  # the path of output file. this value must not empty if output be set to "file"
+  outputFile: ""
+  # logfile for agent which is used to log runing log messages of agent to 
+  logFile: "/var/log/sysad-agent.log"
+# following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
+agent:
+  passive: true
+  # tls parameters for agent when agent running as daemon.
+  tls:
+    isTls: true
+    ca: ""
+    cert: ""
+    key: ""
+    insecureSkipVerify: false
+  # listen parameters   of agent using when agent running as daemon.
+  server:
+    address: "localhost"
+    port: 5443
+    socket: ""
+  # period(second) for agent gets command from server when agent running as passive
+  period: 60
+  # insecret specifies whether agent listen on a insecret port when it is runing as daemon
+  insecret: false
+  # insecret listen port of agent listening when it is running ad daemon 
+  insecretPort: 5080
+
+  

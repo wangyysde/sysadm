@@ -18,6 +18,7 @@
 # gets the interfaces information in /etc/sysconfig/network-scripts/ifcfg-* files 
 # on a host and retrun json format data
 # 
+
 [ -e ~/.bash_profile ] &&  . ~/.bash_profile || . /etc/profile
 
 /usr/bin/echo -n "["
@@ -33,7 +34,7 @@ do
 	# interface name must not empty.	
 	if [ "X${deviceName}" ==  "X"  -o "${deviceLine}" == "${deviceName}" ]; then
 		continue
-    if
+    fi
 
     onbootLine=`/usr/bin/cat ${file} |/usr/bin/grep -i "ONBOOT"`
     onbootValue=`/usr/bin/echo ${onbootLine} |/usr/bin/cut -d "=" -f2 |/usr/bin/tr -d '"'`
@@ -70,14 +71,12 @@ do
     hwaddrLine=`/usr/bin/cat ${file} |/usr/bin/grep -i "HWADDR"`
     hwaddrValue=`/usr/bin/echo ${hwaddrLine} |/usr/bin/cut -d "=" -f2 |/usr/bin/tr -d '"'`
 
-	
     if [  "X${first}" == "Xyes" ]; then
 		/usr/bin/echo -n "{ \"devname\": \"${deviceName}\", \"onboot\": \"${onbootValue}\", \"ipv4\": \"${ipaddrValue}\", \"prefix\": \"${prefixValue}\", \"ipv6\": \"${ipv6addrValue}\"}"
         first="no"
 	else
 		/usr/bin/echo -n ",{ \"devname\": \"${deviceName}\", \"onboot\": \"${onbootValue}\", \"ipv4\": \"${ipaddrValue}\", \"prefix\": \"${prefixValue}\", \"ipv6\": \"${ipv6addrValue}\"}"
 	fi
+
 done
 /usr/bin/echo "]"
-	
-	
