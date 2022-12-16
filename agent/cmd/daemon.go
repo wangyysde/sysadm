@@ -18,47 +18,16 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/agent/app"
-	"github.com/wangyysde/sysadm/infrastructure/server"
-	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/yaml"
 )
 
 var daemonCmd = &cobra.Command{
     Use: "daemon",
     Short: "start agent as daemon",
     Run: func(cmd *cobra.Command, args []string){
-		version := server.CurrentRuningData.Config.Version
-		const flag = "output"
-        of, err := cmd.Flags().GetString(flag)
-        if err != nil {
-			sysadmServer.Log(fmt.Sprintf("error accessing flag %s for command %s", version.Version, cmd.Name()),"error")
-			return
-		}
-		switch of {
-		case "":
-			sysadmServer.Log(fmt.Sprintf("infrastructure Server version %+v", version),"info")
-		case "short":
-			sysadmServer.Log(fmt.Sprintf("infrastructure Server version %+v",version),"info")
-		case "yaml":
-			y, err := yaml.Marshal(&version)
-            if err != nil {
-                return 
-            }
-        	sysadmServer.Log(fmt.Sprintf("%s",string(y)),"info")
-		case "json":
-			y, err := json.MarshalIndent(&version, "", "  ")
-            if err != nil {
-                return 
-            }
-            sysadmServer.Log(fmt.Sprintf(string(y)),"info")
-		default:
-			sysadmServer.Log(fmt.Sprintf("invalid output format: %s", of),"error")
-		}
+		app.Daemon(cmd, args)
 	},
 	Args: cobra.NoArgs,
 }

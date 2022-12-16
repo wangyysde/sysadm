@@ -69,9 +69,10 @@ func getConfigPath(configPath string, cmdRunPath string) (string, error) {
 	return configPath,nil
 }
 
-// Reading the content of configuration from configPath and parsing the content 
-// returning a pointer to Config if it is successfully parsed
-// Or returning an error and nil
+/* Reading the content of configuration from configPath and parsing the content 
+   returning a pointer to Config if it is successfully parsed
+   Or returning an error and nil
+*/
 func getConfigContent(configPath string) (*Config, error) {
 	if configPath == "" {
 		return nil, fmt.Errorf("the configration file path must not empty")

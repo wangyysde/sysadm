@@ -30,6 +30,11 @@ registryctl:
 	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
 	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)"
 
+.PHONY: agent
+agent:
+	$(info Now building agent package. agent binary file will be placed into "$(BIN_DIR)")
+	build/build.sh "agent" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+
 .PHONY: registry
 registry: 
 	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")

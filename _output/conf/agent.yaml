@@ -1,11 +1,13 @@
 global:
   # tls parameters which agent will used to connect to a server(agent send the reponses message to the server)
   tls:
-    isTls: true
+    isTls: false
     ca: ""
     cert: ""
     key: ""
     insecureSkipVerify: true
+  # set whether agent running in debug mode
+  debug: true
   # server parameters  which agent will used to connect to a server(agent send the reponses message to the server)
   server:
     address: "localhost"
@@ -15,8 +17,35 @@ global:
   output: "server"
   # the path of output file. this value must not empty if output be set to "file"
   outputFile: ""
-  # logfile for agent which is used to log runing log messages of agent to 
-  logFile: "/var/log/sysad-agent.log"
+  # specifies a identifer of the node which agent running on it.
+  # It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
+  # agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer
+  # agent will get hostname and reponse the hostname  to the server by nodeIdentifer.Hostname filed if hostname is included in NodeIdentifer
+  # agent will get all MACs without not active and reponse these MACs in list to the server by nodeIdentifer.MACs filed if MAC is included in NodeIdentifer
+  # customize string is reponse to the server directly .
+  # customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
+  nodeIdentifer: "IP,HOSTNAME,MAC"
+  # specifies the uri where agent get commands to run when agent runing as daemon in passive mode. 
+  # agent will send the requests to "/" on the server if GetUri is empty.
+  # Uri is the path where agent will send result message to when is running as command.
+  # Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
+  # the length of this value shoule less 63
+  uri: ""
+  # sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
+  # interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
+  # log settings
+  sourceIP: ""
+  log:
+    #the path of access log file
+    accessLog: ""
+    # the path of error log file. both access log messages and error log messages will be log into access log file if error log file not set.
+    errorLog: ""
+    # log message with the format(kind) will be output. its value is one of "text" and "json". default value is text 
+    kind: "text"
+    # specifies log level. just the log messages will be output what the level of the log message is higher "logLevel".
+    level: "debug"
+    # specifies the format of time in the log message
+    timeStampFormat: ""
 # following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
 agent:
   passive: true

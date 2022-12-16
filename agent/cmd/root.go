@@ -13,14 +13,11 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and  limitations under the License.
 *
-*/
+ */
 
 package cmd
 
 import (
-	"os"
-	"path/filepath"
-
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -89,7 +86,7 @@ func init() {
 	// will be global for your application.
 
 	// specifing configuration file path.
-	rootCmd.PersistentFlags().StringVarP(&app.CliOps.CfgFile, "config", "c", app.CfgFile, "specified config file")
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.CfgFile, "config", "c", "", "specified config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -123,11 +120,43 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Output, "output", "o", "server", "where the results of a command running will be send to. one of server,stdout,file")
 
 	//  the path of output file. this value must not empty if output be set to "file"
-	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.OutputFile, "outputfile", "of", "", `the path of output file. this value must not empty if output be set to "file"`)	
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.OutputFile, "outputfile", "", "", `the path of output file. this value must not empty if output be set to "file"`)	
 
-	//  logfile for agent which is used to log runing log messages of agent to 
-	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.LogFile, "log", "l", app.LogFile, `logfile for agent which is used to log runing log messages of agent to`)	
+	// the path of access log file 
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Log.AccessLog, "access-logfile", "", "", `the path of access log file`)
 
+	// the path of error log file. both access log messages and error log messages will be log into access log file if error log file not set.  
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Log.ErrorLog, "error-logfile", "", "", `the path of error log file. both access log messages and error log messages will be log into access log file if error log file not set.`)
+
+	// log message with the format(kind) will be output. its value is one of "text" and "json". default value is text   
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Log.Kind, "log-kind", "", app.DefaultLogKind, `log message with the format(kind) will be output. its value is one of "text" and "json". default value is text.`)
+
+	// specifies log level. just the log messages will be output what the level of the log message is higher "logLevel".
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Log.Level, "log-level", "", app.DefaultLogLevel, `specifies log level. just the log messages will be output what the level of the log message is higher "logLevel".`)
+
+	// specifies whether agent running in Debug mode
+	debugMode := rootCmd.PersistentFlags().BoolP("debug", "",app.DefalutDebugMode, "specifies whether agent running in Debug mode")
+	app.CliOps.Global.DebugMode = *debugMode
+
+	// specifies a identifer of the node which agent running on it.
+	// It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
+	// agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer
+	// agent will get hostname and reponse the hostname  to the server by nodeIdentifer.Hostname filed if hostname is included in NodeIdentifer
+	// agent will get all MACs without not active and reponse these MACs in list to the server by nodeIdentifer.MACs filed if MAC is included in NodeIdentifer
+	// customize string is reponse to the server directly .
+	// customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.NodeIdentifer, "node-identifer", "", app.DefaultNodeIdentifer, `It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63`)
+
+	// specifies the uri where agent get commands to run when agent runing as daemon in passive mode. 
+	// agent will send the requests to "/" on the server if GetUri is empty.
+	// Uri is the path where agent will send result message to when is running as command.
+	// Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
+	// the length of this value shoule less 63
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Uri, "uri", "", "", `specifies uri path for agent get command from (daemon in passive), where listen on (daemon in active) or where agent send result to (run as CLI)`)
+
+	// sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
+	// interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
+	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.SourceIP , "source", "", "", `the source IP address which will be use to connect to a server by agent.`)
 }
 
 
@@ -136,20 +165,8 @@ func initConfig() {
 	if app.CliOps.CfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(app.CliOps.CfgFile)
-	} else {
-
-		dir, err :=  filepath.Abs(filepath.Dir(os.Args[0]))
-
-		if err != nil {
-			sysadmLog.Error("get absolute path error %s",err)
-			os.Exit(1)
-		}
-
-		configPath := filepath.Join(dir,app.CfgFile)
-		app.CliOps.CfgFile = configPath
-		viper.SetConfigFile(configPath)
-	}
-
+	} 
+	
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.

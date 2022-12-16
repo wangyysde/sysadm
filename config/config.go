@@ -365,7 +365,14 @@ func ValidateLogLevel(confValue string,defaultValue string, envName string) (str
 
 	return defaultValue,errs
 }
- 
+
+/* 
+   CheckLogLevel check level if is a log level string.
+   return true if it is a log level string otherwise return false
+*/
+func CheckLogLevel(level string) bool {
+	return checkLogLevel(level)
+}
 /* 
    checkLogLevel check level if is a log level string.
    return true if it is a log level string otherwise return false

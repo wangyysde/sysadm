@@ -21,7 +21,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm,registryctl,infrastructure"
+PACKAGE_LIST="sysadm,registryctl,infrastructure,agent"
 
 echo "getting build information......"
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"

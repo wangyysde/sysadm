@@ -18,12 +18,26 @@
 package app
 
 import (
+	"os"
+	"net/http"
+
 	"github.com/wangyysde/sysadm/config"
+	"github.com/wangyysde/sysadm/httpclient"
 )
 
 type RunConfig struct {
+	// workingDir is X/../ ,X is the path of the directory which binary package of agent locate in it. 
+	WorkingDir string
 	Version config.Version
-
+	// for agnet configuration file path
+	CfgFile string 
+	// descriptor of  log file which will be used to close logger when system exit
+	LogFileFp *os.File
+	// the following parameters can be set through command flags(persistent flags), configuration file (global section) or ENV variables
+	Global GlobalConf `form:"global" json:"global" yaml:"global" xml:"global"`
+	// the following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
+	// this struct is for daemon subcommand and agent block in configuration file
+	Agent AgentConf `form:"agent" json:"agent" yaml:"agent" xml:"agent"`
 }
 
 // this for command flags and options
@@ -59,11 +73,35 @@ type GlobalConf struct {
 	// the path of output file. this value must not empty if output be set to "file"
 	OutputFile string `form:"outputFile" json:"outputFile" yaml:"outputFile" xml:"outputFile"`
 
-	// logfile for agent which is used to log runing log messages of agent to 
-	LogFile  string `form:"logFile" json:"logFile" yaml:"logFile" xml:"logFile"`
+	// log setting block
+	Log config.Log `form:"log" json:"log" yaml:"log" xml:"log"`
+
+	// set whether agent running in debug mode
+	DebugMode bool `form:"debug" json:"debug" yaml:"debug" xml:"debug"`
+
+	// specifies a identifer of the node which agent running on it.
+	// It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
+	// agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer
+	// agent will get hostname and reponse the hostname  to the server by nodeIdentifer.Hostname filed if hostname is included in NodeIdentifer
+	// agent will get all MACs without not active and reponse these MACs in list to the server by nodeIdentifer.MACs filed if MAC is included in NodeIdentifer
+	// customize string is reponse to the server directly .
+	// customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
+	NodeIdentifer string `form:"nodeIdentifer" json:"nodeIdentifer" yaml:"nodeIdentifer" xml:"nodeIdentifer"`
+
+	// specifies the uri where agent get commands to run when agent runing as daemon in passive mode. 
+	// agent will send the requests to "/" on the server if GetUri is empty.
+	// Uri is the path where agent will send result message to when is running as command.
+	// Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
+	// the length of this value shoule less 63
+	Uri string `form:"uri" json:"uri" yaml:"uri" xml:"uri"`
+
+	// sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
+	// interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
+	SourceIP string `form:"sourceIP" json:"sourceIP" yaml:"sourceIP" xml:"sourceIP"`
 }
 
 // the following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
+// this struct is for daemon subcommand and agent block in configuration file
 type AgentConf struct {
 	// the method of getting commands by agent. agent gets commands from the server periodically and run them if this value is true
 	// otherwise the server send a command to a agent when it  want the agent to run the command on a host. 
@@ -85,10 +123,43 @@ type AgentConf struct {
 	InsecretPort int `form:"insecretPort" json:"insecretPort" yaml:"insecretPort" xml:"insecretPort"`
 }
 
-var RunConf RunConfig = RunConfig{}
+// nodeIdentifer is used to save node identifer information what agent will send to server
+// customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
+// customize is the higher priority than others
+type NodeIdentifer struct {
+	Ips []string
+	Macs []string
+	Hostname string 
+	Customize string
+}
+
+var RunConf RunConfig = RunConfig{
+	WorkingDir: "",
+	Version: config.Version{},
+	CfgFile: "",
+	Global: GlobalConf{},
+	Agent: AgentConf{},
+}
 var CliOps CliOptions = CliOptions{
 	Version: config.Version{},
 	CfgFile: "",
 	Global: GlobalConf{},
 	Agent: AgentConf{},
 }
+
+// runTimeData used to record the data what are used frequently in runtime.
+type runTimeData struct {
+	// In passive mode server can tell agent change nodeIdentifer. this field used to record the node identifer what has be built by getNodeIdentifer func
+	nodeIdentifer *NodeIdentifer 
+
+	// the complete url address where agent get a command to execute from server. this url address can be changed when the server ask agent to do so.
+	getCommandUrl string
+
+	// getCommandParames to save the parameters of the request of get command.
+	getCommandParames *httpclient.RequestParams
+
+	// keep http or https client for reuse. we should recreate http client if the value of this field is nil
+	httpClient *http.Client 
+}
+
+var runData runTimeData = runTimeData{}

@@ -20,6 +20,7 @@ ErrorCode: 501xxx
 package utils
 
 import (
+	"fmt"
 	"net"
 	"strings"
 
@@ -262,4 +263,47 @@ func GetKeyData(dataSet map[string]string, key string)string{
 	}
 
 	return ret
+}
+
+// GetLocalIPs get ip address set on the interfaces on the local host. and return ip list as []string if get successfule.
+// otherwise return empty slice and an error.
+func GetLocalIPs()([]string, error){
+	var ips []string
+
+	adds,err := net.InterfaceAddrs()
+	if err != nil {
+		return ips, fmt.Errorf("can not get host unicast IP list %s", err)
+	}
+	
+	for _,v := range adds {
+		ipnet,ok := v.(*net.IPNet)
+		if !ok {
+			continue
+		}
+		ipstr := Bytes2str(ipnet.IP)
+		if FoundStrInSlice(ips,ipstr,true) {
+			continue
+		}
+		ips = append(ips, ipstr)
+	}
+
+	return ips, nil
+}
+
+// GetLocalMacs get mac information  on the interfaces on the local host. and return mac list as []string if get successfule.
+// otherwise return empty slice and an error.
+func GetLocalMacs()([]string,error){
+	var macs []string
+
+	ints,err := net.Interfaces()
+	if err != nil {
+		return macs, fmt.Errorf("can not get host interfaces information %s", err)
+	}
+
+	for _, dev := range ints {
+		mac := Bytes2str(dev.HardwareAddr)
+		macs = append(macs, mac)
+	}
+
+	return macs, nil
 }

@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -152,3 +153,19 @@ func Interface2Int(value interface{}) (int,error) {
     return ret,err
 }
 
+// FoundStrInSlice check if slice of string sourceStr included subStr string. 
+// return true if slice of string sourceStr included subStr string,otherwise return false
+func FoundStrInSlice(sourceStr []string, subStr string, insensitive bool) bool{
+	for _,v := range sourceStr {
+		if insensitive {
+			v = strings.ToUpper(v)
+			subStr = strings.ToUpper(subStr)
+		}
+
+		if strings.Compare(v,subStr) == 0 {
+			return true
+		}
+	}
+
+	return false
+}

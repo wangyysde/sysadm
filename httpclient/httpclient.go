@@ -24,6 +24,7 @@ import (
 	"crypto/tls"
 	"io/ioutil"
 	"net"
+	"context"
 	"net/http"
 	"net/url"
 	"strings"
@@ -237,6 +238,33 @@ func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
 	}
 
 	return transport
+}
+
+// NewBuildTlsRoundTripper build http.RoundTripper for creating http client.
+// 
+func NewBuildTlsRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleConnsPerHost,maxConnsPerHost,readBuffer,writeBuffer int, disableKeepAlive, disableCompression, forceAttempHTTP2 bool )(http.RoundTripper,error){
+
+	var dialerContext func(ctx context.Context, network string, addr string) (net.Conn,error) = nil
+	if dialer != nil {
+		dialerContext = dialer.DialContext
+	}
+	idleConnTimeout := time.Duration(idleConn)
+	
+    transport := &http.Transport{
+        Proxy: http.ProxyFromEnvironment,
+        DialContext: dialerContext,
+        ForceAttemptHTTP2:     forceAttempHTTP2,
+        MaxIdleConns:          maxIdleConns,
+        IdleConnTimeout:       idleConnTimeout,
+        DisableKeepAlives:     disableKeepAlive,
+        DisableCompression:    disableCompression,
+        MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+        MaxConnsPerHost:       maxConnsPerHost,
+		WriteBufferSize:       writeBuffer,
+		ReadBufferSize: 	   readBuffer,
+    }
+
+    return transport,nil
 }
 
 
