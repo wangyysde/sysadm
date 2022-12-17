@@ -22,6 +22,7 @@ set -o nounset
 set -o pipefail
 
 PACKAGE_LIST="sysadm,registryctl,infrastructure,agent"
+DEFAULT_IMAGE_VER="v1.0.0"
 
 echo "getting build information......"
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -95,6 +96,8 @@ IMAGEVER=$3
 
 
 [ "X${WHAT}" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=${WHAT}
+[ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="N" || BUILD_IMAGE="Y"
+[ "X${IMAGEVER}" == "X" ] && IMAGEVER=${DEFAULT_IMAGE_VER} 
 
 BUILD_LIST_ARRAY=(${BUILD_LIST//,/ })
 for p in ${BUILD_LIST_ARRAY}
