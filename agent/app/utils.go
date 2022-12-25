@@ -208,28 +208,34 @@ func buildGetCommandUrl() string {
 	}
 
 	uri := strings.TrimSpace(RunConf.Global.Uri)
-	prefixStr := uri[0:5]
-	if strings.Compare(strings.ToUpper(prefixStr),"HTTP:") == 0 || strings.Compare(strings.ToUpper(prefixStr),"HTTPS") == 0 {
-		if strings.Compare(strings.ToUpper(prefixStr),"HTTP:") == 0 {
-			tls := RunConf.Global.Tls
-			if tls.IsTls {
-				tmpUri := uri[5:(len(uri)-1)]
-				url = "https" + tmpUri
-			} else {
-				url = uri
+	schemaAdd := false
+	if len(uri) >= 5 {
+		prefixStr := uri[0:5]
+		if strings.Compare(strings.ToUpper(prefixStr),"HTTP:") == 0 || strings.Compare(strings.ToUpper(prefixStr),"HTTPS") == 0 {
+			if strings.Compare(strings.ToUpper(prefixStr),"HTTP:") == 0 {
+				tls := RunConf.Global.Tls
+				if tls.IsTls {
+					tmpUri := uri[5:(len(uri)-1)]
+					url = "https" + tmpUri
+				} else {
+					url = uri
+				}
 			}
-		}
 
-		if  strings.Compare(strings.ToUpper(prefixStr),"HTTPS") == 0 {
-			tls := RunConf.Global.Tls
-			if ! tls.IsTls {
-				tmpUri := uri[6:(len(uri)-1)]
-				url = "http" + tmpUri
-			} else {
-				url = uri
+			if  strings.Compare(strings.ToUpper(prefixStr),"HTTPS") == 0 {
+				tls := RunConf.Global.Tls
+				if ! tls.IsTls {
+					tmpUri := uri[6:(len(uri)-1)]
+					url = "http" + tmpUri
+				} else {
+					url = uri
+				}
 			}
-		}
-	} else {
+			schemaAdd = true
+		} 
+	} 
+	
+	if ! schemaAdd {
 		svr := RunConf.Global.Server.Address
 		port := RunConf.Global.Server.Port
 		tls := RunConf.Global.Tls
@@ -269,6 +275,8 @@ func buildGetCommandUrl() string {
 	return url
 }
 
+/*
 func handleHTTPBody(body []byte) {
 	
 }
+*/

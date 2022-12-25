@@ -48,7 +48,7 @@ func run_DaemonPassive() ([]sysadmerror.Sysadmerror){
 	runData.getCommandParames.Method = http.MethodPost
 	runData.getCommandParames.Url = url
 	
-	signal.Notify(exitChan, syscall.SIGHUP,os.Interrupt,syscall.SIGTERM)
+	signal.Notify(exitChan, syscall.SIGHUP,syscall.SIGINT,syscall.SIGTERM)
 	defer forkNewProcess()
 	getCommandLoop()
 	
@@ -107,6 +107,7 @@ func getCommandLoop(){
 				errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090105,"warning","build http client error %s.we will try it again",err))
 				logErrors(errs)
 				errs = errs[0:0]
+				time.Sleep(getCommandInterval * time.Second) 
 				continue
 			}
 
@@ -118,26 +119,34 @@ func getCommandLoop(){
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090106,"warning","encoding node identifer to json string error %s. we will try it again",err))
 			logErrors(errs)
 			errs = errs[0:0]
+			time.Sleep(getCommandInterval * time.Second) 
 			continue
 		}
 
 		requestParas := runData.getCommandParames
-		body,err := httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090117,"error","client: %##v",runData.httpClient))
+		
+		body, err := httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090107,"warning","can not get command from server error %s",err))
 			logErrors(errs)
 			errs = errs[0:0]
+			time.Sleep(getCommandInterval * time.Second) 
 			continue
 		}
-	
-		go handleHTTPBody(body)
-		time.Sleep(getCommandInterval * time.Second)
+		
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090108,"warning","get command %s sourceIP %s",body,RunConf.Global.SourceIP))
+		logErrors(errs)
+		errs = errs[0:0]
+	//	go handleHTTPBody(body)
+		time.Sleep(getCommandInterval * time.Second) 
 	}
 }
 
 func buildHttpClient() error{
 	var rt http.RoundTripper = nil 
 	dailer, err :=  httpclient.BuildDailer(DefaultTcpTimeout,DefaultKeepAliveProbeInterval,RunConf.Global.SourceIP)
+	
 	if err != nil {
 		return err
 	}
@@ -158,8 +167,13 @@ func buildHttpClient() error{
 			return err
 		}
 	}
-
-	client := httpclient.BuildHttpClient(rt,defaultHTTPTimeOut)
+    
+	//rt = httpclient.BuildRoundTripper(nil)
+	//client := httpclient.BuildHttpClient(rt,defaultHTTPTimeOut)
+	client := &http.Client{
+		Transport: rt,
+		Timeout: 30 * time.Second,
+	}
 	runData.httpClient =  client
 
 	return nil 

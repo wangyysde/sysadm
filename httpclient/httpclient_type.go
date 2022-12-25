@@ -50,7 +50,6 @@ type RequestParams struct {
 	Url string
 }
 
-var headers []RequestData
 var defaultHeaders []RequestData = []RequestData{
 	{
 		Key: "User-Agent", 

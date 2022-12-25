@@ -37,7 +37,6 @@ import (
 // srcIP is the source IP address for the connection. If nil, a local address is automatically chosen.
 // ref net.Dailer: https://pkg.go.dev/net#Dialer
 func BuildDailer(tcpTimeOut,keepAliveProbe int,srcIP string) (*net.Dialer,error){
-	var localAddr net.Addr = nil
 
 	timeOut := time.Duration(tcpTimeOut)
 	keepAlive := time.Duration(keepAliveProbe)
@@ -50,11 +49,12 @@ func BuildDailer(tcpTimeOut,keepAliveProbe int,srcIP string) (*net.Dialer,error)
 
 		localAddr = tcpAddr
 	}
+    
 
 	return &net.Dialer{
-		Timeout: timeOut,
+		Timeout: timeOut * time.Second ,
 		LocalAddr: localAddr,
-		KeepAlive: keepAlive,
+		KeepAlive: keepAlive * time.Second,
 	},nil
 }
 
@@ -175,7 +175,7 @@ func NewSendRequest(r *RequestParams, client *http.Client, bodyReader io.Reader)
 	var body []byte
 
 	if r == nil {
-		return body, fmt.Errorf("can not handle http request without any request request parameters.")
+		return body, fmt.Errorf("can not handle http request without any request request parameters")
 	}
 
 	queryData, err := newHandleQueryData(r)
@@ -184,8 +184,8 @@ func NewSendRequest(r *RequestParams, client *http.Client, bodyReader io.Reader)
 	}
 
 	r.Url = strings.TrimSpace(r.Url)
-	if r.Url != "" {
-		return body, fmt.Errorf("HTTP request Url must not empty.")
+	if r.Url == "" {
+		return body, fmt.Errorf("HTTP request Url must not empty")
 	}
 
 	if queryData != "" {
@@ -193,25 +193,32 @@ func NewSendRequest(r *RequestParams, client *http.Client, bodyReader io.Reader)
 	}
 
 	if client == nil {
-		return body, fmt.Errorf("http client must not nil.")
+		return body, fmt.Errorf("http client must not nil")
 	}
 
 	if ! CheckHttpMethod(r.Method) {
-		return body, fmt.Errorf("HTTP method is not valid.")
+		return body, fmt.Errorf("HTTP method is not valid")
 	}
 
 	req,err := http.NewRequest(strings.ToUpper(r.Method), r.Url,bodyReader)
 	if err != nil {
-		return body, fmt.Errorf("create new HTTP request error %s.",err)
+		return body, fmt.Errorf("create new HTTP request error %s",err)
 	}
 
 	if err := newAddReqestHeader(r,req); err != nil {
-		return body, fmt.Errorf("add request header information onto request  error %s.",err)
+		return body, fmt.Errorf("add request header information onto request  error %s",err)
 	}
 
 	if err := newSetBasicAuth(r, req); err != nil {
 		return body, err
 	}
+
+	/*
+	client = &http.Client{
+		Transport: sysadmTransport,
+		Timeout: 30 * time.Second,
+	}
+	*/
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -233,7 +240,7 @@ func NewSendRequest(r *RequestParams, client *http.Client, bodyReader io.Reader)
 func newHandleQueryData(r *RequestParams)(string,error){
 
 	if r == nil {
-		return "",fmt.Errorf("can nog handle query data without any parameters.")
+		return "",fmt.Errorf("can nog handle query data without any parameters")
 	}
 	data := r.QueryData
 	ret := ""
@@ -276,10 +283,10 @@ func CheckHttpMethod(method string) bool{
 func newAddReqestHeader(r *RequestParams,req *http.Request) error {
 	
 	if r == nil || req == nil{
-		return fmt.Errorf("can not add HTTP header on a nil request or without any request parameteres.")
+		return fmt.Errorf("can not add HTTP header on a nil request or without any request parameteres")
 	}
-	r.Headers = append(r.Headers,defaultHeaders...)
-	
+	r.Headers = defaultHeaders
+
 	for _,h := range r.Headers {
 		if h.Key != "" {
 			req.Header.Set(h.Key,h.Value)
@@ -291,7 +298,7 @@ func newAddReqestHeader(r *RequestParams,req *http.Request) error {
 
 func newSetBasicAuth(r *RequestParams,req *http.Request)(error){
 	if r ==  nil || req == nil {
-		return fmt.Errorf("can not set authorization information on a nil request or without any authorization parameters to be set.")
+		return fmt.Errorf("can not set authorization information on a nil request or without any authorization parameters to be set")
 	}
 
 	authData := r.BasicAuthData
@@ -299,7 +306,7 @@ func newSetBasicAuth(r *RequestParams,req *http.Request)(error){
 		if authData["username"] != "" && authData["password"] != "" {
 			req.SetBasicAuth(authData["username"],authData["password"])
 		} else {
-			return fmt.Errorf("username or password  is empty.")
+			return fmt.Errorf("username or password  is empty")
 		}
 	}
 

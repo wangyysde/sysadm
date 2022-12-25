@@ -31,7 +31,6 @@ import (
 */
 func handleAgentBlock()([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
-	var fileConf *FileConf = nil
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001,"debug","try to handle configuration items in agent block")) 
 
 	var envAgentMap map[string]string 

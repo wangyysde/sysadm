@@ -55,7 +55,7 @@ func Daemon(cmd *cobra.Command, args []string){
 		os.Exit(3)
 	}
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080002,"debug","configurations have been handled and it is ok."))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080002,"debug","configurations: %+v",RunConf))
 
 	// openning  loggers and set log format to loggers 
 	err = setLogger()
@@ -65,6 +65,7 @@ func Daemon(cmd *cobra.Command, args []string){
 	logErrors(errs)
 	errs =errs[0:0]
 
+	exitChan = make(chan os.Signal)
 	if RunConf.Agent.Passive {
 		err = run_DaemonPassive()
 		logErrors(err)

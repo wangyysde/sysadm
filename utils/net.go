@@ -110,7 +110,7 @@ func CheckIpAddress(address string, isLocal bool) (net.IP, []sysadmerror.Sysadme
 func CheckPort(port int)(int, []sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(501008,"debug","now checking port number %d ",port))
-	if port > 1024 && port <= 65535 {
+	if port > 0 && port <= 65535 {
 		return port,errs
 	}
 

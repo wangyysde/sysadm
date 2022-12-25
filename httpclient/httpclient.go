@@ -21,10 +21,10 @@ ErrorCode: 106xxx
 package httpclient
 
 import (
+	"context"
 	"crypto/tls"
 	"io/ioutil"
 	"net"
-	"context"
 	"net/http"
 	"net/url"
 	"strings"
@@ -32,9 +32,6 @@ import (
 
 	"github.com/wangyysde/sysadm/sysadmerror"
 )
-
-
-
 
 // Ref: https://pkg.go.dev/net/http#Transport
 var sysadmTransport http.RoundTripper = &http.Transport{
@@ -252,6 +249,7 @@ func NewBuildTlsRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleCo
 	
     transport := &http.Transport{
         Proxy: http.ProxyFromEnvironment,
+	//	DialContext: dialer.DialContext, 
         DialContext: dialerContext,
         ForceAttemptHTTP2:     forceAttempHTTP2,
         MaxIdleConns:          maxIdleConns,
@@ -262,6 +260,10 @@ func NewBuildTlsRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleCo
         MaxConnsPerHost:       maxConnsPerHost,
 		WriteBufferSize:       writeBuffer,
 		ReadBufferSize: 	   readBuffer,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: defaultInsecureSkipVerify,
+		},
     }
 
     return transport,nil

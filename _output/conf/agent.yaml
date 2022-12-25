@@ -11,7 +11,7 @@ global:
   # server parameters  which agent will used to connect to a server(agent send the reponses message to the server)
   server:
     address: "localhost"
-    port: 443
+    port: 80
     socket: ""
   # where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
   output: "server"
@@ -30,7 +30,7 @@ global:
   # Uri is the path where agent will send result message to when is running as command.
   # Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
   # the length of this value shoule less 63
-  uri: ""
+  uri: "http://www.sysadm.cn/getCommand.php"
   # sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
   # interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
   # log settings
@@ -62,7 +62,7 @@ agent:
     port: 5443
     socket: ""
   # period(second) for agent gets command from server when agent running as passive
-  period: 60
+  period: 10
   # insecret specifies whether agent listen on a insecret port when it is runing as daemon
   insecret: false
   # insecret listen port of agent listening when it is running ad daemon 

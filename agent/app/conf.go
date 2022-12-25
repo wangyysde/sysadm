@@ -29,7 +29,8 @@ import (
 )
 
 // we define fileConf as global variable as it is used by a few of functions.
-var fileConf *FileConf = nil
+var fileConf *FileConf = &FileConf{}
+
 /*
 	handleNotInConfFile handler the configuration items which can not define in define file,
 	such as working dir, configuration file path.
@@ -93,9 +94,7 @@ func handleGlobalBlock()([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10081001,"debug","try to handle configuration items in global block")) 
 
-	// get configuration file content then unmarshal the content to struct if configuration file path is not empty  
 	if strings.TrimSpace(RunConf.CfgFile) != "" {
-		fileConf = &FileConf{}
 		_, tmpErrs := config.GetCfgContent(RunConf.CfgFile, fileConf)
 		errs = append(errs, tmpErrs...)
 	}
@@ -374,26 +373,28 @@ func validateServerConf(cliConf config.Server, fileConf config.Server, envBlock 
 	// 2.try to validate the values set by command flags. the values  of ret will be relaced with this values if they are valid.
 	address = cliConf.Address  
 	port = cliConf.Port 
-	tmpIp, eI = sysadmUtils.CheckIpAddress(address,false)
-	tmpPort,eP = sysadmUtils.CheckPort(port)
-	errs = append(errs, eI...)
-	errs = append(errs, eP...)
+	if strings.TrimSpace(address) != "" && port != 0 {
+		tmpIp, eI = sysadmUtils.CheckIpAddress(address,false)
+		tmpPort,eP = sysadmUtils.CheckPort(port)
+		errs = append(errs, eI...)
+		errs = append(errs, eP...)
 
-	if tmpIp != nil && tmpPort != 0 {
-		ret.Address = address
-		ret.Port = port
-		if isCheckSocket {
-			socketFile := cliConf.Socket 
-			newSocketFile,e  := sysadmUtils.CheckFileIsRead(socketFile,RunConf.WorkingDir)
-			if e != nil {
-				errs = append(errs, sysadmerror.NewErrorWithStringLevel(10081207,"warning","we got socket file path %s from command flags, but this socket file is not valid %s",socketFile,e))
-				ret.Socket = ""
-			} else {
-				ret.Socket =  newSocketFile
+		if tmpIp != nil && tmpPort != 0 {
+			ret.Address = address
+			ret.Port = port
+			if isCheckSocket {
+				socketFile := cliConf.Socket 
+				newSocketFile,e  := sysadmUtils.CheckFileIsRead(socketFile,RunConf.WorkingDir)
+				if e != nil {
+					errs = append(errs, sysadmerror.NewErrorWithStringLevel(10081207,"warning","we got socket file path %s from command flags, but this socket file is not valid %s",socketFile,e))
+					ret.Socket = ""
+				} else {
+					ret.Socket =  newSocketFile
+				}
 			}
-		}
-	} 
-
+		} 
+	}
+	
 	return ret,errs
 } 
 
@@ -520,16 +521,11 @@ func validateLogConf(cliConf config.Log, fileConf config.Log, envBlock string)(r
 		ret.ErrorLog = errorLog
 	} 
 
-	if strings.Compare(ret.AccessLog,ret.ErrorLog) != 0 {
+	if strings.Compare(ret.AccessLog,ret.ErrorLog) != 0 && strings.TrimSpace(ret.ErrorLog) != "" {
 		ret.SplitAccessAndError = true
 	} else {
 		ret.ErrorLog = ""
 	}
-
-	if ret.AccessLog == "" {
-		ret.AccessLog = DefaultLogFile
-	}
-
 
 	// check log kind 
 	kindName,okKind := envMap["Kind"]
