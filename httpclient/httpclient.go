@@ -239,7 +239,7 @@ func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
 
 // NewBuildTlsRoundTripper build http.RoundTripper for creating http client.
 // 
-func NewBuildTlsRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleConnsPerHost,maxConnsPerHost,readBuffer,writeBuffer int, disableKeepAlive, disableCompression, forceAttempHTTP2 bool )(http.RoundTripper,error){
+func NewBuildRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleConnsPerHost,maxConnsPerHost,readBuffer,writeBuffer int, disableKeepAlive, disableCompression, forceAttempHTTP2 bool )(http.RoundTripper,error){
 
 	var dialerContext func(ctx context.Context, network string, addr string) (net.Conn,error) = nil
 	if dialer != nil {
@@ -249,7 +249,6 @@ func NewBuildTlsRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleCo
 	
     transport := &http.Transport{
         Proxy: http.ProxyFromEnvironment,
-	//	DialContext: dialer.DialContext, 
         DialContext: dialerContext,
         ForceAttemptHTTP2:     forceAttempHTTP2,
         MaxIdleConns:          maxIdleConns,

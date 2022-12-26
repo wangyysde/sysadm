@@ -110,13 +110,14 @@ func BuildTlsClientConfig(caFile,certFile, keyFile, workingDir string, insecureS
             return nil, fmt.Errorf("can not load certifaction pair %s",err)
         }
         cert = certPair
-    } else {
-		 return nil, fmt.Errorf("cert file %s or key file %s not exist",certFile,keyFile)
-	}
+		return &tls.Config{
+        	RootCAs: pool,
+        	Certificates: []tls.Certificate{cert},
+        	InsecureSkipVerify: insecureSkipVerify,
+    	},nil
+    } 
 
     return &tls.Config{
-        RootCAs: pool,
-        Certificates: []tls.Certificate{cert},
         InsecureSkipVerify: insecureSkipVerify,
     },nil
 }

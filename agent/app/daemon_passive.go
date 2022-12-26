@@ -90,7 +90,14 @@ func forkNewProcess(){
 
 func getCommandLoop(){
 	var errs []sysadmerror.Sysadmerror
-	
+	var shouldExit bool = false
+	go func(){
+		s := <-exitChan
+   		if s == syscall.SIGHUP || s ==  syscall.SIGINT || s == syscall.SIGTERM {
+     		shouldExit = true
+   		}
+	}()
+
 	if runData.httpClient == nil {
 		if err := buildHttpClient(); err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090104,"fatal","build http client error %s.",err))
@@ -102,6 +109,10 @@ func getCommandLoop(){
 	
 	getCommandInterval := time.Duration(RunConf.Agent.Period)
 	for {
+		if shouldExit {
+			return 
+		}
+		
 		if runData.httpClient == nil {
 			if err := buildHttpClient(); err != nil {
 				errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090105,"warning","build http client error %s.we will try it again",err))
@@ -124,9 +135,8 @@ func getCommandLoop(){
 		}
 
 		requestParas := runData.getCommandParames
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090117,"error","client: %##v",runData.httpClient))
-		
-		body, err := httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
+				
+		_, err = httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090107,"warning","can not get command from server error %s",err))
 			logErrors(errs)
@@ -135,7 +145,6 @@ func getCommandLoop(){
 			continue
 		}
 		
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090108,"warning","get command %s sourceIP %s",body,RunConf.Global.SourceIP))
 		logErrors(errs)
 		errs = errs[0:0]
 	//	go handleHTTPBody(body)
@@ -162,7 +171,7 @@ func buildHttpClient() error{
 			return err
 		}
 	} else {
-		rt, err = httpclient.NewBuildTlsRoundTripper(dailer,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultMaxConnsPerHost,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
+		rt, err = httpclient.NewBuildRoundTripper(dailer,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultMaxConnsPerHost,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
 		if err != nil {
 			return err
 		}
