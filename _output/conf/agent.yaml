@@ -48,17 +48,17 @@ global:
     timeStampFormat: ""
 # following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
 agent:
-  passive: true
+  passive: false
   # tls parameters for agent when agent running as daemon.
   tls:
     isTls: true
     ca: ""
-    cert: ""
-    key: ""
+    cert: "certs/fullchain.crt"
+    key: "certs/sincerecloud.key"
     insecureSkipVerify: false
   # listen parameters   of agent using when agent running as daemon.
   server:
-    address: "localhost"
+    address: "172.28.2.4"
     port: 5443
     socket: ""
   # period(second) for agent gets command from server when agent running as passive

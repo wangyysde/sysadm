@@ -220,10 +220,10 @@ func validateTlsConf(cliConf config.Tls, fileConf config.Tls, envBlock string) (
 		keyValue := strings.ToLower(strings.TrimSpace(fileConf.Key))
 		insecureSkipVerifyValue := fileConf.InsecureSkipVerify
 			
-		caExist, _ := sysadmUtils.CheckFileExists(caValue,"")
+		_, _ = sysadmUtils.CheckFileExists(caValue,"")
 		certExist, _ := sysadmUtils.CheckFileExists(certValue,"")
 		keyExist, _ := sysadmUtils.CheckFileExists(keyValue,"")
-		if caExist && certExist && keyExist {
+		if  certExist && keyExist {
 			ret.InsecureSkipVerify = insecureSkipVerifyValue
 			ret.Ca = caValue
 			ret.Cert = certValue
@@ -240,10 +240,10 @@ func validateTlsConf(cliConf config.Tls, fileConf config.Tls, envBlock string) (
 		keyValue := strings.ToLower(strings.TrimSpace(cliConf.Key))
 		insecureSkipVerifyValue := cliConf.InsecureSkipVerify
 			
-		caExist, _ := sysadmUtils.CheckFileExists(caValue,"")
+		_, _ = sysadmUtils.CheckFileExists(caValue,"")
 		certExist, _ := sysadmUtils.CheckFileExists(certValue,"")
 		keyExist, _ := sysadmUtils.CheckFileExists(keyValue,"")
-		if caExist && certExist && keyExist {
+		if  certExist && keyExist {
 			ret.InsecureSkipVerify = insecureSkipVerifyValue
 			ret.Ca = caValue
 			ret.Cert = certValue

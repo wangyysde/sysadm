@@ -78,7 +78,7 @@ func handleAgentBlock()([]sysadmerror.Sysadmerror){
 	// agent running as active mode
 	if RunConf.Agent.Tls.IsTls {
 		// IsTls is true,but one of certs file not set
-		if RunConf.Agent.Tls.Ca == "" ||  RunConf.Agent.Tls.Cert == "" ||  RunConf.Agent.Tls.Key == "" {
+		if  RunConf.Agent.Tls.Cert == "" ||  RunConf.Agent.Tls.Key == "" {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082003,"warning","agent has be set to run with SSL,but the certification files is not valid,we try to disable TLS. ca: %s cert: %s key: %s",RunConf.Agent.Tls.Ca, RunConf.Agent.Tls.Cert,RunConf.Agent.Tls.Key)) 
 			RunConf.Agent.Tls.IsTls = false
 			if ! RunConf.Agent.Insecret {
@@ -138,7 +138,7 @@ func handleAgentBlock()([]sysadmerror.Sysadmerror){
 */
 func validatePassive( envAgentMap map[string]string)(ret bool, errs []sysadmerror.Sysadmerror){
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082101,"debug","try to validate passive value"))
-	ret = true
+	ret = false
 
 	passiveName, okPassive := envAgentMap["Passive"]
 	if okPassive {
