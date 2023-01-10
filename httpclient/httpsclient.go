@@ -38,8 +38,8 @@ import (
 // ref net.Dailer: https://pkg.go.dev/net#Dialer
 func BuildDailer(tcpTimeOut,keepAliveProbe int,srcIP string) (*net.Dialer,error){
 
-	timeOut := time.Duration(tcpTimeOut)
-	keepAlive := time.Duration(keepAliveProbe)
+	//timeOut := time.Duration(tcpTimeOut)
+	//keepAlive := time.Duration(keepAliveProbe)
 	
 	if strings.TrimSpace(srcIP) != "" {
 		tcpAddr,err :=  net.ResolveTCPAddr("tcp",srcIP)
@@ -52,9 +52,9 @@ func BuildDailer(tcpTimeOut,keepAliveProbe int,srcIP string) (*net.Dialer,error)
     
 
 	return &net.Dialer{
-		Timeout: timeOut * time.Second ,
+		Timeout: 180 * time.Second ,
 		LocalAddr: localAddr,
-		KeepAlive: keepAlive * time.Second,
+		KeepAlive: 15 * time.Second,
 	},nil
 }
 
@@ -62,6 +62,13 @@ func BuildDailer(tcpTimeOut,keepAliveProbe int,srcIP string) (*net.Dialer,error)
 // build tls.Config for a new https connection 
 // return nil,error if any error occurred, otherwise return  *tls.Config,nil
 func BuildTlsClientConfig(caFile,certFile, keyFile, workingDir string, insecureSkipVerify bool ) (*tls.Config, error){
+
+	// not set client tls if cert file or key file is not set 
+	if  strings.TrimSpace(certFile) == "" || strings.TrimSpace(keyFile) == "" {
+		 return &tls.Config{
+        	InsecureSkipVerify: insecureSkipVerify,
+    	},nil
+	}
 
 	// get ca file absolute path
 	if strings.TrimSpace(caFile) != "" {
@@ -91,35 +98,37 @@ func BuildTlsClientConfig(caFile,certFile, keyFile, workingDir string, insecureS
 		keyFile = key
 	}
 
-
-    pool := x509.NewCertPool()
+	
+	var pool *x509.CertPool = nil
     var cert tls.Certificate
+	var err error = nil 
 
     if strings.TrimSpace(caFile) != "" {
+		pool = x509.NewCertPool()
         ca, err := ioutil.ReadFile(caFile)
         if err != nil {
             err = fmt.Errorf("ca has be specified %s but can not read it %s",caFile, err)
             return nil, err
         }
         pool.AppendCertsFromPEM(ca)
+    } else {
+		pool, err = x509.SystemCertPool()
+		if err != nil {
+			return nil, fmt.Errorf("can not get syste cert pool, error %s", err)
+		}
+	}
+
+    certPair, err :=  tls.LoadX509KeyPair(certFile,keyFile)
+    if err != nil {
+        return nil, fmt.Errorf("can not load certifaction pair %s",err)
     }
-
-    if strings.TrimSpace(certFile) != "" && strings.TrimSpace(keyFile) != "" {
-        certPair, err :=  tls.LoadX509KeyPair(certFile,keyFile)
-        if err != nil {
-            return nil, fmt.Errorf("can not load certifaction pair %s",err)
-        }
-        cert = certPair
-		return &tls.Config{
-        	RootCAs: pool,
-        	Certificates: []tls.Certificate{cert},
-        	InsecureSkipVerify: insecureSkipVerify,
-    	},nil
-    } 
-
-    return &tls.Config{
+    cert = certPair
+	return &tls.Config{
+        RootCAs: pool,
+        Certificates: []tls.Certificate{cert},
         InsecureSkipVerify: insecureSkipVerify,
     },nil
+    
 }
 
 // BuildTlsRoundTripper build http.RoundTripper for creating https client. tlsHandshake: TLSHandshakeTimeout specifies the maximum amount of time waiting to wait for a TLS handshake. Zero means no timeout. 
@@ -164,7 +173,7 @@ func BuildHttpClient(roundTripper http.RoundTripper, timeout int) (*http.Client)
 
 	return &http.Client{
 		Transport: roundTripper,
-		Timeout: httpTimeout,
+		Timeout: httpTimeout * time.Second,
 	}
 }
 
@@ -213,13 +222,6 @@ func NewSendRequest(r *RequestParams, client *http.Client, bodyReader io.Reader)
 	if err := newSetBasicAuth(r, req); err != nil {
 		return body, err
 	}
-
-	/*
-	client = &http.Client{
-		Transport: sysadmTransport,
-		Timeout: 30 * time.Second,
-	}
-	*/
 
 	resp, err := client.Do(req)
 	if err != nil {

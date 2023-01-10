@@ -41,7 +41,7 @@ func run_DaemonPassive() ([]sysadmerror.Sysadmerror){
 	}
 	runData.nodeIdentifer = nodeIdentifer
 	
-	url := buildGetCommandUrl()
+	url := buildGetCommandUrl("")
 	runData.getCommandUrl  = url 
 
 	runData.getCommandParames = &httpclient.RequestParams{}
@@ -125,7 +125,11 @@ func getCommandLoop(){
 		}
 
 		nodeIdentifer :=  runData.nodeIdentifer
-		nodeIdentiferJson, err :=  json.Marshal(nodeIdentifer)
+		nodeIdentiferMap := map[string]interface{}{
+			"nodeIdentifer": *nodeIdentifer,
+		}
+
+		nodeIdentiferJson, err :=  json.Marshal(nodeIdentiferMap)
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090106,"warning","encoding node identifer to json string error %s. we will try it again",err))
 			logErrors(errs)
@@ -136,7 +140,7 @@ func getCommandLoop(){
 
 		requestParas := runData.getCommandParames
 				
-		_, err = httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
+		body, err := httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090107,"warning","can not get command from server error %s",err))
 			logErrors(errs)
@@ -147,44 +151,48 @@ func getCommandLoop(){
 		
 		logErrors(errs)
 		errs = errs[0:0]
-	//	go handleHTTPBody(body)
+		go handleHTTPBody(body)
 		time.Sleep(getCommandInterval * time.Second) 
 	}
 }
 
 func buildHttpClient() error{
 	var rt http.RoundTripper = nil 
+	
 	dailer, err :=  httpclient.BuildDailer(DefaultTcpTimeout,DefaultKeepAliveProbeInterval,RunConf.Global.SourceIP)
 	
 	if err != nil {
 		return err
 	}
 
-	if RunConf.Global.Tls.IsTls {
-		tlsConf, err := httpclient.BuildTlsClientConfig(RunConf.Global.Tls.Ca,RunConf.Global.Tls.Cert,RunConf.Global.Tls.Key,RunConf.WorkingDir,RunConf.Global.Tls.InsecureSkipVerify)
-		if err != nil {
-			return err
-		}
+	tlsConf, err := httpclient.BuildTlsClientConfig(RunConf.Global.Tls.Ca,RunConf.Global.Tls.Cert,RunConf.Global.Tls.Key,RunConf.WorkingDir,RunConf.Global.Tls.InsecureSkipVerify)
+	if err != nil {
+		return err
+	}
 
-		rt, err = httpclient.BuildTlsRoundTripper(dailer,tlsConf,defaultTLSHandshakeTimeout,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultReadBufferSize,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
-		if err != nil {
-			return err
-		}
-	} else {
-		rt, err = httpclient.NewBuildRoundTripper(dailer,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultMaxConnsPerHost,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
-		if err != nil {
-			return err
-		}
+	rt, err = httpclient.BuildTlsRoundTripper(dailer,tlsConf,defaultTLSHandshakeTimeout,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultReadBufferSize,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
+	if err != nil {
+		return err
 	}
-    
-	//rt = httpclient.BuildRoundTripper(nil)
-	//client := httpclient.BuildHttpClient(rt,defaultHTTPTimeOut)
-	client := &http.Client{
-		Transport: rt,
-		Timeout: 30 * time.Second,
-	}
+	
+	client := httpclient.BuildHttpClient(rt,defaultHTTPTimeOut)
+
 	runData.httpClient =  client
 
 	return nil 
+}
+
+func handleHTTPBody(body []byte){
+	var errs []sysadmerror.Sysadmerror
+	var gotCommand Command = Command{}
+
+	err := json.Unmarshal(body,&gotCommand)
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090108,"error","we got a command %s from server,but can not unmarshal it to object error %s",body,err))
+		logErrors(errs)
+		return 
+	}
+
+	doRouteCommand(&gotCommand,nil)
 }
 

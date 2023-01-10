@@ -280,7 +280,7 @@ func GetLocalIPs()([]string, error){
 		if !ok {
 			continue
 		}
-		ipstr := Bytes2str(ipnet.IP)
+		ipstr := ipnet.IP.String() 
 		if FoundStrInSlice(ips,ipstr,true) {
 			continue
 		}
@@ -301,7 +301,10 @@ func GetLocalMacs()([]string,error){
 	}
 
 	for _, dev := range ints {
-		mac := Bytes2str(dev.HardwareAddr)
+		mac := dev.HardwareAddr.String()
+		if strings.TrimSpace(mac) == "" {
+			continue
+		}
 		macs = append(macs, mac)
 	}
 

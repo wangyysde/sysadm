@@ -162,4 +162,26 @@ type runTimeData struct {
 	httpClient *http.Client 
 }
 
+/* 
+	Command is used to save command data received from or got from server.
+*/
+type Command struct {
+	// command name , agent will route handler according to the value of this filed.
+	Command string `form:"command" json:"command" yaml:"command" xml:"command"`
+	// the value of this feild should not empty if server want to specify the node identifer.
+	// specifies a identifer of the node which agent running on it.
+	// It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
+	// agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer
+	// agent will get hostname and reponse the hostname  to the server by nodeIdentifer.Hostname filed if hostname is included in NodeIdentifer
+	// agent will get all MACs without not active and reponse these MACs in list to the server by nodeIdentifer.MACs filed if MAC is included in NodeIdentifer
+	// customize string is reponse to the server directly .
+	// customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
+	NodeIdentifer string `form:"nodeIdentifer" json:"nodeIdentifer" yaml:"nodeIdentifer" xml:"nodeIdentifer"`
+	// where agent will reponse the result of the command execution,otherwise agent will reponse the result of the command execution to the url where
+	// it got the command.
+	ResponseUri string `form:"responseUri" json:"responseUri" yaml:"responseUri" xml:"responseUri"`
+	// parameters what will be used to execute the command. key is parameter name and value is the value of the parameter.
+	Parameters map[string]string `form:"parameter" json:"parameter" yaml:"parameter" xml:"parameter"`
+
+}
 var runData runTimeData = runTimeData{}

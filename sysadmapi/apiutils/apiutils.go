@@ -90,6 +90,26 @@ func BuildResponseDataForMap(data []map[string]interface{}) (ApiResponseData){
 	return retData
 }
 
+/* 
+	NewBuildResponseDataForMap: build response data for data sets
+	ApiResponseData.Message is the result sets 
+*/
+func NewBuildResponseDataForMap(status bool, errorCode int, data []map[string]interface{}) (ApiResponseData){
+	if status {
+		errorCode = 0
+	}
+
+	retData := ApiResponseData{
+		Status: status,
+		ErrorCode: errorCode,
+		Message: data,
+	}
+
+	return retData
+}
+
+
+
 /*
 	BuildResponseDataForSuccess build response data for string with successful 
 */

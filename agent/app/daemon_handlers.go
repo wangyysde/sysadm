@@ -19,9 +19,11 @@ package app
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 )
 
 func addHandlers(r *sysadmServer.Engine) (errs []sysadmerror.Sysadmerror) {
@@ -49,4 +51,33 @@ func addRootHandler(r *sysadmServer.Engine) error {
 	return nil
 }
 
+func addReceiveCommandHandler(r *sysadmServer.Engine) error {
+	if strings.TrimSpace(RunConf.Global.Uri) == "" {
+		RunConf.Global.Uri = defaultReceiveCommandUri
+	}
 
+	listenUri :=  RunConf.Global.Uri
+	if listenUri[0:1] != "/" {
+		listenUri = "/" + listenUri
+	}
+
+	r.POST(listenUri, receivedCommand)
+
+	return nil
+}
+
+func receivedCommand(c *sysadmServer.Context){
+	var cmd Command = Command{}
+	var errs []sysadmerror.Sysadmerror
+
+	err := c.BindJSON(&cmd)
+	if err != nil {
+		msg := fmt.Sprintf("receive command error %s", err) 
+		_ = apiutils.SendResponseForErrorMessage(c,10082001,msg)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001,"error",msg))
+		logErrors(errs)
+		return 
+	}
+
+	return
+}

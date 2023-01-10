@@ -56,6 +56,8 @@ var DefalutDebugMode bool = true
 // customize string is reponse to the server directly .
 // customize string is conflicted with IP,HOSTNAME and MAC. the nodeIdentifer can be changed by the server during agent communicate with the server
 var DefaultNodeIdentifer string = "IP,HOSTNAME,MAC"
+// in active mode, if the path where agent receive command fro is not set, then its value should be set to defaultReceiveCommandUri
+var defaultReceiveCommandUri string = "/receiveCommand"
 // Timeout is the maximum amount of time a dial will wait for a connect to complete. When using TCP and dialing a host name with multiple IP 
 // addresses, the timeout may be divided between them. This value is for build net.Dialer for a http client.
 var DefaultTcpTimeout int = 180
@@ -81,4 +83,4 @@ var defaultDisableKeepAives bool = false
 // DisableCompression, if true, prevents the Transport from requesting compression with an "Accept-Encoding: gzip"
 var defaultDisableCompression  bool = false
 // Timeout specifies a time limit for requests made by this Client. The timeout includes connection time, any redirects, and reading the response body. The timer remains
-var defaultHTTPTimeOut int =  300 
+var defaultHTTPTimeOut int =  30

@@ -10,13 +10,13 @@ global:
   debug: true
   # server parameters  which agent will used to connect to a server(agent send the reponses message to the server)
   server:
-    address: "localhost"
+    address: "www.sysadm.cn"
     port: 80
     socket: ""
   # where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
-  output: "server"
+  output: "stdout"
   # the path of output file. this value must not empty if output be set to "file"
-  outputFile: ""
+  outputFile: "logs/agent_outfile.log"
   # specifies a identifer of the node which agent running on it.
   # It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
   # agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer
@@ -29,8 +29,9 @@ global:
   # agent will send the requests to "/" on the server if GetUri is empty.
   # Uri is the path where agent will send result message to when is running as command.
   # Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
+  # in active mode, if uri is "" then its value will be set to /receiveCommand
   # the length of this value shoule less 63
-  uri: "http://www.sysadm.cn/getCommand.php"
+  uri: "/getCommand.php"
   # sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
   # interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
   # log settings
@@ -48,7 +49,7 @@ global:
     timeStampFormat: ""
 # following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
 agent:
-  passive: false
+  passive: true
   # tls parameters for agent when agent running as daemon.
   tls:
     isTls: true

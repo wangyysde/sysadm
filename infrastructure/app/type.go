@@ -152,7 +152,7 @@ type handlerAdder func (*sysadmServer.Engine, string, Infrastructure)([]sysadmer
 // define host information for API server using
 type ApiHost struct {
 	// host name of OS
-	Hostname string `chostname" xml:"hostname" binding:"-"`
+	Hostname string `form:"hostname" json:"hostname" xml:"hostname" binding:"-"`
 
 	// ip address for connecting to 
 	Ip string `form:"ip" json:"ip" xml:"ip"`
