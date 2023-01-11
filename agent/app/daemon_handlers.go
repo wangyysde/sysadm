@@ -21,16 +21,21 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 )
 
 func addHandlers(r *sysadmServer.Engine) (errs []sysadmerror.Sysadmerror) {
 
 	if e := addRootHandler(r); e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803001,"fatal","add root handler error %s", e))
-		
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803001, "fatal", "add root handler error %s", e))
+		return errs
+	}
+
+	if e := addReceiveCommandHandler(r); e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803002, "fatal", "add receive command  handler error %s", e))
+		return errs
 	}
 
 	return errs
@@ -42,12 +47,12 @@ func addRootHandler(r *sysadmServer.Engine) error {
 		return fmt.Errorf("router is nil")
 	}
 
-	r.Any("/", func (c *sysadmServer.Context) {
+	r.Any("/", func(c *sysadmServer.Context) {
 		c.JSON(200, sysadmServer.H{
-            "status": "ok",
-        })
+			"status": "ok",
+		})
 	})
-		
+
 	return nil
 }
 
@@ -56,7 +61,7 @@ func addReceiveCommandHandler(r *sysadmServer.Engine) error {
 		RunConf.Global.Uri = defaultReceiveCommandUri
 	}
 
-	listenUri :=  RunConf.Global.Uri
+	listenUri := RunConf.Global.Uri
 	if listenUri[0:1] != "/" {
 		listenUri = "/" + listenUri
 	}
@@ -66,18 +71,18 @@ func addReceiveCommandHandler(r *sysadmServer.Engine) error {
 	return nil
 }
 
-func receivedCommand(c *sysadmServer.Context){
+func receivedCommand(c *sysadmServer.Context) {
 	var cmd Command = Command{}
 	var errs []sysadmerror.Sysadmerror
 
 	err := c.BindJSON(&cmd)
 	if err != nil {
-		msg := fmt.Sprintf("receive command error %s", err) 
-		_ = apiutils.SendResponseForErrorMessage(c,10082001,msg)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001,"error",msg))
+		msg := fmt.Sprintf("receive command error %s", err)
+		_ = apiutils.SendResponseForErrorMessage(c, 10082001, msg)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001, "error", msg))
 		logErrors(errs)
-		return 
+		return
 	}
 
-	return
+	doRouteCommand(&cmd, c)
 }
