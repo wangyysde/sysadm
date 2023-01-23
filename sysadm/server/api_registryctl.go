@@ -27,7 +27,7 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
-var  registryctlActions = []string{"imagelist","getinfo","imagedel","taglist","tagdel"}
+var  registryctlActions = []string{"imagelist","getinfo","imagedel","taglist","tagdel","yumlist","yumadd","yumdel"}
 
  func (r Registryctl) ModuleName()string{
 	return "registryctl"
@@ -43,6 +43,12 @@ func (r Registryctl)  ActionHanderCaller(action string, c *sysadmServer.Context)
 			r.tagdelHandler(c)
 		case "getinfo":
 			r.getInfoHandler(c)
+		case "yumlist": 			// TODO
+			r.yumlistHandler(c)
+		case "yumadd": 				//TODO
+			r.yumaddHandler(c)
+		case "yumdel":				//TODO
+			r.yumdelHandler(c)
 	}
 	
 }
@@ -230,6 +236,43 @@ func (r Registryctl)tagdelHandler(c *sysadmServer.Context){
 
 	logErrors(errs)
 }
+
+
+/* 
+	handling user login according to username and password provided by rquest's URL
+	response the client with Status: false, Erorrcode: int, and Message: string if login is failed
+	otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
+*/
+func (r Registryctl)yumlistHandler(c *sysadmServer.Context){
+	var errs []sysadmerror.Sysadmerror
+	
+	moduleName := "registryctl"
+	actionName := "imagelist"
+
+	definedConfig := RuntimeData.RuningParas.DefinedConfig
+	apiVersion := definedConfig.Registryctl.ApiVersion
+	tls := definedConfig.Registryctl.Tls
+	address := definedConfig.Registryctl.Address
+	port := definedConfig.Registryctl.Port
+	ca := definedConfig.Registryctl.Ca
+	cert := definedConfig.Registryctl.Cert
+	key := definedConfig.Registryctl.Key
+
+	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	if apiServerData == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010006,"error","api server parameters error"))
+		err := apiutils.SendResponseForErrorMessage(c,700010006, "api server parameters error")
+		errs = append(errs,err...)
+		logErrors(errs)
+	}
+
+	err := apiutils.PassProxy(c,apiServerData)
+	errs = append(errs,err...)
+	logErrors(errs)
+	
+
+}
+
 
 func (r Registryctl)getInfoHandler(c *sysadmServer.Context){
 

@@ -1,0 +1,90 @@
+time=2023-01-16T14:39:42+08:00 level=info msg=Using config file: conf/config.yaml
+
+time=2023-01-16T14:39:42+08:00 level=info msg=Using config file: conf/registryctl.yaml
+
+Error: unknown command "-" for "registryctl daemon start"
+Usage:
+  registryctl daemon start [flags]
+
+Flags:
+  -h, --help   help for start
+
+Global Flags:
+  -c, --config string   specified config file (default "conf/registryctl.yaml")
+
+Error: unknown command "-" for "registryctl daemon start"
+time=2023-01-16T14:39:55+08:00 level=info msg=Using config file: conf/config.yaml
+
+time=2023-01-16T14:39:55+08:00 level=info msg=Using config file: conf/registryctl.yaml
+
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 202001 Msg: try to start registyctl server
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201036 Msg: got configuration file path is: /data/code/golang/src/bzhyProjects/sysadm/_output/conf/registryctl.yaml
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201038 Msg: got the address of server: 172.28.2.4
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201039 Msg: got the port of server: 5001
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201040 Msg: socket file's path is : /var/run/registryctl.sock
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201041 Msg: access log file's path is : /data/code/golang/src/bzhyProjects/sysadm/_output/logs/registryctl-access.log
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201042 Msg: error log file's path is : /data/code/golang/src/bzhyProjects/sysadm/_output/logs/registryctl-error.log
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201043 Msg: the kind of log is  : text
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201044 Msg: log level has be set to: debug
+time=2023-01-16T14:39:55+08:00 level=warning msg=erroCode: 201026 Msg: We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201045 Msg: timeformat has be set to: 2006-01-02 15:04:05
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201046 Msg: is split error and access log to difference log file: true
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201047 Msg: registryctl user is : registryctl_user
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201048 Msg: registryctl password is : registryctl_password
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201069 Msg: db type is: mysql
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201049 Msg: db host : 192.53.117.73
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201050 Msg: db port : 3306
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201051 Msg: db user: sysadm
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201052 Msg: db password: bwyy1679
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201053 Msg: db name: k8ssadm
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201054 Msg: ssl mode for db: disable
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201058 Msg: maxconnection to db is: 100
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201059 Msg: idle connection to db is: 20
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201060 Msg: registry host is: 172.8.2.4
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201061 Msg: registry server port is: 5000
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201066 Msg: registry server user sysadm_registry_user
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201066 Msg: registry server password sysadm_registry_password
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201070 Msg: now handling configurations for sysadm section
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 201067 Msg: sysadm host is: 172.28.2.4
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 202004 Msg: configurations have been handled and it is ok
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 202005 Msg: try to setting logger...
+time=2023-01-16T14:39:55+08:00 level=debug msg=erroCode: 202006 Msg: loggers have been set
+time=2023-01-16T14:40:16+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-01-16T14:40:16+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-01-16T14:40:16+08:00 level=fatal msg=erroCode: 107004 Msg: we can connect to the DB server while we can not ping the server with the connection.Error is:dial tcp 192.53.117.73:3306: connect: connection refused
+time=2023-01-16T14:48:08+08:00 level=info msg=Using config file: conf/config.yaml
+
+time=2023-01-16T14:48:08+08:00 level=info msg=Using config file: conf/registryctl.yaml
+
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 202001 Msg: try to start registyctl server
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201036 Msg: got configuration file path is: /data/code/golang/src/bzhyProjects/sysadm/_output/conf/registryctl.yaml
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201038 Msg: got the address of server: 172.28.2.4
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201039 Msg: got the port of server: 5001
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201040 Msg: socket file's path is : /var/run/registryctl.sock
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201041 Msg: access log file's path is : /data/code/golang/src/bzhyProjects/sysadm/_output/logs/registryctl-access.log
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201042 Msg: error log file's path is : /data/code/golang/src/bzhyProjects/sysadm/_output/logs/registryctl-error.log
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201043 Msg: the kind of log is  : text
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201044 Msg: log level has be set to: debug
+time=2023-01-16T14:48:09+08:00 level=warning msg=erroCode: 201026 Msg: We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201045 Msg: timeformat has be set to: 2006-01-02 15:04:05
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201046 Msg: is split error and access log to difference log file: true
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201047 Msg: registryctl user is : registryctl_user
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201048 Msg: registryctl password is : registryctl_password
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201069 Msg: db type is: mysql
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201049 Msg: db host : 192.53.117.73
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201050 Msg: db port : 3306
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201051 Msg: db user: sysadm
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201052 Msg: db password: bwyy1679
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201053 Msg: db name: k8ssadm
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201054 Msg: ssl mode for db: disable
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201058 Msg: maxconnection to db is: 100
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201059 Msg: idle connection to db is: 20
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201060 Msg: registry host is: 172.8.2.4
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201061 Msg: registry server port is: 5000
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201066 Msg: registry server user sysadm_registry_user
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201066 Msg: registry server password sysadm_registry_password
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201070 Msg: now handling configurations for sysadm section
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 201067 Msg: sysadm host is: 172.28.2.4
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 202004 Msg: configurations have been handled and it is ok
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 202005 Msg: try to setting logger...
+time=2023-01-16T14:48:09+08:00 level=debug msg=erroCode: 202006 Msg: loggers have been set

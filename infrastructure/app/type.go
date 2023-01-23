@@ -32,7 +32,7 @@ type RuningData struct {
 }
 
 // Initating working data for an instance
-var WorkingData RuningData = RuningData{
+var  WorkingData RuningData = RuningData{
 	dbConf: nil,
 	logConf: nil,
 	workingRoot: "",
@@ -160,20 +160,14 @@ type ApiHost struct {
 	// ip type 4 for ipv4 6 for ipv6
 	Iptype string `form:"iptype" json:"iptype" xml:"iptype"`
 
-	// identifying whether the ssh public key has be upload onto a node
-	PubkeyUploaded bool `form:"pubkeyUploaded" json:"pubkeyUploaded" xml:"pubkeyUploaded"`
+	// wheather agent running in passive mode
+	PassiveMode bool `form:"passiveMode" json:"passiveMode" xml:"passiveMode"`
 
-	// ssh service port on a host
-	Port int `form:"port" json:"port" xml:"port"`
+	// agent listen port number
+	AgentPort int `form:"agentPort" json:"agentPort" xml:"agentPort"`
 
-	// user account on a host which can login OS by ssh
-	User string `form:"user" json:"user" xml:"user"`
-
-	// user password on a host 
-	Password string `form:"password" json:"password" xml:"password"`
-
-	// user password again on a host 
-	RePassword string `form:"repassword" json:"repassword" xml:"repassword"`
+	// the path where agent listen to receiving command when is running in active mode
+	ReceiveCommandUri string `form:"receiveCommandUri" json:"receiveCommandUri" xml:"receiveCommandUri"`
 
 	// which os has be installed on a node. the value of osid is reference to table os in DB
 	OsID int  `form:"osid" json:"osid" xml:"osid"`

@@ -49,6 +49,8 @@ global:
     timeStampFormat: ""
 # following parameters can be set through command flags(daemon subcommand flags), configuration file (agent section) or ENV variables
 agent:
+  # the method of getting commands by agent. agent gets commands from the server periodically and run them if this value is true
+  # otherwise the server send a command to a agent when it  want the agent to run the command on a host. 
   passive: false
   # tls parameters for agent when agent running as daemon.
   tls:

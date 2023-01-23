@@ -32,12 +32,20 @@ type DBServer struct {
 	MaxIdleConns int `json:"maxIdleConns"`
 }
 
+// This structure is for configuration of apiServer Block
+type ApiServer struct {
+	Server config.Server `form:"server" json:"server" yaml:"server" xml:"server"`
+	Tls config.Tls `form:"tls" json:"tls" yaml:"tls" xml:"tls"`
+	ApiVersion string `form:"apiVersion" json:"apiVersion" yaml:"apiVersion" xml:"apiVersion"`
+}
+
 type Config struct {
 	Version config.Version 
 	Server config.Server `json:"server,omitempty"`
 	ServerTls config.Tls `json:"tls"`
 	Log config.Log `json:"log"`
 	DB DBServer `json:"db,omitempty"`
+	ApiServer ApiServer `form:"apiServer" json:"apiServer" yaml:"apiServer" xml:"apiServer"`
 }
 
 type CliOptions struct {

@@ -1,0 +1,5 @@
+O:可选，M：必选 S: 字符串 B: Bool,注意，Bool值有对应参数即表示True,没有对应参数表示False; I: 整型,数值
+
+COMMAND 			Parameters 																						Return Formate
+gethostip			withmac(O,B,是否获取网卡MAC地址),withmask(O,B, 是否获取IP地址的掩码)  	                         {"data":{"status":true "errorCode":0,"message":[{"ips":[{"ip":"127.0.0.1"}],"name":"lo"},{"ips":[{"ip":"172.28.2.4"},{"ip":"172.28.2.5"}],"name":"ens33"},{"ips":[{"ip":"172.18.0.1"}],"name":"docker0"}]},"nodeIdentifer":{"Ips":["127.0.0
+.1","172.28.2.4","172.28.2.5","172.18.0.1"],"Macs":["00:0c:29:68:4c:e1","02:42:4d:e1:c6:cb"],"Hostname":"admin-centos-4","Customize":""}}

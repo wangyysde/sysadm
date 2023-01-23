@@ -715,3 +715,35 @@ func ValidateConns(confValue int,defaultValue int, envName string )(int,[]sysadm
 	
 	return defaultValue,errs
 }
+
+/*
+  Try to get apiVersion from one of envName, configuration file or default value.
+  The order for getting user is envName, configuration file and default value.
+*/
+func ValidateApiVersion(confValue string,defaultValue string, envName string)(string,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	if strings.TrimSpace(envName) != "" {
+		apiVersion := strings.TrimSpace(os.Getenv(envName))
+		matched,err := regexp.MatchString("^[a-zA-Z0-9.]{1,64}",apiVersion)
+		if matched {
+			return apiVersion, errs
+		}
+
+		if err != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001036,"warning","The environment variable %s has be found, but the value(%s) of %s is not a apiVersion",envName,apiVersion,envName))
+
+		}
+	}
+
+	if strings.TrimSpace(confValue) != "" {
+		matched,_ := regexp.MatchString("^[a-zA-Z0-9.]{1,64}",confValue)
+		if matched {
+			return confValue, errs
+		}
+
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001037,"warning","The ApiVersion has been set in the configuration file,but it is not a valid ApiVersion",confValue))
+	} 
+
+	return defaultValue,errs
+}

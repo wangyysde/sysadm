@@ -45,5 +45,14 @@ var dbServerKey = ""
 var dbServerInsecureSkipVerify = true
 var dbMaxOpenConns = 10
 var dbMaxIdeleConns = 5
+var apiServerAddress = "apiserver"
+var apiServerPort = 8081
+var apiServerIsTls = false
+var apiServerCa = ""
+var apiServerCert = ""
+var apiServerKey = ""
+var apiServerInsecureSkipVerify = true
+var apiVersion = "v1.0"
+
 
 

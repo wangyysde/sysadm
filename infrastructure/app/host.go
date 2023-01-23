@@ -68,6 +68,7 @@ func addHost(c *sysadmServer.Context){
 		return 
 	}
 	
+	// insert host information into host table	
 	hostid,err := addHostToDB(tx,&requestData)
 	errs = append(errs,err...)
 	if hostid == 0 {
@@ -77,6 +78,55 @@ func addHost(c *sysadmServer.Context){
 		logErrors(errs)
 		return 
 	}
+
+	// insert IP information into hostIP table
+	ipID, err := addManageIPToDB(tx, &requestData, hostid)
+	errs = append(errs,err...)
+	if ipID == 0 {
+		_ = tx.Rollback()
+		err := apiutils.SendResponseForErrorMessage(c,30301002,"host %s manage IP %s add into DB error", requestData.Hostname,requestData.Ip)
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	// insert the relation between yum and host into hostYum
+	rID, err := addYumHostToDB(tx, &requestData, hostid)
+	if rID == 0 {
+		_ = tx.Rollback()
+		err := apiutils.SendResponseForErrorMessage(c,30301003,"add the information of  host %s into DB error", requestData.Hostname)
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	// insert command information into command
+	cID, err := addCommandToDB(tx,"gethostip",requestData.PassiveMode, hostid)
+	if cID == 0 {
+		_ = tx.Rollback()
+		err := apiutils.SendResponseForErrorMessage(c,30301004,"add the information of host %s into DB error", requestData.Hostname)
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+	parameters := make(map[string]string,0)
+	parameters["withmac"] = "1"
+	parameters["withmask"] = "1"
+	pid, err := addCommandParametersToDB(tx,cID,parameters)
+	if pid == 0 {
+		_ = tx.Rollback()
+		err := apiutils.SendResponseForErrorMessage(c,30301005,"add the information of host %s into DB error", requestData.Hostname)
+		errs = append(errs,err...)
+		logErrors(errs)
+		return 
+	}
+
+
+
+
+
+	
 
 	hostid,err = addIPToDB(tx,&requestData)
 
@@ -120,36 +170,26 @@ func checkAddHostData(data *ApiHost)(error,[]sysadmerror.Sysadmerror){
 	}
 	data.Iptype = ipType
 
-	port := data.Port
-	if tmpPort,e := utils.CheckPort(port); tmpPort == 0{
-		errs = append(errs, e...)
-		return fmt.Errorf("SSH port(%d) is not valid",port),errs
-	}
-
-	user := strings.TrimSpace(data.User)
-	if matched,e := regexp.MatchString(`^[a-zA-Z0-9_.][a-zA-Z0-9_.-]{1,31}$`, user); !matched{
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020008,"error","os user (%s) is not valid %s.",user,e))
-		return fmt.Errorf("os user (%s) is not valid.",user),errs
-	}
-	data.User =  user
-
-	pubkeyUploaded := data.PubkeyUploaded
-	if !pubkeyUploaded {
-		password := strings.TrimSpace(data.Password)
-		rePassword := strings.TrimSpace(data.RePassword)
-		if password != rePassword {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009,"error","the password(%s) is not matched twice password(%s).",password,rePassword))
-			return fmt.Errorf("the password(%s) is not matched twice password(%s).",password,rePassword), errs
+	passiveMode := data.PassiveMode
+	if passiveMode {
+		data.AgentPort = 0
+		data.ReceiveCommandUri = ""
+	} else {
+		port := data.AgentPort
+		if port < 1 || port > 65535 {
+			err := fmt.Errorf("Agent port(%d) is not valid",port)
+			errs = append(errs, err))
+			return err,errs
 		}
 
-		if matched,e := regexp.MatchString(`^.{1,64}$`, password); !matched{
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020010,"error","user password (%s) is not valid %s.",password,e))
-			return fmt.Errorf("user password(%s) is not valid.",password),errs
+		receiveCommandUri := strings.TrimSpace(data.ReceiveCommandUri)
+		if len(receiveCommandUri) < 1 {
+			err := fmt.Errorf("agent listen uri path %s  is not valid",receiveCommandUri )
+			errs = append(errs, err)
+			return err,errs
 		}
-
-		data.Password = password
 	}
-
+	
 	osID := data.OsID
 	osVersionID := data.OsVersionID
 
@@ -181,14 +221,17 @@ func addHostToDB(tx *db.Tx, data *ApiHost)(int,[]sysadmerror.Sysadmerror){
 	insertData["osID"] = data.OsID
 	insertData["versionID"] = data.OsVersionID
 	insertData["statusID"] = 1
-	insertData["sshPort"] = data.Port
-	
-	rows,err := tx.InsertData("host",insertData)
+	insertData["agentPassive"] = data.PassiveMode
+	insertData["agentPort"] = data.AgentPort
+	insertData["receiveCommandUri"] = data.ReceiveCommandUri
+		
+	_,err := tx.InsertData("host",insertData)
 	errs = append(errs,err...)
-	if rows == 0 {
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
 		return 0, errs
 	}
 
+	// get the last hostid which is the last added
 	selectData := db.SelectData{
 		Tb: []string{"host"},
 		OutFeilds: []string{"max(hostid) as hostid"},
@@ -220,6 +263,67 @@ func addHostToDB(tx *db.Tx, data *ApiHost)(int,[]sysadmerror.Sysadmerror){
 	return hostid,errs
 }
 
+/*
+   addManageIPToDB add manage IP of host into DB
+   return ipID(which just added) and []sysadmerror.Sysadmerror
+   otherwise return 0  and []sysadmerror.Sysadmerror
+   the IP information(such as devName, mask) of the host should be updated when we got the details of the IP information of the host
+*/
+func addManageIPToDB(tx *db.Tx, data *ApiHost, hostid int)(int,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303010,"debug","try to add host %s manager IP to DB", data.Hostname))
+	insertData := make(db.FieldData,0)
+
+	insertData["devName"] = ""
+	if data.Iptype == "4" {
+		insertData["ipv4"] = data.Ip
+		insertData["maskv4"] = ""
+		insertData["ipv6"] = ""
+		insertData["maskv6"] = ""
+	} else {
+		insertData["ipv4"] = ""
+		insertData["maskv4"] = ""
+		insertData["ipv6"] = data.Ip
+		insertData["maskv6"] = ""
+	}
+	insertData["hostid"] = hostid
+	insertData["status"] = 1
+	insertData["isManage"] = 1
+
+	_,err := tx.InsertData("hostIP",insertData)
+	errs = append(errs,err...)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
+		return 0, errs
+	}
+	
+	return 1, errs
+}
+
+/*
+   addYumHostToDB add relation information between host and yum into DB
+   return 1 and []sysadmerror.Sysadmerror
+   otherwise return 0  and []sysadmerror.Sysadmerror
+*/
+func addYumHostToDB(tx *db.Tx, data *ApiHost, hostid int)(int,[]sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303010,"debug","try to add yum host relations to DB"))
+	insertData := make(db.FieldData,0)
+
+	insertData["hostid"] = hostid
+	yumIDS := data.YumID
+	for _, yID := range yumIDS {
+		insertData["yumid"] = yID
+		rows,err := tx.InsertData("hostYum",insertData)
+		errs = append(errs,err...)
+		if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
+			return 0, errs
+		}
+	}
+
+	return 1, errs
+}
 
 func addIPToDB(tx *db.Tx, data *ApiHost)(maxIPid int,errs []sysadmerror.Sysadmerror){
 	// SSH Public key should be update to host

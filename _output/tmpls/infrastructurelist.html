@@ -105,6 +105,20 @@
 		$('#container').load("/infrastructure/list");
 	}
 
+	function selectAllCheckbox() {
+			var thCheckBox = document.getElementById("yumidth");
+			if (thCheckBox.checked) {
+				var chklist = document.getElementsByName('yumid[]');
+				for (var i = 0; i < chklist.length; i++) {
+					chklist[i].checked = true;
+				}
+			} else {
+				var chklist = document.getElementsByName('yumid[]');
+				for (var i = 0; i < chklist.length; i++) {
+					chklist[i].checked = false;
+				}
+			}
+		}
 /*
     function changePage(urlparas) {
         var url = "/registryctl/imagelist" + urlparas;
@@ -116,28 +130,7 @@
 			var url = "/registryctl/taglist" + params;
 			$('#container').load(url);
 		}
-    function selectAllCheckbox() {
-        var thCheckBox = document.getElementById("yumidth");
-        if (thCheckBox.checked) {
-            var chklist = document.getElementsByName('yumid[]');
-            for (var i = 0; i < chklist.length; i++) {
-                    chklist[i].checked = true;
-            }
-			var buttonDel = document.getElementById("buttonDel")
-			buttonDel.style.color = "#ffffff";
-			buttonDel.style.background = "#3c8dbc";
-			buttonDel.disabled = false;
-        } else {
-            var chklist = document.getElementsByName('yumid[]');
-            for (var i = 0; i < chklist.length; i++) {
-                    chklist[i].checked = false;
-            }
-			var buttonDel = document.getElementById("buttonDel")
-			buttonDel.style.color = "#3c8dbc";
-			buttonDel.style.background = "#cbd8df";
-			buttonDel.disabled = true;
-        }
-    }
+    
 
 	function selectCheckbox() {
 		var chklist = document.getElementsByName('yumid[]');
@@ -164,17 +157,16 @@
 	}
 */
 
-	function changePubkey(){
-		var updatedKey = document.getElementById("pubkeyUploaded");
-		var password = document.getElementById("password");
-		var repassword = document.getElementById("repassword");
-		
-		if(updatedKey.checked){
-			password.disabled = true;
-			repassword.disabled = true;
+	function changeAgentMode(){
+		var passiveMode = document.getElementById("passiveMode");
+		var agentPort = document.getElementById("agentPort");
+		var receiveCommandUri = document.getElementById("receiveCommandUri");
+		if (passiveMode.checked) {
+			agentPort.disabled = true;
+			receiveCommandUri.disabled = true;
 		} else {
-			password.disabled = false;
-			repassword.disabled = false;
+			agentPort.disabled = false;
+			receiveCommandUri.disabled = false;
 		}
 	}
 
@@ -186,18 +178,19 @@
 			return false;
 		}
 
-		var user = document.getElementById("user").value;
-		if(user.length < 1){
-			alert("user name should be input");
-			return false;
-		}
+		var passiveMode = document.getElementById("passiveMode");
+		if(!passiveMode.checked){
+			var agentPort = document.getElementById("agentPort");
+			var receiveCommandUri = document.getElementById("receiveCommandUri");
+			var portValue = agentPort.value;
+			if (portValue <= 0 || portValue > 65535) { 
+				alert("Agent端口不合法");
+				return false;	
+			}
 
-		var updatedKey = document.getElementById("pubkeyUploaded");
-		if(!updatedKey.checked){
-			var password = document.getElementById("password").value;
-			var repassword = document.getElementById("repassword").value;
-			if(password.length < 1 || password != repassword){
-				alert("password for the user should be input if you have not updated public key onto node");
+			var uri = receiveCommandUri.value
+			if(uri.length < 1) {
+				alert("agent接收指令的URI地址不合法");
 				return false;	
 			}
 		}
@@ -490,17 +483,14 @@
 		</div>
 		<div class="yum-radio">
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
-			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="pubkeyUploaded" id="pubkeyUploaded" value="1" onclick="changePubkey()"> 公钥已上传&nbsp;&nbsp;&nbsp;&nbsp;SSH端口: 
-			<input id="port" type="text" name="port" value="22" class="sshportinput"> *默认是22
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onclick="changeAgentMode()"> Agent被动模式
 		</div>
 		<div class="yum-item">
-			系统帐号： <input id="user" type="text" name="user"> *被添加节点上用于远程管理的系统帐号。
+			Agent端口： <input id="agentPort" type="text" name="agentPort"> *agent运行主动模式时，其侦听端口号
 		</div>
+		
 		<div class="yum-item">
-			用户密码： <input id="password" type="password" name="password"> *被添加节点上用于远程管理的系统帐号密码。
-		</div>
-		<div class="yum-item">
-			重复用户密码： <input id="repassword" type="password" name="repassword"> 
+			指令接收地址： <input id="receiveCommandUri" type="text" name="receiveCommandUri"> *当Agent运行于主动模式时，其接收指令的URI地址
 		</div>
 		<div class="yum-item">
 			操作系统：

@@ -1,0 +1,12 @@
+20230118
+1. 尝试完成infrastructure\app\host.go文件中addHost函数中向数据中添加增加yum配置命令时，发现通过sysadm下API接口无法获取yum列表信息，为此需要完成：
+	a. 在sysadm/server/api_registryctl.go文件的ActionHanderCaller以下三个处理器，并实现相应的方法
+	   case "yumlist": 			// TODO
+			r.yumlistHandler(c)
+		case "yumadd": 				//TODO
+			r.yumaddHandler(c)
+		case "yumdel":				//TODO
+			r.yumdelHandler(c)
+	b. 因为registryctl/server/yum_api.go文件中已经实现上述三个处理器所需要功能，所以在实现上述三个处理器的功能时，打算使用Proxy方法实现，参考sysadm/server/api_registryctl.go文件的imagelistHandler方法
+	c. 需要在infrastructure组件中添加有关apiserver的配置项，并实现相应的功能。
+	d. 继续完成infrastructure\app\host.go文件中addHost函数中后续功能。

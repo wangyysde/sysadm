@@ -70,13 +70,14 @@ func runGetHostIP(gotCommand *Command, c *sysadmServer.Context){
    		for _,addr := range addrs {
       		ipnet,ok := addr.(*net.IPNet)
       		if ok {
+				ipstr := ipnet.IP.String()
+				if withMask {
+					ipstr = ipstr + "/" + ipnet.Mask.String()
+				}
 				ipMap := map[string]interface{}{
-					"ip": ipnet.IP.String(),
+					"ip": ipstr,
 				}
 		
-				if withMask {
-					ipMap["mask"] = ipnet.Mask.String()
-				}
 				ipMaps = append(ipMaps, ipMap)
       		}
     	}
