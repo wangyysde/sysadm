@@ -27,40 +27,34 @@ import (
 	"github.com/wangyysde/sysadmServer"
 )
 
-var  registryctlActions = []string{"imagelist","getinfo","imagedel","taglist","tagdel","yumlist","yumadd","yumdel"}
+var registryctlActions = []string{"imagelist", "getinfo", "imagedel", "taglist", "tagdel", "yumlist", "yumadd", "yumdel"}
 
- func (r Registryctl) ModuleName()string{
+func (r Registryctl) ModuleName() string {
 	return "registryctl"
 }
 
-func (r Registryctl)  ActionHanderCaller(action string, c *sysadmServer.Context){
-	switch action{
-		case "imagelist":
-			r.imagelistHandler(c)
-		case "imagedel":
-			r.imagedelHandler(c)
-		case "tagdel":
-			r.tagdelHandler(c)
-		case "getinfo":
-			r.getInfoHandler(c)
-		case "yumlist": 			// TODO
-			r.yumlistHandler(c)
-		case "yumadd": 				//TODO
-			r.yumaddHandler(c)
-		case "yumdel":				//TODO
-			r.yumdelHandler(c)
+func (r Registryctl) ActionHanderCaller(action string, c *sysadmServer.Context) {
+	switch action {
+	case "imagelist":
+		r.imagelistHandler(c)
+	case "imagedel":
+		r.imagedelHandler(c)
+	case "tagdel":
+		r.tagdelHandler(c)
+	case "getinfo":
+		r.getInfoHandler(c)
 	}
-	
+
 }
 
-/* 
-	handling user login according to username and password provided by rquest's URL
-	response the client with Status: false, Erorrcode: int, and Message: string if login is failed
-	otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
+/*
+handling user login according to username and password provided by rquest's URL
+response the client with Status: false, Erorrcode: int, and Message: string if login is failed
+otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
 */
-func (r Registryctl)imagelistHandler(c *sysadmServer.Context){
+func (r Registryctl) imagelistHandler(c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
-	
+
 	moduleName := "registryctl"
 	actionName := "imagelist"
 
@@ -73,29 +67,29 @@ func (r Registryctl)imagelistHandler(c *sysadmServer.Context){
 	cert := definedConfig.Registryctl.Cert
 	key := definedConfig.Registryctl.Key
 
-	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiVersion, tls, address, port, ca, cert, key)
 	if apiServerData == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010006,"error","api server parameters error"))
-		err := apiutils.SendResponseForErrorMessage(c,700010006, "api server parameters error")
-		errs = append(errs,err...)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010006, "error", "api server parameters error"))
+		err := apiutils.SendResponseForErrorMessage(c, 700010006, "api server parameters error")
+		errs = append(errs, err...)
 		logErrors(errs)
 	}
 
-	err := apiutils.PassProxy(c,apiServerData)
-	errs = append(errs,err...)
+	err := apiutils.PassProxy(c, apiServerData)
+	errs = append(errs, err...)
 	logErrors(errs)
 
 	// 1. user authorization and privelege checks
 }
 
-/* 
-	handling user login according to username and password provided by rquest's URL
-	response the client with Status: false, Erorrcode: int, and Message: string if login is failed
-	otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
+/*
+handling user login according to username and password provided by rquest's URL
+response the client with Status: false, Erorrcode: int, and Message: string if login is failed
+otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
 */
-func (r Registryctl)imagedelHandler(c *sysadmServer.Context){
+func (r Registryctl) imagedelHandler(c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
-	
+
 	moduleName := "registryctl"
 	actionName := "imagedel"
 
@@ -108,32 +102,32 @@ func (r Registryctl)imagedelHandler(c *sysadmServer.Context){
 	cert := definedConfig.Registryctl.Cert
 	key := definedConfig.Registryctl.Key
 
-	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
+	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiVersion, tls, address, port, ca, cert, key)
 	if apiServerData == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010007,"error","api server parameters error"))
-		err := apiutils.SendResponseForErrorMessage(c,700010007, "api server parameters error")
-		errs = append(errs,err...)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010007, "error", "api server parameters error"))
+		err := apiutils.SendResponseForErrorMessage(c, 700010007, "api server parameters error")
+		errs = append(errs, err...)
 		logErrors(errs)
-		return 
+		return
 	}
 
 	keys := []string{"imageid[]"}
-	datas,err := utils.GetRequestDataArray(c,keys)
-	errs = append(errs,err...)
-	data,okdata := datas["imageid[]"]
-	if !okdata || len(data) <1 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010008,"error","no image has be selected"))
-		err := apiutils.SendResponseForErrorMessage(c,700010008, "no image has be selected")
-		errs = append(errs,err...)
+	datas, err := utils.GetRequestDataArray(c, keys)
+	errs = append(errs, err...)
+	data, okdata := datas["imageid[]"]
+	if !okdata || len(data) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010008, "error", "no image has be selected"))
+		err := apiutils.SendResponseForErrorMessage(c, 700010008, "no image has be selected")
+		errs = append(errs, err...)
 		logErrors(errs)
-		return 
+		return
 	}
 
 	imageidStr := ""
-	for _,id := range data {
-		if imageidStr == ""{
+	for _, id := range data {
+		if imageidStr == "" {
 			imageidStr = id
-		}else{
+		} else {
 			imageidStr = imageidStr + "," + id
 		}
 	}
@@ -142,37 +136,36 @@ func (r Registryctl)imagedelHandler(c *sysadmServer.Context){
 	errs = append(errs, err...)
 
 	var queryData []*httpclient.RequestData
-	queryData = append(queryData,&httpclient.RequestData{"imageid",imageidStr})
+	queryData = append(queryData, &httpclient.RequestData{Key: "imageid", Value: imageidStr})
 	requestParams := httpclient.RequestParams{
-		Headers: []httpclient.RequestData{},
-		QueryData: queryData,
+		Headers:       []httpclient.RequestData{},
+		QueryData:     queryData,
 		BasicAuthData: map[string]string{},
-		Method: http.MethodDelete,
-		Url: rawURL,
+		Method:        http.MethodDelete,
+		Url:           rawURL,
 	}
 
-	body,err := httpclient.SendRequest(&requestParams)
-	errs = append(errs,err...)
-	if len(body)< 1 {
-		err := apiutils.SendResponseForErrorMessage(c,700010009, "unkown error has occurred.")
-		errs = append(errs,err...)
+	body, err := httpclient.SendRequest(&requestParams)
+	errs = append(errs, err...)
+	if len(body) < 1 {
+		err := apiutils.SendResponseForErrorMessage(c, 700010009, "unkown error has occurred.")
+		errs = append(errs, err...)
 		logErrors(errs)
 		return
 	}
 
 	parsedRet, err := apiutils.ParseResponseBody(body)
-	errs = append(errs,err...)
+	errs = append(errs, err...)
 	c.JSON(http.StatusOK, parsedRet)
 
 	logErrors(errs)
 }
 
-/* 
-
-*/
-func (r Registryctl)tagdelHandler(c *sysadmServer.Context){
+/*
+ */
+func (r Registryctl) tagdelHandler(c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
-	
+
 	moduleName := "registryctl"
 	actionName := "tagdel"
 
@@ -185,25 +178,25 @@ func (r Registryctl)tagdelHandler(c *sysadmServer.Context){
 	cert := definedConfig.Registryctl.Cert
 	key := definedConfig.Registryctl.Key
 
-	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
-	
+	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiVersion, tls, address, port, ca, cert, key)
+
 	keys := []string{"tagid[]"}
-	datas,err := utils.GetRequestDataArray(c,keys)
-	errs = append(errs,err...)
-	data,okdata := datas["tagid[]"]
-	if !okdata || len(data) <1 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010010,"error","no tag has be selected"))
-		err := apiutils.SendResponseForErrorMessage(c,700010010, "no tag has be selected")
-		errs = append(errs,err...)
+	datas, err := utils.GetRequestDataArray(c, keys)
+	errs = append(errs, err...)
+	data, okdata := datas["tagid[]"]
+	if !okdata || len(data) < 1 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010010, "error", "no tag has be selected"))
+		err := apiutils.SendResponseForErrorMessage(c, 700010010, "no tag has be selected")
+		errs = append(errs, err...)
 		logErrors(errs)
-		return 
+		return
 	}
 
 	tagidStr := ""
-	for _,id := range data {
-		if tagidStr == ""{
+	for _, id := range data {
+		if tagidStr == "" {
 			tagidStr = id
-		}else{
+		} else {
 			tagidStr = tagidStr + "," + id
 		}
 	}
@@ -212,68 +205,31 @@ func (r Registryctl)tagdelHandler(c *sysadmServer.Context){
 	errs = append(errs, err...)
 
 	var queryData []*httpclient.RequestData
-	queryData = append(queryData,&httpclient.RequestData{"tagid",tagidStr})
+	queryData = append(queryData, &httpclient.RequestData{Key: "tagid", Value: tagidStr})
 	requestParams := httpclient.RequestParams{
-		Headers: []httpclient.RequestData{},
-		QueryData: queryData,
+		Headers:       []httpclient.RequestData{},
+		QueryData:     queryData,
 		BasicAuthData: map[string]string{},
-		Method: http.MethodDelete,
-		Url: rawURL,
+		Method:        http.MethodDelete,
+		Url:           rawURL,
 	}
 
-	body,err := httpclient.SendRequest(&requestParams)
-	errs = append(errs,err...)
-	if len(body)< 1 {
-		err := apiutils.SendResponseForErrorMessage(c,700010011, "unkown error has occurred.")
-		errs = append(errs,err...)
+	body, err := httpclient.SendRequest(&requestParams)
+	errs = append(errs, err...)
+	if len(body) < 1 {
+		err := apiutils.SendResponseForErrorMessage(c, 700010011, "unkown error has occurred.")
+		errs = append(errs, err...)
 		logErrors(errs)
 		return
 	}
 
 	parsedRet, err := apiutils.ParseResponseBody(body)
-	errs = append(errs,err...)
+	errs = append(errs, err...)
 	c.JSON(http.StatusOK, parsedRet)
 
 	logErrors(errs)
 }
 
-
-/* 
-	handling user login according to username and password provided by rquest's URL
-	response the client with Status: false, Erorrcode: int, and Message: string if login is failed
-	otherwise response the client with Status: true, Erorrcode: 0, and Message: "" if login is successful
-*/
-func (r Registryctl)yumlistHandler(c *sysadmServer.Context){
-	var errs []sysadmerror.Sysadmerror
-	
-	moduleName := "registryctl"
-	actionName := "imagelist"
-
-	definedConfig := RuntimeData.RuningParas.DefinedConfig
-	apiVersion := definedConfig.Registryctl.ApiVersion
-	tls := definedConfig.Registryctl.Tls
-	address := definedConfig.Registryctl.Address
-	port := definedConfig.Registryctl.Port
-	ca := definedConfig.Registryctl.Ca
-	cert := definedConfig.Registryctl.Cert
-	key := definedConfig.Registryctl.Key
-
-	apiServerData := apiutils.BuildApiServerData(moduleName,actionName,apiVersion,tls,address,port,ca,cert,key)
-	if apiServerData == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700010006,"error","api server parameters error"))
-		err := apiutils.SendResponseForErrorMessage(c,700010006, "api server parameters error")
-		errs = append(errs,err...)
-		logErrors(errs)
-	}
-
-	err := apiutils.PassProxy(c,apiServerData)
-	errs = append(errs,err...)
-	logErrors(errs)
-	
-
-}
-
-
-func (r Registryctl)getInfoHandler(c *sysadmServer.Context){
+func (r Registryctl) getInfoHandler(c *sysadmServer.Context) {
 
 }

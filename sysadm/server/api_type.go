@@ -41,6 +41,7 @@ type Module struct {
 
  type User struct {}
  type Registryctl struct {}
+ type Yum struct {}
  type Sysadm struct {}
  type Project struct {
 	Projectid int `json:"projectid"`
@@ -71,6 +72,13 @@ var Modules = map[string]Module{
 		Instance: Registryctl{},
 		Actions: registryctlActions,
 	},
+	"yum": {
+		Name: "yum",
+		Path: "yum",
+		Instance: Yum{},
+		Actions: yumActions,
+	},
+	   
 	"sysadm": {
 		Name: "sysadm",
 		Path: "sysadm",

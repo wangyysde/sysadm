@@ -27097,3 +27097,143 @@ time=2023-01-16T18:51:21+08:00 level=debug msg=erroCode: 800010001 Msg: set erro
 time=2023-01-16T22:28:11+08:00 level=debug msg=erroCode: 501008 Msg: now checking port number 0 
 time=2023-01-16T22:28:11+08:00 level=error msg=erroCode: 501009 Msg: The port should be great than 1024 and less than 65535. Now is :0
 time=2023-01-16T22:28:11+08:00 level=debug msg=erroCode: 800010001 Msg: set errorCode 3030002 message: SSH port(0) is not valid to the client
+time=2023-01-23T21:09:07+08:00 level=debug msg=erroCode: 10010001 Msg: try to start infrastructure server
+time=2023-01-23T21:09:07+08:00 level=debug msg=erroCode: 501001 Msg: now checking IP address 0.0.0.0 
+time=2023-01-23T21:09:07+08:00 level=debug msg=erroCode: 501001 Msg: now checking IP address 172.28.2.4 
+time=2023-01-23T21:09:07+08:00 level=debug msg=erroCode: 10010002 Msg: configurations have been handled and it is ok
+time=2023-01-23T21:09:07+08:00 level=debug msg=erroCode: 10010003 Msg: loggers have been set
+time=2023-01-23T21:09:10+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2023-01-23T21:09:10+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/infrastructure/server.addTestHandlers.func1 (3 handlers)
+
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 100006 Msg: Database server host www.sysadm.cn is right.
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-01-23T21:09:10+08:00 level=warning msg=erroCode: 100015 Msg: the value of MaxIdleConns(Now: 2) should be set large 10 and less 2000. 
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-01-23T21:09:10+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/infrastructure.sock
+
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: www.sysadm.cn and Port: 3306. successful
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 10010004 Msg: connections to DB server have be openned
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 10010005 Msg: handlers have be added.
+time=2023-01-23T21:09:10+08:00 level=debug msg=erroCode: 10010006 Msg: listening to 0.0.0.0:8083
+time=2023-01-23T21:09:10+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8083
+
+time=2023-01-25T20:58:20+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-01-25T20:58:20+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-01-25T20:58:20+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-01-25T20:58:20+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-01-25T20:58:20+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-01-25T20:58:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=Loaded HTML Templates (12): 
+	- login.html
+	- login_bak20211223.html
+	- projectlist.html
+	- yumlist.html
+	- showmessage.html
+	- taglist.html
+	- 
+	- imagelist.html
+	- index.html
+	- infrastructurelist.html
+	- login_bak20211226.html
+	- main.html
+
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.addForms.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /forms/login              --> github.com/wangyysde/sysadm/sysadm/server.loginHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /api/v1.0/:module/*action --> github.com/wangyysde/sysadm/sysadm/server.apiHandlers (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /project/list             --> github.com/wangyysde/sysadm/sysadm/server.projectListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 110001 Msg: now adding handlers for project
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /registryctl/imagelist    --> github.com/wangyysde/sysadm/sysadm/server.imageListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /registryctl/taglist      --> github.com/wangyysde/sysadm/sysadm/server.tagListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /registryctl/yumlist      --> github.com/wangyysde/sysadm/sysadm/server.yumListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /registryctl/yumadd       --> github.com/wangyysde/sysadm/sysadm/server.yumAddHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /registryctl/yumdel       --> github.com/wangyysde/sysadm/sysadm/server.yumDelHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /api/0.1/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /api/1.0/infrastructure/add --> github.com/wangyysde/sysadm/infrastructure/app.addHost (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/0.1/infrastructure
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 3020002 Msg: add group handlers for /api/1.0/infrastructure
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /infrastructure/list      --> github.com/wangyysde/sysadm/sysadm/server.infrastructureListHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /api/0.1/syssetting/test  --> github.com/wangyysde/sysadm/syssetting/app.testHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /api/1.0/syssetting/test  --> github.com/wangyysde/sysadm/syssetting/app.testHandler (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 4020002 Msg: add group handlers for /api/0.1/syssetting
+time=2023-01-25T20:58:23+08:00 level=debug msg=erroCode: 4020002 Msg: add group handlers for /api/1.0/syssetting
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=POST   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=PUT    /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=PATCH  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=OPTIONS /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=DELETE /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=CONNECT /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=TRACE  /                         --> github.com/wangyysde/sysadm/sysadm/server.handleRootPath (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /favicon.ico/*filepath    --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /favicon.ico/*filepath    --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /images/*filepath         --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /css/*filepath            --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /js/*filepath             --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=GET    /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=HEAD   /fonts/*filepath          --> github.com/wangyysde/sysadmServer.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=Listening and serving HTTP on 0.0.0.0:8081
+
+time=2023-01-25T20:58:23+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2023-01-25T21:00:16+08:00 level=error msg=erroCode: 1101016 Msg: user should login The value of session key:userid has not found
+time=2023-01-25T21:00:16+08:00 level=debug msg=redirecting request 301: /favicon.ico/ --> /favicon.ico/
+
+time=2023-01-25T21:00:16+08:00 level=debug msg=redirecting request 301: / --> /
+
+time=2023-01-25T21:00:16+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
+time=2023-01-25T21:01:23+08:00 level=debug msg=[WARNING] Headers were already written. Wanted to override status code 307 with 200
+
