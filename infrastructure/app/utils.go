@@ -44,7 +44,7 @@ func (i Infrastructure)GetActionList()[]string{
 	set dbConfig(*sysadmDB.DbConfig) and working root path to the global variable WorkingData
 	the value of variable are not be instead of by the new values if them are not empty or nil. 
 */
-func (i Infrastructure)SetWorkingData(dbConf *sysadmDB.DbConfig, logConf *config.Log, workingRoot string)([]sysadmerror.Sysadmerror){
+func (i Infrastructure)SetWorkingData(dbConf *sysadmDB.DbConfig, logConf *config.Log, workingRoot string, apiServer *ApiServer)([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	
 	if WorkingData.dbConf ==  nil {
@@ -66,6 +66,15 @@ func (i Infrastructure)SetWorkingData(dbConf *sysadmDB.DbConfig, logConf *config
 		errs = append(errs,e...)
 	}
 	
+	if WorkingData.apiServer == nil {
+		if apiServer == nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3010006,"fatal","Can not set apiServer configuration to working data with nil" ))
+			return errs
+		}
+
+		WorkingData.apiServer = apiServer
+	}
+
 	if strings.TrimSpace(WorkingData.workingRoot) == "" {
 		if strings.TrimSpace(workingRoot) == "" {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3010003,"warn","working root path is empty" ))

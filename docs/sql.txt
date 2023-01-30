@@ -265,3 +265,13 @@ CREATE TABLE `commandLogs` (
 	KEY `FK_commandLogs` (`commandID`),
 	CONSTRAINT `FK_commandLogs` FOREIGN KEY (`commandID`) REFERENCES `command` (`commandID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
+/* 在事务中向表中添加数据时，自增字段的值在当前事务中是获取不到的，为此增加ids表，该表记录拥有自增字段的表名、自增字段和自增字段的下一个值 */
+CREATE TABLE `ids` (
+  tableName VARCHAR(255) NOT NULL COMMENT 'table name which has AUTO_INCREMENT ID  field',
+  fieldName VARCHAR(255) NOT NULL COMMENT 'field name which is a AUTO_INCREMENT ID  field',
+  nextValue INT(11) NOT NULL DEFAULT 1 COMMENT 'the next value of ID'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC
+
+insert into `ids`(`tableName`,`fieldName`,`nextValue`) values ('host','hostid',1);
+insert into `ids`(`tableName`,`fieldName`,`nextValue`) values ('command','commandID',1);

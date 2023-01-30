@@ -19,15 +19,13 @@ package app
 
 import (
 	"fmt"
-	"strconv"
+	"net/http"
 	"strings"
 
-	"github.com/wangyysde/sshclient/sftp"
-	"github.com/wangyysde/sshclient/sshclient"
 	"github.com/wangyysde/sysadm/db"
+	"github.com/wangyysde/sysadm/httpclient"
 	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 	"github.com/wangyysde/sysadm/sysadmerror"
-	syssetting "github.com/wangyysde/sysadm/syssetting/app"
 	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
@@ -92,7 +90,7 @@ func addHost(c *sysadmServer.Context) {
 	rID, err := addYumHostToDB(tx, &requestData, hostid)
 	if rID == 0 {
 		_ = tx.Rollback()
-		err := apiutils.SendResponseForErrorMessage(c, 30301003,fmt.Sprintf("add the information of  host %s into DB error", requestData.Hostname))
+		err := apiutils.SendResponseForErrorMessage(c, 30301003, fmt.Sprintf("add the information of  host %s into DB error", requestData.Hostname))
 		errs = append(errs, err...)
 		logErrors(errs)
 		return
@@ -120,6 +118,21 @@ func addHost(c *sysadmServer.Context) {
 		return
 	}
 
+	yid, err := addYumHostToDB(tx, &requestData, hostid)
+	if yid == 0 {
+		_ = tx.Rollback()
+		err := apiutils.SendResponseForErrorMessage(c, 30301006, fmt.Sprintf("add the information of host %s into DB error", requestData.Hostname))
+		errs = append(errs, err...)
+		logErrors(errs)
+		return
+	}
+
+	e := tx.Commit()
+	if e != nil {
+		err := apiutils.SendResponseForErrorMessage(c, 30301007, fmt.Sprintf("add the information of host %s into DB error %s", requestData.Hostname, e))
+		errs = append(errs, err...)
+		logErrors(errs)
+	}
 	msg := "host has be added successful"
 	err = apiutils.SendResponseForSuccessMessage(c, msg)
 	errs = append(errs, err...)
@@ -158,7 +171,7 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 	data.Iptype = ipType
 
 	passiveMode := data.PassiveMode
-	if passiveMode {
+	if passiveMode == 0 {
 		data.AgentPort = 0
 		data.ReceiveCommandUri = ""
 	} else {
@@ -203,6 +216,37 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 
 	// adding host information into DB
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(3030004, "debug", "now try to insert host information into host table"))
+
+	// get the last hostid which will be added
+	whereStatement := make(map[string]string,0)
+	whereStatement["tableName"] = "host"
+	whereStatement["fieldName"] = "hostid"
+	selectData := db.SelectData{
+		Tb:        []string{"ids"},
+		OutFeilds: []string{"nextValue"},
+		Where: whereStatement,
+	}
+	
+	dbEntity := WorkingData.dbConf.Entity
+	retData, err := dbEntity.QueryData(&selectData)
+	errs = append(errs, err...)
+	if retData == nil {
+		return 0, errs
+	}
+
+	hostid := 0
+	line := retData[0]
+	if v, ok := line["nextValue"]; ok {
+		id, e := utils.Interface2Int(v)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303013, "error", "got hostid error %s", e))
+		} else {
+			hostid = id
+		}
+	} else {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303014, "error", "got hostid error"))
+	}
+
 	insertData := make(db.FieldData, 0)
 	insertData["hostname"] = data.Hostname
 	insertData["osID"] = data.OsID
@@ -211,47 +255,32 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	insertData["agentPassive"] = data.PassiveMode
 	insertData["agentPort"] = data.AgentPort
 	insertData["receiveCommandUri"] = data.ReceiveCommandUri
+	insertData["hostid"] = hostid
 
-	_, err := tx.InsertData("host", insertData)
+	_, err = tx.InsertData("host", insertData)
 	errs = append(errs, err...)
 	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
 		return 0, errs
 	}
 
-	// get the last hostid which is the last added
-	selectData := db.SelectData{
-		Tb:        []string{"host"},
-		OutFeilds: []string{"max(hostid) as hostid"},
-	}
-	entity := tx.Entity
-	retData, err := entity.QueryData(&selectData)
+	// update hostid value id ids table using transaction
+	updateData := make(db.FieldData, 0)
+	updateData["nextValue"] = hostid + 1
+	whereStatement["tableName"] = "host"
+	whereStatement["fieldName"] = "hostid"
+
+	_, err = tx.UpdateData("ids",updateData,whereStatement)
 	errs = append(errs, err...)
-	if retData == nil {
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
 		return 0, errs
 	}
-
-	hostid := 0
-	line := retData[0]
-	if v, ok := line["hostid"]; ok {
-		id, e := utils.Interface2Int(v)
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3030005, "error", "got hostid error %s", e))
-		} else {
-			hostid = id
-		}
-	} else {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3030006, "error", "got hostid error"))
-	}
-
-	if hostid == 0 {
-		return 0, errs
-	}
-
+	
 	return hostid, errs
 }
 
 /*
-addManageIPToDB add manage IP of host into DB
+	addManageIPToDB add manage IP of host into DB
+
 return ipID(which just added) and []sysadmerror.Sysadmerror
 otherwise return 0  and []sysadmerror.Sysadmerror
 the IP information(such as devName, mask) of the host should be updated when we got the details of the IP information of the host
@@ -312,60 +341,86 @@ func addYumHostToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysadmerror.Sy
 	return 1, errs
 }
 
-func getHostIPs(hostip string, hostPort int, user string) (retIps []HostIP, errs []sysadmerror.Sysadmerror) {
+func addYumConfigCommandToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303011, "debug", "try to add yum configuration command  to DB"))
 
-	scriptsPath, e := syssetting.GetFilePath(moduleName, "scriptsPath")
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303001, "error", "%s", e))
-		return retIps, errs
+	apiServer := WorkingData.apiServer
+	apiVersion := apiServer.ApiVersion
+	tls := apiServer.Tls.IsTls
+	address := apiServer.Server.Address
+	port := apiServer.Server.Port
+	ca := apiServer.Tls.Ca
+	cert := apiServer.Tls.Cert
+	key := apiServer.Tls.Key
+
+	// get yum information list
+	moduleName := "yum"
+	actionName := "yumlist"
+	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiVersion, tls, address, port, ca, cert, key)
+	urlRaw, _ := apiutils.BuildApiUrl(apiServerData)
+
+	var yumStr = ""
+	yumid := data.YumID
+	for _, id := range yumid {
+		if yumStr == "" {
+			yumStr = id
+		} else {
+			yumStr = yumStr + "," + id
+		}
 	}
 
-	scriptGetHostIPs, e := syssetting.GetFilePath(moduleName, "scriptGetHostIPs")
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303002, "error", "%s", e))
-		return retIps, errs
+	requestParas := httpclient.RequestParams{}
+	requestParas.Url = urlRaw
+	requestParas.Method = http.MethodPost
+	queryData := httpclient.RequestData{
+		Key:   "yumid",
+		Value: yumStr,
+	}
+	var queryDataSlice []*httpclient.RequestData
+	queryDataSlice = append(queryDataSlice, &queryData)
+	requestParas.QueryData = queryDataSlice
+
+	body, err := httpclient.SendRequest(&requestParas)
+	errs = append(errs, err...)
+	ret, err := apiutils.ParseResponseBody(body)
+	errs = append(errs, err...)
+	if !ret.Status {
+		message := ret.Message
+		messageLine := message[0]
+		msg := utils.Interface2String(messageLine["msg"])
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303012, "error", "get yum information list error %s", msg))
+		return 0, errs
 	}
 
-	privateKeyFile, e := syssetting.GetFilePath(moduleName, "privateKeyFile")
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303003, "error", "%s", e))
-		return retIps, errs
-	}
-	privateKeyFile = WorkingData.workingRoot + "/" + privateKeyFile
+	for _, line := range ret.Message {
+		yumName := utils.Interface2String(line["name"])
+		yumCatalog := utils.Interface2String(line["catalog"])
+		base_url := utils.Interface2String(line["base_url"])
+		enabled, _ := utils.Interface2Int(line["enabled"])
+		gpgcheck := utils.Interface2String(line["gpgcheck"])
+		gpgkey := utils.Interface2String(line["gpgkey"])
+		if enabled == 1 {
+			// insert command information into command
+			cID, err := addCommandToDB(tx, "addyum", data.PassiveMode, hostid)
+			errs = append(errs, err...)
+			if cID == 0 {
+				return 0, errs
+			}
 
-	sftpClient, err := sftp.ConnectSFTP(hostip, user, "", privateKeyFile, hostPort, true, true)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303004, "error", "%s", err))
-		return retIps, errs
-	}
-
-	getHostIpsScripts := WorkingData.workingRoot + "/" + scriptsPath + "/" + scriptGetHostIPs
-	dstScript := "/tmp/" + scriptGetHostIPs
-	e = sftp.Put(sftpClient, getHostIpsScripts, dstScript)
-	sftpClient.Close()
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303005, "error", "%s", err))
-		return retIps, errs
-	}
-
-	addr := hostip + ":" + strconv.Itoa(hostPort)
-	sshClient, err := sshclient.DialWithKey(addr, user, privateKeyFile)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303006, "error", "%s", err))
-		return retIps, errs
-	}
-
-	out, err := sshClient.Cmd("chmod +x " + dstScript).SmartOutput()
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303007, "error", "%s:%s", err, out))
-		return retIps, errs
+			parameters := make(map[string]string, 0)
+			parameters["yumName"] = yumName
+			parameters["yumCatalog"] = yumCatalog
+			parameters["base_url"] = base_url
+			parameters["gpgcheck"] = gpgcheck
+			parameters["gpgkey"] = gpgkey
+			pid, err := addCommandParametersToDB(tx, cID, parameters)
+			errs = append(errs, err...)
+			if pid == 0 {
+				return 0, errs
+			}
+		}
 	}
 
-	ipstr, err := sshClient.Cmd(dstScript).SmartOutput()
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303008, "error", "get host ip error %s:%s", err, ipstr))
-		return retIps, errs
-	}
-
-	return retIps, errs
+	return 1, errs
 }

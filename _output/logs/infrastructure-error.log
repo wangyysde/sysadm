@@ -62,3 +62,14 @@
 {"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2022-07-19T14:55:50+08:00"}
 {"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2022-07-19T14:55:50+08:00"}
 {"level":"debug","msg":"erroCode: 107003 Msg: Connect to postgre server with host: 172.28.1.10 and Port: 30306. successful","time":"2022-07-19T14:55:50+08:00"}
+{"level":"debug","msg":"erroCode: 10010001 Msg: try to start infrastructure server","time":"2023-01-27T20:33:25+08:00"}
+{"level":"error","msg":"erroCode: 1001003 Msg: Can not open the configuration file:/data/code/golang/src/bzhyProjects/sysadm/_output/_output/conf/infrastructure.yaml, error: open /data/code/golang/src/bzhyProjects/sysadm/_output/_output/conf/infrastructure.yaml: no such file or directory.","time":"2023-01-27T20:33:25+08:00"}
+{"level":"debug","msg":"erroCode: 501001 Msg: now checking IP address 127.0.0.1 ","time":"2023-01-27T20:33:25+08:00"}
+{"level":"warning","msg":"erroCode: 1001011 Msg: socket file(/var/run/infrastructure.sock) set in the configuration file  is not a valid socket file","time":"2023-01-27T20:33:25+08:00"}
+{"level":"debug","msg":"erroCode: 501001 Msg: now checking IP address apiserver ","time":"2023-01-27T20:33:25+08:00"}
+{"level":"error","msg":"erroCode: 501005 Msg: Lookup the IP of address(apiserver) error lookup apiserver on 223.6.6.6:53: no such host.","time":"2023-01-27T20:33:25+08:00"}
+{"level":"warning","msg":"erroCode: 1001029 Msg: Address of server has be found in the configuration file, but the value(apiserver) is not a valid server address([{%!s(int=501001) %!s(int=1) now checking IP address apiserver } {%!s(int=501005) %!s(int=4) Lookup the IP of address(apiserver) error lookup apiserver on 223.6.6.6:53: no such host.}])","time":"2023-01-27T20:33:25+08:00"}
+{"level":"debug","msg":"erroCode: 10010002 Msg: configurations have been handled and it is ok","time":"2023-01-27T20:33:25+08:00"}
+{"level":"debug","msg":"erroCode: 10010003 Msg: loggers have been set","time":"2023-01-27T20:33:25+08:00"}
+{"level":"debug","msg":"erroCode: 107001 Msg: Try to open a connection to mysql server","time":"2023-01-27T20:33:46+08:00"}
+{"level":"debug","msg":"erroCode: 107003 Msg: Connect to DB server with host: 172.28.1.10 and Port: 30306. successful","time":"2023-01-27T20:33:46+08:00"}

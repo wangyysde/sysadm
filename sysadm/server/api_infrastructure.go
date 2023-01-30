@@ -22,6 +22,7 @@ import (
 	"github.com/wangyysde/sysadm/infrastructure/app"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	sysadmConfig "github.com/wangyysde/sysadm/config"
 )
 
 func AddInfrastructureHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror){
@@ -46,7 +47,22 @@ func AddInfrastructureHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror
 	workingRoot := RuntimeData.StartParas.SysadmRootPath 
 
 	infrastructure := app.NewInfrastructure()
-	err := infrastructure.SetWorkingData(dbConf,&logConf,workingRoot)
+	apiServer := app.ApiServer{
+		Server: sysadmConfig.Server{
+			Address: definedConfig.ApiServer.Address,
+			Port: definedConfig.ApiServer.Port,
+			Socket: "",
+		},
+		Tls: sysadmConfig.Tls{
+			IsTls: definedConfig.ApiServer.Tls,
+			Ca: definedConfig.ApiServer.Ca,
+			Cert: definedConfig.ApiServer.Cert,
+			Key: definedConfig.ApiServer.Key,
+			InsecureSkipVerify: true,
+		},
+		ApiVersion: definedConfig.ApiServer.ApiVersion,
+	}
+	err := infrastructure.SetWorkingData(dbConf,&logConf,workingRoot,&apiServer)
 	errs = append(errs,err...)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
 		return errs

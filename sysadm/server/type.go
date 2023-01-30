@@ -27,8 +27,8 @@ import (
 
 // Start parameters of the program
 type StartParas struct {
-	// Point to configuration file path of server 
-	ConfigPath  string 
+	// Point to configuration file path of server
+	ConfigPath string
 	// root path of sysadm executeable package
 	SysadmRootPath string
 }
@@ -45,22 +45,22 @@ type RunningParas struct {
 }
 
 type RuningData struct {
-	// the start parameters of program such as configuration file , root path of program 
+	// the start parameters of program such as configuration file , root path of program
 	StartParas *StartParas
-	// the runing parameters of program what come from environment, configure file or default value 
+	// the runing parameters of program what come from environment, configure file or default value
 	RuningParas *RunningParas
-	// the old start parameters of program after the program reload or restart  
+	// the old start parameters of program after the program reload or restart
 	OldStartParas *StartParas
 	// the old runing parameters of program after the program reload or restart
 	OldRunningParas *RunningParas
 }
 
 type actionHandler struct {
-	name string
-	templateFile string 
-	handler sysadmServer.HandlerFunc
-	method []string
+	name         string
+	templateFile string
+	handler      sysadmServer.HandlerFunc
+	method       []string
 }
 
-var RuntimeData RuningData = RuningData{StartParas: &StartParas{}, RuningParas: &RunningParas{},OldStartParas:nil,OldRunningParas:nil}
+var RuntimeData RuningData = RuningData{StartParas: &StartParas{}, RuningParas: &RunningParas{}, OldStartParas: nil, OldRunningParas: nil}
 var CliData StartParas = StartParas{ConfigPath: ""}
