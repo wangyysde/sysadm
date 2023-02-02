@@ -22,7 +22,6 @@ import (
 
 	"github.com/wangyysde/sysadm/db"
 	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
 )
 
 /*
@@ -30,42 +29,13 @@ addCommandToDB add the information of a command into DB
 return 1 and []sysadmerror.Sysadmerror
 otherwise return 0  and []sysadmerror.Sysadmerror
 */
-func addCommandToDB(tx *db.Tx, command string, passiveMode int, hostid int) (int, []sysadmerror.Sysadmerror) {
+func addCommandToDB(tx *db.Tx, command string, passiveMode int, hostid,nextCommandID int) (int, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30304001, "debug", "try to add the information of command %s to DB", command))
-	// get the last commandid which will be added
-	whereStatement := make(map[string]string, 0)
-	whereStatement["tableName"] = "command"
-	whereStatement["fieldName"] = "commandID"
-	selectData := db.SelectData{
-		Tb:        []string{"ids"},
-		OutFeilds: []string{"nextValue"},
-		Where:     whereStatement,
-	}
-
-	dbEntity := WorkingData.dbConf.Entity
-	retData, err := dbEntity.QueryData(&selectData)
-	errs = append(errs, err...)
-	if retData == nil {
-		return 0, errs
-	}
-
-	commandID := 0
-	line := retData[0]
-	if v, ok := line["nextValue"]; ok {
-		id, e := utils.Interface2Int(v)
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(303040002, "error", "got commandID error %s", e))
-		} else {
-			commandID = id
-		}
-	} else {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(303040003, "error", "got commandID error"))
-	}
-
+	
 	insertData := make(db.FieldData, 0)
-	insertData["commandID"] = commandID
+	insertData["commandID"] = nextCommandID
 	insertData["command"] = command
 	insertData["hostID"] = hostid
 	if passiveMode == 1 {
@@ -80,25 +50,13 @@ func addCommandToDB(tx *db.Tx, command string, passiveMode int, hostid int) (int
 	insertData["tryTimes"] = 0
 	insertData["status"] = 0
 
-	_, err = tx.InsertData("command", insertData)
+	_, err := tx.InsertData("command", insertData)
 	errs = append(errs, err...)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("error") {
 		return 0, errs
 	}
 
-	// update commandID value in ids table using transaction
-	updateData := make(db.FieldData, 0)
-	updateData["nextValue"] = commandID + 1
-	whereStatement["tableName"] = "command"
-	whereStatement["fieldName"] = "commandID"
-
-	_, err = tx.UpdateData("ids", updateData, whereStatement)
-	errs = append(errs, err...)
-	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
-		return 0, errs
-	}
-
-	return commandID, errs
+	return nextCommandID, errs
 
 }
 

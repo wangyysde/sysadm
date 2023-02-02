@@ -59,6 +59,7 @@ func (p MySQL) OpenDbConnect() []sysadmerror.Sysadmerror {
 		//dbDsnstr = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password,config.DbName)
 	}
 
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107037, "debug", "connect statement %s", dbDsnstr))
 	dbConnect, err := sql.Open("mysql", dbDsnstr)
 	if err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107002, "fatal", "Can not connect to DB server with host: %s and Port: %d. error message is :%s", config.Host, config.Port, err))
@@ -117,6 +118,7 @@ func (p MySQL) InsertData(tb string, data FieldData) (int, []sysadmerror.Sysadme
 	valueStr = valueStr + ")"
 
 	dbConnect := p.Config.Connect
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107038, "debug", "insert statement %s", (insertStr + valueStr)))
 	stmt, err := dbConnect.Prepare((insertStr + valueStr))
 	if err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107011, "error", "Prepare SQL(%s) error: %s.", err, (insertStr+valueStr)))
@@ -204,10 +206,10 @@ func (p MySQL) QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror
 	first = true
 	for key, value := range sd.Where {
 		if first {
-			querySQL = querySQL + " where " + key + "='" + value + "'"
+			querySQL = querySQL + " where " + key + value
 			first = false
 		} else {
-			querySQL = querySQL + " and " + key + "='" + value + "'"
+			querySQL = querySQL + " and " + key + value
 		}
 	}
 
@@ -313,10 +315,10 @@ func (p MySQL) UpdateData(tb string, data FieldData, where map[string]string) (i
 	first = true
 	for key, value := range where {
 		if first {
-			querySQL = querySQL + " where " + key + value
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
 			first = false
 		} else {
-			querySQL = querySQL + " and " + key + value
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
 		}
 	}
 
@@ -371,10 +373,10 @@ func (p MySQL) DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror) {
 	first = true
 	for key, value := range dd.Where {
 		if first {
-			querySQL = querySQL + " where " + key + value
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
 			first = false
 		} else {
-			querySQL = querySQL + " and " + key + value
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
 		}
 	}
 
@@ -505,10 +507,10 @@ func (p MySQL) BuildUpdateQuery(tb string, data FieldData, where map[string]stri
 	first = true
 	for key, value := range where {
 		if first {
-			querySQL = querySQL + " where " + key + value
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
 			first = false
 		} else {
-			querySQL = querySQL + " and " + key + value
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
 		}
 	}
 
@@ -544,10 +546,10 @@ func (p MySQL) BuildDeleteQuery(dd *SelectData) (string, []sysadmerror.Sysadmerr
 	first = true
 	for key, value := range dd.Where {
 		if first {
-			querySQL = querySQL + " where " + key + value
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
 			first = false
 		} else {
-			querySQL = querySQL + " and " + key + value
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
 		}
 	}
 

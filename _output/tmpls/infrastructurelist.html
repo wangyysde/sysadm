@@ -483,14 +483,14 @@
 		</div>
 		<div class="yum-radio">
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
-			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onclick="changeAgentMode()"> Agent被动模式
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onclick="changeAgentMode()"> 被动模式
 		</div>
 		<div class="yum-item">
-			Agent端口： <input id="agentPort" type="text" name="agentPort"> *agent运行主动模式时，其侦听端口号
+			Agent端口： <input id="agentPort" type="text" name="agentPort"> *被动模式时，客户端侦听的端口号
 		</div>
 		
 		<div class="yum-item">
-			指令接收地址： <input id="receiveCommandUri" type="text" name="receiveCommandUri"> *当Agent运行于主动模式时，其接收指令的URI地址
+			指令接收地址： <input id="receiveCommandUri" type="text" name="receiveCommandUri"> *被动模式时，客户端接收指令的URL地址
 		</div>
 		<div class="yum-item">
 			操作系统：

@@ -6184,3 +6184,580 @@ time=2023-01-30T14:55:29+08:00 level=debug msg=erroCode: 501014 Msg: not found a
 time=2023-01-30T14:55:29+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
 time=2023-01-30T14:55:29+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.typeid=d.typeID and a.osid=b.osID and a.versionid=c.versionID
 time=2023-01-30T14:55:29+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 202001 Msg: try to start registyctl server
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201036 Msg: got configuration file path is: /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/conf/registryctl.yaml
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201038 Msg: got the address of server: 172.28.2.4
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201039 Msg: got the port of server: 5001
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201040 Msg: socket file's path is : /var/run/registryctl.sock
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201041 Msg: access log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-access.log
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201042 Msg: error log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-error.log
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201043 Msg: the kind of log is  : text
+time=2023-01-31T17:41:14+08:00 level=debug msg=erroCode: 201044 Msg: log level has be set to: debug
+time=2023-01-31T17:41:15+08:00 level=warning msg=erroCode: 201026 Msg: We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201045 Msg: timeformat has be set to: 2006-01-02 15:04:05
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201046 Msg: is split error and access log to difference log file: true
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201047 Msg: registryctl user is : registryctl_user
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201048 Msg: registryctl password is : registryctl_password
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201069 Msg: db type is: mysql
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201049 Msg: db host : 192.53.117.73
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201050 Msg: db port : 3306
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201051 Msg: db user: sysadm
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201052 Msg: db password: bwyy1679
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201053 Msg: db name: k8ssysadm
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201054 Msg: ssl mode for db: disable
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201058 Msg: maxconnection to db is: 100
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201059 Msg: idle connection to db is: 20
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201060 Msg: registry host is: 172.8.2.4
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201061 Msg: registry server port is: 5000
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201066 Msg: registry server user sysadm_registry_user
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201066 Msg: registry server password sysadm_registry_password
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201070 Msg: now handling configurations for sysadm section
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 201067 Msg: sysadm host is: 172.28.2.4
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 202004 Msg: configurations have been handled and it is ok
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 202005 Msg: try to setting logger...
+time=2023-01-31T17:41:15+08:00 level=debug msg=erroCode: 202006 Msg: loggers have been set
+time=2023-01-31T17:41:16+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=POST   /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1PostHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=DELETE /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1DeleteHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=GET    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.getHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=POST   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.postHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=HEAD   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.headHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=PUT    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.putHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=PATCH  /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.patchHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=DELETE /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.deleteHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-01-31T17:41:16+08:00 level=debug msg=POST   /api/v1.0/yum/:action     --> github.com/wangyysde/sysadm/registryctl/server.apiV1YumPostHandlers (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-01-31T17:41:16+08:00 level=debug msg=erroCode: 2040001 Msg: add group handlers for  /api/1.0/yum
+time=2023-01-31T17:41:16+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/registryctl/server.DaemonStart.func1 (3 handlers)
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=Listening and serving HTTP on 172.28.2.4:5001
+
+time=2023-01-31T17:41:16+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/registryctl.sock
+
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.typeid=d.typeID and a.osid=b.osID and a.versionid=c.versionID
+time=2023-01-31T17:41:36+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.typeid=d.typeID and a.osid=b.osID and a.versionid=c.versionID
+time=2023-01-31T17:42:03+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T17:42:11+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.versionid=c.versionID and a.typeid=d.typeID and a.osid=b.osID
+time=2023-01-31T17:52:38+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T17:52:46+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 1
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="1" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T18:29:50+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}} to the client
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 2
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="2" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T18:29:54+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}} to the client
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 1
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.versionid=c.versionID and a.typeid=d.typeID and yumid="1" and a.osid=b.osID
+time=2023-01-31T18:36:23+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}} to the client
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 2
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="2" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T18:36:26+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}} to the client
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T18:47:49+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 1
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.versionid=c.versionID and a.typeid=d.typeID and yumid="1" and a.osid=b.osID
+time=2023-01-31T18:48:12+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}} to the client
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 2
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="2" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-01-31T18:48:15+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}} to the client
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.versionid=c.versionID and a.typeid=d.typeID and a.osid=b.osID
+time=2023-01-31T18:48:18+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 202001 Msg: try to start registyctl server
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201036 Msg: got configuration file path is: /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/conf/registryctl.yaml
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201038 Msg: got the address of server: 172.28.2.4
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201039 Msg: got the port of server: 5001
+time=2023-02-02T14:05:23+08:00 level=warning msg=erroCode: 201013 Msg: We have found server socket file (/var/run/registryctl.sock) from configuration file,but the value of server socket file is not a valid server socket file(open /var/run/registryctl.sock: no such device or address).default value of server socket file: /var/run/sysadm.sock will be used.
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201040 Msg: socket file's path is : /var/run/sysadm.sock
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201041 Msg: access log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-access.log
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201042 Msg: error log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-error.log
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201043 Msg: the kind of log is  : text
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201044 Msg: log level has be set to: debug
+time=2023-02-02T14:05:23+08:00 level=warning msg=erroCode: 201026 Msg: We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201045 Msg: timeformat has be set to: 2006-01-02 15:04:05
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201046 Msg: is split error and access log to difference log file: true
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201047 Msg: registryctl user is : registryctl_user
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201048 Msg: registryctl password is : registryctl_password
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201069 Msg: db type is: mysql
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201049 Msg: db host : 192.53.117.73
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201050 Msg: db port : 3306
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201051 Msg: db user: sysadm
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201052 Msg: db password: bwyy1679
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201053 Msg: db name: k8ssysadm
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201054 Msg: ssl mode for db: disable
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201058 Msg: maxconnection to db is: 100
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201059 Msg: idle connection to db is: 20
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201060 Msg: registry host is: 172.8.2.4
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201061 Msg: registry server port is: 5000
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201066 Msg: registry server user sysadm_registry_user
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201066 Msg: registry server password sysadm_registry_password
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201070 Msg: now handling configurations for sysadm section
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 201067 Msg: sysadm host is: 172.28.2.4
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 202004 Msg: configurations have been handled and it is ok
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 202005 Msg: try to setting logger...
+time=2023-02-02T14:05:23+08:00 level=debug msg=erroCode: 202006 Msg: loggers have been set
+time=2023-02-02T14:05:23+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=POST   /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1PostHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=DELETE /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1DeleteHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=GET    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.getHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=POST   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.postHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=HEAD   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.headHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=PUT    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.putHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=PATCH  /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.patchHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=DELETE /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.deleteHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-02-02T14:05:24+08:00 level=debug msg=POST   /api/v1.0/yum/:action     --> github.com/wangyysde/sysadm/registryctl/server.apiV1YumPostHandlers (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-02-02T14:05:24+08:00 level=debug msg=erroCode: 2040001 Msg: add group handlers for  /api/1.0/yum
+time=2023-02-02T14:05:24+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/registryctl/server.DaemonStart.func1 (3 handlers)
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=Listening and serving HTTP on 172.28.2.4:5001
+
+time=2023-02-02T14:05:24+08:00 level=debug msg=Listening and serving HTTP on unix://var/run/sysadm.sock
+
+time=2023-02-02T14:05:24+08:00 level=error msg=listen tcp 172.28.2.4:5001: bind: address already in use
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 202001 Msg: try to start registyctl server
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201036 Msg: got configuration file path is: /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/conf/registryctl.yaml
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201038 Msg: got the address of server: 172.28.2.4
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201039 Msg: got the port of server: 5001
+time=2023-02-02T14:50:19+08:00 level=warning msg=erroCode: 201013 Msg: We have found server socket file (/var/run/registryctl.sock) from configuration file,but the value of server socket file is not a valid server socket file(open /var/run/registryctl.sock: no such device or address).default value of server socket file: /var/run/sysadm.sock will be used.
+time=2023-02-02T14:50:19+08:00 level=error msg=erroCode: 201014 Msg: we can not open socket file (/var/run/sysadm.sock): open /var/run/sysadm.sock: no such device or address .
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201040 Msg: socket file's path is : 
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201041 Msg: access log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-access.log
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201042 Msg: error log file's path is : /data/host/documented_document/code/golang/bzhyProjects/sysadm/_output/logs/registryctl-error.log
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201043 Msg: the kind of log is  : text
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201044 Msg: log level has be set to: debug
+time=2023-02-02T14:50:19+08:00 level=warning msg=erroCode: 201026 Msg: We have found log timestampformat from configuration file,but the value of log timestampformat is not a valid(format is empty,default format will be set).default value of log timestampformat: 2006-01-02 15:04:05 will be used.
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201045 Msg: timeformat has be set to: 2006-01-02 15:04:05
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201046 Msg: is split error and access log to difference log file: true
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201047 Msg: registryctl user is : registryctl_user
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201048 Msg: registryctl password is : registryctl_password
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201069 Msg: db type is: mysql
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201049 Msg: db host : 192.53.117.73
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201050 Msg: db port : 3306
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201051 Msg: db user: sysadm
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201052 Msg: db password: bwyy1679
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201053 Msg: db name: k8ssysadm
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201054 Msg: ssl mode for db: disable
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201058 Msg: maxconnection to db is: 100
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201059 Msg: idle connection to db is: 20
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201060 Msg: registry host is: 172.8.2.4
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201061 Msg: registry server port is: 5000
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201066 Msg: registry server user sysadm_registry_user
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201066 Msg: registry server password sysadm_registry_password
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201070 Msg: now handling configurations for sysadm section
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 201067 Msg: sysadm host is: 172.28.2.4
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 202004 Msg: configurations have been handled and it is ok
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 202005 Msg: try to setting logger...
+time=2023-02-02T14:50:19+08:00 level=debug msg=erroCode: 202006 Msg: loggers have been set
+time=2023-02-02T14:50:20+08:00 level=debug msg=Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export SYSADMSERVER_MODE=release
+ - using code:	sysadmServer.SetMode(sysadmServer.ReleaseMode)
+
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=POST   /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1PostHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=DELETE /api/v1.0/registryctl/:action --> github.com/wangyysde/sysadm/registryctl/server.apiV1DeleteHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=GET    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.getHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=POST   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.postHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=HEAD   /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.headHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=PUT    /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.putHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=PATCH  /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.patchHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=DELETE /v2/*path                 --> github.com/wangyysde/sysadm/registryctl/server.deleteHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-02-02T14:50:20+08:00 level=debug msg=POST   /api/v1.0/yum/:action     --> github.com/wangyysde/sysadm/registryctl/server.apiV1YumPostHandlers (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 202008 Msg: try to initating DB entity...
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100001 Msg: Now checking database configurations.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100003 Msg: Database type mysql is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100006 Msg: Database server host 192.53.117.73 is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100008 Msg: Database server port 3306 is right.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 100016 Msg: all database configuration parametes have be checked.
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 107001 Msg: Try to open a connection to mysql server
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 107003 Msg: Connect to DB server with host: 192.53.117.73 and Port: 3306. successful
+time=2023-02-02T14:50:20+08:00 level=debug msg=erroCode: 2040001 Msg: add group handlers for  /api/1.0/yum
+time=2023-02-02T14:50:20+08:00 level=debug msg=GET    /ping                     --> github.com/wangyysde/sysadm/registryctl/server.DaemonStart.func1 (3 handlers)
+
+time=2023-02-02T14:50:20+08:00 level=debug msg=Listening and serving HTTP on 172.28.2.4:5001
+
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-02-02T14:51:36+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 1
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="1" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-02-02T14:52:01+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}} to the client
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 2
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where yumid="2" and a.osid=b.osID and a.versionid=c.versionID and a.typeid=d.typeID
+time=2023-02-02T14:52:05+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}} to the client
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 2040002 Msg: handling the request for yum module  with action yumlist.
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key yumid was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: yumid value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key name was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: name value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key osid was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: osid value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key typeid was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: typeid value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key kind was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: kind value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key enabled was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: enabled value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key start was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: start value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501013 Msg: the data for key numperpage was not found
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501012 Msg: try to get data for key: numperpage value: 
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 501014 Msg: not found any data for keys
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 107019 Msg: now preparing db query.
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 107021 Msg: now execute the SQL query: select a.yumid,a.name,a.osid,b.name as osName,a.versionid,c.name as versionName,a.typeid,d.name as typeName,a.catalog,a.kind,base_url,enabled,gpgcheck,gpgkey from `yum` a,`os` b,`version` c,`type` d where a.versionid=c.versionID and a.typeid=d.typeID and a.osid=b.osID
+time=2023-02-02T14:52:11+08:00 level=debug msg=erroCode: 800010003 Msg: send data: []map[string]interface {}{map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34}, "catalog":[]uint8{0x62, 0x61, 0x73, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x31}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x6f, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x32}, "name":[]uint8{0x74, 0x65, 0x73, 0x74, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x31}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x37, 0x2f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f}, "catalog":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x52, 0x50, 0x4d, 0x2d, 0x47, 0x50, 0x47, 0x2d, 0x4b, 0x45, 0x59, 0x2d, 0x43, 0x65, 0x6e, 0x74, 0x4f, 0x53, 0x2d, 0x37}, "kind":[]uint8{0x30}, "name":[]uint8{0x75, 0x70, 0x64, 0x61, 0x74, 0x65}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x37}, "versionid":[]uint8{0x31}, "yumid":[]uint8{0x32}}, map[string]interface {}{"base_url":[]uint8{0x68, 0x74, 0x74, 0x70, 0x73, 0x3a, 0x2f, 0x2f, 0x6d, 0x69, 0x72, 0x72, 0x6f, 0x72, 0x73, 0x2e, 0x31, 0x36, 0x33, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73, 0x2f, 0x38, 0x2d, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x42, 0x61, 0x73, 0x65, 0x4f, 0x53, 0x2f, 0x78, 0x38, 0x36, 0x5f, 0x36, 0x34, 0x2f, 0x6f, 0x73, 0x2f}, "catalog":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "enabled":[]uint8{0x31}, "gpgcheck":[]uint8{0x30}, "gpgkey":[]uint8{}, "kind":[]uint8{0x30}, "name":[]uint8{0x42, 0x61, 0x73, 0x65, 0x4f, 0x53}, "osName":[]uint8{0x63, 0x65, 0x6e, 0x74, 0x6f, 0x73}, "osid":[]uint8{0x31}, "typeName":[]uint8{0x6f, 0x73}, "typeid":[]uint8{0x31}, "versionName":[]uint8{0x38}, "versionid":[]uint8{0x32}, "yumid":[]uint8{0x33}}} to the client

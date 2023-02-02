@@ -306,6 +306,9 @@ func BuildReverseProxyDirector(c *sysadmServer.Context,data *ApiServerData)(func
 		return nil,errs
 	}
 	
+	url := c.Request.URL
+	query := url.RawQuery
+	rawURL = rawURL + "?" + query
 	url,e := url.Parse(rawURL)
 	if e != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(800010006,"error","parse proxy url(%s) error: %s",rawURL,e))

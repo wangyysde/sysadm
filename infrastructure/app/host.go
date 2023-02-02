@@ -75,6 +75,7 @@ func addHost(c *sysadmServer.Context) {
 		return
 	}
 
+	fmt.Printf("HOSTID %d\n", hostid)
 	// insert IP information into hostIP table
 	ipID, err := addManageIPToDB(tx, &requestData, hostid)
 	errs = append(errs, err...)
@@ -86,18 +87,19 @@ func addHost(c *sysadmServer.Context) {
 		return
 	}
 
-	// insert the relation between yum and host into hostYum
-	rID, err := addYumHostToDB(tx, &requestData, hostid)
-	if rID == 0 {
+	nextCommandID, err := getNextID("command", "commandID", tx)
+	errs = append(errs, err...)
+	if nextCommandID == 0 {
 		_ = tx.Rollback()
-		err := apiutils.SendResponseForErrorMessage(c, 30301003, fmt.Sprintf("add the information of  host %s into DB error", requestData.Hostname))
+		err := apiutils.SendResponseForErrorMessage(c, 30303017, fmt.Sprintf("add the information of  host %s into DB error", requestData.Hostname))
 		errs = append(errs, err...)
 		logErrors(errs)
 		return
 	}
 
 	// insert command information into command
-	cID, err := addCommandToDB(tx, "gethostip", requestData.PassiveMode, hostid)
+	cID, err := addCommandToDB(tx, "gethostip", requestData.PassiveMode, hostid, nextCommandID)
+	errs = append(errs, err...)
 	if cID == 0 {
 		_ = tx.Rollback()
 		err := apiutils.SendResponseForErrorMessage(c, 30301004, fmt.Sprintf("add the information of host %s into DB error", requestData.Hostname))
@@ -110,6 +112,7 @@ func addHost(c *sysadmServer.Context) {
 	parameters["withmac"] = "1"
 	parameters["withmask"] = "1"
 	pid, err := addCommandParametersToDB(tx, cID, parameters)
+	errs = append(errs, err...)
 	if pid == 0 {
 		_ = tx.Rollback()
 		err := apiutils.SendResponseForErrorMessage(c, 30301005, fmt.Sprintf("add the information of host %s into DB error", requestData.Hostname))
@@ -118,7 +121,9 @@ func addHost(c *sysadmServer.Context) {
 		return
 	}
 
-	yid, err := addYumHostToDB(tx, &requestData, hostid)
+	nextCommandID++
+	yid, err := addYumHostToDB(tx, &requestData, hostid, nextCommandID)
+	errs = append(errs, err...)
 	if yid == 0 {
 		_ = tx.Rollback()
 		err := apiutils.SendResponseForErrorMessage(c, 30301006, fmt.Sprintf("add the information of host %s into DB error", requestData.Hostname))
@@ -218,33 +223,11 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(3030004, "debug", "now try to insert host information into host table"))
 
 	// get the last hostid which will be added
-	whereStatement := make(map[string]string,0)
-	whereStatement["tableName"] = "host"
-	whereStatement["fieldName"] = "hostid"
-	selectData := db.SelectData{
-		Tb:        []string{"ids"},
-		OutFeilds: []string{"nextValue"},
-		Where: whereStatement,
-	}
-	
-	dbEntity := WorkingData.dbConf.Entity
-	retData, err := dbEntity.QueryData(&selectData)
+	nextHostid, err := getNextID("host", "hostid", tx)
 	errs = append(errs, err...)
-	if retData == nil {
+	if nextHostid == 0 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303018, "error", "can not get next hostid"))
 		return 0, errs
-	}
-
-	hostid := 0
-	line := retData[0]
-	if v, ok := line["nextValue"]; ok {
-		id, e := utils.Interface2Int(v)
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303013, "error", "got hostid error %s", e))
-		} else {
-			hostid = id
-		}
-	} else {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303014, "error", "got hostid error"))
 	}
 
 	insertData := make(db.FieldData, 0)
@@ -255,7 +238,7 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	insertData["agentPassive"] = data.PassiveMode
 	insertData["agentPort"] = data.AgentPort
 	insertData["receiveCommandUri"] = data.ReceiveCommandUri
-	insertData["hostid"] = hostid
+	insertData["hostid"] = nextHostid
 
 	_, err = tx.InsertData("host", insertData)
 	errs = append(errs, err...)
@@ -264,18 +247,14 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	}
 
 	// update hostid value id ids table using transaction
-	updateData := make(db.FieldData, 0)
-	updateData["nextValue"] = hostid + 1
-	whereStatement["tableName"] = "host"
-	whereStatement["fieldName"] = "hostid"
-
-	_, err = tx.UpdateData("ids",updateData,whereStatement)
+	tmpID, err := updateNextID("host", "hostid", tx, (nextHostid + 1))
 	errs = append(errs, err...)
-	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
+	if tmpID == 0 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303019, "error", "can not update next hostid"))
 		return 0, errs
 	}
-	
-	return hostid, errs
+
+	return nextHostid, errs
 }
 
 /*
@@ -321,7 +300,7 @@ addYumHostToDB add relation information between host and yum into DB
 return 1 and []sysadmerror.Sysadmerror
 otherwise return 0  and []sysadmerror.Sysadmerror
 */
-func addYumHostToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysadmerror.Sysadmerror) {
+func addYumHostToDB(tx *db.Tx, data *ApiHost, hostid, nextCommandID int) (int, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303010, "debug", "try to add yum host relations to DB"))
@@ -336,12 +315,25 @@ func addYumHostToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysadmerror.Sy
 		if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
 			return 0, errs
 		}
+
+		cid, err := addYumConfigCommandToDB(tx, hostid, nextCommandID, yID, data)
+		errs = append(errs, err...)
+		if cid == 0 {
+			return 0, errs
+		}
+		nextCommandID++
+	}
+
+	nextID, err := updateNextID("command", "commandID", tx, nextCommandID)
+	errs = append(errs, err...)
+	if nextID == 0 {
+		return 0, errs
 	}
 
 	return 1, errs
 }
 
-func addYumConfigCommandToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysadmerror.Sysadmerror) {
+func addYumConfigCommandToDB(tx *db.Tx, hostid, nextCommandID int, yumid string, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303011, "debug", "try to add yum configuration command  to DB"))
 
@@ -360,28 +352,12 @@ func addYumConfigCommandToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysad
 	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiVersion, tls, address, port, ca, cert, key)
 	urlRaw, _ := apiutils.BuildApiUrl(apiServerData)
 
-	var yumStr = ""
-	yumid := data.YumID
-	for _, id := range yumid {
-		if yumStr == "" {
-			yumStr = id
-		} else {
-			yumStr = yumStr + "," + id
-		}
-	}
-
 	requestParas := httpclient.RequestParams{}
 	requestParas.Url = urlRaw
 	requestParas.Method = http.MethodPost
-	queryData := httpclient.RequestData{
-		Key:   "yumid",
-		Value: yumStr,
-	}
-	var queryDataSlice []*httpclient.RequestData
-	queryDataSlice = append(queryDataSlice, &queryData)
-	requestParas.QueryData = queryDataSlice
-
-	body, err := httpclient.SendRequest(&requestParas)
+	requestParasP, err := httpclient.AddQueryData(&requestParas, "yumid", yumid)
+	errs = append(errs, err...)
+	body, err := httpclient.SendRequest(requestParasP)
 	errs = append(errs, err...)
 	ret, err := apiutils.ParseResponseBody(body)
 	errs = append(errs, err...)
@@ -393,33 +369,101 @@ func addYumConfigCommandToDB(tx *db.Tx, data *ApiHost, hostid int) (int, []sysad
 		return 0, errs
 	}
 
-	for _, line := range ret.Message {
-		yumName := utils.Interface2String(line["name"])
-		yumCatalog := utils.Interface2String(line["catalog"])
-		base_url := utils.Interface2String(line["base_url"])
-		enabled, _ := utils.Interface2Int(line["enabled"])
-		gpgcheck := utils.Interface2String(line["gpgcheck"])
-		gpgkey := utils.Interface2String(line["gpgkey"])
-		if enabled == 1 {
-			// insert command information into command
-			cID, err := addCommandToDB(tx, "addyum", data.PassiveMode, hostid)
-			errs = append(errs, err...)
-			if cID == 0 {
-				return 0, errs
-			}
-
-			parameters := make(map[string]string, 0)
-			parameters["yumName"] = yumName
-			parameters["yumCatalog"] = yumCatalog
-			parameters["base_url"] = base_url
-			parameters["gpgcheck"] = gpgcheck
-			parameters["gpgkey"] = gpgkey
-			pid, err := addCommandParametersToDB(tx, cID, parameters)
-			errs = append(errs, err...)
-			if pid == 0 {
-				return 0, errs
-			}
+	// add configurate yum command into DB
+	line := ret.Message[0]
+	yumName := utils.Interface2String(line["name"])
+	yumCatalog := utils.Interface2String(line["catalog"])
+	base_url := utils.Interface2String(line["base_url"])
+	enabled, _ := utils.Interface2Int(line["enabled"])
+	gpgcheck := utils.Interface2String(line["gpgcheck"])
+	gpgkey := utils.Interface2String(line["gpgkey"])
+	if enabled == 1 {
+		// insert command information into command
+		cID, err := addCommandToDB(tx, "addyum", data.PassiveMode, hostid, nextCommandID)
+		errs = append(errs, err...)
+		if cID == 0 {
+			return 0, errs
 		}
+
+		parameters := make(map[string]string, 0)
+		parameters["yumName"] = yumName
+		parameters["yumCatalog"] = yumCatalog
+		parameters["base_url"] = base_url
+		parameters["gpgcheck"] = gpgcheck
+		parameters["gpgkey"] = gpgkey
+		pid, err := addCommandParametersToDB(tx, cID, parameters)
+		errs = append(errs, err...)
+		if pid == 0 {
+			return 0, errs
+		}
+	}
+
+	return 1, errs
+}
+
+// get next ID from ids table for tableName with fieldName
+// return the ID value and []sysadmerror.Sysadmerror if successfule
+// otherewise return 0 and []sysadmerror.Sysadmerror
+func getNextID(tableName, fieldName string, tx *db.Tx) (int, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303013, "debug", "try to get table %s next ID with field %s", tableName, fieldName))
+
+	if strings.TrimSpace(tableName) == "" || strings.TrimSpace(fieldName) == "" {
+		return 0, append(errs, sysadmerror.NewErrorWithStringLevel(30303014, "error", "table name %s or field name %s is empty", tableName, fieldName))
+	}
+
+	whereStatement := make(map[string]string, 0)
+	whereStatement["tableName"] = " = '" + tableName + "'"
+	whereStatement["fieldName"] = " = '" + fieldName + "'"
+	selectData := db.SelectData{
+		Tb:        []string{"ids"},
+		OutFeilds: []string{"nextValue"},
+		Where:     whereStatement,
+	}
+
+	dbEntity := WorkingData.dbConf.Entity
+	retData, err := dbEntity.QueryData(&selectData)
+	errs = append(errs, err...)
+	if retData == nil {
+		return 0, errs
+	}
+
+	nextID := 0
+	line := retData[0]
+	if v, ok := line["nextValue"]; ok {
+		id, e := utils.Interface2Int(v)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303015, "error", "can not get next ID with table %s and field %s error %s", tableName, fieldName, e))
+			return 0, errs
+		} else {
+			nextID = id
+		}
+	} else {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303016, "error", "can not get next ID with table %s and field %s", tableName, fieldName))
+		return 0, errs
+	}
+
+	return nextID, errs
+}
+
+// update next ID into ids table for tableName with fieldName
+// return the 1 and []sysadmerror.Sysadmerror if successfule
+// otherewise return 0 and []sysadmerror.Sysadmerror
+func updateNextID(tableName, fieldName string, tx *db.Tx, nextID int) (int, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(30303016, "debug", "now try to update nextID(%d) for table %s with field %s ", nextID, tableName, fieldName))
+
+	// update commandID value in ids table using transaction
+	updateData := make(db.FieldData, 0)
+	updateData["nextValue"] = nextID
+	whereStatement := make(map[string]string, 0)
+	whereStatement["tableName"] = tableName
+	whereStatement["fieldName"] = fieldName
+
+	_, err := tx.UpdateData("ids", updateData, whereStatement)
+	errs = append(errs, err...)
+	if sysadmerror.GetMaxLevel(err) >= sysadmerror.GetLevelNum("error") {
+		return 0, errs
 	}
 
 	return 1, errs
