@@ -24,3 +24,6 @@
 	                     project componet  <----> |<------>  user component
 		user --->	sysadm server(UI)	-->	api Server <--> registry component
 						  other components <----> | <-----> authorization component
+
+三、 服务端和客户端的关系 
+1. 所谓主动模式和被动模式是以服务端为基准，当服务端主动向客户端发送指令和请求时，则主动模式，对应客户端也叫主动模式；对应称为被动模式。
