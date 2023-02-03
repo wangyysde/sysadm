@@ -139,6 +139,13 @@ func DaemonStart(cmd *cobra.Command, cmdPath string){
 		os.Exit(13)
 	}
 
+	// adding command sending, command status receiving and command logs receiving  handlers
+	errs = addCommandHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+		os.Exit(14)
+	}
+
 	// adding Root handlers
 	err = addRootHandler(r,cmdPath)
 	if err != nil {

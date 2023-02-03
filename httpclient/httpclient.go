@@ -44,71 +44,71 @@ var sysadmTransport http.RoundTripper = &http.Transport{
 	MaxIdleConns:          maxIdleConns,
 	IdleConnTimeout:       idleConnTimeout * time.Second,
 	TLSHandshakeTimeout:   tlshandshaketimeout * time.Second,
-	DisableKeepAlives: disableKeepAlives,
-	DisableCompression: disableCompression,
-	MaxIdleConnsPerHost: maxIdleConnsPerHost,
-	MaxConnsPerHost: maxConnsPerHost,
+	DisableKeepAlives:     disableKeepAlives,
+	DisableCompression:    disableCompression,
+	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+	MaxConnsPerHost:       maxConnsPerHost,
 	ExpectContinueTimeout: 1 * time.Second,
 	TLSClientConfig: &tls.Config{
 		InsecureSkipVerify: true,
 	},
 }
 
-/* 
-   addReqestHeader add default header data to request response
+/*
+addReqestHeader add default header data to request response
 */
-func addReqestHeader(r *RequestParams,req *http.Request)([]sysadmerror.Sysadmerror){
+func addReqestHeader(r *RequestParams, req *http.Request) []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106001,"debug","now handling the headers for the request"))
-	if r == nil || req == nil{
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106002,"error","can not handling the headers for nil request"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106001, "debug", "now handling the headers for the request"))
+	if r == nil || req == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106002, "error", "can not handling the headers for nil request"))
 		return errs
 	}
-	r.Headers = append(r.Headers,defaultHeaders...)
-	
-	for _,h := range r.Headers {
+	r.Headers = append(r.Headers, defaultHeaders...)
+
+	for _, h := range r.Headers {
 		if h.Key != "" {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106003,"debug","adding key: %s value %s to the header of the request",h.Key,h.Value))
-			req.Header.Set(h.Key,h.Value)
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106003, "debug", "adding key: %s value %s to the header of the request", h.Key, h.Value))
+			req.Header.Set(h.Key, h.Value)
 		}
 	}
 
 	return errs
 }
 
-func setBasicAuth(r *RequestParams,req *http.Request)([]sysadmerror.Sysadmerror){
+func setBasicAuth(r *RequestParams, req *http.Request) []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106004,"debug","setting authorization for the request"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106004, "debug", "setting authorization for the request"))
 	if req == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106005,"fatal","can not setting authorization for nil request"))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106005, "fatal", "can not setting authorization for nil request"))
 		return errs
 	}
 
 	authData := r.BasicAuthData
-	if strings.EqualFold(authData["isBasicAuth"],"true") {
+	if strings.EqualFold(authData["isBasicAuth"], "true") {
 		if authData["username"] != "" && authData["password"] != "" {
-			req.SetBasicAuth(authData["username"],authData["password"])
+			req.SetBasicAuth(authData["username"], authData["password"])
 		} else {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106006,"error","username or password  is empty."))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106006, "error", "username or password  is empty."))
 		}
 	}
 
 	return errs
 }
 
-func handleQueryData(r *RequestParams)(string,[]sysadmerror.Sysadmerror){
+func handleQueryData(r *RequestParams) (string, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106007,"debug","now handling the data for the request"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106007, "debug", "now handling the data for the request"))
 	if r == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106008,"error","can not handling the data for nil request"))
-		return "",errs
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106008, "error", "can not handling the data for nil request"))
+		return "", errs
 	}
 	data := r.QueryData
 	ret := ""
-	i := 0 
-	for _,d := range data {
+	i := 0
+	for _, d := range data {
 		if d.Key != "" {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106009,"debug","adding key: %s value %s to the data of the request",d.Key,d.Value))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(106009, "debug", "adding key: %s value %s to the data of the request", d.Key, d.Value))
 			if i == 0 {
 				ret = ret + d.Key + "=" + url.QueryEscape(d.Value)
 				i = 1
@@ -121,54 +121,54 @@ func handleQueryData(r *RequestParams)(string,[]sysadmerror.Sysadmerror){
 	return ret, errs
 }
 
-func SendRequest(r *RequestParams)([]byte, []sysadmerror.Sysadmerror){
+func SendRequest(r *RequestParams) ([]byte, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 	var body []byte
 	if r == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106011,"fatal","can not handling a nil request"))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106011, "fatal", "can not handling a nil request"))
 		return body, errs
 	}
-	
+
 	fatalLevel := sysadmerror.GetLevelNum("fatal")
 
 	var bodyReader *strings.Reader = nil
 	if len(r.QueryData) > 0 {
-		query,err := handleQueryData(r) 
+		query, err := handleQueryData(r)
 		maxLevel := sysadmerror.GetMaxLevel(err)
 		errs = append(errs, err...)
 		if maxLevel >= fatalLevel {
 			return body, errs
 		}
 		r.Url = r.Url + "?" + query
-	
+
 	}
 
 	client := &http.Client{
 		Transport: sysadmTransport,
-		Timeout: timeout * time.Second,
+		Timeout:   timeout * time.Second,
 	}
-	
+
 	var req *http.Request
 	var err error
 	if bodyReader == nil {
-		req,err = http.NewRequest(strings.ToUpper(r.Method), r.Url,nil)
-	}else{
-		req,err = http.NewRequest(strings.ToUpper(r.Method), r.Url,bodyReader)
+		req, err = http.NewRequest(strings.ToUpper(r.Method), r.Url, nil)
+	} else {
+		req, err = http.NewRequest(strings.ToUpper(r.Method), r.Url, bodyReader)
 	}
-	
+
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106012,"fatal","can not create a new request, error: %s",err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106012, "fatal", "can not create a new request, error: %s", err))
 		return body, errs
 	}
-	e := addReqestHeader(r,req)
-	errs = append(errs,e...)
+	e := addReqestHeader(r, req)
+	errs = append(errs, e...)
 	maxLevel := sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
 		return body, errs
 	}
 
-	e = setBasicAuth(r,req)
-	errs = append(errs,e...)
+	e = setBasicAuth(r, req)
+	errs = append(errs, e...)
 	maxLevel = sysadmerror.GetMaxLevel(errs)
 	if maxLevel >= fatalLevel {
 		return body, errs
@@ -176,21 +176,21 @@ func SendRequest(r *RequestParams)([]byte, []sysadmerror.Sysadmerror){
 
 	resp, err := client.Do(req)
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106013,"fatal","can not send request, error: %s",err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106013, "fatal", "can not send request, error: %s", err))
 		return body, errs
 	}
 	defer resp.Body.Close()
 
-	body,err = ioutil.ReadAll(resp.Body)
+	body, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106014,"fatal","can not gets reponse body contenet, error: %s",err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106014, "fatal", "can not gets reponse body contenet, error: %s", err))
 		return body, errs
 	}
 
-	return body,errs
+	return body, errs
 }
 
-func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
+func BuildRoundTripper(data *RoundTripperData) http.RoundTripper {
 	var transport http.RoundTripper
 	if data == nil {
 		transport = &http.Transport{
@@ -203,16 +203,16 @@ func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
 			MaxIdleConns:          defaultMaxIdleConns,
 			IdleConnTimeout:       defaultIdleConnTimeout * time.Second,
 			TLSHandshakeTimeout:   defaultTlshandshaketimeout * time.Second,
-			DisableKeepAlives: defaultDisableKeepAlives,
-			DisableCompression: defaultDisableCompression,
-			MaxIdleConnsPerHost: defaultMaxIdleConnsPerHost,
-			MaxConnsPerHost: defaultMaxConnsPerHost,
+			DisableKeepAlives:     defaultDisableKeepAlives,
+			DisableCompression:    defaultDisableCompression,
+			MaxIdleConnsPerHost:   defaultMaxIdleConnsPerHost,
+			MaxConnsPerHost:       defaultMaxConnsPerHost,
 			ExpectContinueTimeout: 1 * time.Second,
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: defaultInsecureSkipVerify,
 			},
 		}
-	}else {
+	} else {
 		transport = &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			DialContext: (&net.Dialer{
@@ -220,13 +220,13 @@ func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
 				KeepAlive: data.KeepAlive * time.Second,
 			}).DialContext,
 			ForceAttemptHTTP2:     true,
-			MaxIdleConns:          data.MaxIdleConns, 
+			MaxIdleConns:          data.MaxIdleConns,
 			IdleConnTimeout:       data.IdleConnTimeout * time.Second,
 			TLSHandshakeTimeout:   data.Tlshandshaketimeout * time.Second,
-			DisableKeepAlives: 	   data.DisableKeepAlives,
-			DisableCompression:  data.DisableCompression, 
-			MaxIdleConnsPerHost: data.MaxIdleConnsPerHost, 
-			MaxConnsPerHost: data.MaxConnsPerHost,
+			DisableKeepAlives:     data.DisableKeepAlives,
+			DisableCompression:    data.DisableCompression,
+			MaxIdleConnsPerHost:   data.MaxIdleConnsPerHost,
+			MaxConnsPerHost:       data.MaxConnsPerHost,
 			ExpectContinueTimeout: 1 * time.Second,
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: data.InsecureSkipVerify,
@@ -238,48 +238,46 @@ func BuildRoundTripper(data *RoundTripperData)(http.RoundTripper){
 }
 
 // NewBuildTlsRoundTripper build http.RoundTripper for creating http client.
-// 
-func NewBuildRoundTripper(dialer *net.Dialer, idleConn,maxIdleConns,maxIdleConnsPerHost,maxConnsPerHost,readBuffer,writeBuffer int, disableKeepAlive, disableCompression, forceAttempHTTP2 bool )(http.RoundTripper,error){
+func NewBuildRoundTripper(dialer *net.Dialer, idleConn, maxIdleConns, maxIdleConnsPerHost, maxConnsPerHost, readBuffer, writeBuffer int, disableKeepAlive, disableCompression, forceAttempHTTP2 bool) (http.RoundTripper, error) {
 
-	var dialerContext func(ctx context.Context, network string, addr string) (net.Conn,error) = nil
+	var dialerContext func(ctx context.Context, network string, addr string) (net.Conn, error) = nil
 	if dialer != nil {
 		dialerContext = dialer.DialContext
 	}
 	idleConnTimeout := time.Duration(idleConn)
-	
-    transport := &http.Transport{
-        Proxy: http.ProxyFromEnvironment,
-        DialContext: dialerContext,
-        ForceAttemptHTTP2:     forceAttempHTTP2,
-        MaxIdleConns:          maxIdleConns,
-        IdleConnTimeout:       idleConnTimeout,
-        DisableKeepAlives:     disableKeepAlive,
-        DisableCompression:    disableCompression,
-        MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-        MaxConnsPerHost:       maxConnsPerHost,
+
+	transport := &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		DialContext:           dialerContext,
+		ForceAttemptHTTP2:     forceAttempHTTP2,
+		MaxIdleConns:          maxIdleConns,
+		IdleConnTimeout:       idleConnTimeout,
+		DisableKeepAlives:     disableKeepAlive,
+		DisableCompression:    disableCompression,
+		MaxIdleConnsPerHost:   maxIdleConnsPerHost,
+		MaxConnsPerHost:       maxConnsPerHost,
 		WriteBufferSize:       writeBuffer,
-		ReadBufferSize: 	   readBuffer,
+		ReadBufferSize:        readBuffer,
 		ExpectContinueTimeout: 1 * time.Second,
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: defaultInsecureSkipVerify,
 		},
-    }
+	}
 
-    return transport,nil
+	return transport, nil
 }
 
-
-func AddHeaders(rp *RequestParams,key string, value string)(*RequestParams,[]sysadmerror.Sysadmerror){
+func AddHeaders(rp *RequestParams, key string, value string) (*RequestParams, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	header := rp.Headers
-	if strings.TrimSpace(key) != ""{
+	if strings.TrimSpace(key) != "" {
 		data := RequestData{
-			Key:key,
+			Key:   key,
 			Value: value,
 		}
-		header = append(header,data)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106015,"debug","add key %s value %s to headers",key,value))
+		header = append(header, data)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106015, "debug", "add key %s value %s to headers", key, value))
 	}
 
 	rp.Headers = header
@@ -287,42 +285,69 @@ func AddHeaders(rp *RequestParams,key string, value string)(*RequestParams,[]sys
 	return rp, errs
 }
 
-
-func AddQueryData(rp *RequestParams,key string, value string)(*RequestParams,[]sysadmerror.Sysadmerror){
+func AddQueryData(rp *RequestParams, key string, value string) (*RequestParams, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	queryData := rp.QueryData
 	if strings.TrimSpace(key) != "" {
 		data := &RequestData{
-			Key:key,
+			Key:   key,
 			Value: value,
 		}
-		queryData = append(queryData,data)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106016,"debug","add key %s value %s to query data",key,value))
+		queryData = append(queryData, data)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106016, "debug", "add key %s value %s to query data", key, value))
 	}
 
 	rp.QueryData = queryData
 	return rp, errs
 }
 
-func AddBasicAuthData(rp *RequestParams,isBasicAuth bool, username string, password string)(*RequestParams,[]sysadmerror.Sysadmerror){
+func AddBasicAuthData(rp *RequestParams, isBasicAuth bool, username string, password string) (*RequestParams, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	var data map[string]string
-	if isBasicAuth && strings.TrimSpace(username) != "" && strings.TrimSpace(password) != ""{
-		data = map[string]string {
+	if isBasicAuth && strings.TrimSpace(username) != "" && strings.TrimSpace(password) != "" {
+		data = map[string]string{
 			"isBasicAuth": "true",
-			"username": username,
-			"password": password,
+			"username":    username,
+			"password":    password,
 		}
 	} else {
-		data = map[string]string {
+		data = map[string]string{
 			"isBasicAuth": "false",
-			"username": "",
-			"password": "",
+			"username":    "",
+			"password":    "",
 		}
 	}
 
 	rp.BasicAuthData = data
 	return rp, errs
+}
+
+// GetRequestBody read all request.body from a *http.Request
+// return the content of body as []byte and []sysadmerror.Sysadmerror if successful
+// otherwise return []byte and []sysadmerror.Sysadmerror
+func GetRequestBody(r *http.Request) ([]byte, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+	var body []byte
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(106017, "debug", "Try to get request body"))
+	if r == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106018, "error", "can not get request body on a nil request"))
+		return body, errs
+	}
+
+	bodyRead := r.Body
+	if  bodyRead == nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106019, "error", "no request body can be read"))
+		return body, errs
+	}
+
+	body, err := ioutil.ReadAll(bodyRead)
+	if err != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106020, "fatal", "can not get request body contenet, error: %s", err))
+		return body, errs
+	}
+
+	return body, errs
 }
