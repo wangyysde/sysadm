@@ -23,11 +23,15 @@
 package server
 
 import (
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadmServer"
+	"strings"
+	"net/http"
+
+	apiServerApp "github.com/wangyysde/sysadm/apiserver/app"
 	"github.com/wangyysde/sysadm/httpclient"
 	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
-
+	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadmServer"
+	infrastructure "github.com/wangyysde/sysadm/infrastructure/app"
 )
 
 // adding command sending, command status receiving and command logs receiving  handlers
@@ -65,19 +69,36 @@ func getCommandHandler(c *sysadmServer.Context) {
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030001, "debug", "received a get command request"))
 
 	body, err := httpclient.GetRequestBody(c.Request)
-	errs =  append(errs, err...)
+	errs = append(errs, err...)
 	if len(body) < 1 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030002, "error", "parameters error"))
 		err := apiutils.SendResponseForErrorMessage(c, 700030003, "parameters error")
 		errs = append(errs, err...)
 		logErrors(errs)
-		
 		return
 	}
 
-	
-	
-	// TODO
+	commandReq, e := apiServerApp.UnmarshalCommandReq(body)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030004, "error", "request command data is not valid"))
+		err := apiutils.SendResponseForErrorMessage(c, 700030004, "request command data is not valid")
+		errs = append(errs, err...)
+		logErrors(errs)
+		return
+	}
+
+	if len(commandReq.Ips) < 1 && len(commandReq.Macs) < 1 && strings.TrimSpace(commandReq.Hostname) == "" && strings.TrimSpace(commandReq.Customize) == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030005, "error", "all node identifier fields are empty"))
+		err := apiutils.SendResponseForErrorMessage(c, 700030005, "all node identifier fields are empty")
+		errs = append(errs, err...)
+		logErrors(errs)
+		return
+	}
+
+	command,err := infrastructure.GetCommand(commandReq.Ips, commandReq.Macs, commandReq.Hostname, commandReq.Customize)
+	errs = append(errs,err...)
+	c.JSON(http.StatusOK, command)
+	logErrors(errs)
 }
 
 /*
@@ -109,3 +130,5 @@ func receiveLogsHandler(c *sysadmServer.Context) {
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101004, "debug", "now handling project list"))
 	// TODO
 }
+
+
