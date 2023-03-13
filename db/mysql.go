@@ -118,7 +118,7 @@ func (p MySQL) InsertData(tb string, data FieldData) (int, []sysadmerror.Sysadme
 	valueStr = valueStr + ")"
 
 	dbConnect := p.Config.Connect
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107038, "debug", "insert statement %s", (insertStr + valueStr)))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(107038, "debug", "insert statement %s", (insertStr+valueStr)))
 	stmt, err := dbConnect.Prepare((insertStr + valueStr))
 	if err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(107011, "error", "Prepare SQL(%s) error: %s.", err, (insertStr+valueStr)))
@@ -428,6 +428,34 @@ func (m MySQL) BuildWhereFieldExact(value string) string {
 		ret += ")"
 	} else {
 		ret = ret + "=\"" + value + "\""
+	}
+
+	return ret
+}
+
+/*
+	BuildWhereFieldExactWithSlice build the value of Where Field for key with value.
+*/
+func (m MySQL) BuildWhereFieldExactWithSlice(value []string) string {
+	if len(value) < 1 {
+		return ""
+	}
+
+	var ret = ""
+	if len(value) > 1 {
+		ret = " in ("
+		first := true
+		for _, v := range value {
+			if first {
+				ret = ret + "\"" + v + "\""
+				first = false
+			} else {
+				ret = ret + ",\"" + v + "\""
+			}
+		}
+		ret += ")"
+	} else {
+		ret = ret + "=\"" + value[0] + "\""
 	}
 
 	return ret

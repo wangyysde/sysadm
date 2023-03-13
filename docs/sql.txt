@@ -176,8 +176,6 @@ CREATE TABLE `host` (
   CONSTRAINT `FK_version` FOREIGN KEY (`versionID`) REFERENCES `version` (`versionID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
-
-
 INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '1','running','running as normal');
 INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '2','maintenance','maintenance');
 INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '3','offline','offline');
@@ -197,6 +195,16 @@ CREATE TABLE `hostIP` (
   KEY `FK_hostid` (`hostid`),
   CONSTRAINT `FK_hostid` FOREIGN KEY (`hostid`) REFERENCES `host` (`hostid`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
+CREATE TABLE `hostMAC` (
+  `macID` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'macID identified a mac adress of host',
+  `devName` VARCHAR(10) DEFAULT NULL COMMENT 'interface name of which the ip set',
+  `mac` VARCHAR(20) DEFAULT NULL COMMENT 'mac address',
+  `hostid` INT(10) UNSIGNED NOT NULL COMMENT 'identifying which host',
+  PRIMARY KEY (`macID`),
+  KEY `FK_hostmacid` (`hostid`),
+  CONSTRAINT `FK_hostmacid` FOREIGN KEY (`hostid`) REFERENCES `host` (`hostid`) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 /* 主机 yum 配置信息关系表 */
 CREATE TABLE `hostYum` (
@@ -228,19 +236,16 @@ CREATE TABLE `command` (
   `commandID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'commandID identified a command',
   `command` varchar(64) NOT NULL COMMENT 'command name , agent will route handler according to the value of this filed',
   `hostID` int(10) unsigned NOT NULL COMMENT 'identifying which host',
-  /* because user can change the mode of agent,so we should record the agent mode for command when a command was added */
-  `agentPassive` tinyint(1) DEFAULT '0' COMMENT 'the method of getting commands by agent.true meanings is agent run passive',
-  /* 因为同时可能有多个命令在同一个客户端运行，并且命令执行结果的顺序不可控，所以在发送命令给agent执行时需将nodeIdentifer修改为commandID值,agent在返回结果需要用这个值标识是哪个命令 */ 
-  `nodeIdentifer` varchar(255) DEFAULT NULL COMMENT 'combination of IP,HOSTNAME and MAC or any string',
+  `synchronized` tinyint(1) DEFAULT '0' COMMENT '指示命令是否是属地同步命令。所谓同步命令是指，命令能够快速执行完成，即能在一个HTTP会话请求超时之前（一般超时时间为几秒内）执行完成的命令。0表示同步命令，否则为异步命令',
   `createTime` int(11) NOT NULL COMMENT 'the time when the command  has be added',
   `sendTime` int(11) DEFAULT '0' COMMENT 'the time when the command has be has be sent to agent',
   `completeTime` int(11) DEFAULT '0' COMMENT 'the time when the command has be run',
   `tryTimes` tinyint(2) DEFAULT '0' COMMENT 'how many times has be tried on the current stage',
-  `status` tinyint(1) DEFAULT '0' COMMENT '0:created,1:sent, 2: send error 3: running 4: running error 5: successful',
+  `status` int(4) DEFAULT '0' COMMENT 'command status code',
   PRIMARY KEY (`commandID`),
   KEY `FK_hostCommand` (`hostID`),
   CONSTRAINT `FK_hostCommand` FOREIGN KEY (`hostID`) REFERENCES `host` (`hostid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 
 /* 存储在节点上执行的命令的命令参数信息 */

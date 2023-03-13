@@ -31,11 +31,20 @@ global:
   # Uri is the listen path where agent receives commands to run when  agent runing as daemon in active mode. 
   # in active mode, if uri is "" then its value will be set to /receiveCommand
   # the length of this value shoule less 63
+  # the default value of this field for passive mode is "getCommand"
   uri: "/receiveCommand"
   # sourceIP specifies the source IP address which will be use to connect to a server by agent. this ip address must be configurated on one of the 
   # interfaces  on the host where agent running on.  agent will get a source IP address from host  automatically if the value of this field is "". 
   # log settings
   sourceIP: ""
+  # specifies the uri where agent send command status to when agent runing as daemon in passive mode.
+  # agent will listening on the path of this field specified for apiservser getting command status if agent running as active mode
+  # the default value of this field for passive mode "receiveCommandStatus"
+  commandStatusUri: "/getCommandStatus"
+  # specifies the uri where agent send command status to when agent runing as daemon in passive mode.
+  # agent will listening on the path of this field specified for apiservser getting command logs if agent running as active mode
+  # the default value of this field for passive mode is "receiveLogs"
+  commandLogsUri: "/getLogs"
   log:
     #the path of access log file
     accessLog: ""
@@ -64,6 +73,31 @@ agent:
     address: "172.28.2.4"
     port: 5443
     socket: ""
+  # redis server parameters
+  redis:
+    # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
+    mode: 1
+    # master server name
+    master: "master"
+    # redis server address and port
+    addrs: "192.53.117.73:6379"
+    # redis server username
+    username: ""
+    # redis server password
+    password: ""
+    # sentinel username
+    sentinelUsername: ""
+    # sentinel password
+    sentinelPassword: ""
+    # db name. default db if the value of this field is zero
+    db: 0
+     # tls parameters for agent when agent running as daemon.
+    tls:
+      isTls: true
+      ca: ""
+      cert: ""
+      key: ""
+      insecureSkipVerify: false
   # period(second) for agent gets command from server when agent running as passive
   period: 10
   # insecret specifies whether agent listen on a insecret port when it is runing as daemon

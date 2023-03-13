@@ -29,19 +29,20 @@ import (
 	"github.com/wangyysde/sysadm/httpclient"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	sysadmutils "github.com/wangyysde/sysadm/utils"
+	apiserver "github.com/wangyysde/sysadm/apiserver/app"
 )
 
 func run_DaemonPassive() ([]sysadmerror.Sysadmerror){
 	var errs []sysadmerror.Sysadmerror
 	confNodeIdentifer := RunConf.Global.NodeIdentifer
-	nodeIdentifer, err := getNodeIdentifer(confNodeIdentifer)
+	nodeIdentifer, err := apiserver.BuildNodeIdentifer(confNodeIdentifer)
 	if err != nil {
 		errs := append(errs, sysadmerror.NewErrorWithStringLevel(50090101,"fatal","get node identifier error %s",err))
 		return errs
 	}
-	runData.nodeIdentifer = nodeIdentifer
+	runData.nodeIdentifer = &nodeIdentifer
 	
-	url := buildGetCommandUrl("")
+	url := buildUrl(RunConf.Global.Uri)
 	runData.getCommandUrl  = url 
 
 	runData.getCommandParames = &httpclient.RequestParams{}
@@ -184,7 +185,7 @@ func buildHttpClient() error{
 
 func handleHTTPBody(body []byte){
 	var errs []sysadmerror.Sysadmerror
-	var gotCommand Command = Command{}
+	var gotCommand apiserver.CommandData  = apiserver.CommandData{}
 
 	err := json.Unmarshal(body,&gotCommand)
 	if err != nil {

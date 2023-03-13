@@ -23,6 +23,8 @@ import (
 	"strings"
 
 	"github.com/wangyysde/sysadm/sysadmerror"
+	"github.com/wangyysde/sysadm/redis"
+	"github.com/wangyysde/sysadm/config"
 )
 
 /*
@@ -127,6 +129,8 @@ func handleAgentBlock()([]sysadmerror.Sysadmerror){
 		return errs
 	}
 
+	err = handleRedisBlock()
+	errs = append(errs, err...)
 	return errs
 
 }
@@ -258,6 +262,123 @@ func validateInsecretPort( envAgentMap map[string]string)(ret int, errs []sysadm
 
 	if CliOps.Agent.InsecretPort != 0 {
 		ret = CliOps.Agent.InsecretPort
+	}
+
+	return ret,errs 
+}
+
+// handle configuration items set in redis block.
+// these configuration items can be set by configuration file or environment
+func handleRedisBlock()([]sysadmerror.Sysadmerror){
+	var envAgentMap map[string]string 
+	envMapP := getEnvDefineForBlock("agentredis")
+	if envMapP == nil {
+		envAgentMap = map[string]string{}
+	} else {
+		envAgentMap = *envMapP
+	}
+
+	var errs,err []sysadmerror.Sysadmerror
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082403,"debug","try to handle configuration items in redis block")) 
+
+	RunConf.Agent.RedisConf.Mode, err = validateRedisMode(envAgentMap)
+	errs = append(errs,err...)
+
+	RunConf.Agent.RedisConf.Master, err = validateRedisMaster(RunConf.Agent.RedisConf.Mode,envAgentMap)
+	errs = append(errs, err...)
+
+	RunConf.Agent.RedisConf.Addrs, err = validateRedisAddrs(RunConf.Agent.RedisConf.Mode, envAgentMap)
+	errs = append(errs, err...)
+
+	tlsValue := validateTlsConf(config.Tls{} ,fileConf.Agent.Tls,"agentredis")
+	RunConf.Agent.RedisConf.Tls = *tlsValue
+
+	return errs
+}
+
+// validateRedisMode validate the redis mode's values in  fileConf(set by configuration file) and envAgentMap (set by environment)
+// the priority of the defination in configuration file is higher than enverionments. 
+// return the default mode if both the value in configuration and the value in environment are not valid.
+func validateRedisMode(envAgentMap map[string]string)(ret int, errs []sysadmerror.Sysadmerror){
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082501,"debug","try to validate redis mode"))
+	ret = 0
+
+	redisModeName, okRedisMode := envAgentMap["RedisMode"]
+	if okRedisMode {
+		redisModeValue := os.Getenv(redisModeName)
+		if strings.TrimSpace(redisModeValue) != "" {
+			redisModeInt, e := strconv.Atoi(strings.TrimSpace(redisModeValue))
+			if e != nil || !redis.IsValidMode(redisModeInt) {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082502,"debug","get redis mode  value from environment with name %s ,but the value is not valid.",redisModeName))
+			} else {
+				ret = redisModeInt
+			}
+		}
+		
+	}
+
+	if redis.IsValidMode(fileConf.Agent.RedisConf.Mode)  {
+		ret = fileConf.Agent.RedisConf.Mode 
+	}
+
+	if !redis.IsValidMode(ret) {
+		ret = redis.DefaultMode
+	}
+
+	return ret,errs 
+}
+
+// validateRedisMaster validate the redis mode's values in  fileConf(set by configuration file) and envAgentMap (set by environment)
+// the priority of the defination in configuration file is higher than enverionments. 
+func validateRedisMaster(mode int, envAgentMap map[string]string)(ret string, errs []sysadmerror.Sysadmerror){
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082503,"debug","try to validate redis master hostname"))
+	ret = ""
+
+	redisMasterName, okRedisMaster := envAgentMap["RedisMaster"]
+	if okRedisMaster {
+		redisMasterValue := strings.TrimSpace(os.Getenv(redisMasterName))
+		if redis.IsValidMaster(mode,redisMasterValue) {
+			ret = redisMasterValue
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082504,"debug","get redis master  value from environment with name %s ,but the value is not valid.",redisMasterName))
+		}
+		
+	}
+
+	if redis.IsValidMaster(mode, fileConf.Agent.RedisConf.Master)  {
+		ret = fileConf.Agent.RedisConf.Master
+	}
+
+	if !redis.IsValidMaster(mode, ret) {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082505,"fatal","redis master %s is not valid.", ret))
+	}
+
+	return ret,errs 
+}
+
+// validateRedisAddrs validate the addresses of redis server(or sentinel) in  fileConf(set by configuration file) and envAgentMap (set by environment)
+// the priority of the defination in configuration file is higher than enverionments. 
+func validateRedisAddrs(mode int, envAgentMap map[string]string)(ret string, errs []sysadmerror.Sysadmerror){
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082506,"debug","try to validate redis server address"))
+	ret = ""
+
+	redisAddrName, okRedisAddr := envAgentMap["RedisAddrs"]
+	if okRedisAddr {
+		redisAddrValue := strings.TrimSpace(os.Getenv(redisAddrName))
+		if redis.IsValidAddrs(mode,redisAddrValue) {
+			ret = redisAddrValue
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082507,"debug","got redis server address from environment with name %s ,but the value is not valid.",redisAddrName))
+		}
+		
+	}
+
+	if redis.IsValidAddrs(mode, fileConf.Agent.RedisConf.Addrs)  {
+		ret = fileConf.Agent.RedisConf.Addrs
+	}
+
+	if !redis.IsValidAddrs(mode, ret) {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082508,"fatal","the addresses of redis server(or sentinel) %s is not valid.", ret))
 	}
 
 	return ret,errs 

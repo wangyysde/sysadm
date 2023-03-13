@@ -3,8 +3,8 @@ module github.com/wangyysde/sysadm
 go 1.16
 
 require (
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gokyle/sshkey v0.0.0-20131202145224-d32a9ef172a1 // indirect
 	github.com/lib/pq v1.10.6
 	github.com/lithammer/dedent v1.1.0
 	github.com/spf13/cobra v1.5.0

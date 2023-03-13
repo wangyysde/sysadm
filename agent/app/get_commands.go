@@ -22,14 +22,15 @@ import (
 
 	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 	"github.com/wangyysde/sysadmServer"
+	apiserver "github.com/wangyysde/sysadm/apiserver/app"
 )
 
-func runGetHostIP(gotCommand *Command, c *sysadmServer.Context){
+func runGetHostIP(gotCommand apiserver.Command, c *sysadmServer.Context){
 	ints,err := net.Interfaces()
 	var retMap []map[string]interface{}  
 	
 	if err != nil {
-		outPutMessage(c, gotCommand, "get interface list error %s\n", err)
+		outPutErrorMessage(c, &gotCommand, "get interface list error %s", err)
 		return
 	}
   

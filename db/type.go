@@ -50,6 +50,7 @@ type DbConfig struct {
 	DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror)
 	UpdateData(string, FieldData, map[string]string) (int, []sysadmerror.Sysadmerror)
 	BuildWhereFieldExact(string) (string)
+	BuildWhereFieldExactWithSlice([]string) (string)
 	BuildInsertQuery(tb string,data FieldData) (string, []sysadmerror.Sysadmerror)
 	BuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, []sysadmerror.Sysadmerror)
 	BuildDeleteQuery(dd *SelectData) (string, []sysadmerror.Sysadmerror)

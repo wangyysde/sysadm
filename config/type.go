@@ -43,11 +43,11 @@ type Server struct {
 
 //Define tls structure
 type Tls struct {
-	IsTls bool `json:"isTls"`
-	Ca string `json:"ca"`
-	Cert string `json:"cert"`
-	Key string `json:"key"`
-	InsecureSkipVerify bool `json:"insecureSkipVerify"`
+	IsTls bool `form:"isTls" json:"isTls" yaml:"isTls" xml:"isTls"` 
+	Ca string  `form:"ca" json:"ca" yaml:"ca" xml:"ca"`  
+	Cert string `form:"cert" json:"cert" yaml:"cert" xml:"cert"`   
+	Key string  `form:"key" json:"key" yaml:"key" xml:"key"`   
+	InsecureSkipVerify bool  `form:"insecureSkipVerify" json:"insecureSkipVerify" yaml:"insecureSkipVerify" xml:"insecureSkipVerify"` 
 }
 
 //Defining log configuration 

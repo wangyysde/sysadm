@@ -25,6 +25,7 @@ import (
 
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	"github.com/wangyysde/sysadm/redis"
 )
 
 var exitChan chan os.Signal
@@ -65,6 +66,15 @@ func Daemon(cmd *cobra.Command, args []string){
 	logErrors(errs)
 	errs =errs[0:0]
 
+	entity,e := redis.NewClient(RunConf.Agent.RedisConf, RunConf.WorkingDir)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080011,"fatal","can not open connection to redis server %s",e))
+		logErrors(errs)
+		os.Exit(5)
+	}
+
+	runData.redisEntity = entity
+
 	exitChan = make(chan os.Signal)
 	if RunConf.Agent.Passive {
 		err = run_DaemonPassive()
@@ -79,8 +89,8 @@ func Daemon(cmd *cobra.Command, args []string){
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(),sysadmServer.Recovery())
 
-	e := addHandlers(r)
-	errs =  append(errs,e...)
+	err = addHandlers(r)
+	errs =  append(errs,err...)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
 		logErrors(errs)
 		os.Exit(3)

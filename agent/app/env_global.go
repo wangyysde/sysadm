@@ -31,4 +31,6 @@ var env_global map[string]string = map[string]string{
 	"NodeIdentifer": "GLOBAL_NODEIDENTIFER",
 	"Uri": "GLOBAL_URI",
 	"SourceIP": "GLOBAL_SOURCEIP",
+	"commandStatusUri": "GLOBAL_COMMANDSTATUSURI",
+	"commandLogsUri": "GLOBAL_COMMANDLOGSURI",
 }

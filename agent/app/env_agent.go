@@ -25,3 +25,14 @@ var env_agent map[string]string = map[string]string{
 	"Key": "AGENT_KEY",
 	"InsecureSkipVerify": "AGENT_INSECURESKIPVERIFY",
 }
+
+var env_agentRedis map[string]string = map[string]string{
+	"IsTls": "AGENT_REDIS_ISTLS",
+	"Ca": "AGENT_REDIS_CA",
+	"Cert": "AGENT_REDIS_CERT",
+	"Key": "AGENT_REDIS_KEY",
+	"InsecureSkipVerify": "AGENT_REDIS_INSECURESKIPVERIFY",
+	"RedisMode": "AGENT_REDIS_MODE",
+	"RedisMaster": "AGENT_REDIS_MASTER",
+	"RedisAddrs": "AGENT_REDIS_ADDRS",
+}

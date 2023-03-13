@@ -98,7 +98,7 @@ func addHost(c *sysadmServer.Context) {
 	}
 
 	// insert command information into command
-	cID, err := addCommandToDB(tx, "gethostip", requestData.PassiveMode, hostid, nextCommandID)
+	cID, err := addCommandToDB(tx, "gethostip", 0, hostid, nextCommandID)
 	errs = append(errs, err...)
 	if cID == 0 {
 		_ = tx.Rollback()
@@ -375,11 +375,11 @@ func addYumConfigCommandToDB(tx *db.Tx, hostid, nextCommandID int, yumid string,
 	yumCatalog := utils.Interface2String(line["catalog"])
 	base_url := utils.Interface2String(line["base_url"])
 	enabled, _ := utils.Interface2Int(line["enabled"])
-	gpgcheck := utils.Interface2String(line["gpgcheck"])
+	gpgcheck := utils.Interface2String(line["gpgcheck"]) 
 	gpgkey := utils.Interface2String(line["gpgkey"])
 	if enabled == 1 {
 		// insert command information into command
-		cID, err := addCommandToDB(tx, "addyum", data.PassiveMode, hostid, nextCommandID)
+		cID, err := addCommandToDB(tx, "addyum", 0, hostid, nextCommandID)
 		errs = append(errs, err...)
 		if cID == 0 {
 			return 0, errs
@@ -468,3 +468,4 @@ func updateNextID(tableName, fieldName string, tx *db.Tx, nextID int) (int, []sy
 
 	return 1, errs
 }
+

@@ -19,8 +19,10 @@ package app
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
+	apiserver "github.com/wangyysde/sysadm/apiserver/app"
 	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
@@ -33,10 +35,33 @@ func addHandlers(r *sysadmServer.Engine) (errs []sysadmerror.Sysadmerror) {
 		return errs
 	}
 
-	if e := addReceiveCommandHandler(r); e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803002, "fatal", "add receive command  handler error %s", e))
+	// we should build nodeIdentifier after start listen
+	nodeIdentifier, e := apiserver.BuildNodeIdentifer(RunConf.Global.NodeIdentifer)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803001, "fatal", "build node identifier error %s", e))
 		return errs
 	}
+	runData.nodeIdentifer = &nodeIdentifier
+
+	
+	if !RunConf.Agent.Passive {
+		// add handler for the path of uri specifing if agent running in active mode 
+		if e := addReceiveCommandHandler(r); e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803002, "fatal", "add receive command  handler error %s", e))
+			return errs
+		}
+
+		if e := addGetCommandStatusHandler(r); e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803003, "fatal", "add get command status  handler error %s", e))
+			return errs
+		}
+
+		if e := addGetLogs(r); e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(100803003, "fatal", "add get logs  handler error %s", e))
+			return errs
+		}
+	}
+	
 
 	return errs
 }
@@ -67,22 +92,60 @@ func addReceiveCommandHandler(r *sysadmServer.Engine) error {
 	}
 
 	r.POST(listenUri, receivedCommand)
+	r.GET(listenUri, receivedCommand)
 
 	return nil
 }
 
 func receivedCommand(c *sysadmServer.Context) {
-	var cmd Command = Command{}
+	var cmd apiserver.CommandData = apiserver.CommandData{}
 	var errs []sysadmerror.Sysadmerror
 
 	err := c.BindJSON(&cmd)
 	if err != nil {
+		data := make(map[string]interface{},0)
 		msg := fmt.Sprintf("receive command error %s", err)
+		commandStatus, e := apiserver.BuildCommandStatus("",RunConf.Global.NodeIdentifer,msg, *runData.nodeIdentifer,apiserver.ComandStatusSendError,data,true)
+		c.JSON(http.StatusOK,commandStatus)
+
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001, "error", msg))
+		errs = append(errs,sysadmerror.NewErrorWithStringLevel(10082001, "error",fmt.Sprintf("build command status error: %s",e)))
+		logErrors(errs)
+		return
+	}
+
+	doRouteCommand(&cmd, c)
+}
+
+
+func addGetCommandStatusHandler(r *sysadmServer.Engine) error {
+	if strings.TrimSpace(RunConf.Global.CommandStatusUri) == "" {
+		RunConf.Global.CommandStatusUri = defaultGetCommandStatus
+	}
+
+	listenUri := RunConf.Global.CommandStatusUri
+	if listenUri[0:1] != "/" {
+		listenUri = "/" + listenUri
+	}
+
+	r.POST(listenUri, getCommandStatus)
+	r.GET(listenUri, getCommandStatus)
+
+	return nil
+}
+
+func getCommandStatus(c *sysadmServer.Context) {
+	var cmdStatusReq apiserver.CommandStatusReq = apiserver.CommandStatusReq{}
+	var errs []sysadmerror.Sysadmerror
+
+	err := c.BindJSON(&cmdStatusReq)
+	if err != nil {
+		msg := fmt.Sprintf("the request for getting command status is not valid %s", err)
 		_ = apiutils.SendResponseForErrorMessage(c, 10082001, msg)
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082001, "error", msg))
 		logErrors(errs)
 		return
 	}
 
-	doRouteCommand(&cmd, c)
+	doRouteCommand(&cmdStatus, c)
 }

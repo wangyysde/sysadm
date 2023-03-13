@@ -305,6 +305,17 @@ func (p Postgre)BuildWhereFieldExact(value string) string{
 }
 
 /*
+   BuildWhereFieldExactWithSlice build the value of Where Field for key with value. 
+   
+   TODO
+*/
+func (p Postgre)BuildWhereFieldExactWithSlice(value []string) string{
+	return ""
+}
+
+
+
+/*
    BuildWhereFieldExact build the value of Where Field for key with value. 
    
    TODO

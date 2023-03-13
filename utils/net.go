@@ -310,3 +310,23 @@ func GetLocalMacs()([]string,error){
 
 	return macs, nil
 }
+
+// judge a string is a ipv4 address or ipv6 address
+// 0: invalid ip
+// 4: IPv4
+// 6: IPv6
+func JudgeIpv4OrIpv6 (s string) (net.IP, int) {
+    ip := net.ParseIP(s)
+    if ip == nil {
+        return nil, 0
+    }
+    for i := 0; i < len(s); i++ {
+        switch s[i] {
+        case '.':
+            return ip, 4
+        case ':':
+            return ip, 6
+        }
+    }
+    return nil, 0
+}

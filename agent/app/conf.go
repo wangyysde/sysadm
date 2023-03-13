@@ -145,6 +145,8 @@ func handleGlobalBlock() []sysadmerror.Sysadmerror {
 
 	RunConf.Global.NodeIdentifer = validateNodeIdentifer(CliOps.Global.NodeIdentifer, fileConf.Global.NodeIdentifer, "global")
 	RunConf.Global.Uri = validateUri(CliOps.Global.Uri, fileConf.Global.Uri, "global")
+	RunConf.Global.CommandStatusUri = validateListenUri(CliOps.Global.CommandStatusUri, fileConf.Global.CommandStatusUri,"global","commandStatusUri")
+	RunConf.Global.CommandLogsUri = validateListenUri(CliOps.Global.CommandLogsUri, fileConf.Global.CommandLogsUri, "global", "commandLogsUri")
 	RunConf.Global.SourceIP = validateSourceIP(CliOps.Global.SourceIP, fileConf.Global.SourceIP, "global")
 
 	return errs
@@ -266,6 +268,8 @@ func getEnvDefineForBlock(blockName string) *map[string]string {
 		return &env_global
 	case strings.Compare(blockName, "agent") == 0:
 		return &env_agent
+	case strings.Compare(blockName, "agentredis") == 0:
+		return &env_agentRedis
 	default:
 		return nil
 	}
@@ -734,6 +738,47 @@ func validateUri(cliConf string, fileConf string, envBlock string) (ret string) 
 	}
 
 	uriName, okUri := envMap["Uri"]
+	if okUri {
+		uriValue := strings.TrimSpace(os.Getenv(uriName))
+		if uriValue != "" && len(uriValue) <= 63 {
+			ret = uriValue
+		}
+	}
+
+	fileConf = strings.TrimSpace(fileConf)
+	if fileConf != "" && len(fileConf) <= 63 {
+		ret = fileConf
+	}
+
+	cliConf = strings.TrimSpace(cliConf)
+	if cliConf != "" && len(cliConf) <= 63 {
+		ret = cliConf
+	}
+
+	if ret == "" {
+		ret = "/"
+	}
+
+	return ret
+}
+
+/*
+validateListenUri  validate fieldName in cliConf (set by command line flags), fileConf(set by configuration file) and envBlock (set by environment)
+the priority of the defination in configuration file is higher than enverionments. and  the priority of the defination in command line flags is higher
+the priority of the defination in configuration file.
+*/
+func validateListenUri(cliConf, fileConf, envBlock,fieldName string) (ret string) {
+	ret = ""
+
+	var envMap map[string]string
+	envMapP := getEnvDefineForBlock(envBlock)
+	if envMapP == nil {
+		envMap = map[string]string{}
+	} else {
+		envMap = *envMapP
+	}
+
+	uriName, okUri := envMap[fieldName]
 	if okUri {
 		uriValue := strings.TrimSpace(os.Getenv(uriName))
 		if uriValue != "" && len(uriValue) <= 63 {

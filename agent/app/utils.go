@@ -31,6 +31,7 @@ import (
 	"github.com/wangyysde/sysadm/sysadmerror"
 	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
+	apiserver "github.com/wangyysde/sysadm/apiserver/app"
 )
 
 func SetVersion(version *config.Version) {
@@ -150,73 +151,16 @@ func checkLogTimeFormat(format string) bool {
 	return false
 }
 
-func getNodeIdentifer(confNodeIdentifer string) (*NodeIdentifer, error) {
-	if strings.TrimSpace(confNodeIdentifer) == "" {
-		confNodeIdentifer = "IP,HOSTNAME,MAC"
-	}
-
-	ret := NodeIdentifer{}
-
-	identiferSlice := strings.Split(confNodeIdentifer, ",")
-	isCustomize := true
-
-	for _, value := range identiferSlice {
-		switch {
-		case strings.ToUpper(strings.TrimSpace(value)) == "IP":
-			ips, err := utils.GetLocalIPs()
-			if err != nil {
-				return nil, fmt.Errorf("get local host ip address error %s", err)
-			}
-			ret.Ips = ips
-			isCustomize = false
-		case strings.ToUpper(strings.TrimSpace(value)) == "MAC":
-			macs, err := utils.GetLocalMacs()
-			if err != nil {
-				return nil, fmt.Errorf("get local host mac information error %s", err)
-			}
-			ret.Macs = macs
-			isCustomize = false
-		case strings.ToUpper(strings.TrimSpace(value)) == "HOSTNAME":
-			hostname, err := os.Hostname()
-			if err != nil {
-				return nil, fmt.Errorf("can not get hostname %s", err)
-			}
-			ret.Hostname = hostname
-			isCustomize = false
-		default:
-			if strings.TrimSpace(value) != "" {
-				ret.Customize = strings.TrimSpace(value)
-				isCustomize = true
-			} else {
-				return nil, fmt.Errorf("node identifer %s is not valid", value)
-			}
-		}
-	}
-
-	if strings.TrimSpace(confNodeIdentifer) != "" && isCustomize {
-		ret.Customize = strings.TrimSpace(confNodeIdentifer)
-	}
-
-	return &ret, nil
-}
-
 /*
 buildGetCommandUrl build complete url address which will be send to a server
 */
-func buildGetCommandUrl(newUri string) string {
+func buildUrl(uri string) string {
 	var url string = ""
 
-	if strings.TrimSpace(RunConf.Global.Uri) == "" {
-		RunConf.Global.Uri = "/"
+	if strings.TrimSpace(uri) == "" {
+		uri = "/"
 	}
-
-	var uri string = ""
-	if strings.TrimSpace(newUri) == "" {
-		uri = strings.TrimSpace(RunConf.Global.Uri)
-	} else {
-		uri = strings.TrimSpace(newUri)
-	}
-
+	
 	svr := RunConf.Global.Server.Address
 	port := RunConf.Global.Server.Port
 	tls := RunConf.Global.Tls
@@ -262,27 +206,44 @@ func buildGetCommandUrl(newUri string) string {
 route the command to a handler function which will execute the command according to gotCommand.
 c is nil when a command is got in passive mode or  by CLI. otherwise, c should not be nil.
 */
-func doRouteCommand(gotCommand *Command, c *sysadmServer.Context) {
+func doRouteCommand(gotCommand *apiserver.CommandData, c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
 	// if server ask agent to change node identifer
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090123, "debug", "get command from server %+v", gotCommand))
-	logErrors(errs)
-	errs = errs[0:0]
-	if strings.TrimSpace(gotCommand.NodeIdentifer) != "" && !strings.EqualFold(strings.ToLower(gotCommand.NodeIdentifer), strings.ToLower(RunConf.Global.NodeIdentifer)) {
-		RunConf.Global.NodeIdentifer = strings.ToLower(gotCommand.NodeIdentifer)
-		nodeIdentifer, err := getNodeIdentifer(gotCommand.NodeIdentifer)
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090123, "debug", "try to run command  %+v", gotCommand))
+	isChanged, err := isNodeIdentiferChanged(gotCommand.NodeIdentiferStr)
+	errs = append(errs, err...)
+	if isChanged {
+		newNodeIdentifer, err := apiserver.BuildNodeIdentifer(strings.ToUpper(strings.TrimSpace(gotCommand.NodeIdentiferStr)))
 		if err != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090109, "error", "get node identifier error %s", err))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090215, "error", "change node identifer error %s",err))
+			data := make(map[string]interface{},0)
+			outPutCommandStatus(c,&gotCommand.Command,fmt.Sprintf("change node identifer error %s",err),data, apiserver.CommandStatusUnrecognized,false)
 			logErrors(errs)
-			return
+			return 
+		} else {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090216, "debug", "node identifier has be changed "))
+			runData.nodeIdentifer = &newNodeIdentifer
 		}
-		runData.nodeIdentifer = nodeIdentifer
+	}
+	
+	if !apiserver.IsCommandSeqValid(gotCommand.CommandSeq) {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090217, "error", "command sequence %s is not valid ",gotCommand.CommandSeq))
+		data := make(map[string]interface{},0)
+		outPutCommandStatus(c,&gotCommand.Command,fmt.Sprintf("command sequence %s is not valid ",gotCommand.CommandSeq),data, apiserver.ComandStatusSendError,true)
+		logErrors(errs)
+		return 
 	}
 
 	switch {
-	case strings.Compare(strings.ToLower(gotCommand.Command), "gethostip") == 0:
-		runGetHostIP(gotCommand, c)
+	case strings.Compare(strings.ToLower(gotCommand.Command.Command), "gethostip") == 0:
+		runGetHostIP(gotCommand.Command, c)
+	case strings.Compare(strings.ToLower(gotCommand.Command.Command), "addyum") == 0:
+		runAddyum(gotCommand.Command, c)
+	default:
+		data := make(map[string]interface{},0)
+		outPutCommandStatus(c,&gotCommand.Command,fmt.Sprintf("command %s is not in the list of agent supported",strings.ToLower(gotCommand.Command.Command)),data, apiserver.CommandStatusUnrecognized,true )
 	}
+	
 }
 
 func outPutResult(c *sysadmServer.Context, gotCommand *Command, data apiutils.ApiResponseData) {
@@ -317,7 +278,44 @@ func outPutResult(c *sysadmServer.Context, gotCommand *Command, data apiutils.Ap
 
 }
 
-func outPutMessage(c *sysadmServer.Context, gotCommand *Command, msg string, data ...interface{}) {
+func outPutCommandStatus(c *sysadmServer.Context, gotCommand *apiserver.Command, msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool) {
+	var errs []sysadmerror.Sysadmerror
+
+	// that meaning is a response action if c is not nil. so agent must response the server with apiserver.CommandStatus whatever 
+	// RunConf.Global.Output is server and apiserver.Command.Synchronized is true
+	if c != nil {
+		commandStausData, e := apiserver.BuildCommandStatus(gotCommand.CommandSeq,"",msg,*runData.nodeIdentifer,statusCode,data,notCommand)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090218, "error", "build command %s status error %s ",gotCommand.CommandSeq,e))
+			logErrors(errs)
+			return 
+		}
+		c.JSON(http.StatusOK,commandStausData)
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090219, "debug", "command status of %s has be send to server ",gotCommand.CommandSeq))
+		logErrors(errs)
+		return 
+	}
+
+	outPut := RunConf.Global.Output
+	switch {
+	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "server") == 0:
+		outPutCommandStatusToServer(gotCommand, msg, data, statusCode, notCommand)
+	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "file") == 0:
+		// if outputFile is not set,the we will output the result to server
+		if RunConf.Global.OutputFile == "" {
+			outPutResultToServer(gotCommand, data)
+		} else {
+			outPutResultToFile(gotCommand, data)
+		}
+	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "stdout") == 0:
+		outPutResultToStdout(gotCommand, data)
+	default:
+		outPutCommandStatusToServer(gotCommand, msg, data, statusCode, notCommand)
+	}
+
+
+
+
 	var msgData []map[string]interface{}
 
 	m := fmt.Sprintf(msg, data...)
@@ -334,51 +332,52 @@ func outPutMessage(c *sysadmServer.Context, gotCommand *Command, msg string, dat
 outPutResultToServer output the result of a command execution to the server when agent running in passive mode or CLI.
 agent response the result to the server in outPutResult function if it is running active mode.
 */
-func outPutResultToServer(gotCommand *Command, data apiutils.ApiResponseData) {
+func outPutCommandStatusToServer(gotCommand *apiserver.Command, msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool) {
 	var errs []sysadmerror.Sysadmerror
+
+	if !RunConf.Agent.Passive {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090220, "error", "agent can not send command status data to apiserver actively when is running in active mode."))
+		logErrors(errs)
+		return 
+	} 
 
 	if runData.httpClient == nil {
 		if err := buildHttpClient(); err != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090202, "fatal", "build http client error %s.", err))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090221, "error", "build http client error %s.", err))
 			logErrors(errs)
-			os.Exit(22)
+			return 
 		}
 
 	}
 
-	var url string = ""
-	if strings.TrimSpace(gotCommand.ResponseUri) != "" {
-		url = buildGetCommandUrl(strings.TrimSpace(gotCommand.ResponseUri))
-	} else {
-		url = buildGetCommandUrl(strings.TrimSpace(RunConf.Global.Uri))
-	}
-
+	url := buildUrl(RunConf.Global.CommandStatusUri)
 	requestParams := &httpclient.RequestParams{}
 	requestParams.Method = http.MethodPost
 	requestParams.Url = url
 
-	nodeIdentifer := runData.nodeIdentifer
-	repData := map[string]interface{}{
-		"nodeIdentifer": *nodeIdentifer,
-		"data":          data,
+	commandStausData, e := apiserver.BuildCommandStatus(gotCommand.CommandSeq,"",msg,*runData.nodeIdentifer,statusCode,data,notCommand)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090222, "error", "build command %s status error %s ",gotCommand.CommandSeq,e))
+		logErrors(errs)
+		return 
 	}
 
-	datajson, err := json.Marshal(repData)
+	datajson, err := json.Marshal(commandStausData)
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090203, "error", "encoding response data to json string error %s", err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090223, "error", "encoding response data to json string error %s", err))
 		logErrors(errs)
 		return
 	}
 
 	body, err := httpclient.NewSendRequest(requestParams, runData.httpClient, strings.NewReader(utils.Bytes2str(datajson)))
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090204, "error", "can not send the result of command execution to server %s", err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090224, "error", "can not send the status of command to server %s", err))
 		logErrors(errs)
 		return
 	}
 
-	responseData := apiutils.ApiResponseData{}
-	if err := json.Unmarshal(body, &responseData); err != nil {
+	repStatusData := apiserver.RepStatus{}
+	if err := json.Unmarshal(body, &repStatusData); err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090205, "error", "can not unmarshal response message what come from server %s", err))
 		logErrors(errs)
 		return
@@ -462,4 +461,52 @@ func outPutResultToStdout(gotCommand *Command, data apiutils.ApiResponseData) {
 	}
 
 	fmt.Printf("%s", datajson)
+}
+
+func isNodeIdentiferChanged(nodeIdentifierStr string) (bool, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	nodeIdentifierStr = strings.ToUpper(strings.TrimSpace(nodeIdentifierStr))
+	if nodeIdentifierStr == ""{
+		return false, errs
+	}
+
+	oldIdentifier := RunConf.Global.NodeIdentifer
+	var oldIP,oldMAC,oldHostName,oldCustomize,newIP, newMAC, newHostName, newCustomize string 
+	oldSlice := strings.Split(oldIdentifier,"")
+	for _, v := range oldSlice {
+		switch {
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "IP") == 0:
+			oldIP = "IP"
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "MAC") == 0:
+			oldMAC = "MAC"
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "HOSTNAME") == 0:
+			oldHostName = "HOSTNAME"
+		default:
+		    oldCustomize = v 
+		}
+	}
+	oldStr := oldIP + oldMAC + oldHostName + oldCustomize
+
+	newSlice := strings.Split(nodeIdentifierStr,"")
+	for _, v := range newSlice {
+		switch {
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "IP") == 0:
+			newIP = "IP"
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "MAC") == 0:
+			newMAC = "MAC"
+		case strings.Compare(strings.TrimSpace(strings.ToUpper(v)), "HOSTNAME") == 0:
+			newHostName = "HOSTNAME"
+		default:
+		    newCustomize = v 
+		}
+	}
+	newStr := newIP + newMAC + newHostName + newCustomize
+
+	if oldStr ==  newStr {
+		return false, errs
+	}
+
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090214, "debug", "node identifer will be changed to  %s", newStr))
+	return true, errs
 }
