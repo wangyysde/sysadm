@@ -19,6 +19,7 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
@@ -138,12 +139,6 @@ func TestExist(t *testing.T) {
 	fmt.Print("check the key /commandStatus/202303131528 exist is not correct\n")
 }
 
-type Student struct {
-	Name    string `json:"name"`
-	Age     int    `json:"age"`
-	Address string `json:"adress"`
-}
-
 func TestHSet(t *testing.T) {
 	if entity == nil {
 		tmpEntiy, e := connectRedis(t)
@@ -154,18 +149,31 @@ func TestHSet(t *testing.T) {
 		entity = tmpEntiy
 	}
 
-	s := make(map[string]string,0)
+	s := make(map[string]interface{}, 0)
 	s["Name"] = "testName"
 	s["Age"] = "18"
-	s["Address"] = "shanghai baoshang "
+	s["score"] = 90
+	sec := make(map[string]interface{}, 0)
+	sec["field1"] = "1111111"
+	third := make(map[string]interface{}, 0)
+	third["f1"] = "AAAAAA"
+	sec["field2"] = third
 
+	var fieldStr string = ""
+	fieldBytes, err := json.Marshal(&sec)
+	if err != nil {
+		fieldStr = ""
+	} else {
+		fieldStr = fmt.Sprintf("%s", fieldBytes)
+	}
+	s["test"] = fieldStr
 	e := HSet(entity, ctx, "/commandStatus/202303131529", s)
 	if e != nil {
 		t.Errorf("set the value of key /commandStatus/202303131529 error %s", e)
 		return
 	}
 
-	fmt.Print("set the value of key /commandStatus/202303131529 error\n")
+	fmt.Print("set the value of key /commandStatus/202303131529 ok\n")
 }
 
 func TestHGet(t *testing.T) {
@@ -281,4 +289,85 @@ func TestDel(t *testing.T) {
 	}
 
 	fmt.Print("delete key sucessful")
+}
+
+func TestLPush(t *testing.T) {
+	if entity == nil {
+		tmpEntiy, e := connectRedis(t)
+		if e != nil {
+			t.Log("can not connect to redis server")
+			os.Exit(2)
+		}
+		entity = tmpEntiy
+	}
+
+	s := make(map[string]interface{}, 0)
+	s["Name"] = "testName"
+	s["Age"] = "18"
+	s["score"] = 90
+	sec := make(map[string]interface{}, 0)
+	sec["field1"] = "1111111"
+	third := make(map[string]interface{}, 0)
+	third["f1"] = "AAAAAA"
+	sec["field2"] = third
+
+	var fieldStr string = ""
+	fieldBytes, err := json.Marshal(&sec)
+	if err != nil {
+		fieldStr = ""
+	} else {
+		fieldStr = string(fieldBytes)
+	}
+	e := LPush(entity, ctx, "/commandLogs/20230317", fieldStr)
+	if e != nil {
+		t.Errorf("can not push key value %s", e)
+		return
+	}
+
+	t.Log("json data key has be pushed into list")
+
+	e = LPush(entity, ctx, "/commandLogs/20230317", "the second element's value")
+	if e != nil {
+		t.Errorf("can not push second key %s", e)
+		return
+	}
+
+	t.Log("the second key has be pushed into list")
+}
+
+func TestLLen(t *testing.T) {
+	if entity == nil {
+		tmpEntiy, e := connectRedis(t)
+		if e != nil {
+			t.Log("can not connect to redis server")
+			os.Exit(2)
+		}
+		entity = tmpEntiy
+	}
+
+	len, e := LLen(entity, ctx, "/commandLogs/20230317")
+	if e != nil {
+		t.Errorf("get the length of a list error %s", e)
+		return
+	}
+
+	t.Logf("the length of the list is %d\n", len)
+}
+
+func TestLPop(t *testing.T) {
+	if entity == nil {
+		tmpEntiy, e := connectRedis(t)
+		if e != nil {
+			t.Log("can not connect to redis server")
+			os.Exit(2)
+		}
+		entity = tmpEntiy
+	}
+
+	s, e := RPop(entity, ctx, "/commandLogs/20230317")
+	if e != nil {
+		t.Errorf("pop element from a list error %s", e)
+		return
+	}
+	t.Logf("popped element from the list is %s\n", s)
 }

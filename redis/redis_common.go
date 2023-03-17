@@ -415,3 +415,98 @@ func HGetAll(entity RedisEntity, ctx context.Context, key string) (map[string]st
 
 	return result, e
 }
+
+// prepend one or multiple elements to a list
+func LPush(entity RedisEntity, ctx context.Context,key string, values ...interface{}) error {
+	if entity == nil {
+		return fmt.Errorf("can not delete hash field on  nil entity")
+	}
+
+	ic := entity.LPush(ctx,key,values...) 
+	_, e := ic.Result()
+	if e == redis.Nil {
+		return fmt.Errorf("the key does not exist")
+	}
+
+	if e == redis.ErrClosed {
+		return fmt.Errorf("can not push elementes on the closed client")
+	}
+
+	return e
+}
+
+// Append one or multiple elements to a list
+func RPush(entity RedisEntity, ctx context.Context,key string, values ...interface{}) error {
+	if entity == nil {
+		return fmt.Errorf("can not push elementes on  nil entity")
+	}
+
+	ic := entity.RPush(ctx,key,values...) 
+	_, e := ic.Result()
+	if e == redis.Nil {
+		return fmt.Errorf("the key does not exist")
+	}
+
+	if e == redis.ErrClosed {
+		return fmt.Errorf("can not push elementes on the closed client")
+	}
+
+	return e
+}
+
+// Remove and get the first elements in a list
+func LPop(entity RedisEntity, ctx context.Context, key string) (string, error) {
+	if entity == nil {
+		return "", fmt.Errorf("can not get value on  nil entity")
+	}
+
+	sc := entity.LPop(ctx,key)
+	str, e := sc.Result()
+	if e == redis.Nil {
+		return "", fmt.Errorf("the key does not exist")
+	}
+
+	if e == redis.ErrClosed {
+		return "", fmt.Errorf("can not get key value on the closed client")
+	}
+
+	return str, e
+}
+
+// Remove and get the last elements in a list
+func RPop(entity RedisEntity, ctx context.Context, key string) (string, error) {
+	if entity == nil {
+		return "", fmt.Errorf("can not get value on  nil entity")
+	}
+
+	sc := entity.RPop(ctx,key)
+	str, e := sc.Result()
+	if e == redis.Nil {
+		return "", fmt.Errorf("the key does not exist")
+	}
+
+	if e == redis.ErrClosed {
+		return "", fmt.Errorf("can not get key value on the closed client")
+	}
+
+	return str, e
+}
+
+// Get the length of a list
+func LLen(entity RedisEntity, ctx context.Context,key string)(int, error) {
+	if entity == nil {
+		return -1, fmt.Errorf("can not get length of a list on nil entity")
+	}
+
+	ic := entity.LLen(ctx,key) 
+	len, e := ic.Result()
+	if e == redis.Nil {
+		return -1, fmt.Errorf("the key does not exist")
+	}
+
+	if e == redis.ErrClosed {
+		return -1, fmt.Errorf("can not get length of a list  on the closed client")
+	}
+
+	return int(len), e
+}

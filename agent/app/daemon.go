@@ -20,6 +20,7 @@ package app
 import (
 	"fmt"
 	"os"
+	"context"
 
 	"github.com/spf13/cobra"
 
@@ -72,8 +73,9 @@ func Daemon(cmd *cobra.Command, args []string){
 		logErrors(errs)
 		os.Exit(5)
 	}
-
 	runData.redisEntity = entity
+	var ctx = context.Background()
+	runData.redisctx = ctx
 
 	exitChan = make(chan os.Signal)
 	if RunConf.Agent.Passive {

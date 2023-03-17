@@ -21,11 +21,11 @@
 package app
 
 import (
-	"fmt"
-	"strings"
-	"os"
 	"encoding/json"
+	"fmt"
+	"os"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/wangyysde/sysadm/utils"
@@ -299,9 +299,8 @@ func UnMarshalRepStatus(data []byte) (*RepStatus, error) {
 	return &ret, err
 }
 
-/*
- * 检查代码是否是合法的命令状态代码，如果是合法的状态代码则返回true, 否则返回false
- */
+
+// 检查代码是否是合法的命令状态代码，如果是合法的状态代码则返回true, 否则返回false
 func IsCommandStatusCodeValid(code CommandStatusCode) bool {
 	for _, v := range AllCommandStatusCode {
 		if v == code {
@@ -312,15 +311,27 @@ func IsCommandStatusCodeValid(code CommandStatusCode) bool {
 	return false
 }
 
+// GetCommandStatusCodeByInt get command status code by int. 
+// return CommandStatusCode if int is in AllCommandStatusCode
+// otherwise return CommandStatusUnkown
+func GetCommandStatusCodeByInt(code int) CommandStatusCode {
+	for _, v := range AllCommandStatusCode {
+		if int(v) == code {
+			return v
+		}
+	}
+
+	return CommandStatusUnkown
+}
 
 func BuildCommandStatus(commandSeq, nodeIdentifierStr, statusMessage string, nodeIdentifier NodeIdentifier, statusCode CommandStatusCode,
-	data map[string]interface{}, notCommand bool)(CommandStatus, error){
+	data map[string]interface{}, notCommand bool) (CommandStatus, error) {
 	var e error = nil
 	if strings.TrimSpace(commandSeq) == "" {
 		commandSeq = "0000000000000000000"
 	}
 
-	if reflect.DeepEqual(NodeIdentifier{},nodeIdentifier){
+	if reflect.DeepEqual(NodeIdentifier{}, nodeIdentifier) {
 		if strings.TrimSpace(nodeIdentifierStr) == "" {
 			nodeIdentifierStr = DefaultNodeIdentifer
 		}
@@ -329,17 +340,17 @@ func BuildCommandStatus(commandSeq, nodeIdentifierStr, statusMessage string, nod
 	}
 
 	return CommandStatus{
-		CommandSeq: commandSeq,
+		CommandSeq:     commandSeq,
 		NodeIdentifier: nodeIdentifier,
-		StatusCode: statusCode,
-		StatusMessage: statusMessage,
-		Data: data,
-		NotCommand: notCommand,
-	},e 
+		StatusCode:     statusCode,
+		StatusMessage:  statusMessage,
+		Data:           data,
+		NotCommand:     notCommand,
+	}, e
 
 }
 
-func BuildNodeIdentifer(nodeIdentiferStr string) (NodeIdentifier,error) {
+func BuildNodeIdentifer(nodeIdentiferStr string) (NodeIdentifier, error) {
 	if strings.TrimSpace(nodeIdentiferStr) == "" || len(strings.TrimSpace(nodeIdentiferStr)) > MaxCustomizeNodeIdentiferLen {
 		nodeIdentiferStr = DefaultNodeIdentifer
 	}
@@ -348,7 +359,7 @@ func BuildNodeIdentifer(nodeIdentiferStr string) (NodeIdentifier,error) {
 
 	if !IsNodeIdentiferStrValid(nodeIdentiferStr) && len(nodeIdentiferStr) <= MaxCustomizeNodeIdentiferLen {
 		ret.Customize = strings.TrimSpace(nodeIdentiferStr)
-		return ret,nil
+		return ret, nil
 	}
 
 	identiferSlice := strings.Split(nodeIdentiferStr, ",")
@@ -379,16 +390,16 @@ func BuildNodeIdentifer(nodeIdentiferStr string) (NodeIdentifier,error) {
 }
 
 /*
-* IsNodeIdentiferStrValid check whether nodeIdentifierStr is a valid node identifer string 
+* IsNodeIdentiferStrValid check whether nodeIdentifierStr is a valid node identifer string
 * nodeIdentifierStr should be a combination of "IP", "HOSTNAME" or "MAC"
-*/
-func IsNodeIdentiferStrValid(nodeIdentifierStr string) bool{
+ */
+func IsNodeIdentiferStrValid(nodeIdentifierStr string) bool {
 	if strings.TrimSpace(nodeIdentifierStr) == "" {
 		return false
 	}
 
 	identiferSlice := strings.Split(nodeIdentifierStr, ",")
-	for _,v := range identiferSlice{
+	for _, v := range identiferSlice {
 		tmpV := strings.ToUpper(strings.TrimSpace(v))
 		if tmpV != "IP" && tmpV != "HOSTNAME" && tmpV != "MAC" {
 			return false
@@ -413,16 +424,16 @@ func IsCommandSeqValid(commandSeq string) bool {
 	return true
 }
 
-// BuildCommandSeqByID build command sequence with id. 
+// BuildCommandSeqByID build command sequence with id.
 // return 0000000000000000000 if id is empty.
 // otherewise return YYYYMMDD0000ID
-func BuildCommandSeqByID(id string) string{
+func BuildCommandSeqByID(id string) string {
 	if strings.TrimSpace(id) == "" {
 		return "0000000000000000000"
 	}
 
 	dateStr := time.Now().Local().Format("20060102")
-	for i := len(id); i<11; i++ {
+	for i := len(id); i < 11; i++ {
 		dateStr = dateStr + "0"
 	}
 
@@ -430,15 +441,15 @@ func BuildCommandSeqByID(id string) string{
 }
 
 // GetCommandIDFromSeq get command id from a command sequence.
-// return command id and nil if successful 
+// return command id and nil if successful
 // otherwise return "" and an error
-func GetCommandIDFromSeq(seq string) (string,error) {
+func GetCommandIDFromSeq(seq string) (string, error) {
 	if !IsCommandSeqValid(seq) {
-		return "", fmt.Errorf("command sequence %s is not valid",seq)
+		return "", fmt.Errorf("command sequence %s is not valid", seq)
 	}
 
 	idStr := seq[8:]
-	for{
+	for {
 		if idStr[0:] == "0" {
 			idStr = idStr[1:]
 		} else {
@@ -446,5 +457,100 @@ func GetCommandIDFromSeq(seq string) (string,error) {
 		}
 	}
 
-	return idStr, nil 
+	return idStr, nil
+}
+
+// ConvCommandStatus2Map convert CommandStatus to map[string]interface{} for saving into redis server
+// because redis can not save nested data, so ConvCommandStatus2Map extend all sub struct to one level
+func ConvCommandStatus2Map(commandStatus *CommandStatus) (map[string]interface{}, error) {
+	ret := make(map[string]interface{})
+	if strings.TrimSpace(commandStatus.CommandSeq) == "" {
+		return ret, fmt.Errorf("command sequerence is empty")
+	}
+
+	ipStr := strings.Join(commandStatus.NodeIdentifier.Ips, ",")
+	macStr := strings.Join(commandStatus.Macs, ",")
+	var dataStr string = ""
+	if len(commandStatus.Data) > 0 {
+		dataBytes, e := json.Marshal(commandStatus.Data)
+		if e != nil {
+			return ret, e
+		}
+		dataStr = fmt.Sprintf("%s", dataBytes)
+	}
+
+	notCommand := 0
+	if commandStatus.NotCommand {
+		notCommand = 1
+	}
+
+	ret["commandSeq"] = commandStatus.CommandSeq
+	ret["ips"] = ipStr
+	ret["macs"] = macStr
+	ret["hostname"] = commandStatus.NodeIdentifier.Hostname
+	ret["customize"] = commandStatus.NodeIdentifier.Customize
+	ret["statusCode"] = commandStatus.StatusCode
+	ret["statusMessage"] = commandStatus.StatusMessage
+	ret["data"] = dataStr
+	ret["notCommand"] = notCommand
+
+	return ret, nil
+}
+
+// ConvMap2CommandStatus convert map[string]interface{} to  CommandStatus 
+//  return CommandStatus{}, error if any error was occurred
+// otherwise return CommandStatus, nil 
+func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
+	var ret CommandStatus = CommandStatus{}
+
+	commandSeq, ok := data["commandSeq"]
+	if !ok {
+		return ret, fmt.Errorf("command sequence is empty")
+	}
+
+	ipsStr := data["ips"]
+	ipSlice := strings.Split(utils.Interface2String(ipsStr), ",")
+
+	macStr := data["macs"]
+	macSlice := strings.Split(utils.Interface2String(macStr), ",")
+
+	hostname, _ := data["hostname"]
+	customize, _ := data["customize"]
+	statusCode, _ := data["statusCode"]
+
+	statusMessage, _ := data["statusMessage"]
+	dataTmp, _ := data["data"]
+	dataStr := utils.Interface2String(dataTmp)
+	dataBytes := utils.Str2bytes(dataStr)
+	dataMap := make(map[string]interface{}, 0)
+	e := json.Unmarshal(dataBytes, &dataMap)
+	if e != nil {
+		return ret, fmt.Errorf("can not unmarshal json to map")
+	}
+
+	notCommandTmp, _ := data["notCommand"]
+	notCommand, e := utils.Interface2Int(notCommandTmp)
+	notCommandBool := false
+	if notCommand > 0 {
+		notCommandBool = true
+	}
+	if e != nil {
+		return ret, fmt.Errorf("can not convert notCommand to int")
+	}
+    
+	statusCodeInt, e := utils.Interface2Int(statusCode)
+	if e != nil {
+		return ret, fmt.Errorf("can not convert statusCode to int")
+	}
+
+	ret.CommandSeq = utils.Interface2String(commandSeq)
+	ret.NodeIdentifier.Ips = ipSlice
+	ret.NodeIdentifier.Macs = macSlice
+	ret.NodeIdentifier.Hostname = utils.Interface2String(hostname)
+	ret.NodeIdentifier.Customize = utils.Interface2String(customize)
+	ret.StatusCode = GetCommandStatusCodeByInt(statusCodeInt)
+	ret.StatusMessage = utils.Interface2String(statusMessage)
+	ret.NotCommand = notCommandBool
+
+	return ret,nil
 }

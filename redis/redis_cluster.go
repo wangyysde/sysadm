@@ -83,3 +83,23 @@ func (r RedisCluster) Keys(ctx context.Context, pattern string) *redis.StringSli
 func (r RedisCluster) HKeys(ctx context.Context, key string) *redis.StringSliceCmd{
 	return r.Client.Keys(ctx,key)
 }
+
+func (r RedisCluster) LPush(ctx context.Context,key string, values ...interface{}) *redis.IntCmd{
+	return r.Client.LPush(ctx,key,values...) 
+}
+
+func (r RedisCluster) RPush(ctx context.Context,key string, values ...interface{}) *redis.IntCmd{
+	return r.Client.RPush(ctx,key,values...) 
+}
+
+func (r RedisCluster) LPop(ctx context.Context, key string) *redis.StringCmd{
+	return r.Client.LPop(ctx,key)
+}
+
+func (r RedisCluster) RPop(ctx context.Context, key string) *redis.StringCmd{
+	return r.Client.RPop(ctx,key)
+}
+
+func (r RedisCluster) LLen(ctx context.Context, key string) *redis.IntCmd{
+	return r.Client.LLen(ctx,key)
+}

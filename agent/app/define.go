@@ -86,3 +86,5 @@ var defaultDisableKeepAives bool = false
 var defaultDisableCompression  bool = false
 // Timeout specifies a time limit for requests made by this Client. The timeout includes connection time, any redirects, and reading the response body. The timer remains
 var defaultHTTPTimeOut int =  30
+// root path of command status data to save in redis server
+var defaultRootPathCommandStatus string = "/commandstatus/"

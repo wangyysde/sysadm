@@ -56,7 +56,7 @@ const (
 	// 表示apiServer正在下发命令给客户端执行。包括apiServer正与客户端通信，下发命令但是未收到成功接收的结果；下发出错，但是未超过重试次数
 	CommandStatusSendding CommandStatusCode = 400
 
-	// 表示客户端已成功接收了命令
+	// 表示服务端或客户端已经成功接收了命令或命令状态信息
 	ComandStatusReceived CommandStatusCode = 500
 
 	// 表示命令下发出错，且超过重试次数；或者命令创建成功后，超过指定时间未能成功下发，通常此时本状态是由定时任务设置的；或者客户端虽然接收到命令，但是命令未通过合法性检查。

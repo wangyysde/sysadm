@@ -32,6 +32,7 @@ import (
 	"github.com/wangyysde/sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 	apiserver "github.com/wangyysde/sysadm/apiserver/app"
+	redis "github.com/wangyysde/sysadm/redis"
 )
 
 func SetVersion(version *config.Version) {
@@ -246,37 +247,6 @@ func doRouteCommand(gotCommand *apiserver.CommandData, c *sysadmServer.Context) 
 	
 }
 
-func outPutResult(c *sysadmServer.Context, gotCommand *Command, data apiutils.ApiResponseData) {
-	// it is that agent running in active mode if c is not nil,then we should response the client with data
-	if c != nil {
-
-		nodeIdentifer := runData.nodeIdentifer
-		repData := map[string]interface{}{
-			"nodeIdentifer": *nodeIdentifer,
-			"data":          data,
-		}
-		c.JSON(http.StatusOK, repData)
-		return
-	}
-
-	outPut := RunConf.Global.Output
-	switch {
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "server") == 0:
-		outPutResultToServer(gotCommand, data)
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "file") == 0:
-		// if outputFile is not set,the we will output the result to server
-		if RunConf.Global.OutputFile == "" {
-			outPutResultToServer(gotCommand, data)
-		} else {
-			outPutResultToFile(gotCommand, data)
-		}
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "stdout") == 0:
-		outPutResultToStdout(gotCommand, data)
-	default:
-		outPutResultToServer(gotCommand, data)
-	}
-
-}
 
 func outPutCommandStatus(c *sysadmServer.Context, gotCommand *apiserver.Command, msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool) {
 	var errs []sysadmerror.Sysadmerror
@@ -292,47 +262,25 @@ func outPutCommandStatus(c *sysadmServer.Context, gotCommand *apiserver.Command,
 		}
 		c.JSON(http.StatusOK,commandStausData)
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090219, "debug", "command status of %s has be send to server ",gotCommand.CommandSeq))
+		// we should delete data of command status in redis server if agent runing in passive or command is asynchronous
+		if RunConf.Agent.Passive || !gotCommand.Synchronized {
+			key := defaultRootPathCommandStatus + gotCommand.CommandSeq
+			e := redis.Del(runData.redisEntity,runData.redisctx,key)
+			if e != nil {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090220, "error", "delete data of command status for command %s error %s ",gotCommand.CommandSeq,e))
+			}
+		}
 		logErrors(errs)
 		return 
 	}
 
-	outPut := RunConf.Global.Output
-	switch {
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "server") == 0:
-		outPutCommandStatusToServer(gotCommand, msg, data, statusCode, notCommand)
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "file") == 0:
-		// if outputFile is not set,the we will output the result to server
-		if RunConf.Global.OutputFile == "" {
-			outPutResultToServer(gotCommand, data)
-		} else {
-			outPutResultToFile(gotCommand, data)
-		}
-	case strings.Compare(strings.TrimSpace(strings.ToLower(outPut)), "stdout") == 0:
-		outPutResultToStdout(gotCommand, data)
-	default:
-		outPutCommandStatusToServer(gotCommand, msg, data, statusCode, notCommand)
-	}
-
-
-
-
-	var msgData []map[string]interface{}
-
-	m := fmt.Sprintf(msg, data...)
-	ret := map[string]interface{}{
-		"msg": m,
-	}
-	msgData = append(msgData, ret)
-	retData := apiutils.NewBuildResponseDataForMap(false, 50090201, msgData)
-	outPutResult(c, gotCommand, retData)
+	sendCommandStatusToServer(gotCommand, msg, data, statusCode, notCommand)
 
 }
 
-/*
-outPutResultToServer output the result of a command execution to the server when agent running in passive mode or CLI.
-agent response the result to the server in outPutResult function if it is running active mode.
-*/
-func outPutCommandStatusToServer(gotCommand *apiserver.Command, msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool) {
+
+//  sendCommandStatusToServer send the of command status to server actively. 
+func sendCommandStatusToServer(gotCommand *apiserver.Command, msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool) {
 	var errs []sysadmerror.Sysadmerror
 
 	if !RunConf.Agent.Passive {
@@ -383,84 +331,24 @@ func outPutCommandStatusToServer(gotCommand *apiserver.Command, msg string, data
 		return
 	}
 
-	if responseData.Status {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090206, "info", "the result of the command execution has be sent to the server"))
-		logErrors(errs)
-		return
-	}
-
-	if len(responseData.Message) > 0 {
-		msgSlice := responseData.Message
-		msg := msgSlice[1]
-		errMsg, okMsg := msg["msg"]
-		if okMsg {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090207, "error", "send the result of the command execution error %s", errMsg))
+	if repStatusData.StatusCode == apiserver.ComandStatusReceived {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090206, "info", "the status of command %s has be send to server", repStatusData.CommandSeq))
+		key := defaultRootPathCommandStatus + repStatusData.CommandSeq
+		e := redis.Del(runData.redisEntity,runData.redisctx,key)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090207, "error", "delete command status data for command %s from redis server error %s", repStatusData.CommandSeq,e))
 			logErrors(errs)
 			return
 		}
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090208, "debug", "command status data for command %s has be send to server", repStatusData.CommandSeq))
+		logErrors(errs)
+		return
 	}
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090208, "error", "unknow error has occurred when send the result of command execution to server"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090209, "error", "send command status data for command %s to server error", repStatusData.CommandSeq))
 	logErrors(errs)
-}
+	return
 
-func outPutResultToFile(gotCommand *Command, data apiutils.ApiResponseData) {
-	var errs []sysadmerror.Sysadmerror
-
-	if strings.TrimSpace(RunConf.Global.OutputFile) == "" {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090209, "warning", "output has be set to file, but outputFile is not exist. we will output the result to stdout."))
-		logErrors(errs)
-		outPutResultToStdout(gotCommand, data)
-		return
-	}
-
-	nodeIdentifer := runData.nodeIdentifer
-	repData := map[string]interface{}{
-		"nodeIdentifer": *nodeIdentifer,
-		"data":          data,
-	}
-
-	datajson, err := json.Marshal(repData)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090210, "error", "encoding response data to json string error %s", err))
-		logErrors(errs)
-		return
-	}
-
-	fp, err := os.OpenFile(RunConf.Global.OutputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090214, "error", "can not open output file %s error %s", RunConf.Global.OutputFile, err))
-		logErrors(errs)
-		return
-	}
-	n, err := fp.Write(datajson)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090211, "error", "write the result of command to file %s error %s", RunConf.Global.OutputFile, err))
-		logErrors(errs)
-		return
-	}
-
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090212, "info", "write the result of command to file %s successful. total bytes %d has be write to file", RunConf.Global.OutputFile, n))
-	logErrors(errs)
-}
-
-func outPutResultToStdout(gotCommand *Command, data apiutils.ApiResponseData) {
-	var errs []sysadmerror.Sysadmerror
-
-	nodeIdentifer := runData.nodeIdentifer
-	repData := map[string]interface{}{
-		"nodeIdentifer": *nodeIdentifer,
-		"data":          data,
-	}
-
-	datajson, err := json.Marshal(repData)
-	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090213, "error", "encoding response data to json string error %s", err))
-		logErrors(errs)
-		return
-	}
-
-	fmt.Printf("%s", datajson)
 }
 
 func isNodeIdentiferChanged(nodeIdentifierStr string) (bool, []sysadmerror.Sysadmerror){
@@ -508,5 +396,31 @@ func isNodeIdentiferChanged(nodeIdentifierStr string) (bool, []sysadmerror.Sysad
 	}
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090214, "debug", "node identifer will be changed to  %s", newStr))
+	return true, errs
+}
+
+// setCommandStatusIntoRedis build CommandStatus and try to save it into redis server
+func setCommandStatusIntoRedis(gotCommand *apiserver.Command,msg string, data map[string]interface{},statusCode apiserver.CommandStatusCode, notCommand bool)(bool, []sysadmerror.Sysadmerror){
+	var errs []sysadmerror.Sysadmerror
+
+	key := defaultRootPathCommandStatus + gotCommand.CommandSeq
+	commandStatus, e := apiserver.BuildCommandStatus(gotCommand.CommandSeq,"",msg,*runData.nodeIdentifer,statusCode,data,notCommand)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090215, "error", "build command status error %s", e))
+		return false, errs
+	}
+	
+	commandStatusMap, e := apiserver.ConvCommandStatus2Map(&commandStatus)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090216, "error", "convert CommandStatus to map error %s", e))
+		return false, errs
+	}
+	
+	e = redis.HSet(runData.redisEntity,runData.redisctx,key,commandStatusMap)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090217, "error", "save command status data to redis server error %s", e))
+		return false, errs
+	}
+
 	return true, errs
 }

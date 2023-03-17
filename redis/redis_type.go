@@ -39,6 +39,11 @@ type RedisEntity interface {
 	HExists(ctx context.Context, key, field string) *redis.BoolCmd
 	Keys(ctx context.Context, pattern string) *redis.StringSliceCmd
 	HKeys(ctx context.Context, key string) *redis.StringSliceCmd
+	LPush(ctx context.Context,key string, values ...interface{}) *redis.IntCmd
+	RPush(ctx context.Context, key string, values ...interface{}) *redis.IntCmd
+	LPop(ctx context.Context, key string) *redis.StringCmd
+	RPop(ctx context.Context, key string) *redis.StringCmd
+	LLen(ctx context.Context, key string) *redis.IntCmd
  }
 
 // connection parameters for client.

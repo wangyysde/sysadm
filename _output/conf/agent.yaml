@@ -13,10 +13,6 @@ global:
     address: "www.sysadm.cn"
     port: 80
     socket: ""
-  # where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
-  output: "server"
-  # the path of output file. this value must not empty if output be set to "file"
-  outputFile: "logs/agent_outfile.log"
   # specifies a identifer of the node which agent running on it.
   # It is any combination of the IP,HOSTNAME and MAC joined by commas  or a customize string what the leght of the string is less 63
   # agent will get all IPs without not active and reponse these IPs in list to the server by nodeIdentifer.IPs filed if IP is included in NodeIdentifer

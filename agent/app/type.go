@@ -20,6 +20,7 @@ package app
 import (
 	"net/http"
 	"os"
+	"context"
 
 	"github.com/wangyysde/sysadm/config"
 	"github.com/wangyysde/sysadm/httpclient"
@@ -68,12 +69,6 @@ type GlobalConf struct {
 
 	// server parameters  which agent will used to connect to a server(agent send the reponses message to the server)
 	Server config.Server `form:"server" json:"server" yaml:"server" xml:"server"`
-
-	// where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
-	Output string `form:"output" json:"output" yaml:"output" xml:"output"`
-
-	// the path of output file. this value must not empty if output be set to "file"
-	OutputFile string `form:"outputFile" json:"outputFile" yaml:"outputFile" xml:"outputFile"`
 
 	// log setting block
 	Log config.Log `form:"log" json:"log" yaml:"log" xml:"log"`
@@ -176,6 +171,9 @@ type runTimeData struct {
 
 	// keep redis' entity 
 	redisEntity redis.RedisEntity
+
+	// redis context
+	redisctx context.Context
 }
 
 var runData runTimeData = runTimeData{}

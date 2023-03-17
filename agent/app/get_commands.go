@@ -23,13 +23,32 @@ import (
 	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
 	"github.com/wangyysde/sysadmServer"
 	apiserver "github.com/wangyysde/sysadm/apiserver/app"
+	redis "github.com/wangyysde/sysadm/redis"
+	"github.com/wangyysde/sysadm/sysadmerror"
 )
 
 func runGetHostIP(gotCommand apiserver.Command, c *sysadmServer.Context){
+	var errs []sysadmerror.Sysadmerror
+
+	// we should save command status to redis when command is asynchronous or agent running in passive mode
+	if !gotCommand.Synchronized || c == nil {
+		if c != nil {
+			data := make(map[string]interface{},0)
+			outPutCommandStatus(c,&gotCommand,"",data, apiserver.ComandStatusReceived,false)
+		}
+
+		data := make(map[string]interface{},0 )
+		_, err := setCommandStatusIntoRedis(&gotCommand,"",data, apiserver.ComandStatusReceived,false)
+		errs = append(errs, err...)
+	}
+
 	ints,err := net.Interfaces()
 	var retMap []map[string]interface{}  
-	
+
 	if err != nil {
+		if RunConf.Agent.Passive {
+			
+		}
 		outPutErrorMessage(c, &gotCommand, "get interface list error %s", err)
 		return
 	}

@@ -116,24 +116,6 @@ func handleGlobalBlock() []sysadmerror.Sysadmerror {
 	}
 	RunConf.Global.Server = *retServer
 
-	outPut := validateOutput(CliOps.Global.Output, fileConf.Global.Output, "global")
-	RunConf.Global.Output = outPut
-
-	outputFile := validateOutputFile(CliOps.Global.OutputFile, fileConf.Global.OutputFile, "global")
-	RunConf.Global.OutputFile = outputFile
-
-	if strings.ToLower(RunConf.Global.Output) == "server" {
-		if RunConf.Global.Server.Address == "" || RunConf.Global.Server.Port == 0 {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10081005, "fatal", "output method is server.but the server address %s or server port %d is not valid.", RunConf.Global.Server.Address, RunConf.Global.Server.Port))
-			return errs
-		}
-	}
-
-	if strings.ToLower(RunConf.Global.Output) == "file" && RunConf.Global.OutputFile == "" {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10081006, "fatal", "output method is file.but output file %s is not valid.", RunConf.Global.OutputFile))
-		return errs
-	}
-
 	retLog, err := validateLogConf(CliOps.Global.Log, fileConf.Global.Log, "global")
 	RunConf.Global.Log = *retLog
 	errs = append(errs, err...)
@@ -397,86 +379,6 @@ func validateServerConf(cliConf config.Server, fileConf config.Server, envBlock 
 	}
 
 	return ret, errs
-}
-
-/*
-validateOutput get the values for output from environment, configuration file and command flags,then validate the validation of them.
-the level of priorities of  the values for output is disclining from command flags, configuration file and environment.
-*/
-func validateOutput(cliConf string, fileConf string, envBlock string) string {
-	var ret string = ""
-
-	var envMap map[string]string
-	envMapP := getEnvDefineForBlock(envBlock)
-	if envMapP == nil {
-		envMap = map[string]string{}
-	} else {
-		envMap = *envMapP
-	}
-
-	evnName, okOutput := envMap["Output"]
-	if okOutput {
-		envValue := strings.ToLower(strings.TrimSpace(os.Getenv(evnName)))
-		if envValue == "server" || envValue == "stdout" || envValue == "file" {
-			ret = envValue
-		}
-	}
-
-	envValue := strings.ToLower(strings.TrimSpace(fileConf))
-	if envValue == "server" || envValue == "stdout" || envValue == "file" {
-		ret = envValue
-	}
-
-	envValue = strings.ToLower(strings.TrimSpace(cliConf))
-	if envValue == "server" || envValue == "stdout" || envValue == "file" {
-		ret = envValue
-	}
-
-	return ret
-}
-
-/*
-validateOutput get the values for outputFile from environment, configuration file and command flags,then validate the validation of them.
-the level of priorities of  the values for output is disclining from command flags, configuration file and environment.
-*/
-func validateOutputFile(cliConf string, fileConf string, envBlock string) string {
-	var ret string = ""
-
-	var envMap map[string]string
-	envMapP := getEnvDefineForBlock(envBlock)
-	if envMapP == nil {
-		envMap = map[string]string{}
-	} else {
-		envMap = *envMapP
-	}
-
-	evnName, okOutputFile := envMap["OutputFile"]
-	if okOutputFile {
-		envValue := strings.TrimSpace(os.Getenv(evnName))
-		if strings.TrimSpace(envValue) != "" {
-			outputFile, e := sysadmUtils.CheckFileWritable(envValue, RunConf.WorkingDir, true, false)
-			if e == nil {
-				ret = outputFile
-			}
-		}
-	}
-
-	fileConf = strings.TrimSpace(fileConf)
-	if fileConf != "" {
-		outputFile, e := sysadmUtils.CheckFileWritable(fileConf, RunConf.WorkingDir, true, false)
-		if e == nil {
-			ret = outputFile
-		}
-	}
-
-	cliConf = strings.TrimSpace(cliConf)
-	if cliConf != "" {
-		outputFile, e := sysadmUtils.CheckFileWritable(cliConf, RunConf.WorkingDir, true, false)
-		if e == nil {
-			ret = outputFile
-		}
-	}
-	return ret
 }
 
 /*
