@@ -116,12 +116,6 @@ func init() {
 	skipVerifyCert := rootCmd.PersistentFlags().BoolP("skip-verify-cert", "", app.DefaultskipVerifyCert, "skipVerifyCert set whether check the certs which got from a server isvalid")
 	app.CliOps.Global.Tls.InsecureSkipVerify = *skipVerifyCert
 
-	// where the results of a command running will be send to. one of server: a server receiving the results; stdout, file
-	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Output, "output", "o", "", "where the results of a command running will be send to. one of server,stdout,file")
-
-	//  the path of output file. this value must not empty if output be set to "file"
-	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.OutputFile, "outputfile", "", "", `the path of output file. this value must not empty if output be set to "file"`)
-
 	// the path of access log file
 	rootCmd.PersistentFlags().StringVarP(&app.CliOps.Global.Log.AccessLog, "access-logfile", "", "", `the path of access log file`)
 

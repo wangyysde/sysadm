@@ -250,6 +250,10 @@ type LogData struct {
 	// 本次所发送的日志的总条数
 	Total int `form:"total" json:"total" yaml:"total" xml:"total"`
 
+	// 日志结束标志.当本字段值为true时，则表示当前数据包含对应命令所有的日志，否则表示对应命令还有日志未发送，
+	// 如果是主动模式下，则apiserver需要再次请求余下日志; 被动模式下表示客户端下一次再发剩余日志
+	EndFlag bool `form:"endflag" json:"endflag" yaml:"endflag" xml:"endflag"`
+
 	// 当客户端没有发现所请求的命令的时候，应设置本字段的值为true，否则为false.当本字段的值为true时，通常意味以下几种情况：
 	// 1. 请求中所提供的CommandSeq不正确；2. 客户端之前已经完成对所有日志的发送清除了对应命令的日志；
 	NotCommand bool `form:"notCommand" json:"notCommand" yaml:"notCommand" xml:"notCommand"`

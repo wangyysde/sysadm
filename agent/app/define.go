@@ -60,6 +60,8 @@ var DefaultNodeIdentifer string = "IP,HOSTNAME,MAC"
 var defaultReceiveCommandUri string = "/receiveCommand"
 // in active mode, if the path where apiserver get command status from is not set , then its value should be set to defaultGetCommandStatus
 var defaultGetCommandStatus string = "/getCommandStatus"
+// in active mode, if the path where apiserver get command logs from is not set , then its value should be set to defaultGetCommandLogs
+var defaultGetCommandLogs string = "/getLogs"
 // Timeout is the maximum amount of time a dial will wait for a connect to complete. When using TCP and dialing a host name with multiple IP 
 // addresses, the timeout may be divided between them. This value is for build net.Dialer for a http client.
 var DefaultTcpTimeout int = 180
@@ -88,3 +90,17 @@ var defaultDisableCompression  bool = false
 var defaultHTTPTimeOut int =  30
 // root path of command status data to save in redis server
 var defaultRootPathCommandStatus string = "/commandstatus/"
+// root path of command logs data to save in redis server
+var defaultRootPathCommandLog string = "/commandlog/"
+// in passive mode, how many times agent try to send command status data to server
+var sendCommandStatusMaxTryTimes int = 5
+// interval(second) how long agent is waiting for sending command status data to server
+var sendCommandStatusTryInterval int = 30
+// max number of logs what the client can sent to server per time 
+var maxLogNumPerRequest int  = 50
+// in passive mode, how many times agent try to send command logs to server
+var sendCommandLogMaxTryTimes int = 5
+// interval(second) how long agent is waiting for sending command logs to server
+var sendCommandLogTryInterval int = 30
+// the root path of yum configuration files
+var yumConfRootPath string = "/etc/yum.repos.d/"

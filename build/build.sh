@@ -23,6 +23,7 @@ set -o pipefail
 
 PACKAGE_LIST="sysadm,registryctl,infrastructure,agent"
 DEFAULT_IMAGE_VER="v1.0.0"
+DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
 
 echo "getting build information......"
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -90,17 +91,46 @@ function build::package(){
 }
 
 BUILD_LIST=""
-WHAT=$1
-BUILD_IMAGE=$2
-IMAGEVER=$3
+WHAT=""
+BUILD_IMAGE="y"
+IMAGEVER=${DEFAULT_IMAGE_VER}
+REGISTRY_URL=${DEFAULT_REGISTRY_URL}
+if [ $# != 0 ]; then
+  WHAT=$1
+  shift
+fi
 
+if [ $# != 0 ]; then
+  BUILD_IMAGE=$1
+  [ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="y"
+  shift
+fi
 
-[ "X${WHAT}" == "X" ] && BUILD_LIST=${PACKAGE_LIST} || BUILD_LIST=${WHAT}
+if [ $# != 0 ]; then
+  IMAGEVER=$1
+  [ "X${IMAGEVER}" == "X" ] && IMAGEVER=${DEFAULT_IMAGE_VER}
+  shift
+fi
+
+if [ $# != 0 ]; then
+  REGISTRY_URL=$1
+  [ "X${REGISTRY_URL}" == "X" ] && REGISTRY_URL=${DEFAULT_REGISTRY_URL}
+  shift
+fi
+
+if [ "X${WHAT}" == "X" ]; then
+  BUILD_LIST=${PACKAGE_LIST}
+elif [ "X${WHAT}" == "Xall" ]; then
+  BUILD_LIST=${PACKAGE_LIST}
+else 
+  BUILD_LIST=${WHAT} 
+fi
+
 [ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="N" || BUILD_IMAGE="Y"
 [ "X${IMAGEVER}" == "X" ] && IMAGEVER=${DEFAULT_IMAGE_VER} 
 
 BUILD_LIST_ARRAY=(${BUILD_LIST//,/ })
-for p in ${BUILD_LIST_ARRAY}
+for p in ${BUILD_LIST_ARRAY[@]}
 do
    create::build::infofile ${p}
    [ $? -eq  1 ] && exit 1
@@ -109,7 +139,7 @@ do
 
   if [ "${BUILD_IMAGE}" == "y" -o "${BUILD_IMAGE}" == "Y" ]; then
 	if [ -e "${SYSADM_ROOT}/build/build_${p}_image.sh" ]; then
-		"${SYSADM_ROOT}/build/build_${p}_image.sh" ${IMAGEVER}
+		"${SYSADM_ROOT}/build/build_${p}_image.sh" "${IMAGEVER}" "${REGISTRY_URL}"
 		if [ $? -ne 0 ]; then
 			echo "building ${p} image error"
 			exit 1

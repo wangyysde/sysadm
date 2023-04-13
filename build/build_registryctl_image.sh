@@ -18,16 +18,12 @@
 #
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-REGISTRYCTL_VER="1.0"
-REGISTRY_URL="harbor.bzhy.com/sysadm/"
 BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
 EMAIL="net_use@bzhy.com"
 
-if [ ! -z $1 ]; then
-  REGISTRYCTL_VER=$1
-fi
-
+REGISTRYCTL_VER=$1
+REGISTRY_URL=$2
 
 function create::dockerfile(){
 	datetime=`date  '+%Y%m%d %H:%M:%S'`

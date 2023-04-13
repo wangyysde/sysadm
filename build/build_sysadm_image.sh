@@ -24,9 +24,8 @@ BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
 EMAIL="net_use@bzhy.com"
 
-if [ ! -z $1 ]; then
-  SYSADM_VER=$1
-fi
+SYSADM_VER=$1
+REGISTRY_URL=$2
 
 
 function create::dockerfile(){

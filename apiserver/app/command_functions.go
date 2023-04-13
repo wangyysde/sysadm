@@ -27,8 +27,10 @@ import (
 	"reflect"
 	"strings"
 	"time"
+	"strconv"
 
 	"github.com/wangyysde/sysadm/utils"
+	"github.com/wangyysde/sysadmLog"
 )
 
 /*
@@ -553,4 +555,33 @@ func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 	ret.NotCommand = notCommandBool
 
 	return ret,nil
+}
+
+// BuildLog  build an instance of Log used logID, message and level
+func BuildLog(logID int, message string,level sysadmLog.Level) Log {
+	logSeq := BuildLogSeqByID(logID)
+
+	return Log{
+		LogSeq: logSeq,
+		Level: level,
+		Message: message,
+	}
+}
+
+// BuildLogSeqByID build log sequence with id.
+// return YYYYMMDD111111 if id is less 1 or id is bigger 111111.
+// otherewise return YYYYMMDD0000ID
+func BuildLogSeqByID(id int) string {
+	if id <1 || id >=111111 {
+		id = 111111
+	}
+
+	dateStr := time.Now().Local().Format("20060102")
+	idStr := strconv.Itoa(id)
+
+	for i := len(idStr); i < 6; i++ {
+		dateStr = dateStr + "0"
+	}
+
+	return (dateStr + idStr)
 }
