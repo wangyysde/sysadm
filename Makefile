@@ -7,7 +7,7 @@ PRINT_HELP ?=
 PREFIX ?= /usr/local/sysadm
 REGISTRYvER ?= v2.7.0
 BUILD_IMAGE ?= 
-IMAGEVER ?= v1.4
+#IMAGEVER ?= v1.4
 
 .PHONY: all
 ifeq ($(PRINT_HELP),y)

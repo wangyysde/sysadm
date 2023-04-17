@@ -22,7 +22,7 @@ set -o nounset
 set -o pipefail
 
 PACKAGE_LIST="sysadm,registryctl,infrastructure,agent"
-DEFAULT_IMAGE_VER="v1.0.0"
+DEFAULT_IMAGE_VER="v1.0.1"
 DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
 
 echo "getting build information......"

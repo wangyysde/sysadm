@@ -16,7 +16,7 @@
 *
 * NOTE:
 * 本文件定义了将来准备独立出来的sysadmApiServer组件所使用的导出的数据结构、常量和全局变量
- */
+*/
 
 package app
 
