@@ -22,23 +22,43 @@ import(
 )
 
 type Version struct {
-	Version string `json:"version"`
-	Author string `json:"author"`
-	GitCommitId string `json:"gitCommitId"`
-	Branch	string `json:"branch"`
-	GitTreeStatus string `json:"gitTreeStatus"`
-	BuildDateTime string `json:"buildDateTime"`
-	GoVersion string `json:"goVersion"`
-	Compiler string `json:"compiler"`
-	Arch string `json:"arch"`
-	Os string `json:"os"`
+	// version of application. 
+	Version string  `form:"version" json:"version" yaml:"version" xml:"version"` 
+
+	// author of application s
+	Author string  `form:"author" json:"author" yaml:"author" xml:"author"` 
+
+	// commit ID of the application when the application built based on
+	GitCommitId string  `form:"gitCommitId" json:"gitCommitId" yaml:"gitCommitId" xml:"gitCommitId"`  
+
+	// branch name of the application which the application build based on
+	Branch	string `form:"branch" json:"branch" yaml:"branch" xml:"branch"`  
+
+	// git status of the branch when the application build based on
+	GitTreeStatus string `form:"gitTreeStatus" json:"gitTreeStatus" yaml:"gitTreeStatus" xml:"gitTreeStatus"`  
+
+	// the build time of the application 
+	BuildDateTime string `form:"buildDateTime" json:"buildDateTime" yaml:"buildDateTime" xml:"buildDateTime"` 
+
+	// go version which used to build the application 
+	GoVersion string `form:"goVersion" json:"goVersion" yaml:"goVersion" xml:"goVersion"`  
+
+	// compiler which used to build the application 
+	Compiler string  `form:"compiler" json:"compiler" yaml:"compiler" xml:"compiler"` 
+
+	// architecture the application was build based on 
+	Arch string `form:"arch" json:"arch" yaml:"arch" xml:"arch"` 
+
+	// OS name the application was build based on 
+	Os string `form:"os" json:"os" yaml:"os" xml:"os"`  
+
 }
 
 //Defining server configuration
 type Server struct {
-	Address string `json:"address"`
-	Port int `json:"port"`
-	Socket string `json:"socket"`
+	Address string `form:"address" json:"address" yaml:"address" xml:"address"` 
+	Port int  `form:"port" json:"port" yaml:"port" xml:"port"` 
+	Socket string `form:"socket" json:"socket" yaml:"socket" xml:"socket"` 
 }
 
 //Define tls structure
@@ -52,16 +72,16 @@ type Tls struct {
 
 //Defining log configuration 
 type Log struct {
-	AccessLog string `json:"accessLog"`
+	AccessLog string `form:"accessLog" json:"accessLog" yaml:"accessLog" xml:"accessLog"` 
 	// descriptor of access log file which will be used to close logger when system exit
 	AccessLogFp *os.File
-	ErrorLog string `json:"errorLog"`
+	ErrorLog string `form:"errorLog" json:"errorLog" yaml:"errorLog" xml:"errorLog"`  
 	// descriptor of error log file which will be used to close logger when system exit
 	ErrorLogFp *os.File
-	Kind string `json:"kind"`
-	Level string `json:"level"`
-	SplitAccessAndError bool `json:"splitAccessAndError"`
-	TimeStampFormat string `json:"timeStampFormat"`
+	Kind string `form:"kind" json:"kind" yaml:"kind" xml:"kind"`  
+	Level string `form:"level" json:"level" yaml:"level" xml:"level"` 
+	SplitAccessAndError bool `form:"splitAccessAndError" json:"splitAccessAndError" yaml:"splitAccessAndError" xml:"splitAccessAndError"`  
+	TimeStampFormat string `form:"timeStampFormat" json:"timeStampFormat" yaml:"timeStampFormat" xml:"timeStampFormat"` 
 }
 
 type User struct {

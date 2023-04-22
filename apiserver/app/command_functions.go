@@ -478,7 +478,7 @@ func ConvCommandStatus2Map(commandStatus *CommandStatus) (map[string]interface{}
 		if e != nil {
 			return ret, e
 		}
-		dataStr = fmt.Sprintf("%s", dataBytes)
+		dataStr = string(dataBytes)  
 	}
 
 	notCommand := 0
@@ -516,12 +516,12 @@ func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 	macStr := data["macs"]
 	macSlice := strings.Split(utils.Interface2String(macStr), ",")
 
-	hostname, _ := data["hostname"]
-	customize, _ := data["customize"]
-	statusCode, _ := data["statusCode"]
+	hostname := data["hostname"]
+	customize := data["customize"]
+	statusCode := data["statusCode"]
 
-	statusMessage, _ := data["statusMessage"]
-	dataTmp, _ := data["data"]
+	statusMessage := data["statusMessage"]
+	dataTmp := data["data"]
 	dataStr := utils.Interface2String(dataTmp)
 	dataBytes := utils.Str2bytes(dataStr)
 	dataMap := make(map[string]interface{}, 0)
@@ -530,7 +530,7 @@ func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 		return ret, fmt.Errorf("can not unmarshal json to map")
 	}
 
-	notCommandTmp, _ := data["notCommand"]
+	notCommandTmp := data["notCommand"]
 	notCommand, e := utils.Interface2Int(notCommandTmp)
 	notCommandBool := false
 	if notCommand > 0 {

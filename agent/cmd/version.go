@@ -13,7 +13,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and  limitations under the License.
 *
-*/
+ */
 
 package cmd
 
@@ -22,55 +22,54 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadm/agent/app"
-	"github.com/wangyysde/yaml"
 	"github.com/wangyysde/sysadmLog"
+	"github.com/wangyysde/yaml"
 )
 
 var versionCmd = &cobra.Command{
-    Use: "version",
-    Short: "Print the version of agent",
-    Run: func(cmd *cobra.Command, args []string){
-		version :=  app.GetVersion()
+	Use:   "version",
+	Short: "Print the version of agent",
+	Run: func(cmd *cobra.Command, args []string) {
+		version := app.GetVersion()
 		const flag = "format"
 		if version != nil {
 			of, err := cmd.Flags().GetString(flag)
 
 			if err != nil {
 				sysadmLog.Error("error accessing flag %s for command %s", version.Version, cmd.Name())
-				return 
+				return
 			}
-			
+
 			switch of {
 			case "":
 				sysadmLog.Info("agent version %+v", version)
 			case "short":
-				sysadmLog.Info("agent version %+v",version)
+				sysadmLog.Info("agent version %+v", version)
 			case "yaml":
 				y, err := yaml.Marshal(&version)
-           	 	if err != nil {
-               		return 
-            	}
-        		sysadmLog.Info("%s",string(y))
+				if err != nil {
+					return
+				}
+				sysadmLog.Info("%s", string(y))
 			case "json":
 				y, err := json.MarshalIndent(&version, "", "  ")
-            	if err != nil {
-                	return 
-            	}
-            	sysadmLog.Info(string(y))
+				if err != nil {
+					return
+				}
+				sysadmLog.Info(string(y))
 			default:
 				sysadmLog.Info("invalid output format: %s", of)
 			}
 		} else {
 			sysadmLog.Error("can not get version inforation  %s", cmd.Name())
-			return 
+			return
 		}
-       
-		
+
 	},
 	Args: cobra.NoArgs,
 }
-        
-func init(){
+
+func init() {
 
 	rootCmd.AddCommand(versionCmd)
 	versionCmd.Flags().StringP("format", "f", "", "Output format; available options are 'yaml', 'json' and 'short'")

@@ -21,7 +21,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm,registryctl,infrastructure,agent"
+PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
 DEFAULT_IMAGE_VER="v1.0.1"
 DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
 
@@ -92,7 +92,7 @@ function build::package(){
 
 BUILD_LIST=""
 WHAT=""
-BUILD_IMAGE="y"
+BUILD_IMAGE="n"
 IMAGEVER=${DEFAULT_IMAGE_VER}
 REGISTRY_URL=${DEFAULT_REGISTRY_URL}
 if [ $# != 0 ]; then
@@ -102,7 +102,7 @@ fi
 
 if [ $# != 0 ]; then
   BUILD_IMAGE=$1
-  [ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="y"
+  [ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="n"
   shift
 fi
 
@@ -126,7 +126,6 @@ else
   BUILD_LIST=${WHAT} 
 fi
 
-[ "X${BUILD_IMAGE}" == "X" ] && BUILD_IMAGE="N" || BUILD_IMAGE="Y"
 [ "X${IMAGEVER}" == "X" ] && IMAGEVER=${DEFAULT_IMAGE_VER} 
 
 BUILD_LIST_ARRAY=(${BUILD_LIST//,/ })
