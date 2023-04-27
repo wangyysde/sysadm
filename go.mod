@@ -16,6 +16,7 @@ require (
 	github.com/wangyysde/sysadmServer v0.0.0-20220719023015-af14b6af71e5
 	github.com/wangyysde/sysadmSessions v0.0.0-20211222125714-def5d4b4f078
 	github.com/wangyysde/yaml v1.5.0
+	golang.org/x/tools v0.8.0 // indirect
 	k8s.io/api v0.26.3 // indirect
 	k8s.io/apimachinery v0.26.3
 	k8s.io/client-go v0.26.3

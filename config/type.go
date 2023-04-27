@@ -85,6 +85,6 @@ type Log struct {
 }
 
 type User struct {
-	UserName string `json:"userName"`
-	Password string `json:"password"`
+	UserName string `form:"userName" json:"userName" yaml:"userName" xml:"userName"`   
+	Password string `form:"password" json:"password" yaml:"password" xml:"password"`  
 }

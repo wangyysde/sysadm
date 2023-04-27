@@ -35,29 +35,28 @@ server:
   address: "0.0.0.0"
 
   # apiserver listen port, default value is 8085.this port is tls port when tls parameters has specified
-  port: 8083
+  port: 8085
 
   # apiserver socket file path. default is "". apiserver will not create socket file when this item is empty
-  socket: "/var/run/infrastructure.sock"
+  socket: "/var/run/apisever.sock"
 
   # insecret specifies whether apiserver listen on a insecret port when it is runing as daemon
   insecret: false
 
   # insecret listen port of apiserver listening when it is running ad daemon 
-  insecretPort: 5083
+  insecretPort: 5085
 
-   # tls parameters for agent when agent running as daemon.
-  tls:
-    # whether use TLS
-    isTls: true
-    # ca path
-    ca: ""
-    # certification path
-    cert: "certs/fullchain.crt"
-    # key path
-    key: "certs/sincerecloud.key"
-    # whether skip insecure verify
-    insecureSkipVerify: false
+  # tls parameters for agent when agent running as daemon.
+  # whether use TLS
+  isTls: true
+  # ca path
+  ca: ""
+  # certification path
+  cert: "certs/fullchain.crt"
+  # key path
+  key: "certs/sincerecloud.key"
+  # whether skip insecure verify
+  insecureSkipVerify: false
 
 log:
     #the path of access log file
@@ -88,26 +87,26 @@ redis:
     # db name. default db if the value of this field is zero
     db: 0
      # tls parameters for agent when agent running as daemon.
-    tls:
-      isTls: true
-      ca: ""
-      cert: ""
-      key: ""
-      insecureSkipVerify: false
-
-db:
-  type: "mysql"
-  dbName: "k8ssysadm" 
-  server:
-    address: "www.sysadm.cn"
-    port: 3306
-    socket: ""
-  tls:
-    isTls: false
+    isTls: true
     ca: ""
     cert: ""
     key: ""
-    insecureSkipVerify: true 
+    insecureSkipVerify: false
+
+db:
+  # db type. the value of this item is "mysql" only now
+  type: "mysql"
+  # db name
+  dbName: "k8ssysadm" 
+  # address of the db server
+  address: "www.sysadm.cn"
+  # port of the db server
+  port: 3306
+  isTls: false
+  ca: ""
+  cert: ""
+  key: ""
+  insecureSkipVerify: true 
   userName: "sysadm"
   password: "bwyy1679"
   maxOpenConns: 10

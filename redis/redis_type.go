@@ -26,6 +26,12 @@ import (
 	"github.com/wangyysde/sysadm/config"
 )
 
+var (
+	RedisModeSingle int  = 1
+	RedisModeCluster int = 2
+	RedisModeSentinel int = 3
+)
+
 type RedisEntity interface {
 	Close() error
 	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd

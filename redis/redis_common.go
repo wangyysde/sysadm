@@ -41,7 +41,7 @@ func IsValidMode(mode int) bool {
 func IsValidMaster(mode int, master string) bool {
 	// master for sentinel mode
 	master = strings.TrimSpace(master)
-	if mode != 3 {
+	if mode != RedisModeSentinel {
 		return true
 	}
 
@@ -60,7 +60,7 @@ func IsValidAddrs(mode int, addrs string) bool {
 	addrs = strings.TrimSpace(addrs)
 
 	// single mode
-	if mode == 1 {
+	if mode == RedisModeSingle {
 		if len(addrs) < 5 {
 			return false
 		}
@@ -114,7 +114,7 @@ func NewClient(conf ClientConf, workDir string) (RedisEntity, error) {
 
 	switch {
 	// for single mode
-	case conf.Mode == 1:
+	case conf.Mode == RedisModeSingle:
 		client := redis.NewClient(&redis.Options{
 			Addr:      conf.Addrs,
 			Username:  conf.Username,
@@ -129,7 +129,7 @@ func NewClient(conf ClientConf, workDir string) (RedisEntity, error) {
 		}
 		ret = entity
 	// for cluster mode
-	case conf.Mode == 2:
+	case conf.Mode == RedisModeCluster:
 		addrSlice := strings.Split(conf.Addrs, ";")
 		client := redis.NewClusterClient(&redis.ClusterOptions{
 			Addrs:     addrSlice,
@@ -145,7 +145,7 @@ func NewClient(conf ClientConf, workDir string) (RedisEntity, error) {
 
 		ret = entity
 	// for sentinel mode
-	case conf.Mode == 3:
+	case conf.Mode == RedisModeSentinel:
 		addrSlice := strings.Split(conf.Addrs, ";")
 		client := redis.NewFailoverClient(&redis.FailoverOptions{
 			MasterName:       conf.Master,
