@@ -19,7 +19,7 @@ package main
 
 import (
 
-	"github.com/wangyysde/sysadm/registryctl/cmd"
+	"sysadm/registryctl/cmd"
 )
 
 func main(){

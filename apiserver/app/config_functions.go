@@ -25,11 +25,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/redis"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/config"
+	"sysadm/db"
+	"sysadm/redis"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 )
 
 func HandlerConfig() (bool, []sysadmerror.Sysadmerror) {

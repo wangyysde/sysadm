@@ -26,10 +26,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	sysadmutils "github.com/wangyysde/sysadm/utils"
-	apiserver "github.com/wangyysde/sysadm/apiserver/app"
+	"sysadm/httpclient"
+	"sysadm/sysadmerror"
+	sysadmutils "sysadm/utils"
+	apiserver "sysadm/apiserver/app"
 )
 
 func run_DaemonPassive() ([]sysadmerror.Sysadmerror){

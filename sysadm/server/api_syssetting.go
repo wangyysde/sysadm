@@ -18,9 +18,9 @@
 package server
 
 import (
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/syssetting/app"
+	"sysadm/config"
+	"sysadm/sysadmerror"
+	"sysadm/syssetting/app"
 	"github.com/wangyysde/sysadmServer"
 )
 

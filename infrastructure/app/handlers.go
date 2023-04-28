@@ -19,7 +19,7 @@ package app
 
 import (
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

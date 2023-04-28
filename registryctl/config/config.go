@@ -26,8 +26,8 @@ import (
 	"strconv"
 	"strings"
 
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	sysadmDB "sysadm/db"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
 )

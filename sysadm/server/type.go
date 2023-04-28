@@ -20,8 +20,8 @@ package server
 import (
 	"os"
 
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadm/config"
+	sysadmDB "sysadm/db"
+	"sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 )
 

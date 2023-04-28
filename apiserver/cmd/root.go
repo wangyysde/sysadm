@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	apiserverApp "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/config"
+	apiserverApp "sysadm/apiserver/app"
+	"sysadm/config"
 	"github.com/wangyysde/sysadmLog"
 )
 
@@ -47,7 +47,7 @@ var rootCmd = &cobra.Command{
 		apiserver send command,collect command status and command logs for sysadm platform
 
 		Please give us feedback at:
-		https://github.com/wangyysde/sysadm/issues/
+		https://sysadm/issues/
 
 	======================================================
 	`),

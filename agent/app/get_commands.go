@@ -23,9 +23,9 @@ import (
 	"os"
 	"strings"
 
-	apiserver "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	apiserver "sysadm/apiserver/app"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )

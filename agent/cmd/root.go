@@ -22,9 +22,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/wangyysde/sysadm/agent/app"
-	"github.com/wangyysde/sysadm/config"
 	"github.com/wangyysde/sysadmLog"
+	"sysadm/agent/app"
+	"sysadm/config"
 )
 
 // Disable completion to agent package
@@ -46,7 +46,7 @@ var rootCmd = &cobra.Command{
 		agent is a management tool for managing node of kubernetes clusters
 
 		Please give us feedback at:
-		https://github.com/wangyysde/sysadm/issues/
+		https://sysadm/issues/
 
 	======================================================
 	`),

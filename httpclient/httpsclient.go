@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/utils"
 )
 
 // BuildDailer build net.Dialer for building RoundTripper. tcpTimeOut is for tcp timeout, keepAliveProbe is the time for probe keepalive alive.

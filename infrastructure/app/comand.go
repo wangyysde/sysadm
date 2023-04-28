@@ -22,10 +22,10 @@ import (
 	"strings"
 	"time"
 
-	apiServerApp "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	apiServerApp "sysadm/apiserver/app"
+	"sysadm/db"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 )
 
 /*

@@ -20,9 +20,9 @@ package app
 import (
 	"strings"
 
-	"github.com/wangyysde/sysadm/config"
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/config"
+	sysadmDB "sysadm/db"
+	"sysadm/sysadmerror"
 	log "github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )

@@ -18,9 +18,9 @@
 package app
 
 import (
-	"github.com/wangyysde/sysadm/config"
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/config"
+	sysadmDB "sysadm/db"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

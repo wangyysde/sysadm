@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/wangyysde/sysadm/infrastructure/cmd"
+	"sysadm/infrastructure/cmd"
 
 )
 

@@ -21,9 +21,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/registryctl/config"
-	"github.com/wangyysde/sysadm/registryctl/server"
-	sysadmcmd "github.com/wangyysde/sysadm/sysadm/cmd"
+	"sysadm/registryctl/config"
+	"sysadm/registryctl/server"
+	sysadmcmd "sysadm/sysadm/cmd"
 )
 
 // define daemon sub-command

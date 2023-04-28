@@ -30,10 +30,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/httpclient"
-	sysadm "github.com/wangyysde/sysadm/sysadm/server"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/httpclient"
+	sysadm "sysadm/sysadm/server"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 )
 
 type ApiRequestData struct {

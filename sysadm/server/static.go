@@ -22,7 +22,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/wangyysde/sysadm/sysadm/config"
+	"sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 )
 

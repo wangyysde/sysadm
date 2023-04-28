@@ -31,9 +31,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wangyysde/sysadm/registryctl/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/registryctl/config"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 

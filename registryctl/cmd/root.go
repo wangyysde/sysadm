@@ -25,8 +25,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/registryctl/config"
+	"sysadm/sysadmerror"
+	"sysadm/registryctl/config"
 )
 
 var cfgFile string
@@ -49,7 +49,7 @@ var rootCmd = &cobra.Command{
 		registry contoller of sysadm registry
 
 		Please give us feedback at:
-		https://github.com/wangyysde/sysadm/issues/
+		https://sysadm/issues/
 
 	======================================================
 	`),

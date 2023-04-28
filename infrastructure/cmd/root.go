@@ -26,8 +26,8 @@ import (
 	"github.com/spf13/viper"
 	"github.com/wangyysde/sysadmServer"
 
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/infrastructure/server"
+	"sysadm/config"
+	"sysadm/infrastructure/server"
 )
 
 var cfgFile string
@@ -50,7 +50,7 @@ var rootCmd = &cobra.Command{
 		An easily system administration platform
 
 		Please give us feedback at:
-		https://github.com/wangyysde/sysadm/issues/
+		https://sysadm/issues/
 
 	======================================================
 	`),

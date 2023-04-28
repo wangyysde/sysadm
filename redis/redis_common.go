@@ -25,7 +25,7 @@ import (
 	"strings"
 
 	redis "github.com/go-redis/redis/v8"
-	"github.com/wangyysde/sysadm/httpclient"
+	"sysadm/httpclient"
 )
 
 // IsValidMode check whether mode is a valid redis mode

@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 // Ref: https://pkg.go.dev/net/http#Transport

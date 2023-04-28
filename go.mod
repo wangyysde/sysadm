@@ -1,4 +1,4 @@
-module github.com/wangyysde/sysadm
+module sysadm
 
 go 1.16
 

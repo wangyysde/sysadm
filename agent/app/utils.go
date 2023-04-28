@@ -26,12 +26,12 @@ import (
 	"strings"
 	"time"
 
-	apiserver "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/httpclient"
-	redis "github.com/wangyysde/sysadm/redis"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	apiserver "sysadm/apiserver/app"
+	"sysadm/config"
+	"sysadm/httpclient"
+	redis "sysadm/redis"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )

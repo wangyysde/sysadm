@@ -18,8 +18,8 @@
 package app
 
 import (
-	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmapi/apiutils"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

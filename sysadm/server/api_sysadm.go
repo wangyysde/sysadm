@@ -20,7 +20,7 @@
  import (
 
 	"github.com/wangyysde/sysadmServer"
-	//"github.com/wangyysde/sysadm/sysadmerror"
+	//"sysadm/sysadmerror"
  )
 
  func (s Sysadm) ModuleName()string{

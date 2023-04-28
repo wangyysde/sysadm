@@ -19,8 +19,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	apiserverApp "github.com/wangyysde/sysadm/apiserver/app"
-	apiserverServer "github.com/wangyysde/sysadm/apiserver/server"
+	apiserverApp "sysadm/apiserver/app"
+	apiserverServer "sysadm/apiserver/server"
 )
 
 var startCmd = &cobra.Command{

@@ -23,9 +23,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	sysadmUtils "github.com/wangyysde/sysadm/utils"
+	"sysadm/config"
+	"sysadm/sysadmerror"
+	sysadmUtils "sysadm/utils"
 )
 
 // we define fileConf as global variable as it is used by a few of functions.

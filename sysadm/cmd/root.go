@@ -24,7 +24,7 @@ import (
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/wangyysde/sysadm/sysadm/config"
+	"sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
 )
 
@@ -48,7 +48,7 @@ var rootCmd = &cobra.Command{
 		An easily system administration platform
 
 		Please give us feedback at:
-		https://github.com/wangyysde/sysadm/issues/
+		https://sysadm/issues/
 
 	======================================================
 	`),

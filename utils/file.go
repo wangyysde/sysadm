@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 // Checking a file if is exists.

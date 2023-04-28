@@ -27,9 +27,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/db"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
 )

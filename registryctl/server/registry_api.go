@@ -28,10 +28,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/httpclient"
+	"sysadm/sysadmapi/apiutils"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 

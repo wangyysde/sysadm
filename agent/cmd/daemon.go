@@ -20,7 +20,7 @@ package cmd
 import (
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/agent/app"
+	"sysadm/agent/app"
 )
 
 var daemonCmd = &cobra.Command{

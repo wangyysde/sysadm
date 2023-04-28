@@ -18,7 +18,7 @@
 package db
 
 import (
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 /*

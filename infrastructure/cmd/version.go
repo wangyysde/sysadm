@@ -22,7 +22,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/infrastructure/server"
+	"sysadm/infrastructure/server"
 	"github.com/wangyysde/sysadmServer"
 	"github.com/wangyysde/yaml"
 )

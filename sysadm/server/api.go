@@ -26,9 +26,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/httpclient"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 

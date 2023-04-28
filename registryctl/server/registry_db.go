@@ -26,11 +26,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmapi"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/db"
+	"sysadm/httpclient"
+	"sysadm/sysadmapi"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 )
 
 

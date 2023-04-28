@@ -22,11 +22,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/db"
+	"sysadm/httpclient"
+	"sysadm/sysadmapi/apiutils"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmServer"
 )
 

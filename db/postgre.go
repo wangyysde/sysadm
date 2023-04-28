@@ -25,7 +25,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 type Postgre struct {

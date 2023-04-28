@@ -18,8 +18,8 @@
 package server
 
 import (
-	"github.com/wangyysde/sysadm/config"
-	sysadmDB "github.com/wangyysde/sysadm/db"
+	"sysadm/config"
+	sysadmDB "sysadm/db"
 )
 
 type DBServer struct {

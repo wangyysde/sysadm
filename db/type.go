@@ -21,7 +21,7 @@ import (
 	"database/sql"
 	"net"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 type DbConfig struct {

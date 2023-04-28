@@ -26,8 +26,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/sysadmerror"
+	"sysadm/utils"
 )
 
 type MySQL struct {

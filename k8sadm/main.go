@@ -20,9 +20,9 @@ package main
 import (
 	"os"
 
-	kubeadmInit "github.com/wangyysde/sysadm/k8sadm/init"
-	"github.com/wangyysde/sysadm/k8sadm/join"
-	"github.com/wangyysde/sysadm/k8sadm/token"
+	kubeadmInit "sysadm/k8sadm/init"
+	"sysadm/k8sadm/join"
+	"sysadm/k8sadm/token"
 )
 
 func main() {

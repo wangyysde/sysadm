@@ -18,7 +18,7 @@
 package main
 
 import (
-	"github.com/wangyysde/sysadm/apiserver/cmd"
+	"sysadm/apiserver/cmd"
 )
 
 func main() {

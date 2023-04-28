@@ -22,10 +22,10 @@ import (
 	"os"
 	"context"
 
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/httpclient"
-	apiserver "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/redis"
+	"sysadm/config"
+	"sysadm/httpclient"
+	apiserver "sysadm/apiserver/app"
+	"sysadm/redis"
 )
 
 type RunConfig struct {

@@ -21,8 +21,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/db"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

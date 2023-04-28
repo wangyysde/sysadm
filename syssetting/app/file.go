@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/utils"
 )
 
 /*

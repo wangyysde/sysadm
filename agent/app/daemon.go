@@ -24,9 +24,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/sysadm/redis"
+	"sysadm/redis"
 )
 
 var exitChan chan os.Signal

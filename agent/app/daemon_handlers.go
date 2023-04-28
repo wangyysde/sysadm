@@ -23,9 +23,9 @@ import (
 	"strings"
 	"encoding/json"
 
-	apiserver "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/redis"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	apiserver "sysadm/apiserver/app"
+	"sysadm/redis"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

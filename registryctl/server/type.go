@@ -20,8 +20,8 @@ package server
 import (
 	"os"
 
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/registryctl/config"
+	sysadmDB "sysadm/db"
+	"sysadm/registryctl/config"
 )
 
 //

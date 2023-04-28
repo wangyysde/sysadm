@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 
 	"github.com/spf13/cobra"
-	apiserverApp "github.com/wangyysde/sysadm/apiserver/app"
+	apiserverApp "sysadm/apiserver/app"
 	"github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/yaml"
 )

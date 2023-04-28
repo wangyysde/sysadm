@@ -28,8 +28,8 @@ import (
 	"strconv"
 	"strings"
 
-	sysadm "github.com/wangyysde/sysadm/sysadm/server"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	sysadm "sysadm/sysadm/server"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

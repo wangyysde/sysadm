@@ -24,7 +24,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

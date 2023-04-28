@@ -18,9 +18,9 @@
 package server
 
 import (
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/registryctl/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	sysadmDB "sysadm/db"
+	"sysadm/registryctl/config"
+	"sysadm/sysadmerror"
 )
 
 /* 

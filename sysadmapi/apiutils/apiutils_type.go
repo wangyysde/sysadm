@@ -25,7 +25,7 @@ package apiutils
 import (
 	"net/http"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 type TlsFile struct {

@@ -22,9 +22,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
-	"github.com/wangyysde/sysadm/redis"
-	"github.com/wangyysde/sysadm/config"
+	"sysadm/sysadmerror"
+	"sysadm/redis"
+	"sysadm/config"
 )
 
 /*

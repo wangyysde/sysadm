@@ -26,8 +26,8 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/registryctl/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/registryctl/config"
+	"sysadm/sysadmerror"
 	log "github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )

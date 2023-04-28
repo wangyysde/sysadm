@@ -18,11 +18,11 @@
 package server
 
 import (
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/infrastructure/app"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/config"
+	"sysadm/infrastructure/app"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
-	sysadmConfig "github.com/wangyysde/sysadm/config"
+	sysadmConfig "sysadm/config"
 )
 
 func AddInfrastructureHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror){

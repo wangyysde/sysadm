@@ -26,9 +26,9 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 
-	//"github.com/wangyysde/sysadm/redis"
-	apiserverApp "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	//"sysadm/redis"
+	apiserverApp "sysadm/apiserver/app"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

@@ -22,8 +22,8 @@ package server
 import (
 	"path/filepath"
 
-	"github.com/wangyysde/sysadm/config"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/config"
+	"sysadm/sysadmerror"
 	log "github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/sysadmServer"
 )

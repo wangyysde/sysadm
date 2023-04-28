@@ -18,8 +18,8 @@
 package server
 
 import (
-	sysadmDB "github.com/wangyysde/sysadm/db"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	sysadmDB "sysadm/db"
+	"sysadm/sysadmerror"
 )
 
 /*

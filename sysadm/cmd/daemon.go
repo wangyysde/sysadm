@@ -23,8 +23,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/sysadm/config"
-	"github.com/wangyysde/sysadm/sysadm/server"
+	"sysadm/sysadm/config"
+	"sysadm/sysadm/server"
 	//    "github.com/wangyysde/sysadmServer"
 	//	"github.com/wangyysde/yaml"
 )

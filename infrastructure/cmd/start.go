@@ -21,7 +21,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/wangyysde/sysadm/infrastructure/server"
+	"sysadm/infrastructure/server"
 )
 
 // define start sub-command

@@ -23,7 +23,7 @@ import (
 
 	redis "github.com/go-redis/redis/v8"
 
-	"github.com/wangyysde/sysadm/config"
+	"sysadm/config"
 )
 
 var (

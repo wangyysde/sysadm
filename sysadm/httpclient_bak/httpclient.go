@@ -29,7 +29,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 // TODO: the following parameters should be configurable in the future.

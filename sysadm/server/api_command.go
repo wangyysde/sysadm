@@ -26,12 +26,12 @@ import (
 	"strings"
 	"net/http"
 
-	apiServerApp "github.com/wangyysde/sysadm/apiserver/app"
-	"github.com/wangyysde/sysadm/httpclient"
-	"github.com/wangyysde/sysadm/sysadmapi/apiutils"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	apiServerApp "sysadm/apiserver/app"
+	"sysadm/httpclient"
+	"sysadm/sysadmapi/apiutils"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
-	infrastructure "github.com/wangyysde/sysadm/infrastructure/app"
+	infrastructure "sysadm/infrastructure/app"
 )
 
 // adding command sending, command status receiving and command logs receiving  handlers

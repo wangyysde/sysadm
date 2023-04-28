@@ -22,7 +22,7 @@ package app
 
 import (
 
-	"github.com/wangyysde/sysadm/config"
+	"sysadm/config"
 )
 
 // for global block

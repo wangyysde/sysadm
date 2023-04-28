@@ -29,7 +29,7 @@ import (
 	"time"
 	"strconv"
 
-	"github.com/wangyysde/sysadm/utils"
+	"sysadm/utils"
 	"github.com/wangyysde/sysadmLog"
 )
 

@@ -25,7 +25,7 @@ import (
 	"os/signal"
 	"github.com/spf13/cobra"
 
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
 )
 

@@ -22,7 +22,7 @@ import (
 	"net/http"
 
 	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/sysadm/sysadmerror"
+	"sysadm/sysadmerror"
 )
 
 // add handlers to *sysadmServer.Engine

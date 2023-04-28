@@ -20,7 +20,7 @@ ErrorCode 90300xxx
 package server
 
 import (
-	"github.com/wangyysde/sysadm/config"
+	"sysadm/config"
 )
 
 func SetVersion(version *config.Version){
