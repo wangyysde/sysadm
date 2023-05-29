@@ -23,7 +23,7 @@
 
 	function ChangeVersion(osid){
 		var osVerList = new Array();
-		{{range $index, $line := .osVerList }}
+		{{ range $index, $line := .osVerList }}
 		{{ $line }}
 		{{ end }}
 		var newOption;
@@ -118,45 +118,7 @@
 					chklist[i].checked = false;
 				}
 			}
-		}
-/*
-    function changePage(urlparas) {
-        var url = "/registryctl/imagelist" + urlparas;
-        $('#container').load(url);
-    }
-
-	function taglist(imageid) {
-		    var params = "?imageid=" + imageid
-			var url = "/registryctl/taglist" + params;
-			$('#container').load(url);
-		}
-    
-
-	function selectCheckbox() {
-		var chklist = document.getElementsByName('yumid[]');
-		var thCheckBox = document.getElementById("yumidth");
-		var checkedItem = 0
-		for (var i = 0; i < chklist.length; i++) {
-			if(chklist[i].checked){
-				checkedItem = checkedItem + 1; 
-			}
-		}
-		if(checkedItem == 0) {
-			var buttonDel = document.getElementById("buttonDel")
-			buttonDel.style.color = "#3c8dbc";
-			buttonDel.style.background = "#cbd8df";
-			thCheckBox.checked = false;
-			buttonDel.disabled = true;
-		}else{
-			var buttonDel = document.getElementById("buttonDel")
-			buttonDel.style.color = "#ffffff";
-			buttonDel.style.background = "#3c8dbc";
-			thCheckBox.checked = true; 
-			buttonDel.disabled = false;
-		}
 	}
-*/
-
 	function changeAgentMode(){
 		var passiveMode = document.getElementById("passiveMode");
 		var agentPort = document.getElementById("agentPort");

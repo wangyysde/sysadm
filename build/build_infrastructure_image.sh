@@ -18,13 +18,17 @@
 #
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
+if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_common.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_common.sh was not found"
+    exit -2
+fi
+
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
-EMAIL="net_use@bzhy.com"
 
 INFRASTRUCTURE_VER=$1
-REGISTRY_URL=$2
-
+ISDEPLOY=$2
 
 function create::dockerfile(){
 	datetime=`date  '+%Y%m%d %H:%M:%S'`
@@ -58,9 +62,12 @@ cp ${SYSADM_ROOT}/_output/bin/infrastructure ${TEMP}/
 cp ${SYSADM_ROOT}/build/infrastructure/entrypoint.sh ${TEMP}/
 cp ${SYSADM_ROOT}/_output/conf/infrastructure.yaml ${TEMP}/
 echo "Now building infrastructure:${INFRASTRUCTURE_VER} ..."
-docker build -f Dockerfile  -t ${REGISTRY_URL}infrastructure:${INFRASTRUCTURE_VER} .
+docker build -f Dockerfile  -t "${DEFAULT_REGISTRY_URL}infrastructure:${INFRASTRUCTURE_VER}" .
 if [ $? == 0 ]; then
-	docker push ${REGISTRY_URL}infrastructure:${INFRASTRUCTURE_VER}
+  if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
+     deploy::package "infrastructure" ${INFRASTRUCTURE_VER}
+  fi
+#	docker push ${REGISTRY_URL}infrastructure:${INFRASTRUCTURE_VER}
 else 
 	echo "build infrastructure:${INFRASTRUCTURE_VER} image error"
 fi

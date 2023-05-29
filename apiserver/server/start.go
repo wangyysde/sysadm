@@ -26,13 +26,13 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 
+	"github.com/wangyysde/sysadmServer"
 	//"sysadm/redis"
 	apiserverApp "sysadm/apiserver/app"
 	"sysadm/sysadmerror"
-	"github.com/wangyysde/sysadmServer"
 )
 
-//var exitChan chan os.Signal
+var exitChan chan os.Signal
 
 func Start(cmd *cobra.Command, args []string) {
 	var errs []sysadmerror.Sysadmerror
@@ -44,50 +44,48 @@ func Start(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	/*
-		// parsing the configurations and get configurations from environment, then set them to CurrentRuningData after checked.
-		err := handleNotInConfFile()
-		errs = append(errs, err...)
-		if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
-			logErrors(errs)
-			os.Exit(1)
-		}
-
-		err = handleGlobalBlock()
-		errs = append(errs, err...)
-		if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
-			logErrors(errs)
-			os.Exit(2)
-		}
-
-		err = handleAgentBlock()
-		errs = append(errs, err...)
-		if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
-			logErrors(errs)
-			os.Exit(3)
-		}
-
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080002, "debug", "configurations: %+v", RunConf))
-
-		// openning  loggers and set log format to loggers
-		err = setLogger()
-		errs = append(errs, err...)
-		defer closeLogger()
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080003, "debug", "loggers have been set"))
+	// initating loggers
+	ok, err = apiserverApp.SetLogger()
+	errs = append(errs, err...)
+	if !ok {
 		logErrors(errs)
-		errs = errs[0:0]
+		os.Exit(2)
+	}
+	defer apiserverApp.CloseLogger()
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080003, "debug", "loggers have been set"))
+	logErrors(errs)
+	errs = errs[0:0]
 
-		entity, e := redis.NewClient(RunConf.Agent.RedisConf, RunConf.WorkingDir)
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080011, "fatal", "can not open connection to redis server %s", e))
+	// initating redis entity
+	ok, err = apiserverApp.InitRedis()
+	errs = append(errs, err...)
+	if !ok {
+		logErrors(errs)
+		os.Exit(3)
+	}
+	defer apiserverApp.CloseRedisEntity()
+
+	// initating DB entity
+	ok, err = apiserverApp.InitDBEntity()
+	errs = append(errs, err...)
+	if !ok {
+		logErrors(errs)
+		os.Exit(4)
+	}
+	defer apiserverApp.CloseDBEntity()
+
+	exitChan = make(chan os.Signal)
+	if apiserverApp.IsPassiveMode() {
+		ok, err := apiserverApp.RunDaemonPassive()
+		errs = append(errs, err...)
+		if !ok {
 			logErrors(errs)
 			os.Exit(5)
 		}
-		runData.redisEntity = entity
-		var ctx = context.Background()
-		runData.redisctx = ctx
+	}
+	/*
 
-		exitChan = make(chan os.Signal)
+
 		if RunConf.Agent.Passive {
 			err = run_DaemonPassive()
 			logErrors(err)
@@ -158,5 +156,4 @@ func logErrors(errs []sysadmerror.Sysadmerror) {
 		no := e.ErrorNo
 		sysadmServer.Logf(l, "erroCode: %d Msg: %s", no, e.ErrorMsg)
 	}
-
 }

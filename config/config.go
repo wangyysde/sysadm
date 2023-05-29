@@ -27,11 +27,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/wangyysde/sysadmServer"
+	"github.com/wangyysde/yaml"
 	"sysadm/db"
 	"sysadm/sysadmerror"
 	"sysadm/utils"
-	"github.com/wangyysde/sysadmServer"
-	"github.com/wangyysde/yaml"
 )
 
 /*
@@ -259,6 +259,11 @@ func ValidateTlsFile(confValue string, defaultValue string, envName string, cmdR
 		}
 
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1001014, "warning", "file(%s) set in the configuration file  is not a valid PKI file", confValue))
+	}
+
+	defaultValue = strings.TrimSpace(defaultValue)
+	if defaultValue == "" {
+		return "", errs
 	}
 
 	tmpTlsFile, _ := utils.CheckFileIsRead(defaultValue, cmdRunPath)

@@ -6,6 +6,9 @@ global:
   # set whether apiserver running in debug mode
   debug: true
 
+  # set whether apiserver running as daemon
+  daemon: true
+
   # specifies the uri where client get commands to run when apiserver runing as daemon in passive mode. default value is "/getCommand"
   # in other word, apiserver is listening this path for client getting command data when apiserver running in passive mode.
   # when apiserver is run in active mode, apiserver send command data to client on the path of this item specified.default value is "/receiveCommand"
@@ -70,29 +73,43 @@ log:
     # specifies the format of time in the log message
     timeStampFormat: ""
 redis:
-    # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
-    mode: 1
-    # master server name
-    master: "master"
-    # redis server address and port
-    addrs: "192.53.117.73:6379"
-    # redis server username
-    userName: ""
-    # redis server password
-    password: ""
-    # sentinel username
-    sentinelUsername: ""
-    # sentinel password
-    sentinelPassword: ""
-    # db name. default db if the value of this field is zero
-    db: 0
-     # tls parameters for agent when agent running as daemon.
+  # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
+  mode: 1
+
+  # master server name
+  master: "master"
+
+  # a string join with semicolon for the addresses of server
+  # this is redis server address and port,like as localhost:6379 when mode is 1
+  # these are addresses and ports of redis servers like as localhost:6379;192.168.1.10:6379;x.x.x.x:6379 when mode is 2
+  # these are addresses and ports of sentinel like as localhost:6379;192.168.1.10:6379;x.x.x.x:6379 when mode is 3
+  addrs: "192.53.117.73:6379"
+
+  # redis server username
+  username: ""
+
+  # redis server password
+  password: ""
+
+  # sentinel username
+  sentinelUsername: ""
+
+  # sentinel password
+  sentinelPassword: ""
+
+  # db name. default db if the value of this field is zero
+  db: 0
+
+  # tls parameters for agent when agent running as daemon.
+  tls:
     isTls: true
+    #  If the certificate is signed by a certificate authority, the certFile should be the concatenation of
+    # the server's certificate, any intermediates, and the CA's certificate.
     ca: ""
     cert: ""
     key: ""
     insecureSkipVerify: false
-
+    
 db:
   # db type. the value of this item is "mysql" only now
   type: "mysql"

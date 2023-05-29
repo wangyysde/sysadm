@@ -101,7 +101,7 @@ func (t *Tx) UpdateData(tb string, data FieldData, where map[string]string) (int
 	tx := t.Tx
 	res, e := tx.Exec(query)
 	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1071007, "error", "update data error: %s", e))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1071007, "fatal", "update data error: %s", e))
 		return -1, errs
 	}
 

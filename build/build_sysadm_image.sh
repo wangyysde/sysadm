@@ -18,14 +18,16 @@
 #
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-SYSADM_VER="1.0"
-REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
-BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
+if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_common.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_common.sh was not found"
+    exit -2
+fi
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
-EMAIL="net_use@bzhy.com"
 
 SYSADM_VER=$1
-REGISTRY_URL=$2
+ISDEPLOY=$2
 
 
 function create::dockerfile(){
@@ -66,7 +68,9 @@ cp -r ${SYSADM_ROOT}/_output/tmpls ${TEMP}/
 echo "Now building sysadm:${SYSADM_VER} ..."
 docker build -f Dockerfile  -t ${REGISTRY_URL}sysadm:${SYSADM_VER} .
 if [ $? == 0 ]; then
-	docker push ${REGISTRY_URL}sysadm:${SYSADM_VER}
+  if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
+       deploy::package "sysadm" ${SYSADM_VER}
+  fi
 else 
 	echo "build sysadm:${SYSADM_VER} image error"
 fi

@@ -18,12 +18,16 @@
 #
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
+if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_common.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_common.sh was not found"
+    exit -2
+fi
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
-EMAIL="net_use@bzhy.com"
 
 REGISTRYCTL_VER=$1
-REGISTRY_URL=$2
+ISDEPLOY=$2
 
 function create::dockerfile(){
 	datetime=`date  '+%Y%m%d %H:%M:%S'`
@@ -59,7 +63,10 @@ cp ${SYSADM_ROOT}/_output/conf/registryctl.yaml ${TEMP}/
 echo "Now building registryctl:${REGISTRYCTL_VER} ..."
 docker build -f Dockerfile  -t ${REGISTRY_URL}registryctl:${REGISTRYCTL_VER} .
 if [ $? == 0 ]; then
-	docker push ${REGISTRY_URL}registryctl:${REGISTRYCTL_VER}
+  if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
+       deploy::package "registryctl" ${REGISTRYCTL_VER}
+  fi
+#	docker push ${REGISTRY_URL}registryctl:${REGISTRYCTL_VER}
 else 
 	echo "build registryctl:${REGISTRYCTL_VER} image error"
 fi

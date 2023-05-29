@@ -16,7 +16,7 @@
 *
 * NOTE:
 * 本文件定义了将来准备独立出来的sysadmApiServer组件所使用的导出的数据结构、常量和全局变量
-*/
+ */
 
 package app
 
@@ -44,22 +44,14 @@ import (
 type CommandStatusCode uint32
 
 const (
-	// 表示apiServer正在收集某个命令所需要的数据或执行命令创建的一些准备工作
-	CommandStatusCreating CommandStatusCode = 100
-
-	// 表示apiServer创建命令出错(包括执行收集创建命令所需要数据或准备工作出错)，创建出错的命令不能被执行，且由定时任务组件定时清除
-	CommandStatusCreateError CommandStatusCode = 200
 
 	// 表示apiServer 已经创建好命令，等待下发给客户端执行
 	CommandStatusCreated CommandStatusCode = 300
 
-	// 表示apiServer正在下发命令给客户端执行。包括apiServer正与客户端通信，下发命令但是未收到成功接收的结果；下发出错，但是未超过重试次数
-	CommandStatusSendding CommandStatusCode = 400
-
 	// 表示服务端或客户端已经成功接收了命令或命令状态信息
 	ComandStatusReceived CommandStatusCode = 500
 
-	// 表示命令下发出错，且超过重试次数；或者命令创建成功后，超过指定时间未能成功下发，通常此时本状态是由定时任务设置的；或者客户端虽然接收到命令，但是命令未通过合法性检查。
+	// 表示命令下发出错
 	ComandStatusSendError CommandStatusCode = 600
 
 	// 表示命令已经成功下发，但是apiServer尚未收到任何关于本命令的状态信息
@@ -70,6 +62,12 @@ const (
 
 	// 表示命令已经成功下发，但是指定时间未能收到命令执行成功或错误的状态报告，通常此时本状态是由定时任务设置的
 	CommandStatusTimeout CommandStatusCode = 900
+
+	// 表示命令的子任务执行成功
+	CommandStatusTaskOk CommandStatusCode = 950
+
+	// 表示命令的子任务执行成功
+	CommandStatusTaskError CommandStatusCode = 960
 
 	// 表示apiServer已经接收到命令已经执行完成，但是命令执行错误
 	CommandStatusError CommandStatusCode = 1000
@@ -82,15 +80,11 @@ const (
 
 	// 表示状态是一个未知状态,这通常表示发生了一个未知错误
 	CommandStatusUnkown CommandStatusCode = 9000
-
 )
 
 // 当添加或减少了上面定义的命令状态码的值，则下面这个切片的内容也需要相应的调整
 var AllCommandStatusCode = []CommandStatusCode{
-	CommandStatusCreating,
-	CommandStatusCreateError,
 	CommandStatusCreated,
-	CommandStatusSendding,
 	ComandStatusReceived,
 	ComandStatusSendError,
 	CommandStatusSent,
@@ -278,4 +272,96 @@ type RepStatus struct {
 	// 当客户端没有发现所请求的命令的时候，应设置本字段的值为true，否则为false.当本字段的值为true时，通常意味以下几种情况：
 	// 1. 请求中所提供的CommandSeq不正确；2. 客户端之前已经完成对所有日志的发送清除了对应命令的日志；
 	NotCommand bool `form:"notCommand" json:"notCommand" yaml:"notCommand" xml:"notCommand"`
+}
+
+// 记录待发送的command数据
+type commandDataBeSent struct {
+	// hostid identified a host
+	hostID int32
+
+	// 当apiserver是以主动模式运行时，连接客户端agent的地址或域名
+	agentAddress string
+
+	// 当apiserver以主动模式运行时，apiserver向agent发送命令时，请求的发送目 标路径。如果本字段为空，则apiserver默认向/receiveCommand请求命令的状态
+	commandUri string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent是否使用TLS.0表示否，否则表示是
+	agentIsTls bool
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容
+	agentCa string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是证书内容
+	agentCert string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容
+	agentKey string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否
+	insecureSkipVerify bool
+
+	// agent listen port when it runing in active mode
+	agentPort int
+
+	// 待发送的command 数据
+	CommandData
+}
+
+// 记录当apiserver以主动模式运行时，apiserver主动向客户端发送请求时，客户端的参数数据，其中uri为请求的uri路径。
+type clientRequestData struct {
+	// hostid identified a host
+	hostID int32
+
+	// 当apiserver是以主动模式运行时，连接客户端agent的地址或域名
+	agentAddress string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent是否使用TLS.0表示否，否则表示是
+	agentIsTls bool
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容
+	agentCa string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是证书内容
+	agentCert string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容
+	agentKey string
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否
+	insecureSkipVerify bool
+
+	// agent listen port when it runing in active mode
+	agentPort int
+
+	// to save the uri address where the apiserver send command data to
+	commandUri string
+
+	// to save the uri address where the apiserver get command status from
+	commandStatusUri string
+
+	// to save the uri address where the apiserver get command logs from
+	commandLogsUri string
+
+	Command
+}
+
+// hold the running data related to command. this items can be configurable in the feature
+type runDataForCommand struct {
+	// 命令的最大重试次数
+	maxTryTimes int
+
+	// concurrency number of apiserver sending command data to agent when apiserver is running in active mode
+	concurrencySendCommand int
+
+	// concurrency number of apiserver get command status from agent when apiserver is running in active mode
+	concurrencyGetCommandStatus int
+
+	// concurrency number of apiserver get command log from agent when apiserver is running in active mode
+	concurrencyGetCommandLog int
+
+	// 日志信息在redis里存储的路径
+	logRootPathInRedis string
+
+	// 每次获取命令日志的最大条数
+	maxGetLogNumPerTime int
 }

@@ -108,14 +108,6 @@ CREATE TABLE `os` (
   PRIMARY KEY (`osID`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
-
-CREATE TABLE `os` (
-  `osID` int(3) NOT NULL COMMENT 'specify the yum for which OS distrubition,such as centos,readhat, ubantu',
-  `name` varchar(10) NOT NULL COMMENT 'distribution name.such as centos,redhat. this field must be unique',
-  `description` varchar(255) DEFAULT NULL COMMENT 'distribution description',
-  PRIMARY KEY (`osID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
 CREATE TABLE `type` (
   `typeID` int(3) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET latin1 NOT NULL,
@@ -164,9 +156,16 @@ CREATE TABLE `host` (
   `osID` int(3) NOT NULL COMMENT 'which OS distrubition,such as centos,readhat, ubantu',
   `versionID` int(11) NOT NULL COMMENT 'version id identified OS version ',
   `statusID` int(3) NOT NULL COMMENT 'identifying a host status',
-  `agentPassive` tinyint(1) DEFAULT '0' COMMENT 'the method of getting commands by agent.true meanings is agent run passive.',
-  `agentPort` int(5) DEFAULT '0' COMMENT 'agent listen port when it runing in active mode',
-  `receiveCommandUri` varchar(255) DEFAULT NULL COMMENT 'the uri where agent receiving commands when it running in active mode',
+  `agentAddress` varchar(255) DEFAULT NULL COMMENT '当apiserver是以主动模式运行时，连接客户端agent的地址或域名',
+  `commandUri` varchar(255) DEFAULT NULL COMMENT '当apiserver以主动模式运行时，apiserver向agent发送命令时，请求的发送目 标路径。如果本字段为空，则apiserver默认向/receiveCommand请求命令的状态',
+  `commandStatusUri` varchar(255) DEFAULT NULL COMMENT '当apiserver以主动模式运行时，apiserver向agent查询命令的执行状态时，请求的发送目\n 标路径。如果本字段为空，则apiserver默认向/getCommandStatus请求命令的状态',
+  `commandLogsUri` varchar(255) DEFAULT NULL COMMENT '当apiserver以主动模式运行时，apiserver向agent查询命令的执行日志时，请求的发送目\n          标路径。如果本字段为空，则apiserver默认向/getLogs请求命令的日志',
+  `agentIsTls` tinyint(1) DEFAULT '0' COMMENT '当apiserver以主动模式运行时，apiserver连接agent是否使用TLS.0表示否，否则表示是',
+  `agentCa` text COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容',
+  `agentCert` text COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是证书内容',
+  `agentKey` text COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容',
+  `insecureSkipVerify` tinyint(1) DEFAULT '1' COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否',
+  `agentPort` int(5) DEFAULT '0' COMMENT 'agent listen port when it runing in active\n  mode',
   PRIMARY KEY (`hostid`),
   KEY `FK_status` (`statusID`),
   KEY `FK_osID` (`osID`),
@@ -174,7 +173,9 @@ CREATE TABLE `host` (
   CONSTRAINT `FK_osID` FOREIGN KEY (`osID`) REFERENCES `os` (`osID`),
   CONSTRAINT `FK_status` FOREIGN KEY (`statusID`) REFERENCES `hostStatus` (`statusID`) ON DELETE NO ACTION,
   CONSTRAINT `FK_version` FOREIGN KEY (`versionID`) REFERENCES `version` (`versionID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
+
 
 INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '1','running','running as normal');
 INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '2','maintenance','maintenance');
@@ -247,6 +248,19 @@ CREATE TABLE `command` (
   CONSTRAINT `FK_hostCommand` FOREIGN KEY (`hostID`) REFERENCES `host` (`hostid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
+/* 存储已经执行完成、出错和超时的命令的历史信息 */
+CREATE TABLE `commandHistory` (
+    `commandID` INT(11) NOT NULL DEFAULT 0 COMMENT 'commandID identified a command',
+    `command` VARCHAR(64) NOT NULL COMMENT 'command name , agent will route handler according to the value of this filed',
+    `hostID` INT(10) UNSIGNED NOT NULL COMMENT 'identifying which host',
+    `synchronized` TINYINT(1) DEFAULT '0' COMMENT '指示命令是否是属地同步命令。所谓同步命令是指，命令能够快速执行完成，即能在一个HTTP会话请求超时之前（一般超时时间为几秒内）执行完成的命令。0表示同步命令，否则为异步命令',
+    `createTime` INT(11) NOT NULL COMMENT 'the time when the command  has be added',
+    `sendTime` INT(11) DEFAULT '0' COMMENT 'the time when the command has be has be sent to agent',
+    `completeTime` INT(11) DEFAULT '0' COMMENT 'the time when the command has be run',
+    `tryTimes` TINYINT(2) DEFAULT '0' COMMENT 'how many times has be tried on the current stage',
+    `status` INT(4) DEFAULT '0' COMMENT 'command status code',
+    `statusMsg` VARCHAR(255) DEFAULT '' COMMENT '被清理到历史表内的原因'
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 /* 存储在节点上执行的命令的命令参数信息 */
 CREATE TABLE `commandParameters` (
@@ -259,17 +273,32 @@ CREATE TABLE `commandParameters` (
 	CONSTRAINT `FK_commandParameters` FOREIGN KEY (`commandID`) REFERENCES `command` (`commandID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
+/* 存储命令状态的历史信息。当一个命令有多个阶段的时候，本表存储的是对应命令各个命令的状态信息 */
+CREATE TABLE `commandStatusHistory` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `commandID` INT(11) NOT NULL DEFAULT 0 COMMENT 'commandID identified a command',
+    `command` VARCHAR(64) NOT NULL COMMENT 'command name , agent will route handler according to the value of this filed',
+    `hostID` INT(10) UNSIGNED NOT NULL COMMENT 'identifying which host',
+    `receivedTime` INT(11) DEFAULT '0' COMMENT '状态接收到的时间截',
+    `status` INT(4) DEFAULT '0' COMMENT '状态码,对应于CommandStatusCode',
+    `statusMsg` VARCHAR(255) DEFAULT '' COMMENT '状态信息的描述信息',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
 /* 存储在节点上执行的命令的发送和执行的日志信息 */
 CREATE TABLE `commandLogs` (
-	`logID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'logID identified a log',
-	`commandID` int(11) unsigned NOT NULL comment 'commandID identified a command',
-	`createTime` INT(11) NOT NULL COMMENT 'the time when the log has be created',
-	`operation` tinyint(1) not null  default 0 comment '0: create command 1: send command  2: running 3: received result',
-	`logMessage` varchar(255) comment 'log message',
-	PRIMARY KEY (`logID`),
-	KEY `FK_commandLogs` (`commandID`),
-	CONSTRAINT `FK_commandLogs` FOREIGN KEY (`commandID`) REFERENCES `command` (`commandID`)
+  `logID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'logID identified a log',
+  `logSeq` char(14) DEFAULT NULL COMMENT 'log sequence',
+  `commandID` int(11) unsigned NOT NULL COMMENT 'commandID identified a command',
+  `createTime` int(11) NOT NULL COMMENT 'the time when the log has be created',
+  `level` int(2) DEFAULT NULL COMMENT 'log level',
+  `operation` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: create command 1: send command  2: running 3: received result',
+  `logMessage` varchar(255) DEFAULT NULL COMMENT 'log message',
+  PRIMARY KEY (`logID`),
+  KEY `FK_commandLogs` (`commandID`),
+  CONSTRAINT `FK_commandLogs` FOREIGN KEY (`commandID`) REFERENCES `command` (`commandID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+
 
 /* 在事务中向表中添加数据时，自增字段的值在当前事务中是获取不到的，为此增加ids表，该表记录拥有自增字段的表名、自增字段和自增字段的下一个值 */
 CREATE TABLE `ids` (

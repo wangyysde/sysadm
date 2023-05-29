@@ -21,12 +21,22 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
-DEFAULT_IMAGE_VER="v1.0.1"
-DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
+#PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
+#DEFAULT_IMAGE_VER="v1.0.1"
+#DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
+#DEFAULT_DEPLOY_SERVER="192.53.117.73"
+#DEFAULT_DEPLOY_SERVER_PORT="2218"
+
+
+SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_common.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_common.sh was not found"
+    exit 1
+fi
 
 echo "getting build information......"
-SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SYSADM_OUTPUT="${SYSADM_ROOT}/_output/bin"
 GIT_COMMITID="$(git log --pretty=format:"%H" -1)"
 BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
@@ -43,7 +53,6 @@ STATS="$(git status -s)"
 if [  ! -e ${SYSADM_OUTPUT} ]; then
 	mkdir -p ${SYSADM_OUTPUT}
 fi
-
 
 function create::build::infofile(){
 	package_name=$1
@@ -113,6 +122,12 @@ if [ $# != 0 ]; then
 fi
 
 if [ $# != 0 ]; then
+  DEPLOY=$1
+  [ "X${DEPLOY}" == "X" ] && DEPLOY="n"
+  shift
+fi
+
+if [ $# != 0 ]; then
   REGISTRY_URL=$1
   [ "X${REGISTRY_URL}" == "X" ] && REGISTRY_URL=${DEFAULT_REGISTRY_URL}
   shift
@@ -138,11 +153,12 @@ do
 
   if [ "${BUILD_IMAGE}" == "y" -o "${BUILD_IMAGE}" == "Y" ]; then
 	if [ -e "${SYSADM_ROOT}/build/build_${p}_image.sh" ]; then
-		"${SYSADM_ROOT}/build/build_${p}_image.sh" "${IMAGEVER}" "${REGISTRY_URL}"
+		"${SYSADM_ROOT}/build/build_${p}_image.sh" "${IMAGEVER}" "${DEPLOY}"
 		if [ $? -ne 0 ]; then
 			echo "building ${p} image error"
 			exit 1
 		fi
+
 	else
 		echo "${SYSADM_ROOT}/build/build_${p}_image.sh script file not exist"
 		exit 1

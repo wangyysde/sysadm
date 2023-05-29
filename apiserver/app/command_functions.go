@@ -25,12 +25,12 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
 
-	"sysadm/utils"
 	"github.com/wangyysde/sysadmLog"
+	"sysadm/utils"
 )
 
 /*
@@ -301,7 +301,6 @@ func UnMarshalRepStatus(data []byte) (*RepStatus, error) {
 	return &ret, err
 }
 
-
 // 检查代码是否是合法的命令状态代码，如果是合法的状态代码则返回true, 否则返回false
 func IsCommandStatusCodeValid(code CommandStatusCode) bool {
 	for _, v := range AllCommandStatusCode {
@@ -313,7 +312,7 @@ func IsCommandStatusCodeValid(code CommandStatusCode) bool {
 	return false
 }
 
-// GetCommandStatusCodeByInt get command status code by int. 
+// GetCommandStatusCodeByInt get command status code by int.
 // return CommandStatusCode if int is in AllCommandStatusCode
 // otherwise return CommandStatusUnkown
 func GetCommandStatusCodeByInt(code int) CommandStatusCode {
@@ -445,9 +444,9 @@ func BuildCommandSeqByID(id string) string {
 // GetCommandIDFromSeq get command id from a command sequence.
 // return command id and nil if successful
 // otherwise return "" and an error
-func GetCommandIDFromSeq(seq string) (string, error) {
+func GetCommandIDFromSeq(seq string) (int, error) {
 	if !IsCommandSeqValid(seq) {
-		return "", fmt.Errorf("command sequence %s is not valid", seq)
+		return 0, fmt.Errorf("command sequence %s is not valid", seq)
 	}
 
 	idStr := seq[8:]
@@ -459,7 +458,11 @@ func GetCommandIDFromSeq(seq string) (string, error) {
 		}
 	}
 
-	return idStr, nil
+	id, e := strconv.Atoi(idStr)
+	if e != nil {
+		return 0, e
+	}
+	return id, nil
 }
 
 // ConvCommandStatus2Map convert CommandStatus to map[string]interface{} for saving into redis server
@@ -478,7 +481,7 @@ func ConvCommandStatus2Map(commandStatus *CommandStatus) (map[string]interface{}
 		if e != nil {
 			return ret, e
 		}
-		dataStr = string(dataBytes)  
+		dataStr = string(dataBytes)
 	}
 
 	notCommand := 0
@@ -499,9 +502,11 @@ func ConvCommandStatus2Map(commandStatus *CommandStatus) (map[string]interface{}
 	return ret, nil
 }
 
-// ConvMap2CommandStatus convert map[string]interface{} to  CommandStatus 
-//  return CommandStatus{}, error if any error was occurred
-// otherwise return CommandStatus, nil 
+// ConvMap2CommandStatus convert map[string]interface{} to  CommandStatus
+//
+//	return CommandStatus{}, error if any error was occurred
+//
+// otherwise return CommandStatus, nil
 func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 	var ret CommandStatus = CommandStatus{}
 
@@ -539,7 +544,7 @@ func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 	if e != nil {
 		return ret, fmt.Errorf("can not convert notCommand to int")
 	}
-    
+
 	statusCodeInt, e := utils.Interface2Int(statusCode)
 	if e != nil {
 		return ret, fmt.Errorf("can not convert statusCode to int")
@@ -554,16 +559,16 @@ func ConvMap2CommandStatus(data map[string]interface{}) (CommandStatus, error) {
 	ret.StatusMessage = utils.Interface2String(statusMessage)
 	ret.NotCommand = notCommandBool
 
-	return ret,nil
+	return ret, nil
 }
 
 // BuildLog  build an instance of Log used logID, message and level
-func BuildLog(logID int, message string,level sysadmLog.Level) Log {
+func BuildLog(logID int, message string, level sysadmLog.Level) Log {
 	logSeq := BuildLogSeqByID(logID)
 
 	return Log{
-		LogSeq: logSeq,
-		Level: level,
+		LogSeq:  logSeq,
+		Level:   level,
 		Message: message,
 	}
 }
@@ -572,7 +577,7 @@ func BuildLog(logID int, message string,level sysadmLog.Level) Log {
 // return YYYYMMDD111111 if id is less 1 or id is bigger 111111.
 // otherewise return YYYYMMDD0000ID
 func BuildLogSeqByID(id int) string {
-	if id <1 || id >=111111 {
+	if id < 1 || id >= 111111 {
 		id = 111111
 	}
 
@@ -584,4 +589,37 @@ func BuildLogSeqByID(id int) string {
 	}
 
 	return (dateStr + idStr)
+}
+
+// GetLogIDFromSeq get log id from a log sequence.
+// return date string in the sequence, id,and nil if successful
+// otherwise return "","" and error
+func GetLogIDFromSeq(seq string) (string, int, error) {
+	if !IsLogSeqValid(seq) {
+		return "", 0, fmt.Errorf("sequence %s is not valid", seq)
+	}
+
+	dateStr := seq[0:8]
+	idStr := seq[8:]
+	id, e := strconv.Atoi(idStr)
+	if e != nil {
+		return "", 0, fmt.Errorf("sequence %s is not valid", seq)
+	}
+
+	return dateStr, id, nil
+}
+
+// IsLogSeqValid check whether seq is a valid log sequence.Note: "00000000000000" considered as a not valid log sequence
+// return true if seq is a valid log sequence
+// otherwise return false
+func IsLogSeqValid(seq string) bool {
+	seq = strings.TrimSpace(seq)
+	if len(seq) != 14 {
+		return false
+	}
+	if seq == "00000000000000" {
+		return false
+	}
+
+	return true
 }

@@ -20,7 +20,7 @@
 
 package app
 
-// current version of apiserver 
+// current version of apiserver
 var appVer string = "1.0.1"
 
 // author of apiserver
@@ -39,22 +39,22 @@ var activeSendCommandUri string = "/receiveCommand"
 var passiveResponseCommandStatusUri string = "/receiveCommandStatus"
 
 // specifies the default uri for apiserver to send command status to client when apiserver is run in active mode
-var activeSendCommandStatusUri string = "/getCommandStatus"
+var defaultCommandStatusUri string = "/getCommandStatus"
 
 // specifies the default uri where client send command logs to when apiserver running as daemon in passive mode
 var passiveResponseCommandLogsUri string = "/receiveLogs"
 
 // specifies the default uri for apiserver to send command status to client when apiserver is run in active mode
-var activeSendCommandLogsUri string = "/getLogs"
+var defaultCommandLogsUri string = "/getLogs"
 
 // interval of checking new command for client by apiserver when apiserver is running actively. default is 5 second.
-var checkCommandInterval int = 5
+var defaultCheckCommandInterval int = 5
 
 // interval of try to get command status from client by apiserver when apiserver is running actively. default is 5 second
-var getStatusInterval int = 5
+var defaultGetStatusInterval int = 5
 
 // interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
-var getLogInterval int = 5
+var defaultGetLogInterval int = 5
 
 // default address of apiserver listening
 var apiserverAddress string = "0.0.0.0"
@@ -85,3 +85,39 @@ var defaultMaxDBOpenConns int = 20
 
 // max number of idle connections
 var defaultMaxDBIdleConns int = 5
+
+// over time of command execution, second
+var defaultMaxExecuteTime int = 3600
+
+// max try time of a command try to execute
+var defaultCommandExecuteMaxTryTimes int = 3
+
+// concurrency number of apiserver sending command data to agent when apiserver is running in active mode
+var defaultConcurrencySendCommand int = 10
+
+// concurrency number of apiserver get command status from agent when apiserver is running in active mode
+var defaultConcurrencyGetCommandStatus int = 10
+
+// concurrency number of apiserver get command log from agent when apiserver is running in active mode
+var defaultConcurrencyGetCommandLog int = 10
+
+// Timeout is the maximum amount of time a dial will wait for a connect to complete.
+var defaultHttpTimeout int = 180
+
+// KeepAlive specifies the interval between keep-alive probes for an active network connection.
+var defaultHttpKeepAliveProbe int = 15
+
+// specifies the maximum amount of time waiting to wait for a TLS handshake. Zero means no timeout.
+var defaultTLSHandshakeTimeout int = 5
+
+// IdleConnTimeout is the maximum amount of time an idle (keep-alive) connection will remain idle before closing itself
+var defaultIdleConnTimeout int = 60
+
+// 命令的最大重试次数
+var defaultMaxCommandTrytimes int = 3
+
+// 日志信息在redis里存储的路径
+var defaultLogRootPathInRedis = "/sysadm/apiserver/logs"
+
+// 每次获取命令日志的最大条数
+var defaultMaxGetLogNumPerTime = 10

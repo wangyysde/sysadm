@@ -6,8 +6,9 @@ BIN_DIR := $(OUT_DIR)/bin
 PRINT_HELP ?=
 PREFIX ?= /usr/local/sysadm
 REGISTRYvER ?= v2.7.0
-BUILD_IMAGE ?= 
-#IMAGEVER ?= v1.4
+BUILD_IMAGE ?=
+DEPLOY ?=
+IMAGEVER ?= v1.4
 
 .PHONY: all
 ifeq ($(PRINT_HELP),y)
@@ -15,25 +16,25 @@ all:
 	build/help_info.sh all
 else
 all: 
-	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
 endif
 
 
 .PHONY: sysadm
 sysadm:
 	$(info Now building sysadm package. sysadm binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "sysadm" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+	build/build.sh "sysadm" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
 #	go build -o $(BIN_DIR)/sysadm 
 	
 .PHONY: registryctl
 registryctl:
 	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
 
 .PHONY: agent
 agent:
 	$(info Now building agent package. agent binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "agent" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+	build/build.sh "agent" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
 
 .PHONY: registry
 registry: 
@@ -46,7 +47,7 @@ endif
 .PHONY: infrastructure
 infrastructure:
 	$(info Now building infrastructure package. infrastructure binary file will be placed into "$(BIN_DIR)")
-	build/build_infrastructure_image.sh "infrastructure" "$(BUILD_IMAGE)" "$(IMAGEVER)"
+	build/build.sh "infrastructure" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
 
 .PHONY: install 
 install: 

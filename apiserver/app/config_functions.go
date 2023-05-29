@@ -21,12 +21,15 @@
 package app
 
 import (
+	"context"
+	"github.com/wangyysde/sysadmServer"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"sysadm/config"
 	"sysadm/db"
+	sysadmDB "sysadm/db"
 	"sysadm/redis"
 	"sysadm/sysadmerror"
 	"sysadm/utils"
@@ -43,7 +46,7 @@ func HandlerConfig() (bool, []sysadmerror.Sysadmerror) {
 	}
 
 	// read configuration content from configuration file
-	var conf *Conf = &Conf{}
+	var conf = &Conf{}
 	tmpConf, err := config.GetCfgContent(runData.runConf.ConfFile, conf)
 	errs = append(errs, err...)
 	if tmpConf == nil {
@@ -103,7 +106,7 @@ func handleNotInConfFile() (bool, []sysadmerror.Sysadmerror) {
 	runData.workingRoot = filepath.Join(binPath, "../")
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020003, "debug", "checking configuration file path"))
-	var cfgFile string = ""
+	var cfgFile = ""
 	if confFile != "" {
 		if filepath.IsAbs(confFile) {
 			fp, err := os.Open(confFile)
@@ -111,7 +114,7 @@ func handleNotInConfFile() (bool, []sysadmerror.Sysadmerror) {
 				errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020004, "fatal", "can not open configuration file %s error %s", confFile, err))
 				return false, errs
 			}
-			fp.Close()
+			_ = fp.Close()
 			cfgFile = confFile
 		} else {
 			configPath := filepath.Join(workingDir, confFile)
@@ -120,7 +123,7 @@ func handleNotInConfFile() (bool, []sysadmerror.Sysadmerror) {
 				errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020005, "fatal", "can not open configuration file %s error %s", configPath, err))
 				return false, errs
 			}
-			fp.Close()
+			_ = fp.Close()
 			cfgFile = configPath
 		}
 	} else {
@@ -131,7 +134,7 @@ func handleNotInConfFile() (bool, []sysadmerror.Sysadmerror) {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020006, "fatal", "can not open configuration file %s error %s", configPath, err))
 			return false, errs
 		}
-		fp.Close()
+		_ = fp.Close()
 		cfgFile = configPath
 	}
 
@@ -141,7 +144,7 @@ func handleNotInConfFile() (bool, []sysadmerror.Sysadmerror) {
 
 }
 
-// set version data to runData instance
+// SetVersion set version data to runData instance
 func SetVersion(version *config.Version) {
 	if version == nil {
 		return
@@ -153,7 +156,7 @@ func SetVersion(version *config.Version) {
 	runData.runConf.Version = *version
 }
 
-// get version data from runData instance
+// GetVersion get version data from runData instance
 func GetVersion() *config.Version {
 	if runData.runConf.Version.Version != "" {
 		return &runData.runConf.Version
@@ -162,12 +165,12 @@ func GetVersion() *config.Version {
 	return nil
 }
 
-// return the configuration file path of the application from runData
+// GetCfgFile return the configuration file path of the application from runData
 func GetCfgFile() string {
 	return strings.TrimSpace(runData.runConf.ConfFile)
 }
 
-// set configuration file path what has got from CLI flag to runData
+// SetCfgFile set configuration file path what has got from CLI flag to runData
 func SetCfgFile(cfgFile string) {
 	cfgFile = strings.TrimSpace(cfgFile)
 	if cfgFile == "" {
@@ -184,6 +187,7 @@ func validateGlobalBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 
 	runData.runConf.ConfGlobal.Passive = conf.ConfGlobal.Passive
 	runData.runConf.ConfGlobal.Debug = conf.ConfGlobal.Debug
+	runData.runConf.ConfGlobal.Daemon = conf.ConfGlobal.Daemon
 
 	commandUri := strings.TrimSpace(conf.ConfGlobal.CommandUri)
 	if commandUri == "" {
@@ -200,7 +204,7 @@ func validateGlobalBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 		if conf.ConfGlobal.Passive {
 			commandStatusUri = passiveResponseCommandStatusUri
 		} else {
-			commandStatusUri = activeSendCommandStatusUri
+			commandStatusUri = defaultCommandStatusUri
 		}
 	}
 	runData.runConf.ConfGlobal.CommandStatusUri = commandStatusUri
@@ -210,24 +214,24 @@ func validateGlobalBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 		if conf.ConfGlobal.Passive {
 			commandLogsUri = passiveResponseCommandLogsUri
 		} else {
-			commandLogsUri = activeSendCommandLogsUri
+			commandLogsUri = defaultCommandLogsUri
 		}
 	}
 	runData.runConf.ConfGlobal.CommandLogsUri = commandLogsUri
 
 	runData.runConf.ConfGlobal.CheckCommandInterval = conf.ConfGlobal.CheckCommandInterval
 	if conf.ConfGlobal.CheckCommandInterval == 0 {
-		runData.runConf.ConfGlobal.CheckCommandInterval = checkCommandInterval
+		runData.runConf.ConfGlobal.CheckCommandInterval = defaultCheckCommandInterval
 	}
 
 	runData.runConf.ConfGlobal.GetStatusInterval = conf.ConfGlobal.GetStatusInterval
 	if conf.ConfGlobal.GetStatusInterval == 0 {
-		runData.runConf.ConfGlobal.GetStatusInterval = getStatusInterval
+		runData.runConf.ConfGlobal.GetStatusInterval = defaultGetStatusInterval
 	}
 
 	runData.runConf.ConfGlobal.GetLogInterval = conf.ConfGlobal.GetLogInterval
 	if conf.ConfGlobal.GetLogInterval == 0 {
-		runData.runConf.ConfGlobal.GetLogInterval = getLogInterval
+		runData.runConf.ConfGlobal.GetLogInterval = defaultGetLogInterval
 	}
 
 	return true, errs
@@ -345,7 +349,7 @@ func validateLogBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 // validate configurations read from configuration file in redis block, then pass them to runData if them are valid.
 func validateRedisBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020014, "debug", "try to handle configuration items in log block"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020014, "debug", "try to handle configuration items in redis block"))
 
 	if conf.ConfRedis.Mode < 1 || conf.ConfRedis.Mode > 3 {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020015, "warning", "redis mode(%d) is not valid. single mode will be used"))
@@ -368,17 +372,17 @@ func validateRedisBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	}
 	runData.runConf.ConfRedis.Addrs = redisAddrs
 
-	runData.runConf.ConfRedis.UserName = strings.TrimSpace(conf.ConfRedis.UserName)
+	runData.runConf.ConfRedis.Username = strings.TrimSpace(conf.ConfRedis.Username)
 	runData.runConf.ConfRedis.Password = strings.TrimSpace(conf.ConfRedis.Password)
 	runData.runConf.ConfRedis.SentinelUsername = strings.TrimSpace(conf.ConfRedis.SentinelUsername)
 	runData.runConf.ConfRedis.SentinelPassword = strings.TrimSpace(conf.ConfRedis.SentinelPassword)
 	runData.runConf.ConfRedis.DB = conf.ConfRedis.DB
 
-	runData.runConf.ConfRedis.IsTls = conf.ConfRedis.IsTls
-	if runData.runConf.ConfRedis.IsTls {
-		ca := strings.TrimSpace(conf.ConfRedis.Ca)
-		cert := strings.TrimSpace(conf.ConfRedis.Cert)
-		key := strings.TrimSpace(conf.ConfRedis.Key)
+	runData.runConf.ConfRedis.Tls.IsTls = conf.ConfRedis.Tls.IsTls
+	if runData.runConf.ConfRedis.Tls.IsTls {
+		ca := strings.TrimSpace(conf.ConfRedis.Tls.Ca)
+		cert := strings.TrimSpace(conf.ConfRedis.Tls.Cert)
+		key := strings.TrimSpace(conf.ConfRedis.Tls.Key)
 		tmpCa, err := config.ValidateTlsFile(ca, "", "", runData.workingRoot)
 		errs = append(errs, err...)
 		tmpCert, err := config.ValidateTlsFile(cert, "", "", runData.workingRoot)
@@ -387,19 +391,19 @@ func validateRedisBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 		errs = append(errs, err...)
 		if tmpCa == "" || tmpCert == "" || tmpKey == "" {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020018, "warning", "isTls has be set to true, but one(s) of certifications file is not readable. apiserver will connect to redis server withoud TLS"))
-			runData.runConf.ConfRedis.IsTls = false
-			runData.runConf.ConfRedis.Ca = ""
-			runData.runConf.ConfRedis.Cert = ""
-			runData.runConf.ConfRedis.Key = ""
+			runData.runConf.ConfRedis.Tls.IsTls = false
+			runData.runConf.ConfRedis.Tls.Ca = ""
+			runData.runConf.ConfRedis.Tls.Cert = ""
+			runData.runConf.ConfRedis.Tls.Key = ""
 		} else {
-			runData.runConf.ConfRedis.Ca = tmpCa
-			runData.runConf.ConfRedis.Cert = tmpCert
-			runData.runConf.ConfRedis.Key = tmpKey
+			runData.runConf.ConfRedis.Tls.Ca = tmpCa
+			runData.runConf.ConfRedis.Tls.Cert = tmpCert
+			runData.runConf.ConfRedis.Tls.Key = tmpKey
 		}
 	} else {
-		runData.runConf.ConfRedis.Ca = ""
-		runData.runConf.ConfRedis.Cert = ""
-		runData.runConf.ConfRedis.Key = ""
+		runData.runConf.ConfRedis.Tls.Ca = ""
+		runData.runConf.ConfRedis.Tls.Cert = ""
+		runData.runConf.ConfRedis.Tls.Key = ""
 	}
 
 	return true, errs
@@ -493,4 +497,152 @@ func validateDbBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	runData.runConf.ConfDB.MaxIdleConns = maxIdleConns
 
 	return true, errs
+}
+
+// SetLogger set parameters to accessLogger and errorLoger
+func SetLogger() (bool, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+
+	_ = sysadmServer.SetLoggerKind(runData.runConf.ConfLog.Kind)
+	_ = sysadmServer.SetLogLevel(runData.runConf.ConfLog.Level)
+	_ = sysadmServer.SetTimestampFormat(runData.runConf.ConfLog.TimeStampFormat)
+
+	if runData.runConf.ConfLog.AccessLog != "" {
+		_, fp, err := sysadmServer.SetAccessLogFile(runData.runConf.ConfLog.AccessLog)
+		if err != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020026, "error", "access log %s can not be openned. error %. access logs will be output to standard device", runData.runConf.ConfLog.AccessLog, err))
+			e := sysadmServer.SetAccessLoggerWithFp(os.Stdout)
+			if e != nil {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020027, "error", "can not set access logger error %s", e))
+				return false, errs
+			}
+		} else {
+			runData.runConf.ConfLog.AccessLogFp = fp
+		}
+	}
+
+	if runData.runConf.ConfLog.SplitAccessAndError && runData.runConf.ConfLog.ErrorLog != "" {
+		_, fp, err := sysadmServer.SetErrorLogFile(runData.runConf.ConfLog.ErrorLog)
+		if err != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020028, "error", "can not open error log file(%s) error: %s", runData.runConf.ConfLog.ErrorLog, err))
+		} else {
+			runData.runConf.ConfLog.ErrorLogFp = fp
+		}
+	}
+
+	sysadmServer.SetIsSplitLog(runData.runConf.ConfLog.SplitAccessAndError)
+	if runData.runConf.ConfGlobal.Debug {
+		sysadmServer.SetMode(sysadmServer.DebugMode)
+	}
+
+	return true, errs
+}
+
+// CloseLogger close access log file descriptor and error log file descriptor
+// set AccessLogger  and ErrorLogger to nil
+func CloseLogger() {
+	if runData.runConf.ConfLog.AccessLogFp != nil {
+		fp := runData.runConf.ConfLog.AccessLogFp
+		_ = fp.Close()
+		runData.runConf.ConfLog.AccessLogFp = nil
+	}
+
+	if runData.runConf.ConfLog.ErrorLogFp != nil {
+		fp := runData.runConf.ConfLog.ErrorLogFp
+		_ = fp.Close()
+		runData.runConf.ConfLog.ErrorLogFp = nil
+	}
+}
+
+// InitRedis initate a new redis entity
+func InitRedis() (bool, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+
+	entity, e := redis.NewClient(runData.runConf.ConfRedis, runData.workingRoot)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020029, "fatal", "can not open connection to redis server %s", e))
+		return false, errs
+	}
+
+	runData.redisEntity = entity
+	var ctx = context.Background()
+	runData.redisCtx = ctx
+
+	return true, errs
+}
+
+// close the entity of redis
+func CloseRedisEntity() {
+
+	if runData.redisEntity != nil {
+		entity := runData.redisEntity
+		_ = entity.Close()
+	}
+
+	runData.redisEntity = nil
+	runData.redisCtx = nil
+}
+
+// InitDB initate a new DB entity
+func InitDBEntity() (bool, []sysadmerror.Sysadmerror) {
+	var errs []sysadmerror.Sysadmerror
+
+	definedConf := runData.runConf.ConfDB
+	var sslModle string = ""
+	if !definedConf.IsTls {
+		sslModle = "disable"
+	} else {
+		sslModle = "enable"
+	}
+
+	dbConf := sysadmDB.DbConfig{
+		Type:         definedConf.Type,
+		Host:         definedConf.Address,
+		Port:         definedConf.Port,
+		User:         definedConf.UserName,
+		Password:     definedConf.Password,
+		DbName:       definedConf.DBName,
+		SslMode:      sslModle,
+		SslCa:        definedConf.Ca,
+		SslCert:      definedConf.Cert,
+		SslKey:       definedConf.Key,
+		MaxOpenConns: definedConf.MaxOpenConns,
+		MaxIdleConns: definedConf.MaxIdleConns,
+		Connect:      nil,
+		Entity:       nil,
+	}
+
+	newDBConf, err := sysadmDB.InitDbConfig(&dbConf, runData.workingRoot)
+	errs = append(errs, err...)
+	maxLevel := sysadmerror.GetMaxLevel(errs)
+	fatalLevel := sysadmerror.GetLevelNum("fatal")
+	if maxLevel >= fatalLevel {
+		return false, errs
+	}
+
+	entity := newDBConf.Entity
+	err = entity.OpenDbConnect()
+	errs = append(errs, err...)
+	maxLevel = sysadmerror.GetMaxLevel(errs)
+	if maxLevel >= fatalLevel {
+		return false, errs
+	}
+
+	runData.dbEntity = entity
+	return true, errs
+}
+
+// close the entity of DB
+func CloseDBEntity() {
+	dbEntity := runData.dbEntity
+	if dbEntity != nil {
+		dbEntity.CloseDB()
+	}
+
+	dbEntity = nil
+}
+
+// IsPassiveMode return the mode of apiserver running
+func IsPassiveMode() bool {
+	return runData.runConf.ConfGlobal.Passive
 }
