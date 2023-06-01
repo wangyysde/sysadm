@@ -66,7 +66,7 @@ cp ${SYSADM_ROOT}/_output/conf/config.yaml ${TEMP}/
 cp -r ${SYSADM_ROOT}/_output/html ${TEMP}/
 cp -r ${SYSADM_ROOT}/_output/tmpls ${TEMP}/
 echo "Now building sysadm:${SYSADM_VER} ..."
-docker build -f Dockerfile  -t ${REGISTRY_URL}sysadm:${SYSADM_VER} .
+docker build -f Dockerfile  -t "${DEFAULT_REGISTRY_URL}sysadm:${SYSADM_VER}" .
 if [ $? == 0 ]; then
   if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
        deploy::package "sysadm" ${SYSADM_VER}

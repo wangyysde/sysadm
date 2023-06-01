@@ -18,10 +18,10 @@
 package app
 
 import (
+	"github.com/wangyysde/sysadmServer"
 	"sysadm/config"
 	sysadmDB "sysadm/db"
 	"sysadm/sysadmerror"
-	"github.com/wangyysde/sysadmServer"
 )
 
 // This structure is for configuration of apiServer Block
@@ -159,8 +159,11 @@ type handlerAdder func(*sysadmServer.Engine, string, Infrastructure) []sysadmerr
 
 // define host information for API server using
 type ApiHost struct {
+	// host id in host table
+	HostID int `form:"hostid" json:"hostid" xml:"hostid"`
+
 	// host name of OS
-	Hostname string `form:"hostname" json:"hostname" xml:"hostname" binding:"-"`
+	Hostname string `form:"hostname" json:"hostname" xml:"hostname" `
 
 	// ip address for connecting to
 	Ip string `form:"ip" json:"ip" xml:"ip"`
@@ -175,10 +178,31 @@ type ApiHost struct {
 	AgentPort int `form:"agentPort" json:"agentPort" xml:"agentPort"`
 
 	// the path where agent listen to receiving command when is running in active mode
-	ReceiveCommandUri string `form:"receiveCommandUri" json:"receiveCommandUri" xml:"receiveCommandUri"`
+	CommandUri string `form:"commandUri" json:"commandUri" xml:"commandUri"`
+
+	// 当apiserver以主动模式运行时，apiserver向agent查询命令的执行状态时，请求的发送目标路径。如果本字段为空，默认向/getCommandStatus请求命令的状态
+	CommandStatusUri string `form:"commandStatusUri" json:"commandStatusUri" xml:"commandStatusUri"`
+
+	// 当apiserver以主动模式运行时，apiserver向agent查询命令的执行日志时，请求的发送目标路径。如果本字段为空，则apiserver默认向/getLogs请求命令的日志
+	CommandLogsUri string `form:"commandLogsUri" json:"commandLogsUri" xml:"commandLogsUri"`
+
+	// 当apiserver以主动模式运行时，apiserver连接agent是否使用TLS.0表示否，否则表示是
+	AgentIsTls bool `form:"agentIsTls" json:"agentIsTls" xml:"agentIsTls"`
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容
+	AgentCa bool `form:"agentCa" json:"agentCa" xml:"agentCa"`
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是证书内容
+	AgentCert bool `form:"agentCert" json:"agentCert" xml:"agentCert"`
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容
+	AgentKey bool `form:"agentKey" json:"agentKey" xml:"agentKey"`
+
+	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否
+	InsecureSkipVerify bool `form:"insecureSkipVerify" json:"insecureSkipVerify" xml:"insecureSkipVerify"`
 
 	// which os has be installed on a node. the value of osid is reference to table os in DB
-	OsID int `form:"osid" json:"osid" xml:"osid"`
+	OsID int `form:"osID" json:"osID" xml:"osID"`
 
 	// which version of os has be installed on a node. the value of osversionid is reference to table version in DB
 	OsVersionID int `form:"osversionid" json:"osversionid" xml:"osversionid"`

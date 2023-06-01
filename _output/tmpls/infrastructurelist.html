@@ -1,17 +1,6 @@
+<script type="text/javascript" src="/js/infrastructurelist.js"></script>
+
 <script type="text/javascript">
-    function addInfrastructure() {
-        var ownerid = document.getElementById("userid");
-        if (ownerid.value == "") {
-            alert("添加节点需要登录到系统!");
-            return
-        }
-        var maskLayer = document.getElementById("maskLayer");
-        maskLayer.style.zIndex = 2000
-        var addProjectForm = document.getElementById("addform");
-        addProjectForm.style.display = "block";
-        addProjectForm.style.zIndex = 2100;
-        addProjectForm.focus();
-    }
 
     function cancelAddHost() {
         var addProjectForm = document.getElementById("addform");
@@ -27,7 +16,7 @@
 		{{ $line }}
 		{{ end }}
 		var newOption;
-		var osVersion = document.getElementById("osversion");
+		var osVersion = document.getElementById("osversionid");
 		osVersion.options.length = 0; 
 		
 		var selectVersionID = 0;
@@ -96,8 +85,8 @@
 				trObj.appendChild(tdThree);
 
 				tableObj.append(trObj)
-			} 
-		}	
+			}
+		}
 	}
 
 
@@ -119,121 +108,6 @@
 				}
 			}
 	}
-	function changeAgentMode(){
-		var passiveMode = document.getElementById("passiveMode");
-		var agentPort = document.getElementById("agentPort");
-		var receiveCommandUri = document.getElementById("receiveCommandUri");
-		if (passiveMode.checked) {
-			agentPort.disabled = true;
-			receiveCommandUri.disabled = true;
-		} else {
-			agentPort.disabled = false;
-			receiveCommandUri.disabled = false;
-		}
-	}
-
-	function checkData(){
-		var ipAdd = document.getElementById("ip").value;
-
-		if(ipAdd.length < 7){
-			alert("You input ip address " + ipAdd + "is not valid");
-			return false;
-		}
-
-		var passiveMode = document.getElementById("passiveMode");
-		if(passiveMode.checked){
-			var agentPort = document.getElementById("agentPort");
-			var receiveCommandUri = document.getElementById("receiveCommandUri");
-			var portValue = agentPort.value;
-			if (portValue <= 0 || portValue > 65535) { 
-				alert("Agent端口不合法");
-				return false;	
-			}
-
-			var uri = receiveCommandUri.value
-			if(uri.length < 1) {
-				alert("agent接收指令的URI地址不合法");
-				return false;	
-			}
-		}
-		
-		var osVersionSelected = document.getElementById("osversion");
-		var index = osVersionSelected.selectedIndex;
-		var osVersion = osVersionSelected.options[index].value
-		if(osVersion == 0){
-			alert("Please select OS and its version");
-			return false;
-		}
-
-		return true;
-	}
-	
-    function submitAddHost() {
-		if(!checkData()){
-			return false;
-		}
-
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "/api/1.0/infrastructure/add",
-            data: $('#addInfrastructure').serialize(), // 你的formid
-            //async: false,
-            error: function(xmlObj, request) {
-                var errMsg = "";
-                if (xmlObj.responseText == null) {
-                    errMsg = "Connection error";
-                } else {
-                    errMsg = xmlObj.responseText;
-                }
-                cancelAddHost();
-                var tip = document.getElementById("tip");
-                tip.innerHTML = errMsg;
-                tip.style.display = "block";
-                setTimeout(function() {
-                    var tip = document.getElementById("tip");
-                    tip.style.display = "none";
-                }, 5000);
-            },
-            success: function(result) {
-                var tip = document.getElementById("tip");
-                cancelAddHost();
-                if (result.errorCode == 0) {
-                    var messageArray = result.message;
-                    var msg = "未知错误";
-                    if (messageArray[0]) {
-                        var msgLine = messageArray[0];
-                        msg = window.atob(msgLine["msg"]);
-
-                    }
-                    tip.style.display = "block";
-                    tip.style.backgroundColor = "#1f6f4a";
-                    tip.style.display = "block";
-                    tip.innerHTML = msg;
-                    refreshPage();
-                    setTimeout(function() {
-                        var tip = document.getElementById("tip");
-                        tip.style.display = "none";
-                    }, 5000);
-
-                } else {
-                    var messageArray = result.message;
-                    var msg = "未知错误";
-                    if (messageArray[0]) {
-                        var msgLine = messageArray[0];
-                        msg = window.atob(msgLine["msg"]);
-
-                    }
-                    tip.innerHTML = msg;
-                    tip.style.display = "block";
-                    setTimeout(function() {
-                        var tip = document.getElementById("tip");
-                        tip.style.display = "none";
-                    }, 5000);
-                }
-            }
-        });
-    }
 
     function delYumJS() {
         if (ownerid.value == "") {
@@ -382,7 +256,7 @@
 	<table class="list-table">
 		<tr>
 			<th width="5%" align="left"> 
-			<!--	<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'> -->
+			<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'>
 			</th>
 			<th width="10%">名称</th>
 			<th width="10%" >操作系统</th>
@@ -445,25 +319,42 @@
 		</div>
 		<div class="yum-radio">
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
-			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onclick="changeAgentMode()"> 被动模式
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onClick='changeAgentMode()'> 被动模式
+			<div id="divisTLS" style="display: inline"><input type="checkbox" name="agentIsTls" id="agentIsTls" value="1" onClick="enableISTLS()" > 启用TLS连接</div>
+			<div id="divinsecureSkipVerify" style="display: inline"><input type="checkbox" name="insecureSkipVerify" id="insecureSkipVerify" value="1" onclick='enableInsecureSkipVerify()'> 忽略客户端证书检查</div>
 		</div>
-		<div class="yum-item">
-			Agent端口： <input id="agentPort" type="text" name="agentPort"> *被动模式时，客户端侦听的端口号
+		<div class="yum-item" id="divAgentPort">
+			Agent端口： <input id="agentPort" type="text" name="agentPort"> *主动模式时，客户端侦听的端口号
 		</div>
 		
-		<div class="yum-item">
-			指令接收地址： <input id="receiveCommandUri" type="text" name="receiveCommandUri"> *被动模式时，客户端接收指令的URL地址
+		<div class="yum-item" id="divCommandUri">
+			指令接收地址： <input id="commandUri" type="text" name="commandUri"> *主动模式时，客户端接收指令的URI地址
+		</div>
+		<div class="yum-item" id="divcommandStatusUri">
+			指令状态查询地址： <input id="commandStatusUri" type="text" name="commandStatusUri"> *主动模式时，从客户端获取指令状态的URI地址
+		</div>
+		<div class="yum-item" id="divcommandLogsUri">
+			指令日志获取地址： <input id="commandLogsUri" type="text" name="commandLogsUri"> *主动模式时，从客户端获取指令日志的URI地址
+		</div>
+		<div class="yum-item" id="caInput" style="display: none">
+			CA证书： <input id="agentCa"  type="file" name="agentCa"> *客户端的CA证书
+		</div>
+		<div class="yum-item" id="certInput" style="display: none">
+			TLS证收： <input id="agentCert"  type="file" name="agentCert"> *客户端的证书
+		</div>
+		<div class="yum-item" id="keyInput" style="display: none">
+			证书密钥： <input id="agentKey"  type="file" name="agentKey"> *客户端证书密钥密钥
 		</div>
 		<div class="yum-item">
 			操作系统：
-			<select name="osid" id="os" onChange="ChangeVersion(this.options[this.options.selectedIndex].value)" >
+			<select name="osID" id="osID" onChange="ChangeVersion(this.options[this.options.selectedIndex].value)" >
 				<option value="0" style="background-color: #045283;"> --请选择系统 --</option>
 				{{range $index,$line := .osList}}
 				<option value="{{ $line.osid }}" style="background-color: #045283;"> {{ $line.osname }} </option>
 				{{end}}
 			</select>
 			版本：
-			<select name="osversionid" id="osversion" onChange="ChangeYumList(this.options[this.options.selectedIndex].value)" >
+			<select name="osversionid" id="osversionid" onChange="ChangeYumList(this.options[this.options.selectedIndex].value)" >
 				<option value="0" style="background-color: #045283;">--请选择版本--</option>
 			</select>
 		</div>
@@ -473,7 +364,7 @@
 		<div >
 			<table width="100%" align="center" id="yumlist" class="addform-table">
 				<th width="10%" align="left">
-					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'>
+					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllYumCheckbox()'>
 				</th>
 				<th width="50%">名称</th>
 				<th width="20%">类别</th>

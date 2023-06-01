@@ -22,12 +22,12 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/wangyysde/sysadmServer"
 	"sysadm/db"
 	"sysadm/httpclient"
 	"sysadm/sysadmapi/apiutils"
 	"sysadm/sysadmerror"
 	"sysadm/utils"
-	"github.com/wangyysde/sysadmServer"
 )
 
 func addHost(c *sysadmServer.Context) {
@@ -178,7 +178,7 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 	passiveMode := data.PassiveMode
 	if passiveMode == 0 {
 		data.AgentPort = 0
-		data.ReceiveCommandUri = ""
+		//	data.ReceiveCommandUri = ""
 	} else {
 		port := data.AgentPort
 		if port < 1 || port > 65535 {
@@ -187,12 +187,12 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 			return err, errs
 		}
 
-		receiveCommandUri := strings.TrimSpace(data.ReceiveCommandUri)
-		if len(receiveCommandUri) < 1 {
-			err := fmt.Errorf("agent listen uri path %s  is not valid", receiveCommandUri)
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009, "warn", "agent listen uri path %s  is not valid", receiveCommandUri))
-			return err, errs
-		}
+		//	receiveCommandUri := strings.TrimSpace(data.ReceiveCommandUri)
+		//	if len(receiveCommandUri) < 1 {
+		//		err := fmt.Errorf("agent listen uri path %s  is not valid", receiveCommandUri)
+		//		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009, "warn", "agent listen uri path %s  is not valid", receiveCommandUri))
+		//		return err, errs
+		//	}
 	}
 
 	osID := data.OsID
@@ -237,7 +237,7 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	insertData["statusID"] = 1
 	insertData["agentPassive"] = data.PassiveMode
 	insertData["agentPort"] = data.AgentPort
-	insertData["receiveCommandUri"] = data.ReceiveCommandUri
+	//	insertData["receiveCommandUri"] = data.ReceiveCommandUri
 	insertData["hostid"] = nextHostid
 
 	_, err = tx.InsertData("host", insertData)
@@ -375,7 +375,7 @@ func addYumConfigCommandToDB(tx *db.Tx, hostid, nextCommandID int, yumid string,
 	yumCatalog := utils.Interface2String(line["catalog"])
 	base_url := utils.Interface2String(line["base_url"])
 	enabled, _ := utils.Interface2Int(line["enabled"])
-	gpgcheck := utils.Interface2String(line["gpgcheck"]) 
+	gpgcheck := utils.Interface2String(line["gpgcheck"])
 	gpgkey := utils.Interface2String(line["gpgkey"])
 	if enabled == 1 {
 		// insert command information into command
@@ -468,4 +468,3 @@ func updateNextID(tableName, fieldName string, tx *db.Tx, nextID int) (int, []sy
 
 	return 1, errs
 }
-
