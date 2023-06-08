@@ -105,7 +105,8 @@ network_closure.sh
 /cluster/libvirt-coreos/coreos_*.img
 
 # Downloaded Kubernetes binary release
-/kubernetes/
+#/kubernetes/
+kubectl
 
 # direnv .envrc files
 .envrc
