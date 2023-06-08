@@ -161,6 +161,13 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 	}
 	data.Hostname = hostname
 
+	// check userid
+	if data.Userid == 0 {
+		errMsg := fmt.Sprintf("添加主机信息需要登陆之后操作")
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020101, "error", errMsg))
+		return fmt.Errorf(errMsg), errs
+	}
+
 	// checking ip
 	ip := strings.TrimSpace(data.Ip)
 	if tmpIP, e := utils.CheckIpAddress(ip, false); tmpIP == nil {
@@ -178,6 +185,13 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 	passiveMode := data.PassiveMode
 	if passiveMode == 0 {
 		data.AgentPort = 0
+		data.AgentIsTls = false
+		data.InsecureSkipVerify = false
+		data.CommandUri = ""
+		data.CommandStatusUri = ""
+		data.CommandLogsUri = ""
+		data.AgentCa = ""
+
 		//	data.ReceiveCommandUri = ""
 	} else {
 		port := data.AgentPort

@@ -62,7 +62,7 @@ cp ${SYSADM_ROOT}/_output/bin/agent ${TEMP}/
 cp ${SYSADM_ROOT}/build/agent/entrypoint.sh ${TEMP}/
 cp ${SYSADM_ROOT}/_output/conf/agent.yaml ${TEMP}/
 echo "Now building agent:${AGENT_VER} ..."
-docker build -f Dockerfile  -t ${REGISTRY_URL}agent:${AGENT_VER} .
+docker build -f Dockerfile  -t ${DEFAULT_REGISTRY_URL}agent:${AGENT_VER} .
 if [ $? == 0 ]; then
   if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
          deploy::package "agent" ${AGENT_VER}

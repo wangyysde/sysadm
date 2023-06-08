@@ -555,7 +555,7 @@ spec:
             - name: CALICO_IPV6POOL_VXLAN
               value: "Never"
             - name: IP_AUTODETECTION_METHOD
-              value: IP_AUTODETECTION_METHOD=kubernetes-internal-ip
+              value: "kubernetes-internal-ip"
             #  value: interface=eth0
             # Set MTU for tunnel device used if ipip is enabled
             - name: FELIX_IPINIPMTU
@@ -796,6 +796,10 @@ spec:
         # Mark the pod as a critical add-on for rescheduling.
         - key: CriticalAddonsOnly
           operator: Exists
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
       # Since Calico can't network a pod until Typha is up, we need to run Typha itself
       # as a host-networked pod.
       serviceAccountName: calico-node

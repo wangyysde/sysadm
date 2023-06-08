@@ -190,13 +190,13 @@ type ApiHost struct {
 	AgentIsTls bool `form:"agentIsTls" json:"agentIsTls" xml:"agentIsTls"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容
-	AgentCa bool `form:"agentCa" json:"agentCa" xml:"agentCa"`
+	AgentCa string `form:"agentCa" json:"agentCa" xml:"agentCa"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是证书内容
-	AgentCert bool `form:"agentCert" json:"agentCert" xml:"agentCert"`
+	AgentCert string `form:"agentCert" json:"agentCert" xml:"agentCert"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容
-	AgentKey bool `form:"agentKey" json:"agentKey" xml:"agentKey"`
+	AgentKey string `form:"agentKey" json:"agentKey" xml:"agentKey"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否
 	InsecureSkipVerify bool `form:"insecureSkipVerify" json:"insecureSkipVerify" xml:"insecureSkipVerify"`

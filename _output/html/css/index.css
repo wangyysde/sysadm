@@ -476,4 +476,17 @@
 	color: #fff;
 	background-color: transparent;
 	outline: none;
+    display: inline-block;
+}
+
+.inputfilebutton {
+    position: relative;
+    width: 80px !important;
+    height: 30px !important;
+    border: 0 !important;
+    color: #045283 !important;
+    outline: none !important;
+    cursor: pointer !important;
+    background-color: #fff !important;
+
 }

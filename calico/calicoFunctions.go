@@ -69,7 +69,17 @@ func ApplyCalico(kubeconf string, conf *GlobalConf) error {
 		return e
 	}
 
+	e = k8sclient.ApplyFromYaml(string(partContent), config, dyClient, apiRL)
+	if e != nil {
+		return e
+	}
+
 	partContent, e = buildYamlContent(tplPart3, conf)
+	if e != nil {
+		return e
+	}
+
+	e = k8sclient.ApplyFromYaml(string(partContent), config, dyClient, apiRL)
 	if e != nil {
 		return e
 	}
@@ -79,6 +89,10 @@ func ApplyCalico(kubeconf string, conf *GlobalConf) error {
 		return e
 	}
 
+	e = k8sclient.ApplyFromYaml(string(partContent), config, dyClient, apiRL)
+	if e != nil {
+		return e
+	}
 	return nil
 }
 

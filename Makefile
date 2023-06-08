@@ -9,6 +9,7 @@ REGISTRYvER ?= v2.7.0
 BUILD_IMAGE ?=
 DEPLOY ?=
 IMAGEVER ?= v1.4
+DEPLOYTYPE ?=
 
 .PHONY: all
 ifeq ($(PRINT_HELP),y)
@@ -16,38 +17,38 @@ all:
 	build/help_info.sh all
 else
 all: 
-	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
+	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 endif
 
 
 .PHONY: sysadm
 sysadm:
 	$(info Now building sysadm package. sysadm binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "sysadm" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
+	build/build.sh "sysadm" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 #	go build -o $(BIN_DIR)/sysadm 
 	
 .PHONY: registryctl
 registryctl:
 	$(info Now building registryctl package. registryctl binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
+	build/build.sh "registryctl" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 
 .PHONY: agent
 agent:
 	$(info Now building agent package. agent binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "agent" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
+	build/build.sh "agent" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 
 .PHONY: registry
 registry: 
 	$(info Now building registry binary package. registry binary package file will be placed into "$(BIN_DIR)")
 	build/build_registry_binary.sh $(REGISTRYvER)
 ifeq ($(BUILD_IMAGE),y)
-	build/build_registry_image.sh $(IMAGEVER)
+	build/build_registry_image.sh $(IMAGEVER) "$(DEPLOYTYPE)"
 endif
 
 .PHONY: infrastructure
 infrastructure:
 	$(info Now building infrastructure package. infrastructure binary file will be placed into "$(BIN_DIR)")
-	build/build.sh "infrastructure" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)"
+	build/build.sh "infrastructure" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 
 .PHONY: install 
 install: 

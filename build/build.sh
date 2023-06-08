@@ -36,6 +36,13 @@ else
     exit 1
 fi
 
+if [ -f "${SYSADM_ROOT}/build/build_tok8s.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_tok8s.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_tok8s.sh was not found"
+    exit 1
+fi
+
 echo "getting build information......"
 SYSADM_OUTPUT="${SYSADM_ROOT}/_output/bin"
 GIT_COMMITID="$(git log --pretty=format:"%H" -1)"
@@ -102,6 +109,8 @@ function build::package(){
 BUILD_LIST=""
 WHAT=""
 BUILD_IMAGE="n"
+DEPLOY_BY_DOCKECOMPOSE="n"
+DEPLOYTYPE=""
 IMAGEVER=${DEFAULT_IMAGE_VER}
 REGISTRY_URL=${DEFAULT_REGISTRY_URL}
 if [ $# != 0 ]; then
@@ -128,9 +137,20 @@ if [ $# != 0 ]; then
 fi
 
 if [ $# != 0 ]; then
-  REGISTRY_URL=$1
-  [ "X${REGISTRY_URL}" == "X" ] && REGISTRY_URL=${DEFAULT_REGISTRY_URL}
+  DEPLOYTYPE=$1
   shift
+fi
+[ "X${DEPLOYTYPE}" == "X" ] && DEPLOYTYPE=${DEFAULT_DEPLOY_TYPE}
+
+if [ "${DEPLOY}" == "y" -o "${DEPLOY}" == "Y" ]; then
+  BUILD_IMAGE="y"
+  DEPLOY_BY_DOCKECOMPOSE="y"
+else
+   BUILD_IMAGE="n"
+fi
+
+if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" ]; then
+  DEPLOY_BY_DOCKECOMPOSE="n"
 fi
 
 if [ "X${WHAT}" == "X" ]; then
@@ -153,7 +173,7 @@ do
 
   if [ "${BUILD_IMAGE}" == "y" -o "${BUILD_IMAGE}" == "Y" ]; then
 	if [ -e "${SYSADM_ROOT}/build/build_${p}_image.sh" ]; then
-		"${SYSADM_ROOT}/build/build_${p}_image.sh" "${IMAGEVER}" "${DEPLOY}"
+		"${SYSADM_ROOT}/build/build_${p}_image.sh" "${IMAGEVER}" "${DEPLOY_BY_DOCKECOMPOSE}"
 		if [ $? -ne 0 ]; then
 			echo "building ${p} image error"
 			exit 1
@@ -163,7 +183,13 @@ do
 		echo "${SYSADM_ROOT}/build/build_${p}_image.sh script file not exist"
 		exit 1
 	fi
-  fi		
+  fi
+
+  if [ "${DEPLOY}" == "y" -o "${DEPLOY}" == "Y" ]; then
+      if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" ]; then
+          deploy::to::k8s "${p}" "${IMAGEVER}"
+      fi
+  fi
 done
 
 exit 0

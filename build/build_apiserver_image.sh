@@ -60,7 +60,7 @@ cp ${SYSADM_ROOT}/_output/conf/apiserver.yaml ${TEMP}/
 echo "Now building apiserver:${AGENT_VER} ..."
 docker build -f Dockerfile  -t ${REGISTRY_URL}apiserver:${AGENT_VER} .
 if [ $? == 0 ]; then
-	docker push ${REGISTRY_URL}apiserver:${AGENT_VER}
+	docker push ${DEFAULT_REGISTRY_URL}apiserver:${AGENT_VER}
 else 
 	echo "build apiserver:${AGENT_VER} image error"
 fi

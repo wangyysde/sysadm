@@ -46,6 +46,6 @@ cp ${SYSADM_ROOT}/build/registry/entrypoint.sh ${TEMP}/
 cp ${SYSADM_ROOT}/build/registry/install_cert.sh ${TEMP}/
 cp ${SYSADM_ROOT}/build/registry/config.yml ${TEMP}/
 echo "Now building sysadm_registry:${REGISTRY_VER} ..."
-docker build -f Dockerfile --build-arg sysadm_base_image_version=${BASE_IMG_VER} -t ${REGISTRY_URL}registry:${REGISTRY_VER} .
+docker build -f Dockerfile --build-arg sysadm_base_image_version=${BASE_IMG_VER} -t ${DEFAULT_REGISTRY_URL}registry:${REGISTRY_VER} .
 rm -rf ${TEMP}
 docker rmi sysadm-registry-base:${BASE_IMG_VER}

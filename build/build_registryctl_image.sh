@@ -61,7 +61,7 @@ cp ${SYSADM_ROOT}/_output/bin/registryctl ${TEMP}/
 cp ${SYSADM_ROOT}/build/registryctl/entrypoint.sh ${TEMP}/
 cp ${SYSADM_ROOT}/_output/conf/registryctl.yaml ${TEMP}/
 echo "Now building registryctl:${REGISTRYCTL_VER} ..."
-docker build -f Dockerfile  -t ${REGISTRY_URL}registryctl:${REGISTRYCTL_VER} .
+docker build -f Dockerfile  -t ${DEFAULT_REGISTRY_URL}registryctl:${REGISTRYCTL_VER} .
 if [ $? == 0 ]; then
   if [ "${ISDEPLOY}" == "y" -o "${ISDEPLOY}" == "Y" ]; then
        deploy::package "registryctl" ${REGISTRYCTL_VER}
