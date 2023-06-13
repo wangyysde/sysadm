@@ -12,6 +12,9 @@
 # certifications for testing
 /_output/certs
 
+# skip mysql data
+/_output/deployment/k8s/pvs/mysql
+
 #logs files for testing
 /_output/logs
 
