@@ -1,14 +1,7 @@
+<script type="text/javascript" src="/js/sysadmfunctions.js"></script>
 <script type="text/javascript" src="/js/infrastructurelist.js"></script>
 
 <script type="text/javascript">
-
-    function cancelAddHost() {
-        var addProjectForm = document.getElementById("addform");
-        addProjectForm.style.display = "none";
-        addProjectForm.style.zIndex = 0;
-        var maskLayer = document.getElementById("maskLayer");
-        maskLayer.style.zIndex = 0
-    }
 
 	function ChangeVersion(osid){
 		var osVerList = new Array();
@@ -92,21 +85,6 @@
 
 	function refreshPage() {
 		$('#container').load("/infrastructure/list");
-	}
-
-	function selectAllCheckbox() {
-			var thCheckBox = document.getElementById("yumidth");
-			if (thCheckBox.checked) {
-				var chklist = document.getElementsByName('yumid[]');
-				for (var i = 0; i < chklist.length; i++) {
-					chklist[i].checked = true;
-				}
-			} else {
-				var chklist = document.getElementsByName('yumid[]');
-				for (var i = 0; i < chklist.length; i++) {
-					chklist[i].checked = false;
-				}
-			}
 	}
 
     function delYumJS() {
@@ -256,7 +234,7 @@
 	<table class="list-table">
 		<tr>
 			<th width="5%" align="left"> 
-			<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox()'>
+			<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox(this.checked)'>
 			</th>
 			<th width="10%">名称</th>
 			<th width="10%" >操作系统</th>
@@ -308,7 +286,7 @@
 </table>	
 
 <div class="yum-add" id="addform">
-	<form id="infrastructureAddHost" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
+	<form id="infrastructureAddHostForm" name="infrastructureAddHostForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
 		<div class="popform-title">添加新节点</div>
 		<div class="yum-item">
 			节点主机名： <input id="hostname" type="text" name="hostname"> 用于节点管理和识别的主机名
@@ -321,7 +299,7 @@
 			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
 			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onClick='changeAgentMode()'> 被动模式
 			<div id="divisTLS" style="display: inline"><input type="checkbox" name="agentIsTls" id="agentIsTls" value="1" onClick="enableISTLS()" > 启用TLS连接</div>
-			<div id="divinsecureSkipVerify" style="display: none"><input type="checkbox" name="insecureSkipVerify" id="insecureSkipVerify" value="1" onclick='enableInsecureSkipVerify()'> 忽略客户端证书检查</div>
+			<div id="divinsecureSkipVerify" style="display: none"><input type="checkbox" name="insecureSkipVerify" id="insecureSkipVerify" value="1" > 忽略客户端证书检查</div>
 		</div>
 		<div class="yum-item" id="divAgentPort">
 			Agent端口： <input id="agentPort" type="text" name="agentPort"> *主动模式时，客户端侦听的端口号
@@ -336,19 +314,19 @@
 		<div class="yum-item" id="divcommandLogsUri">
 			指令日志获取地址： <input id="commandLogsUri" type="text" name="commandLogsUri"> *主动模式时，从客户端获取指令日志的URI地址
 		</div>
-		<div class="yum-item" id="caInput" >
+		<div class="yum-item" id="caInput" style="display: none">
 			CA证书： <input id="agentCa"  type="file" name="agentCa" style="display: none" onChange='changefilevalue("agentCaDiv","agentCa")'>
 			<input id="agentCaButton" type="button" name="agentCaButton" value="上传文件" onclick='clickagentCaButton("agentCa")' class="inputfilebutton">
 			<div id="agentCaDiv" style="display: inline-block"></div>
 			*客户端的CA证书
 		</div>
-		<div class="yum-item" id="certInput" >
+		<div class="yum-item" id="certInput" style="display: none">
 			TLS证书： <input id="agentCert"  type="file" name="agentCert" style="display: none" onChange='changefilevalue("agentCertDiv","agentCert")'>
 			<input id="agentCertButton" type="button" name="agentCertButton" value="上传文件" onclick='clickagentCaButton("agentCert")' class="inputfilebutton">
 			<div id="agentCertDiv" style="display: inline-block"></div>
 			*客户端的证书
 		</div>
-		<div class="yum-item" id="keyInput" >
+		<div class="yum-item" id="keyInput" style="display: none">
 			证书密钥： <input id="agentKey"  type="file" name="agentKey" style="display: none" onChange='changefilevalue("agentKeyDiv","agentKey")'>
 			<input id="agentKeyButton" type="button" name="agentKeyButton" value="上传文件" onclick='clickagentCaButton("agentKey")' class="inputfilebutton">
 			<div id="agentKeyDiv" style="display: inline-block"></div>
@@ -373,7 +351,7 @@
 		<div >
 			<table width="100%" align="center" id="yumlist" class="addform-table">
 				<th width="10%" align="left">
-					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllYumCheckbox()'>
+					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllYumCheckbox(this.checked)'>
 				</th>
 				<th width="50%">名称</th>
 				<th width="20%">类别</th>

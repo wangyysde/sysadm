@@ -475,7 +475,7 @@
 	border-right-width: 0px;
 	color: #fff;
 	background-color: transparent;
-	outline: none;
+    outline: none;
     display: inline-block;
 }
 
@@ -487,6 +487,19 @@
     color: #045283 !important;
     outline: none !important;
     cursor: pointer !important;
-    background-color: #fff !important;
+    background-color: transparent;
+    outline: none;
+    display: inline-block;
+}
 
+
+.inputfilebutton {
+    position: relative;
+    width: 80px !important;
+    height: 30px !important;
+    border: 0 !important;
+    color: #fff !important;
+    outline: none !important;
+    cursor: pointer !important;
+    background-color: transparent !important;
 }

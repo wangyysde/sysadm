@@ -157,6 +157,7 @@ CREATE TABLE `host` (
   `osversionid` int(11) NOT NULL COMMENT 'version id identified OS version ',
   `statusID` int(3) NOT NULL COMMENT 'identifying a host status',
   `ip` varchar(255) DEFAULT NULL COMMENT '当apiserver是以主动模式运行时，连接客户端agent的地址或域名',
+  `iptype` tinyint(1) DEFAULT '4' COMMENT '主机的IP地址类型4表示ipv4 6表示IPV6',
   `passiveMode` tinyint(1) DEFAULT '0' COMMENT '是否被动模式，0表示主动模式 1表示被动模式',
   `commandUri` varchar(255) DEFAULT NULL COMMENT '当apiserver以主动模式运行时，apiserver向agent发送命令时，请求的发送目\n 标路径。如果本字段为空，则apiserver默认向/receiveCommand请求命令的状态',
   `commandStatusUri` varchar(255) DEFAULT NULL COMMENT '当apiserver以主动模式运行时，apiserver向agent查询命令的执行状态时，请求的发送目\n 标路径。如果本字段为空，则apiserver默认向/getCommandStatus请求命令的状态',
@@ -231,6 +232,14 @@ CREATE TABLE `hostUser` (
   CONSTRAINT `FK_hostUser` FOREIGN KEY (`hostid`) REFERENCES `host` (`hostid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 */
+
+/* 命令定义,即整个平台可以执行的命令类型列表 */
+CREATE TABLE `commandDefined` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '定义的命令ID值',
+    `command` varchar(64) NOT NULL COMMENT '命令名称，不能为空，且在本表内不能有重复',
+
+)
+
 
 /* 存储节点上要执行和已经执行的命令的信息*/
 CREATE TABLE `command` (

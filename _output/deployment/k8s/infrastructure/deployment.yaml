@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "infrastructure"
+  labels:
+    app: infrastructure
+    component: infrastructure
+  namespace: sysadm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infrastructure
+      component: infrastructure
+  template:
+    metadata:
+      labels:
+        app: infrastructure
+        component: infrastructure
+    spec:
+      containers:
+      - name: infrastructure
+        image: hb.sysadm.cn/sysadm/infrastructure:v1.0.2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: infrastructure-logs
+          mountPath: /opt/infrastructure/logs
+        - name: config
+          mountPath: /opt/infrastructure/conf
+      volumes:
+      - name: config
+        configMap:
+          name: "infrastructure-conf"
+      - name: "infrastructure-logs"
+        persistentVolumeClaim:
+          claimName: infrastructure-logs

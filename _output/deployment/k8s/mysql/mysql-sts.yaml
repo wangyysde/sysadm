@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "mysql"
+  labels:
+    app: mysql
+    component: mysql
+  namespace: sysadm
+spec:
+  replicas: 1
+  serviceName: "mysql"
+  selector:
+    matchLabels:
+      app: mysql
+      component: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+        component: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: hb.sincerecloud.com/application/mysql:5.7.30-2.6
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - configMapRef:
+              name: "mysql-env"
+          - secretRef:
+              name: "mysql-secret"
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        - name: mysql-config
+          mountPath: /etc/mysql/
+      volumes:
+      - name: mysql-config
+        configMap:
+          name: "mysql-mycnf"
+      - name: "mysql-data"
+        persistentVolumeClaim:
+          claimName: mysql

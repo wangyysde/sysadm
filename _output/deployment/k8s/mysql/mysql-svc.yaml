@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "mysql"
+  labels:
+    app: mysql
+  namespace: sysadm
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+      nodePort: 30306
+  selector:
+    app: mysql
+    component: mysql

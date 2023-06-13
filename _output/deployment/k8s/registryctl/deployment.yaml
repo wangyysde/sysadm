@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "registryctl"
+  labels:
+    app: registryctl
+    component: registryctl
+  namespace: sysadm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registryctl
+      component: registryctl
+  template:
+    metadata:
+      labels:
+        app: registryctl
+        component: registryctl
+    spec:
+      containers:
+      - name: registryctl
+        image: hb.sysadm.cn/sysadm/registryctl:v1.0.7
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: registryctl-logs
+          mountPath: /opt/registryctl/logs
+        - name: config
+          mountPath: /opt/registryctl/conf
+      volumes:
+      - name: config
+        configMap:
+          name: "registryctl-conf"
+      - name: "registryctl-logs"
+        persistentVolumeClaim:
+          claimName: registryctl-logs

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-env
+  labels:
+    app: mysql
+  namespace: sysadm
+data:
+  MYSQL_DATABASE: "sincerecloud"
+  MYSQL_ERROR_LOG_DIR: "/var/log/mysql"
+  TZ: "Asia/Shanghai"

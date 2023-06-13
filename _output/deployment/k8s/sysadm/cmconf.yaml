@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "sysadm-conf"
+  labels:
+    app: sysadm
+  namespace: sysadm
+data:
+  config.yaml: |+
+    version: v0.1
+    server:
+      address: "0.0.0.0"
+      port: 8080
+      socket: "/var/run/sysadm.sock"
+      tls: false
+      ca: ""
+      cert: ""
+      key: ""
+    apiServer:
+      apiVersion: "v1.0"
+      address: "sysadm"
+      port: 8080
+      tls: false
+      ca: ""
+      cert: ""
+      key: ""
+    log:
+      accessLog: "logs/sysadm-access.log"
+      errorLog: "logs/sysadm-error.log"
+      kind: "text"
+      level: "debug"
+      splitAccessAndError: true
+      timeStampFormat: ""
+    user:
+      defaultUser: "admin"
+      defaultPassword: "Sysadm12345"
+    DB:
+      type: "mysql"
+      host: "mysql"
+      port: 3306
+      user: "sysadm"
+      password: "Sysadm12345"
+      dbname: "k8ssysadm"
+      sslmode: "disable"
+      sslrootcert: ""
+      sslkey: ""
+      sslcert: ""
+    registryctl:
+      apiVersion: "v1.0"
+      address: "registryctl"
+      port: 5001
+      tls: false
+      ca: ""
+      cert: ""
+      key: ""

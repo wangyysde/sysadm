@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "infrastructure"
+  labels:
+    app: infrastructure
+  namespace: sysadm
+spec:
+  type: ClusterIP
+  ports:
+    - name: http 
+      port: 8082
+      targetPort: 8082
+      protocol: TCP
+  selector:
+    app: infrastructure
+    component: infrastructure

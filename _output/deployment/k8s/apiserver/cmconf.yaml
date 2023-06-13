@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "apiserver-conf"
+  labels:
+    app: apiserver
+  namespace: sysadm
+data:
+  apiserver.yaml: |+
+    global:
+      passive: true
+      debug: true
+      daemon: true
+      commandUri: "/getCommand"
+      commandStatusUri: "/receiveCommandStatus"
+      commandLogsUri: "/receiveLogs"
+      checkCommandInterval: 5
+      getStatusInterval: 5
+      getLogInterval: 5
+    server:
+      address: "0.0.0.0"
+      port: 8085
+      socket: "/var/run/apisever.sock"
+      insecret: false
+      insecretPort: 5085
+      isTls: true
+      ca: ""
+      cert: "certs/fullchain.crt"
+      key: "certs/sincerecloud.key"
+      insecureSkipVerify: false
+    log:
+      accessLog: ""
+      errorLog: ""
+      kind: "text"
+      level: "debug"
+      timeStampFormat: ""
+    redis:
+      mode: 1
+      master: "master"
+      addrs: "redis:6379"
+      username: ""
+      password: ""
+      sentinelUsername: ""
+      sentinelPassword: ""
+      db: 0
+      tls:
+        isTls: true
+        ca: ""
+        cert: ""
+        key: ""
+        insecureSkipVerify: false
+    db:
+      type: "mysql"
+      dbName: "k8ssysadm" 
+      address: "mysql"
+      port: 3306
+      isTls: false
+      ca: ""
+      cert: ""
+      key: ""
+      insecureSkipVerify: true 
+      userName: "sysadm"
+      password: "Sysadm12345"
+      maxOpenConns: 10
+      maxIdleConns: 2

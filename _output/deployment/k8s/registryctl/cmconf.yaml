@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "registryctl-conf"
+  labels:
+    app: registryctl
+  namespace: sysadm
+data:
+  registryctl.yaml: |+
+    # the version of registryctl component.
+    version: v21.0.0
+    # the version of api of registryctl component.
+    apiVer: v1.0
+    # registry url address. we should specify a url for registry server if registryctl  running behind a proxy 
+    # its value will be set to request url if this value not set.
+    registryUrl: k8s.sysadm.cn
+    # configuration block for registryctl server
+    server:
+    # listen address of registryctl server
+      address: 0.0.0.0
+      # listen port of registryctl server
+      port: 5001
+      socket: "/var/run/registryctl.sock"
+    log:
+      accessLog: "logs/registryctl-access.log"
+      errorLog: "logs/registryctl-error.log"
+      kind: "text"
+      level: "debug"
+      splitAccessAndError: true
+      timeStampFormat: ""
+    user:
+      defaultUser: "registryctl_user"
+      defaultPassword: "registryctl_password"
+    DB:
+      type: "mysql"
+      host: "mysql"
+      port: 3306
+      user: sysadm
+      password: "Sysadm12345"
+      dbname: "k8ssysadm"
+      sslmode: "disable"
+      sslrootcert: ""
+      sslkey: ""
+      sslcert: ""
+    registry:
+      server:
+        host: "registry"
+        port: 5000
+        tls: false
+        insecureSkipVerify: true
+    credit:
+      username: "sysadm_registry_user"
+      password: "sysadm_registry_password"
+    sysadmserver:
+      apiVerion: v1.0
+      server:
+        host: "sysadm"
+        port: 8080
+        tls: false
+        insecureSkipVerify: true

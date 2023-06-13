@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "sysadm"
+  labels:
+    app: sysadm
+    component: sysadm
+  namespace: sysadm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sysadm
+      component: sysadm
+  template:
+    metadata:
+      labels:
+        app: sysadm
+        component: sysadm
+    spec:
+      containers:
+      - name: sysadm
+        image: hb.sysadm.cn/sysadm/sysadm:v1.0.2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: sysadm-logs
+          mountPath: /opt/sysadm/logs
+        - name: config
+          mountPath: /opt/sysadm/conf
+      volumes:
+      - name: config
+        configMap:
+          name: "sysadm-conf"
+      - name: "sysadm-logs"
+        persistentVolumeClaim:
+          claimName: sysadm-logs

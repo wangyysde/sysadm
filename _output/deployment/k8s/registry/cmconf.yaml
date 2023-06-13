@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "registry"
+  labels:
+    app: registry
+  namespace: sysadm
+data:
+  config.yml: |+
+    version: 0.1
+    # Ref: https://docs.docker.com/registry/configuration/
+    log:
+      fields:
+        service: registry
+    storage:
+      cache:
+        blobdescriptor: inmemory
+      filesystem:
+        rootdirectory: /var/lib/registry
+      delete:
+        enabled: true
+    http:
+      addr: :5000
+    #  tls:
+    #    certificate: /etc/sysadm/ssl/registry/sysadm.crt
+    #    key: /etc/sysadm/ssl/registry/sysadm.key
+    #    clientcas:
+    #    - /etc/sysadm/ssl/registry/ca.crt
+      headers:
+        X-Content-Type-Options: [nosniff]
+    auth:
+      htpasswd:
+        realm: basic-realm
+        path: /etc/registry/passwd/passwd
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3

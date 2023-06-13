@@ -1,0 +1,47 @@
+version: v21.0.0
+apiVer: v1.0
+# registry url address. we should specify a url for registry server if registryctl  running behind a proxy 
+# its value will be set to request url if this value not set.
+registryUrl: sysadm.sysadm.cn:5001
+server:
+  address: 0.0.0.0
+  port: 5001
+  socket: "/opt/registryctl/run/registryctl.sock"
+log:
+  accessLog: "logs/registryctl-access.log"
+  errorLog: "logs/registryctl-error.log"
+  kind: "text"
+  level: "debug"
+  splitAccessAndError: true
+  timeStampFormat: ""
+user:
+  defaultUser: "registryctl_user"
+  defaultPassword: "registryctl_password"
+DB:
+  type: "mysql"
+  host: "mysql"
+  port: 3306
+  user: sysadm
+  password: "bwyy1679"
+  dbname: "k8ssysadm"
+  sslmode: "disable"
+  sslrootcert: ""
+  sslkey: ""
+  sslcert: ""
+registry:
+  server:
+    host: "registry"
+    port: 5000
+    tls: false
+    insecureSkipVerify: true
+  credit:
+    username: "sysadm_registry_user"
+    password: "sysadm_registry_password"
+sysadmserver:
+  apiVerion: v1.0
+  server:
+    host: "sysadm"
+    port: 8081
+    tls: false
+    insecureSkipVerify: true
+

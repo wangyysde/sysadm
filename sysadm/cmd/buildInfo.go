@@ -16,10 +16,10 @@
 */
 package cmd
 
-var gitCommitId = "d2e43b8d7e5bbe0eeb85c8a7457e857e5fd2f09b"
+var gitCommitId = "2cbe315bc5c537b04cb660f7f739a1b7184eb477"
 var branchName = "impleent-addhost"
 var gitTreeStatus = "noclean"
-var buildDateTime = "2023-06-08CST18:37:43"
+var buildDateTime = "2023-06-13CST10:42:59"
 var goVersion = "go1.19.7"
 var compiler = "gcc"
 var arch = "amd64"

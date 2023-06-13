@@ -1,0 +1,111 @@
+version: '2.3'
+services:
+  redis:
+    restart: always
+    image: harbor.bzhy.com/sysadm/redis:v2.4.3
+    container_name: redis
+    volumes:
+      - /data/k8ssysadm/pvs/redis:/var/lib/redis
+      - /data/k8ssysadm/config/redis.conf:/etc/redis.conf
+    networks:
+      sysadm:
+        ipv4_address: 10.0.0.50
+    ports:
+      - 6379:6379
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+#  registry: 
+#    restart: always
+#    image: harbor.bzhy.com/sysadm/sysadm-registry:v1.0.3
+#    container_name: registry
+#    volumes:
+#      - /data/k8ssysadm/pvs/registry:/var/lib/registry
+#      - /data/k8ssysadm/config/registry.yml:/etc/registry/config.yml
+#      - /data/k8ssysadm/config/passwd:/etc/registry/passwd
+#    networks:
+#      - harbor
+  registryctl: 
+    image: sysadm.sysadm.cn:5000/sysadm/registryctl:v1.0.2
+    container_name: registryctl
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    volumes:
+      - /data/k8ssysadm/logs/registryctl:/opt/registryctl/logs:z
+      - /data/k8ssysadm/config:/opt/registryctl/conf:z
+    ports:
+      - 5001:5001
+    networks:
+      sysadm:
+        ipv4_address: 10.0.0.51
+    dns_search: .
+#    depends_on: 
+#      - registry
+  infrastructure:
+    image: sysadm.sysadm.cn:5000/sysadm/infrastructure:v1.0.2
+    container_name: infrastructure
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    volumes:
+      - /data/k8ssysadm/logs/infrastructure:/opt/infrastructure/logs:z
+      - /data/k8ssysadm/config:/opt/infrastructure/conf:z
+    networks:
+      sysadm:
+        ipv4_address: 10.0.0.52
+    dns_search: .
+  apiserver:
+    image: sysadm.sysadm.cn:5000/sysadm/apiserver:v1.0.2
+    container_name: apiserver
+    restart: always
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    volumes:
+      - /data/k8ssysadm/logs/apiserver:/opt/apiserver/logs:z
+      - /data/k8ssysadm/config:/opt/apiserver/conf:z
+    networks:
+      sysadm: 
+        ipv4_address: 10.0.0.53
+    dns_search: .
+  sysadm:
+    restart: always
+    image: sysadm.sysadm.cn:5000/sysadm/sysadm:v1.0.2
+    container_name: sysadm
+    volumes:
+      - /data/k8ssysadm/logs/sysadm:/opt/sysadm/logs:z
+      - /data/k8ssysadm/config:/opt/sysadm/conf:z
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    networks:
+      sysadm: 
+        ipv4_address: 10.0.0.54
+    ports:
+      - 8081:8081
+networks:
+  sysadm:
+    external: true

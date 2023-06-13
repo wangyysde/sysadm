@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "registry"
+  labels:
+    app: registry
+    component: registry
+  namespace: sysadm
+spec:
+  replicas: 1
+  serviceName: "registry"
+  selector:
+    matchLabels:
+      app: registry
+      component: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+        component: registry
+    spec:
+      containers:
+      - name: registry
+        image: hb.sysadm.cn/sysadm/sysadm-registry:v1.0.3
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: registry
+          mountPath: /var/lib/registry
+        - name: config
+          mountPath: /etc/registry
+        - name: passwd
+          mountPath: /etc/registry/passwd
+      volumes:
+      - name: config
+        configMap:
+          name: "registry"
+      - name: "registry"
+        persistentVolumeClaim:
+          claimName: registry
+      - name: "passwd"
+        secret:
+          secretName: registry

@@ -20,6 +20,7 @@ package app
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/wangyysde/sysadmServer"
@@ -33,16 +34,9 @@ import (
 func addHost(c *sysadmServer.Context) {
 	var errs []sysadmerror.Sysadmerror
 
-	var requestData ApiHost
-	if e := c.ShouldBind(&requestData); e != nil {
-		msg := fmt.Sprintf("get host data err %s", e)
-		_ = apiutils.SendResponseForErrorMessage(c, 3030001, msg)
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3030001, "error", msg))
-		logErrors(errs)
-		return
-	}
+	requestData := ApiHost{}
 
-	if e, err := checkAddHostData(&requestData); e != nil {
+	if e, err := checkAddHostData(&requestData, c); e != nil {
 		errs = append(errs, err...)
 		msg := fmt.Sprintf("%s", e)
 		err = apiutils.SendResponseForErrorMessage(c, 3030002, msg)
@@ -75,7 +69,6 @@ func addHost(c *sysadmServer.Context) {
 		return
 	}
 
-	fmt.Printf("HOSTID %d\n", hostid)
 	// insert IP information into hostIP table
 	ipID, err := addManageIPToDB(tx, &requestData, hostid)
 	errs = append(errs, err...)
@@ -149,12 +142,19 @@ validating the valid of the data what have received on http context
 return nil and sysadmerror.Sysadmerror if the data validated.
 otherwise return error and  sysadmerror.Sysadmerror
 */
-func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
+func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
-	// hostname should be large 1 and less 64
-	hostname := strings.TrimSpace(data.Hostname)
-	if len(hostname) < 1 || len(hostname) > 63 {
+	// hostname should be large 1 and less 6
+	multiform, e := c.MultipartForm()
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020005, "error", "get multipart form data error %s", e))
+		return e, errs
+	}
+	formData := multiform.Value
+	hostnameSlice, ok := formData["hostname"]
+	hostname := strings.TrimSpace(hostnameSlice[0])
+	if !ok || len(hostname) < 1 || len(hostname) > 255 {
 		errMsg := fmt.Sprintf("hostname %s is not valid.", hostname)
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020006, "error", errMsg))
 		return fmt.Errorf(errMsg), errs
@@ -162,64 +162,173 @@ func checkAddHostData(data *ApiHost) (error, []sysadmerror.Sysadmerror) {
 	data.Hostname = hostname
 
 	// check userid
-	if data.Userid == 0 {
+	useridSlice, ok := formData["userid"]
+	useridStr := useridSlice[0]
+	userid, e := strconv.Atoi(useridStr)
+	if !ok || userid == 0 || e != nil {
 		errMsg := fmt.Sprintf("添加主机信息需要登陆之后操作")
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020101, "error", errMsg))
 		return fmt.Errorf(errMsg), errs
 	}
+	data.Userid = userid
 
 	// checking ip
-	ip := strings.TrimSpace(data.Ip)
-	if tmpIP, e := utils.CheckIpAddress(ip, false); tmpIP == nil {
-		return fmt.Errorf("host ip %s is not valid.", ip), e
+	ipSlice, ok := formData["ip"]
+	ip := ipSlice[0]
+	tmpIP, err := utils.CheckIpAddress(ip, false)
+	if !ok || tmpIP == nil {
+		return fmt.Errorf("host ip %s is not valid.", ip), err
 	}
 	data.Ip = ip
 
-	ipType := strings.TrimSpace(data.Iptype)
-	if ipType != "4" && ipType != "6" {
+	// checking ip type
+	ipTypeSlice, ok := formData["iptype"]
+	ipType := strings.TrimSpace(ipTypeSlice[0])
+	if !ok || ipType != "4" && ipType != "6" {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020007, "warn", "ip type (%s) is not valid. we try to look node IP as ipv4.", ipType))
 		ipType = "4"
 	}
 	data.Iptype = ipType
 
-	passiveMode := data.PassiveMode
-	if passiveMode == 0 {
+	// checking agent running mode
+	passiveModeSlice, ok := formData["passiveMode"]
+	if !ok {
+		data.PassiveMode = 0
+	} else {
+		passiveMode := strings.TrimSpace(passiveModeSlice[0])
+		if passiveMode == "1" {
+			data.PassiveMode = 1
+		} else {
+			data.PassiveMode = 0
+		}
+	}
+
+	if data.PassiveMode == 1 {
 		data.AgentPort = 0
-		data.AgentIsTls = false
-		data.InsecureSkipVerify = false
+		data.AgentIsTls = 0
+		data.InsecureSkipVerify = 0
 		data.CommandUri = ""
 		data.CommandStatusUri = ""
 		data.CommandLogsUri = ""
 		data.AgentCa = ""
-
-		//	data.ReceiveCommandUri = ""
+		data.AgentCert = ""
+		data.AgentKey = ""
 	} else {
-		port := data.AgentPort
-		if port < 1 || port > 65535 {
-			err := fmt.Errorf("Agent port(%d) is not valid", port)
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020008, "warn", "Agent port(%d) is not valid", port))
+		// get agent port if passive mode is false
+		postSlice, ok := formData["agentPort"]
+		portStr := postSlice[0]
+		port, e := strconv.Atoi(portStr)
+		if !ok || port < 1 || port > 65535 || e != nil {
+			err := fmt.Errorf("Agent port(%s) is not valid", portStr)
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009, "warn", "Agent port(%s) is not valid", portStr))
 			return err, errs
 		}
+		data.AgentPort = port
 
-		//	receiveCommandUri := strings.TrimSpace(data.ReceiveCommandUri)
-		//	if len(receiveCommandUri) < 1 {
-		//		err := fmt.Errorf("agent listen uri path %s  is not valid", receiveCommandUri)
-		//		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009, "warn", "agent listen uri path %s  is not valid", receiveCommandUri))
-		//		return err, errs
-		//	}
+		// get uris if passive mode is false
+		commandUriSlice, commandOk := formData["commandUri"]
+		statusUriSlice, statusOk := formData["commandStatusUri"]
+		logSlice, logOk := formData["commandLogsUri"]
+		if !commandOk || !statusOk || !logOk {
+			err := fmt.Errorf("parsing post data error")
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020010, "err", "%s", err))
+			return err, errs
+		}
+		data.CommandUri = strings.TrimSpace(commandUriSlice[0])
+		data.CommandStatusUri = strings.TrimSpace(statusUriSlice[0])
+		data.CommandLogsUri = strings.TrimSpace(logSlice[0])
+
+		agentIsTlsSlice, ok := formData["agentIsTls"]
+		if !ok {
+			data.AgentIsTls = 0
+		}
+		agentIsTlsStr := strings.TrimSpace(agentIsTlsSlice[0])
+		if agentIsTlsStr == "1" {
+			data.AgentIsTls = 1
+		} else {
+			data.AgentIsTls = 0
+		}
+
+		if data.AgentIsTls == 1 {
+			agentCa, _ := c.FormFile("agentCa")
+			caContent, e := utils.ReadUploadedFile(agentCa)
+			if e == nil {
+				data.AgentCa = string(caContent)
+			} else {
+				data.AgentCa = ""
+			}
+
+			agentCert, _ := c.FormFile("agentCert")
+			certContent, e := utils.ReadUploadedFile(agentCert)
+			if e != nil {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020011, "error", "upload certification file error %s", e))
+				return e, errs
+			}
+			data.AgentCert = string(certContent)
+
+			agentKey, _ := c.FormFile("agentKey")
+			keyContent, e := utils.ReadUploadedFile(agentKey)
+			if e != nil {
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020012, "error", "upload key file error %s", e))
+				return e, errs
+			}
+			data.AgentKey = string(keyContent)
+
+			insecureSkipVerifySlice, ok := formData["insecureSkipVerify"]
+			if !ok {
+				data.InsecureSkipVerify = 0
+			} else {
+				insecureSkipVerify := strings.TrimSpace(insecureSkipVerifySlice[0])
+				if insecureSkipVerify == "1" {
+					data.InsecureSkipVerify = 1
+				} else {
+					data.InsecureSkipVerify = 0
+				}
+			}
+		} else {
+			data.AgentCa = ""
+			data.AgentCert = ""
+			data.AgentKey = ""
+			data.InsecureSkipVerify = 0
+		}
 	}
 
-	osID := data.OsID
-	osVersionID := data.OsVersionID
-
-	if osID == 0 || osVersionID == 0 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020011, "error", "os and version of the os for node should be selected"))
-		return fmt.Errorf("os and version of the os for node should be selected"), errs
+	// get os ID
+	osIDSlice, ok := formData["osID"]
+	if !ok {
+		err := fmt.Errorf("parsing post data error")
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020012, "err", "%s", err))
+		return err, errs
 	}
+	osIDStr := strings.TrimSpace(osIDSlice[0])
+	osID, e := strconv.Atoi(osIDStr)
+	if osID == 0 || e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020013, "error", "the os for node should be selected"))
+		return fmt.Errorf("the os for node should be selected"), errs
+	}
+	data.OsID = osID
 
-	yumIDs := data.YumID
-	if len(yumIDs) < 1 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020012, "warn", "no yum configuration has be selected"))
+	// get os version ID
+	osVersionIDSlice, ok := formData["osversionid"]
+	if !ok {
+		err := fmt.Errorf("parsing post data error")
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020014, "err", "%s", err))
+		return err, errs
+	}
+	osVersionIDStr := strings.TrimSpace(osVersionIDSlice[0])
+	osVersionID, e := strconv.Atoi(osVersionIDStr)
+	if osVersionID == 0 || e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020015, "error", "the version of the os for node should be selected"))
+		return fmt.Errorf("the version of the os for node should be selected"), errs
+	}
+	data.OsVersionID = osVersionID
+
+	yumIDs, okForm := formData["yumid[]"]
+	if okForm && len(yumIDs) > 0 {
+		data.YumID = yumIDs
+	} else {
+		data.YumID = []string{}
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020013, "warn", "no yum configuration has be selected"))
 	}
 
 	return nil, errs
@@ -247,11 +356,20 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	insertData := make(db.FieldData, 0)
 	insertData["hostname"] = data.Hostname
 	insertData["osID"] = data.OsID
-	insertData["versionID"] = data.OsVersionID
+	insertData["osversionid"] = data.OsVersionID
 	insertData["statusID"] = 1
-	insertData["agentPassive"] = data.PassiveMode
+	insertData["ip"] = data.Ip
+	insertData["iptype"] = data.Iptype
+	insertData["passiveMode"] = data.PassiveMode
+	insertData["commandUri"] = data.CommandUri
+	insertData["commandStatusUri"] = data.CommandStatusUri
+	insertData["commandLogsUri"] = data.CommandLogsUri
+	insertData["agentIsTls"] = data.AgentIsTls
+	insertData["agentCa"] = data.AgentCa
+	insertData["agentCert"] = data.AgentCert
+	insertData["agentKey"] = data.AgentKey
+	insertData["insecureSkipVerify"] = data.InsecureSkipVerify
 	insertData["agentPort"] = data.AgentPort
-	//	insertData["receiveCommandUri"] = data.ReceiveCommandUri
 	insertData["hostid"] = nextHostid
 
 	_, err = tx.InsertData("host", insertData)

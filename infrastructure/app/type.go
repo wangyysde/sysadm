@@ -187,7 +187,7 @@ type ApiHost struct {
 	CommandLogsUri string `form:"commandLogsUri" json:"commandLogsUri" xml:"commandLogsUri"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent是否使用TLS.0表示否，否则表示是
-	AgentIsTls bool `form:"agentIsTls" json:"agentIsTls" xml:"agentIsTls"`
+	AgentIsTls int `form:"agentIsTls" json:"agentIsTls" xml:"agentIsTls"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是CA证书内容
 	AgentCa string `form:"agentCa" json:"agentCa" xml:"agentCa"`
@@ -199,7 +199,7 @@ type ApiHost struct {
 	AgentKey string `form:"agentKey" json:"agentKey" xml:"agentKey"`
 
 	// 当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不合法证书。1表示是，否则为否
-	InsecureSkipVerify bool `form:"insecureSkipVerify" json:"insecureSkipVerify" xml:"insecureSkipVerify"`
+	InsecureSkipVerify int `form:"insecureSkipVerify" json:"insecureSkipVerify" xml:"insecureSkipVerify"`
 
 	// which os has be installed on a node. the value of osid is reference to table os in DB
 	OsID int `form:"osID" json:"osID" xml:"osID"`

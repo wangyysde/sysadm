@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "registryctl"
+  labels:
+    app: registryctl
+  namespace: sysadm
+spec:
+  type: NodePort
+  ports:
+    - name: http 
+      port: 5001
+      targetPort: 5001
+      nodePort: 30000
+  selector:
+    app: registryctl
+    component: registryctl

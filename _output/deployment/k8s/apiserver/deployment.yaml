@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "apiserver"
+  labels:
+    app: apiserver
+    component: apiserver
+  namespace: sysadm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apiserver
+      component: apiserver
+  template:
+    metadata:
+      labels:
+        app: apiserver
+        component: apiserver
+    spec:
+      containers:
+      - name: apiserver
+        image: hb.sysadm.cn/sysadm/apiserver:v1.0.2
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: apiserver-logs
+          mountPath: /opt/apiserver/logs
+        - name: config
+          mountPath: /opt/apiserver/conf
+      volumes:
+      - name: config
+        configMap:
+          name: "apiserver-conf"
+      - name: "apiserver-logs"
+        persistentVolumeClaim:
+          claimName: apiserver-logs

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "apiserver"
+  labels:
+    app: apiserver
+  namespace: sysadm
+spec:
+  type: ClusterIP
+  ports:
+    - name: https
+      port: 8085
+      targetPort: 8085
+      protocol: TCP
+    - name: http
+      port: 5085
+      targetPort: 5085
+      protocol: TCP
+  selector:
+    app: apiserver
+    component: apiserver

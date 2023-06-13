@@ -21,6 +21,8 @@ package utils
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
@@ -192,4 +194,32 @@ func CheckFileWritable(f string, workingDir string, isCreate, isRmCreate bool) (
 	return f, nil
 }
 
+// ReadUploadedFile read all content of upload file .
+func ReadUploadedFile(file *multipart.FileHeader) ([]byte, error) {
+	var ret []byte
 
+	size := file.Size
+	if strings.TrimSpace(file.Filename) == "" || size == 0 {
+		return ret, fmt.Errorf("no uploaded file can be read")
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		return ret, err
+	}
+	defer src.Close()
+
+	buf := make([]byte, size)
+	for {
+		_, e := src.Read(buf)
+		if e == io.EOF {
+			ret = append(ret, buf...)
+			break
+		}
+
+		if e != nil {
+			return ret, e
+		}
+	}
+	return ret, nil
+}

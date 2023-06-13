@@ -1,0 +1,35 @@
+server:
+  address: "0.0.0.0"
+  port: 8083
+  socket: "/var/run/infrastructure.sock"
+tls:
+  isTls: false
+  ca: ""
+  cert: ""
+  key: ""
+  insecureSkipVerify: true
+log:
+  accessLog: "logs/sysadm-access.log"
+  errorLog: "logs/sysadm-error.log"
+  kind: "text"
+  level: "debug"
+  splitAccessAndError: true
+  timeStampFormat: ""
+db:
+  type: "mysql"
+  dbName: "k8ssysadm" 
+  server:
+    address: "mysql"
+    port: 3306
+    socket: ""
+  tls:
+    isTls: false
+    ca: ""
+    cert: ""
+    key: ""
+    insecureSkipVerify: true 
+  credit:
+    userName: "sysadm"
+    password: "bwyy1679"
+  maxOpenConns: 10
+  maxIdleConns: 2

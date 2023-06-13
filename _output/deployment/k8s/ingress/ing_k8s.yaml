@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/proxy-body-size: "0"
+    meta.helm.sh/release-name: sysadm
+    meta.helm.sh/release-namespace: sysadm
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  labels:
+    app: sysadm
+    app.kubernetes.io/managed-by: Helm
+  name: k8s
+  namespace: sysadm
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: k8s.sysadm.cn
+    http:
+      paths:
+      - backend:
+          service:
+            name: sysadm
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: registryctl
+            port:
+              number: 5001
+        path: /v2
+        pathType: Prefix   
+  tls:
+  - hosts:
+    - k8s.sysadm.cn
+    secretName: sysadm
