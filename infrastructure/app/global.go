@@ -19,8 +19,17 @@ package app
 
 var moduleName string = "infrastructure"
 var apiVersion string = "1.0"
-var supportApiVers = []string{"0.1","1.0"}
+var supportApiVers = []string{"0.1", "1.0", "ui"}
 var apiHandlers = map[string]handlerAdder{
 	"0.1": addHandlersFor1Dot0,
 	"1.0": addHandlersFor1Dot0,
+	"ui":  addHandlersForUi,
+}
+
+var hostStatus = map[string]string{
+	"run":         "运行",
+	"maintenance": "维护",
+	"offline":     "已下线",
+	"deleted":     "已删除",
+	"unkown":      "未知",
 }

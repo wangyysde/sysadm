@@ -18,46 +18,57 @@
 package app
 
 import (
-
-	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	"sysadm/sysadmerror"
 )
 
 /*
-   add handlers for all api version. the path of these handlers for are /api/<version>/infrastructure
-   this function called in daemonServer
+add handlers for all api version. the path of these handlers for are /api/<version>/infrastructure
+this function called in daemonServer
 */
-func (i Infrastructure)AddHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror){
+func (i Infrastructure) AddHandlers(r *sysadmServer.Engine) []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
 
 	if r == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020001,"fatal","can not add handlers to nil" ))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020001, "fatal", "can not add handlers to nil"))
 		return errs
 	}
 
-	for v, h := range apiHandlers{
-		e :=  h(r,v, i)
-		errs =  append(errs,e...)
+	for v, h := range apiHandlers {
+		e := h(r, v, i)
+		errs = append(errs, e...)
 	}
 
 	return errs
 }
 
-
-
-
-func addHandlersFor1Dot0(r *sysadmServer.Engine, version string ,i Infrastructure)([]sysadmerror.Sysadmerror){
+func addHandlersFor1Dot0(r *sysadmServer.Engine, version string, i Infrastructure) []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
 
 	moduleName := i.ModuleName
 	groupPath := "/api/" + version + "/" + moduleName
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020002,"debug","add group handlers for %s", groupPath ))
-		
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020002, "debug", "add group handlers for %s", groupPath))
+
 	v1 := r.Group(groupPath)
 	{
 		v1.POST("/add", addHost)
 	}
-	
+
 	return errs
 }
 
+// addHandlersForUi add handlers for UI. this function be called by sysadm package
+func addHandlersForUi(r *sysadmServer.Engine, version string, i Infrastructure) []sysadmerror.Sysadmerror {
+	var errs []sysadmerror.Sysadmerror
+
+	moduleName := i.ModuleName
+	groupPath := "/" + moduleName
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020010, "debug", "add group handlers for %s", groupPath))
+
+	v1 := r.Group(groupPath)
+	{
+		v1.GET("/list", listHost)
+	}
+
+	return errs
+}

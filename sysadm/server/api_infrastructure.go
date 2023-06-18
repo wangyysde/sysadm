@@ -18,23 +18,23 @@
 package server
 
 import (
-	"sysadm/config"
-	"sysadm/infrastructure/app"
-	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	"sysadm/config"
 	sysadmConfig "sysadm/config"
+	infrastructureApp "sysadm/infrastructure/app"
+	"sysadm/sysadmerror"
 )
 
-func AddInfrastructureHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror){
+func AddInfrastructureHandlers(r *sysadmServer.Engine) []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
 
 	if r == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700020001,"fatal","can not add handlers to nil" ))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700020001, "fatal", "can not add handlers to nil"))
 		return errs
 	}
 
-	dbConf := RuntimeData.RuningParas.DBConfig 
-	logConf :=  config.Log{}
+	dbConf := RuntimeData.RuningParas.DBConfig
+	logConf := config.Log{}
 	definedConfig := RuntimeData.RuningParas.DefinedConfig
 	logConf.AccessLog = definedConfig.Log.AccessLog
 	logConf.AccessLogFp = RuntimeData.RuningParas.AccessLogFp
@@ -44,34 +44,35 @@ func AddInfrastructureHandlers(r *sysadmServer.Engine)([]sysadmerror.Sysadmerror
 	logConf.Level = definedConfig.Log.Level
 	logConf.SplitAccessAndError = definedConfig.Log.SplitAccessAndError
 	logConf.TimeStampFormat = definedConfig.Log.TimeStampFormat
-	workingRoot := RuntimeData.StartParas.SysadmRootPath 
+	workingRoot := RuntimeData.StartParas.SysadmRootPath
 
-	infrastructure := app.NewInfrastructure()
-	apiServer := app.ApiServer{
+	infrastructure := infrastructureApp.NewInfrastructure()
+	apiServer := infrastructureApp.ApiServer{
 		Server: sysadmConfig.Server{
 			Address: definedConfig.ApiServer.Address,
-			Port: definedConfig.ApiServer.Port,
-			Socket: "",
+			Port:    definedConfig.ApiServer.Port,
+			Socket:  "",
 		},
 		Tls: sysadmConfig.Tls{
-			IsTls: definedConfig.ApiServer.Tls,
-			Ca: definedConfig.ApiServer.Ca,
-			Cert: definedConfig.ApiServer.Cert,
-			Key: definedConfig.ApiServer.Key,
+			IsTls:              definedConfig.ApiServer.Tls,
+			Ca:                 definedConfig.ApiServer.Ca,
+			Cert:               definedConfig.ApiServer.Cert,
+			Key:                definedConfig.ApiServer.Key,
 			InsecureSkipVerify: true,
 		},
 		ApiVersion: definedConfig.ApiServer.ApiVersion,
 	}
-	err := infrastructure.SetWorkingData(dbConf,&logConf,workingRoot,&apiServer)
-	errs = append(errs,err...)
-	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+	err := infrastructure.SetWorkingData(dbConf, &logConf, workingRoot, &apiServer)
+	errs = append(errs, err...)
+
+	infrastructureApp.SetSessionOptions(sessionOptions.Path, sessionOptions.Domain, sessionName, sessionOptions.MaxAge, sessionOptions.Secure, sessionOptions.HttpOnly)
+	infrastructureApp.SetPageInfo(numPerPage)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
 		return errs
 	}
 
 	err = infrastructure.AddHandlers(r)
-	errs = append(errs,err...)
-	
-	
+	errs = append(errs, err...)
+
 	return errs
 }
-

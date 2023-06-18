@@ -187,11 +187,11 @@ func ConvSlice2String(sourceSlice []string) string {
 	return ret
 }
 
-/* 
+/*
 * return a slice which from sourceStr using comma(,)split
-*/
+ */
 func ConvString2Slice(sourceStr string) []string {
 
-	return  strings.Split(sourceStr,",")
+	return strings.Split(sourceStr, ",")
 
 }

@@ -60,6 +60,12 @@ function enableISTLS(){
 }
 
 function infrastructurlistcheckData(){
+    var addHostproject = document.getElementById("addHostprojectid")
+    if (addHostproject[addHostproject.selectedIndex].value == 0){
+        alert("Please select a project");
+        return false;
+    }
+
     var hostname = document.getElementById("hostname");
     if(hostname.length < 1 || hostname.length >255){
         alert("you input hostname " + hostname + "is not valid.");

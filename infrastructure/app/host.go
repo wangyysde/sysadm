@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sysadm/user"
 
 	"github.com/wangyysde/sysadmServer"
 	"sysadm/db"
@@ -152,43 +153,67 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 		return e, errs
 	}
 	formData := multiform.Value
+
+	// get project ID
+	projectIDSlice, ok := formData["addHostprojectid"]
+	if !ok {
+		err := fmt.Errorf("parsing post data error")
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020101, "err", "%s", err))
+		return err, errs
+	}
+	projectIDStr := strings.TrimSpace(projectIDSlice[0])
+	projectID, e := strconv.Atoi(projectIDStr)
+	if projectID == 0 || e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020102, "error", "the project for host should be selected"))
+		return fmt.Errorf("the project for host should be selected"), errs
+	}
+	data.ProjectID = projectID
+
 	hostnameSlice, ok := formData["hostname"]
-	hostname := strings.TrimSpace(hostnameSlice[0])
-	if !ok || len(hostname) < 1 || len(hostname) > 255 {
-		errMsg := fmt.Sprintf("hostname %s is not valid.", hostname)
+	errMsg, hostname := "", ""
+	if !ok {
+		errMsg = fmt.Sprintf("can not got hostname")
+	} else {
+		hostname = strings.TrimSpace(hostnameSlice[0])
+		if len(hostname) < 1 || len(hostname) > 255 {
+			errMsg = fmt.Sprintf("hostname %s is not valid.", hostname)
+		}
+	}
+	if errMsg != "" {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020006, "error", errMsg))
-		return fmt.Errorf(errMsg), errs
+		return fmt.Errorf("%s", errMsg), errs
 	}
 	data.Hostname = hostname
 
 	// check userid
+	userid := 0
+	errMsg = ""
 	useridSlice, ok := formData["userid"]
-	useridStr := useridSlice[0]
-	userid, e := strconv.Atoi(useridStr)
-	if !ok || userid == 0 || e != nil {
-		errMsg := fmt.Sprintf("添加主机信息需要登陆之后操作")
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020101, "error", errMsg))
-		return fmt.Errorf(errMsg), errs
+	if ok {
+		tmpid := useridSlice[0]
+		tmpUserid, e := strconv.Atoi(tmpid)
+		if e == nil {
+			userid = tmpUserid
+		}
+	}
+	if userid == 0 {
+		tmpid, e := user.GetSessionValue(c, "userid", WorkingData.sessionOption.sessionName)
+		if e == nil {
+			tmpUserid, e := utils.Interface2Int(tmpid)
+			if e == nil {
+				userid = tmpUserid
+			} else {
+				errMsg = fmt.Sprintf("添加主机信息需要登陆之后操作")
+			}
+		} else {
+			errMsg = fmt.Sprintf("添加主机信息需要登陆之后操作")
+		}
+	}
+	if errMsg != "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020007, "error", errMsg))
+		return fmt.Errorf("%s", errMsg), errs
 	}
 	data.Userid = userid
-
-	// checking ip
-	ipSlice, ok := formData["ip"]
-	ip := ipSlice[0]
-	tmpIP, err := utils.CheckIpAddress(ip, false)
-	if !ok || tmpIP == nil {
-		return fmt.Errorf("host ip %s is not valid.", ip), err
-	}
-	data.Ip = ip
-
-	// checking ip type
-	ipTypeSlice, ok := formData["iptype"]
-	ipType := strings.TrimSpace(ipTypeSlice[0])
-	if !ok || ipType != "4" && ipType != "6" {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020007, "warn", "ip type (%s) is not valid. we try to look node IP as ipv4.", ipType))
-		ipType = "4"
-	}
-	data.Iptype = ipType
 
 	// checking agent running mode
 	passiveModeSlice, ok := formData["passiveMode"]
@@ -203,6 +228,37 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 		}
 	}
 
+	// checking ip
+	ip := ""
+	ipSlice, ok := formData["ip"]
+	if ok {
+		tmpIpStr := ipSlice[0]
+		tmpIP, _ := utils.CheckIpAddress(tmpIpStr, false)
+		if tmpIP != nil {
+			ip = tmpIpStr
+		}
+	}
+	if data.PassiveMode == 0 && ip == "" {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020008, "error", "host ip must be specified when agent run in active mode"))
+		return fmt.Errorf("host ip must be specified when agent run in active mode"), errs
+	}
+	data.Ip = ip
+
+	// checking ip type
+	ipType := ""
+	ipTypeSlice, ok := formData["iptype"]
+	if ok {
+		tmpIpType := strings.TrimSpace(ipTypeSlice[0])
+		if tmpIpType == "4" || tmpIpType == "6" {
+			ipType = tmpIpType
+		}
+	}
+	if data.Ip != "" && (ipType != "4" || ipType != "6") {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020009, "error", "host ip type(%s) is not valid", ipType))
+		return fmt.Errorf("host ip type(%s) is not valid", ipType), errs
+	}
+	data.Iptype = ipType
+
 	if data.PassiveMode == 1 {
 		data.AgentPort = 0
 		data.AgentIsTls = 0
@@ -215,8 +271,8 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 		data.AgentKey = ""
 	} else {
 		// get agent port if passive mode is false
-		postSlice, ok := formData["agentPort"]
-		portStr := postSlice[0]
+		portSlice, ok := formData["agentPort"]
+		portStr := portSlice[0]
 		port, e := strconv.Atoi(portStr)
 		if !ok || port < 1 || port > 65535 || e != nil {
 			err := fmt.Errorf("Agent port(%s) is not valid", portStr)
@@ -227,16 +283,25 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 
 		// get uris if passive mode is false
 		commandUriSlice, commandOk := formData["commandUri"]
-		statusUriSlice, statusOk := formData["commandStatusUri"]
-		logSlice, logOk := formData["commandLogsUri"]
-		if !commandOk || !statusOk || !logOk {
-			err := fmt.Errorf("parsing post data error")
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020010, "err", "%s", err))
-			return err, errs
+		if !commandOk {
+			data.CommandUri = ""
+		} else {
+			data.CommandUri = strings.TrimSpace(commandUriSlice[0])
 		}
-		data.CommandUri = strings.TrimSpace(commandUriSlice[0])
-		data.CommandStatusUri = strings.TrimSpace(statusUriSlice[0])
-		data.CommandLogsUri = strings.TrimSpace(logSlice[0])
+
+		statusUriSlice, statusOk := formData["commandStatusUri"]
+		if !statusOk {
+			data.CommandStatusUri = ""
+		} else {
+			data.CommandStatusUri = strings.TrimSpace(statusUriSlice[0])
+		}
+
+		logSlice, logOk := formData["commandLogsUri"]
+		if !logOk {
+			data.CommandLogsUri = ""
+		} else {
+			data.CommandLogsUri = strings.TrimSpace(logSlice[0])
+		}
 
 		agentIsTlsSlice, ok := formData["agentIsTls"]
 		if !ok {
@@ -335,7 +400,8 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 }
 
 /*
-addHostToDB add host information into DB
+	addHostToDB add host information into DB
+
 return hostid(which just added) and []sysadmerror.Sysadmerror
 otherwise return 0  and []sysadmerror.Sysadmerror
 */
@@ -354,10 +420,12 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 	}
 
 	insertData := make(db.FieldData, 0)
+	insertData["userid"] = data.Userid
+	insertData["projectid"] = data.ProjectID
 	insertData["hostname"] = data.Hostname
 	insertData["osID"] = data.OsID
 	insertData["osversionid"] = data.OsVersionID
-	insertData["statusID"] = 1
+	insertData["status"] = "run"
 	insertData["ip"] = data.Ip
 	insertData["iptype"] = data.Iptype
 	insertData["passiveMode"] = data.PassiveMode

@@ -31,20 +31,37 @@ type ApiServer struct {
 	ApiVersion string        `form:"apiVersion" json:"apiVersion" yaml:"apiVersion" xml:"apiVersion"`
 }
 
+type sessionOption struct {
+	path        string
+	domain      string
+	sessionName string
+	maxAge      int
+	secure      bool
+	httpOnly    bool
+}
+
+type pageInfo struct {
+	// how many hosts information have be display on a page when list host infromation
+	numPerPage int
+}
+
 // Saving running data of an instance
 type RuningData struct {
-	dbConf      *sysadmDB.DbConfig
-	logConf     *config.Log
-	apiServer   *ApiServer
-	workingRoot string
+	dbConf        *sysadmDB.DbConfig
+	logConf       *config.Log
+	apiServer     *ApiServer
+	workingRoot   string
+	sessionOption sessionOption
+	pageInfo      pageInfo
 }
 
 // Initating working data for an instance
 var WorkingData RuningData = RuningData{
-	dbConf:      nil,
-	logConf:     nil,
-	apiServer:   nil,
-	workingRoot: "",
+	dbConf:        nil,
+	logConf:       nil,
+	apiServer:     nil,
+	workingRoot:   "",
+	sessionOption: sessionOption{},
 }
 
 // Saving the status of a host
@@ -159,6 +176,9 @@ type handlerAdder func(*sysadmServer.Engine, string, Infrastructure) []sysadmerr
 
 // define host information for API server using
 type ApiHost struct {
+	// project id in host table
+	ProjectID int `form:"projectid" json:"projectid" xml:"projectid"`
+
 	// host id in host table
 	HostID int `form:"hostid" json:"hostid" xml:"hostid"`
 

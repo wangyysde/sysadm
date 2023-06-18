@@ -224,8 +224,24 @@
 <div>
 	<div class="selectForm">
 		<form id="InfrastructureAdd" name="InfrastructureAdd" method="post" target="_self" onsubmit="return false">
+			<select name="projectid" onChange="projectChanged(this.options[this.options.selectedIndex].value)">
+				{{range $index,$line := .projectinfo}}
+				{{range $id, $name := $line}}
+				{{if eq $haveSelectProject $id }}
+				<option value="{{ $id }}" selected> {{ $name }} </option>
+				{{else}}
+				<option value="{{ $id }}" > {{ $name }} </option>
+				{{end}}
+				{{end}}
+				{{end}}
+			</select> &nbsp;
 			<button id="buttonAdd" onclick="infrastructureAddHost() "> + 添加节点</button>&nbsp;
 			<button id="buttonDel" onclick="delInfrastructure() " disabled> X 删除节点</button>
+		</form>
+	</div>
+	<div class="searchForm">
+		<form id="searchForm" name="search" method="post" target="_self" onsubmit="return false">
+			<input type="text" name="searchKey" placeholder="Search..." autocomplete="off" onblur="doSearch(this.value)" />
 		</form>
 	</div>
 </div>
@@ -234,43 +250,27 @@
 	<table class="list-table">
 		<tr>
 			<th width="5%" align="left"> 
-			<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllCheckbox(this.checked)'>
+			<input type="checkbox" id="hostidth" name="hostidth[]" onclick='selectAllCheckbox(this.checked)'>
 			</th>
-			<th width="10%">名称</th>
-			<th width="10%" >操作系统</th>
-			<th width="5%">版本</th>
-			<th width="10%">类别</th>
-			<th width="10%">用途</th>
-			<th width="5%">类型</th>
+			<th width="20%">主机名称</th>
+			<th width="10%" >操作系统/版本</th>
+			<th width="15%">管理IP</th>
+			<th width="15%">所属项目</th>
+			<th width="20%">所属集群</th>
 			<th width="5%">状态</th>
-			<th >地址</th>
+			<th >操作</th>
 		</tr>
-		{{range $index,$line := .yumlist}}
+		{{range $index,$line := .HostData}}
 			<tr>
-		   <td width="5%"> <input type="checkbox"  name="yumid[]" value="{{ $line.Id }}" onclick='selectCheckbox()'></td> 
-			<td > {{ $line.YumName }} </td>
-			<td> {{ $line.OsName }} </td> 
-			<td> {{ $line.VersionName }} </td>
-			<td> {{ $line.TypeName }} </td>
-			<td> {{ $line.Catalog }} </td>
+		   <td width="5%"> <input type="checkbox"  name="hostid[]" value="{{ $line.hostid }}" onclick='selectCheckbox()'></td>
+			<td > {{ $line.hostname }} </td>
+			<td> {{ $line.OsVerInfo }} </td>
+			<td> {{ $line.ip }} </td>
+			<td> {{ $line.projectName }} </td>
+			<td> {{ $line.k8sclusterid }} </td>
+			<td> {{ $line.statusText }} </td>
 			<td>
-				{{ if eq $line.Kind "0"}}
-				直连
-				{{ else if eq $line.Kind "1"}}
-				代理
-				{{ else }}
-				本地
-				{{ end }}
-			</td>
-			<td>
-				{{ if eq $line.Enabled "0"}}
-				禁用
-				{{ else }}
-				启用
-				{{ end }}
-			</td>
-			<td>
-				{{ $line.Base_url }}
+				<a href="/infrastructure/hostdetails?hosid={{ $line.hostid }}" target="_blank">详情</a>
 			</td>
 			</tr>
 		{{end}}
@@ -288,6 +288,21 @@
 <div class="yum-add" id="addform">
 	<form id="infrastructureAddHostForm" name="infrastructureAddHostForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
 		<div class="popform-title">添加新节点</div>
+		<div class="yum-item">
+			所属项目：
+			<select name="addHostprojectid" id="addHostprojectid">
+				{{range $index,$line := .projectinfo}}
+				{{range $id, $name := $line}}
+				{{if eq $haveSelectProject $id }}
+				<option value="{{ $id }}" style="background-color: #045283;" selected > {{ $name }} </option>
+				{{else}}
+				<option value="{{ $id }}" style="background-color: #045283;" > {{ $name }} </option>
+				{{end}}
+				{{end}}
+				{{end}}
+			</select> &nbsp;
+		</div>
+
 		<div class="yum-item">
 			节点主机名： <input id="hostname" type="text" name="hostname"> 用于节点管理和识别的主机名
 			<input id="userid" type="hidden" name="userid" value="{{.userid}}">

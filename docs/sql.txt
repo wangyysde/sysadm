@@ -152,10 +152,12 @@ CREATE TABLE `yum` (
 
 CREATE TABLE `host` (
   `hostid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'hostid identified a host',
+  `userid` int(10) NOT NULL COMMENT '主机所属的用户ID',
+  `projectid` int(10) NOT NULL COMMENT '主机所属的项目ID',
   `hostname` varchar(255) NOT NULL COMMENT 'host name of OS',
   `osID` int(3) NOT NULL COMMENT 'which OS distrubition,such as centos,readhat, ubantu',
   `osversionid` int(11) NOT NULL COMMENT 'version id identified OS version ',
-  `statusID` int(3) NOT NULL COMMENT 'identifying a host status',
+  `status` varchar(20) NOT NULL COMMENT '主机状态',
   `ip` varchar(255) DEFAULT NULL COMMENT '当apiserver是以主动模式运行时，连接客户端agent的地址或域名',
   `iptype` tinyint(1) DEFAULT '4' COMMENT '主机的IP地址类型4表示ipv4 6表示IPV6',
   `passiveMode` tinyint(1) DEFAULT '0' COMMENT '是否被动模式，0表示主动模式 1表示被动模式',
@@ -168,20 +170,15 @@ CREATE TABLE `host` (
   `agentKey` text COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,本子段是密钥内容',
   `insecureSkipVerify` tinyint(1) DEFAULT '1' COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不\n   合法证书。1表示是，否则为否',
   `agentPort` int(5) DEFAULT '0' COMMENT 'agent listen port when it runing in active\n  mode',
+  `k8sclusterid` varchar(20) DEFAULT NULL COMMENT '节点所属集群ID，如果为空表示节点不隶属于任何K8S集群',
   PRIMARY KEY (`hostid`),
-  KEY `FK_status` (`statusID`),
+  KEY `FK_status` (`status`),
   KEY `FK_osID` (`osID`),
   KEY `FK_version` (`osversionid`),
   CONSTRAINT `FK_osID` FOREIGN KEY (`osID`) REFERENCES `os` (`osID`),
-  CONSTRAINT `FK_status` FOREIGN KEY (`statusID`) REFERENCES `hostStatus` (`statusID`) ON DELETE NO ACTION,
   CONSTRAINT `FK_version` FOREIGN KEY (`osversionid`) REFERENCES `version` (`versionID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
-
-INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '1','running','running as normal');
-INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '2','maintenance','maintenance');
-INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '3','offline','offline');
-INSERT INTO `hostStatus`(`statusID`,`name`,`description`) VALUES ( '4','remove','host has be removed');
 
 CREATE TABLE `hostIP` (
   `ipID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ipID identified a IP adress of host',
