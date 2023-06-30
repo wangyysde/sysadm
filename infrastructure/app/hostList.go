@@ -101,10 +101,18 @@ func listHost(c *sysadmServer.Context) {
 		}
 		templateFile := "showmessage.html"
 		c.HTML(http.StatusOK, templateFile, errorTplData)
-
 		return
 	}
 
+	if hostCount < 1 {
+		logErrors(errs)
+		errorTplData := map[string]interface{}{
+			"errormessage": "系统中没有查询到主机信息",
+		}
+		templateFile := "showmessage.html"
+		c.HTML(http.StatusOK, templateFile, errorTplData)
+		return
+	}
 	// caclusiong page information for HTML
 
 	// get host list data
@@ -165,6 +173,12 @@ func listHost(c *sysadmServer.Context) {
 
 		return
 	}
+
+	selectedprojectid := requestData["projectid"]
+	if selectedprojectid == "" {
+		selectedprojectid = "0"
+	}
+	tplData["selectedprojectid"] = selectedprojectid
 
 	templateFile := "infrastructurelist.html"
 	c.HTML(http.StatusOK, templateFile, tplData)

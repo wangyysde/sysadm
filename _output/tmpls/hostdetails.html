@@ -1,0 +1,53 @@
+
+<div class="popform-title">节点详情</div>
+<div class="yum-item">
+	所属项目：<span id="projectname"></span> &nbsp;&nbsp; 主机名：{{ .hostData.hostname }} &nbsp; &nbsp;操作系统/版本: <span id="hostosinfo"></span>
+</div>
+<div class="yum-item">
+<span>管理IP: {{ .hostData.ip }} </span> &nbsp;&nbsp; 运行状态: <span>{{ .hostData.statusMsg }} </span> &nbsp;&nbsp;
+	运行模式: {{ .hostData.modeStr }}
+</div>
+<div class="yum-item">
+	所属集群: {{ .hostData.offlineTime }} &nbsp;&nbsp; agent端口: {{ .hostData.agentPortStr }}&nbsp;&nbsp;
+</div>
+<div class="yum-item">
+	 创建时间: {{ .hostData.createTime }} &nbsp;&nbsp;
+	下线时间： {{ .hostData.offlineTime }} 删除时间: {{ .hostData.deleteTime }} &nbsp;&nbsp;
+
+</div>
+<div class="yum-item">
+	 命令接收地址: {{ .hostData.commandUri }} &nbsp;&nbsp;
+	命令状态查询地址: {{ .hostData.commandStatusUri }}  &nbsp;&nbsp; 日志查询地址: {{ .hostData.commandLogsUri }}
+</div>
+
+<div class="popform-button">
+	<button id="closehostdetails" onclick="closeDetailsPage() ">关闭</button>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var detailshostid = document.getElementById("detailshostid");
+		hostid = detailshostid.value;
+		var projectName = document.getElementById("projectname");
+		var addHostprojectid = document.getElementById("addHostprojectid");
+		var hostProjectid = projectHost[hostid];
+		for (i = 0; i < addHostprojectid.options.length; i++) {
+			var projectid = addHostprojectid.options[i].value;
+			if (projectid == hostProjectid) {
+				var name = addHostprojectid.options[i].innerHTML;
+				projectName.innerHTML = name;
+			}
+		}
+
+		var objHostosinfo = document.getElementById("hostosinfo");
+		var osVersionInfo = osVersionHost[hostid];
+		objHostosinfo.innerHTML = osVersionInfo;
+
+		var maskLayer = document.getElementById("maskLayer");
+		maskLayer.style.zIndex = 2000
+		var detailHost = document.getElementById("detailHost");
+		detailHost.style.display = "block";
+		detailHost.style.zIndex = 2100;
+		detailHost.focus();
+	})
+</script>

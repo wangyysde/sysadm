@@ -52,6 +52,7 @@ func addHandlersFor1Dot0(r *sysadmServer.Engine, version string, i Infrastructur
 	v1 := r.Group(groupPath)
 	{
 		v1.POST("/add", addHost)
+		v1.POST("/delhost", delHost)
 	}
 
 	return errs
@@ -68,6 +69,8 @@ func addHandlersForUi(r *sysadmServer.Engine, version string, i Infrastructure) 
 	v1 := r.Group(groupPath)
 	{
 		v1.GET("/list", listHost)
+		v1.GET("/hostdetails", detailHost)
+		v1.POST("/delhost", delHost)
 	}
 
 	return errs

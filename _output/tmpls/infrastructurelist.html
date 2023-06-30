@@ -2,6 +2,12 @@
 <script type="text/javascript" src="/js/infrastructurelist.js"></script>
 
 <script type="text/javascript">
+	var projectHost = new Array();
+	var osVersionHost = new Array();
+	{{range $index,$line := .HostData}}
+	projectHost[{{ $line.hostid }}] = {{ $line.projectid }};
+	osVersionHost[{{ $line.hostid }}] = {{ $line.OsVerInfo }};
+	{{ end }}
 
 	function ChangeVersion(osid){
 		var osVerList = new Array();
@@ -87,126 +93,6 @@
 		$('#container').load("/infrastructure/list");
 	}
 
-    function delYumJS() {
-        if (ownerid.value == "") {
-            alert("删除镜像需要登录到系统!");
-            return
-        }
-		var chklist = document.getElementsByName('yumid[]');
-		var checkedItem = 0
-		for (var i = 0; i < chklist.length; i++) {
-			if (chklist[i].checked) {
-				checkedItem = checkedItem + 1;
-			}
-		}
-
-        if (checkedItem == 0) {
-            alert("没有Yum信息可以删除!");
-            return
-        }
-        var ok = confirm("确认需要删除这些Yum信息吗？");
-        if (!ok) {
-            return
-        }
-        $.ajax({
-			statusCode: {
-				500: function () {
-				//	refreshPage();
-					var tip = document.getElementById("tip");
-					tip.innerHTML = "出现服务器端错误，请稍后再试";
-					tip.style.display = "block";
-					setTimeout(function () {
-						var tip = document.getElementById("tip");
-						tip.style.display = "none";
-					}, 5000);
-				},
-				501: function () {
-				//	refreshPage();
-					var tip = document.getElementById("tip");
-					tip.innerHTML = "出现服务器端错误，请稍后再试";
-					tip.style.display = "block";
-					setTimeout(function () {
-						var tip = document.getElementById("tip");
-						tip.style.display = "none";
-					}, 5000);
-				},
-				502: function() {
-				//	refreshPage();
-					var tip = document.getElementById("tip");
-					tip.innerHTML = "出现服务器端错误，请稍后再试";
-					tip.style.display = "block";
-					setTimeout(function () {
-						var tip = document.getElementById("tip");
-						tip.style.display = "none";
-					}, 5000);
-				},
-				
-			},
-            type: "POST",
-            dataType: "json",
-            url: "/registryctl/yumdel",
-            data: $('#delYum').serialize(), // 你的formid
-            //async: false,
-            error: function(xmlObj, request) {
-                var errMsg = "";
-                if (xmlObj.responseText == null) {
-                    errMsg = "Connection error";
-                } else {
-                    errMsg = xmlObj.responseText;
-                }
-                var tip = document.getElementById("tip");
-                tip.innerHTML = errMsg;
-                tip.style.display = "block";
-                setTimeout(function() {
-                    var tip = document.getElementById("tip");
-                    tip.style.display = "none";
-                }, 5000);
-            },
-            success: function(result) {
-                var tip = document.getElementById("tip");
-                if (result.status) {
-                    tip.style.display = "block";
-                    tip.style.backgroundColor = "#1f6f4a";
-                    tip.style.display = "block";
-                    var messageArray = result.message;
-                    var msg = "未知错误";
-                    if (messageArray[0]) {
-                        var msgLine = messageArray[0];
-                        msg = window.atob(msgLine["msg"]);
-
-                    }
-                    tip.innerHTML = msg;
-
-                    refreshPage();
-                    setTimeout(function() {
-                        var tip = document.getElementById("tip");
-                        tip.style.display = "none";
-                    }, 5000);
-                } else {
-                    var messageArray = result.message;
-                    var msg = "未知错误";
-                    if (messageArray[0]) {
-                        var msgLine = messageArray[0];
-                        msg = window.atob(msgLine["msg"]);
-
-                    }
-                    tip.innerHTML = msg;
-                    tip.style.display = "block";
-                    setTimeout(function() {
-                        var tip = document.getElementById("tip");
-                        tip.style.display = "none";
-                    }, 5000);
-                }
-            }
-        });
-
-    }
-
-	function doSearch(searchKey) {
-		var urlParam = "?searchKey=" + searchKey;
-		changePage(urlParam);
-	}
-
 </script>
 
 <section class="content-header">
@@ -236,7 +122,7 @@
 				{{end}}
 			</select> &nbsp;
 			<button id="buttonAdd" onclick="infrastructureAddHost() "> + 添加节点</button>&nbsp;
-			<button id="buttonDel" onclick="delInfrastructure() " disabled> X 删除节点</button>
+			<button id="buttonDel" onclick="delHostJs() " disabled> X 删除节点</button>
 		</form>
 	</div>
 	<div class="searchForm">
@@ -246,11 +132,12 @@
 	</div>
 </div>
 
-	<form id="delYum" method="post" target="_self" onsubmit="return false">
+	<form id="hostList" method="post" target="_self" onsubmit="return false">
 	<table class="list-table">
 		<tr>
 			<th width="5%" align="left"> 
-			<input type="checkbox" id="hostidth" name="hostidth[]" onclick='selectAllCheckbox(this.checked)'>
+			<input type="checkbox" id="hostidth" name="hostidth[]" onclick='selectAllHostCheckbox(this.checked)'>
+			<input type="hidden" name="detailshostid" id="detailshostid" value="0">
 			</th>
 			<th width="20%">主机名称</th>
 			<th width="10%" >操作系统/版本</th>
@@ -262,7 +149,7 @@
 		</tr>
 		{{range $index,$line := .HostData}}
 			<tr>
-		   <td width="5%"> <input type="checkbox"  name="hostid[]" value="{{ $line.hostid }}" onclick='selectCheckbox()'></td>
+		   <td width="5%"> <input type="checkbox"  id="hostid[]" name="hostid[]" value="{{ $line.hostid }}" onclick='selectHostCheckbox(this.checked)'></td>
 			<td > {{ $line.hostname }} </td>
 			<td> {{ $line.OsVerInfo }} </td>
 			<td> {{ $line.ip }} </td>
@@ -270,7 +157,8 @@
 			<td> {{ $line.k8sclusterid }} </td>
 			<td> {{ $line.statusText }} </td>
 			<td>
-				<a href="/infrastructure/hostdetails?hosid={{ $line.hostid }}" target="_blank">详情</a>
+				<a href="#" onclick='displayHostDetails({{ $line.hostid }})'> 详情 </a>
+		<!--		<a href="/infrastructure/hostdetails?hosid={{ $line.hostid }}" target="_blank">详情</a> -->
 			</td>
 			</tr>
 		{{end}}
@@ -378,4 +266,7 @@
 			<button id="cacel " onclick="cancelAddHost() ">关闭</button>
 		</div>
 	</form>
+</div>
+
+<div class="yum-add" id="detailHost">
 </div>

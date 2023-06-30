@@ -171,6 +171,9 @@ CREATE TABLE `host` (
   `insecureSkipVerify` tinyint(1) DEFAULT '1' COMMENT '当apiserver以主动模式运行时，apiserver连接agent时主动采用TLS,指定是否跳过检查不\n   合法证书。1表示是，否则为否',
   `agentPort` int(5) DEFAULT '0' COMMENT 'agent listen port when it runing in active\n  mode',
   `k8sclusterid` varchar(20) DEFAULT NULL COMMENT '节点所属集群ID，如果为空表示节点不隶属于任何K8S集群',
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '主机创建时间截',
+  `offlineStartTime` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '主机下线开始时间',
+  `deletetime` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '主机删除时间',
   PRIMARY KEY (`hostid`),
   KEY `FK_status` (`status`),
   KEY `FK_osID` (`osID`),
@@ -234,8 +237,16 @@ CREATE TABLE `hostUser` (
 CREATE TABLE `commandDefined` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '定义的命令ID值',
     `command` varchar(64) NOT NULL COMMENT '命令名称，不能为空，且在本表内不能有重复',
-
-)
+    `descriptions` varchar(255) comment '命令描述，一般包含功能和执行方法',
+    `synchronized` tinyint(1) DEFAULT '0' COMMENT '指示命令是否是属地同步命令。所谓同步命令是指，命令能够快速执行完成，即能在一个HTTP会话请求超时之前（一般超时时间为几秒内）执行完成的命令。0表示同步命令，否则为异步命令',
+    `osID` int(3) NOT NULL COMMENT '适应的操作系统类型',
+    `osversionid` int(11) NOT NULL COMMENT '适应的操作系统版本',
+    `dependent` int(11) not null default 0 comment '命令是否依赖于其它命令，0表示不依赖于其它命令的独立命令,否则本字段记录被依赖命令的id',
+    `type` tinyint(1) not null default 0 comment '0表示内嵌命令,1系统命令, 2 脚本或批处理程序',
+    `mustParas` tinyint(1) not null default 0 comment '命令的执行是否必须带至少一个参数，0表示否，1表示1',
+    `deprecated` tinyint(1) not null default 0 comment '是否废弃，0表示否，1表示是',
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC
 
 
 /* 存储节点上要执行和已经执行的命令的信息*/

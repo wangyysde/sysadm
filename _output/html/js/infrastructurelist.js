@@ -318,3 +318,209 @@ function cancelAddHost() {
     var maskLayer = document.getElementById("maskLayer");
     maskLayer.style.zIndex = 0
 }
+
+function changePage(urlparas) {
+    var url = "/infrastructure/list" + urlparas;
+    $('#container').load(url);
+}
+
+function projectChanged(projectid) {
+    var urlParam = "?projectid="+projectid;
+    changePage(urlParam);
+}
+
+function doSearch(searchKey) {
+    var urlParam = "?searchKey=" + searchKey;
+    changePage(urlParam);
+}
+
+// check or uncheck all host checkbox on host list page
+function selectAllHostCheckbox(isChecked) {
+    if(isChecked) {
+        var chklist = document.getElementsByName('hostid[]');
+        for (var i = 0; i < chklist.length; i++) {
+            chklist[i].checked = true;
+        }
+        var buttonDel = document.getElementById("buttonDel")
+        buttonDel.style.color = "#ffffff";
+        buttonDel.style.background = "#3c8dbc";
+        buttonDel.disabled = false;
+    } else {
+        var chklist = document.getElementsByName('hostid[]');
+        for (var i = 0; i < chklist.length; i++) {
+            chklist[i].checked = false;
+        }
+        var buttonDel = document.getElementById("buttonDel")
+        buttonDel.style.color = "#3c8dbc";
+        buttonDel.style.background = "#cbd8df";
+        buttonDel.disabled = true;
+    }
+}
+
+function selectHostCheckbox(isChecked){
+    if(isChecked){
+        var buttonDel = document.getElementById("buttonDel")
+        buttonDel.style.color = "#ffffff";
+        buttonDel.style.background = "#3c8dbc";
+        buttonDel.disabled = false;
+
+        var chklist = document.getElementsByName('hostid[]');
+        var allChecked = true;
+        for (var i = 0; i < chklist.length; i++) {
+            if(!chklist[i].checked){
+                allChecked = false;
+            }
+        }
+        if(allChecked){
+            var hostth = document.getElementById("hostidth");
+            hostth.checked = true;
+        }
+        return;
+    }
+
+    var allNotChecked = true;
+    var chklist = document.getElementsByName('hostid[]');
+    for (var i = 0; i < chklist.length; i++) {
+        if(chklist[i].checked){
+            allNotChecked = false;
+        }
+    }
+
+    if(allNotChecked){
+        var buttonDel = document.getElementById("buttonDel")
+        buttonDel.style.color = "#3c8dbc";
+        buttonDel.style.background = "#cbd8df";
+        buttonDel.disabled = true;
+        var hostth = document.getElementById("hostidth");
+        hostth.checked = false;
+    }
+}
+
+function delHostJs() {
+
+    var chklist = document.getElementsByName('hostid[]');
+    var checkedItem = 0;
+    for (var i = 0; i < chklist.length; i++) {
+        if (chklist[i].checked) {
+            checkedItem = checkedItem + 1;
+        }
+    }
+
+    if (checkedItem == 0) {
+        alert("没有主机信息可以删除!");
+        return
+    }
+    var ok = confirm("确认需要删除这些主机信息吗？");
+    if (!ok) {
+        return
+    }
+    $.ajax({
+        statusCode: {
+            500: function () {
+                //	refreshPage();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = "出现服务器端错误，请稍后再试";
+                tip.style.display = "block";
+                setTimeout(function () {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            501: function () {
+                //	refreshPage();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = "出现服务器端错误，请稍后再试";
+                tip.style.display = "block";
+                setTimeout(function () {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+            502: function() {
+                //	refreshPage();
+                var tip = document.getElementById("tip");
+                tip.innerHTML = "出现服务器端错误，请稍后再试";
+                tip.style.display = "block";
+                setTimeout(function () {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            },
+
+        },
+        type: "POST",
+        dataType: "json",
+        url: "/infrastructure/delhost",
+        data: $('#hostList').serialize(), // 你的formid
+        //async: false,
+        error: function(xmlObj, request) {
+            var errMsg = "";
+            if (xmlObj.responseText == null) {
+                errMsg = "Connection error";
+            } else {
+                errMsg = xmlObj.responseText;
+            }
+            var tip = document.getElementById("tip");
+            tip.innerHTML = errMsg;
+            tip.style.display = "block";
+            setTimeout(function() {
+                var tip = document.getElementById("tip");
+                tip.style.display = "none";
+            }, 5000);
+        },
+        success: function(result) {
+            var tip = document.getElementById("tip");
+            if (result.status) {
+                tip.style.display = "block";
+                tip.style.backgroundColor = "#1f6f4a";
+                tip.style.display = "block";
+                var messageArray = result.message;
+                var msg = "未知错误";
+                if (messageArray[0]) {
+                    var msgLine = messageArray[0];
+                    msg = window.atob(msgLine["msg"]);
+
+                }
+                tip.innerHTML = msg;
+
+                refreshPage();
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            } else {
+                var messageArray = result.message;
+                var msg = "未知错误";
+                if (messageArray[0]) {
+                    var msgLine = messageArray[0];
+                    msg = window.atob(msgLine["msg"]);
+
+                }
+                tip.innerHTML = msg;
+                tip.style.display = "block";
+                setTimeout(function() {
+                    var tip = document.getElementById("tip");
+                    tip.style.display = "none";
+                }, 5000);
+            }
+        }
+    });
+
+}
+
+function displayHostDetails(hostid){
+    var url = "/infrastructure/hostdetails?hostid=" + hostid;
+    var detailshostid = document.getElementById("detailshostid");
+    detailshostid.value = hostid;
+
+    $('#detailHost').load(url);
+
+}
+
+function closeDetailsPage() {
+    var detailHost = document.getElementById("detailHost");
+    detailHost.style.display = "none";
+    detailHost.style.zIndex = 0;
+    var maskLayer = document.getElementById("maskLayer");
+    maskLayer.style.zIndex = 0
+}
