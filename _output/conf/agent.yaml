@@ -70,30 +70,30 @@ agent:
     port: 5443
     socket: ""
   # redis server parameters
-  redis:
-    # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
-    mode: 1
-    # master server name
-    master: "master"
-    # redis server address and port
-    addrs: "192.53.117.73:6379"
-    # redis server username
-    username: ""
-    # redis server password
-    password: ""
-    # sentinel username
-    sentinelUsername: ""
-    # sentinel password
-    sentinelPassword: ""
-    # db name. default db if the value of this field is zero
-    db: 0
-     # tls parameters for agent when agent running as daemon.
-    tls:
-      isTls: true
-      ca: ""
-      cert: ""
-      key: ""
-      insecureSkipVerify: false
+  # redis:
+  #  # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
+  #  mode: 1
+  #  # master server name
+  #  master: "master"
+  #  # redis server address and port
+  #  addrs: "192.53.117.73:6379"
+  #  # redis server username
+  #  username: ""
+  #  # redis server password
+  #  password: ""
+  #  # sentinel username
+  #  sentinelUsername: ""
+  #  # sentinel password
+  #  sentinelPassword: ""
+  #  # db name. default db if the value of this field is zero
+  #  db: 0
+  #   # tls parameters for agent when agent running as daemon.
+  #  tls:
+  #    isTls: true
+  #    ca: ""
+  #    cert: ""
+  #    key: ""
+  #    insecureSkipVerify: false
   # period(second) for agent gets command from server when agent running as passive
   period: 10
   # insecret specifies whether agent listen on a insecret port when it is runing as daemon

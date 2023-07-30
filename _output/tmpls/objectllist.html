@@ -1,0 +1,192 @@
+<script type="text/javascript" src="/js/objectlist.js"></script>
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+<script language="javascript1.2">
+	var popMenuItems = new Array();
+	var pageUrl = {{.baseUri}};
+	{{range $index,$line := .allPopMenuItems }}
+	popMenuItems[{{ $index }}] = {{ $line}};
+	{{end}}
+</script>
+
+<section class="content-header">
+	<h1>
+		{{ .mainCategory }}
+		<small>{{ .subCategory }}</small>
+	</h1>
+</section>
+
+{{ $groupSelectedID := .groupSelectID }}
+<div>
+	<div class="selectForm">
+		<form id="groupSelect" name="groupSelect" method="post" target="_self" onsubmit="return false">
+			{{if gt (len .groupSelect) 0 }}
+			<select name="groupSelectID" onChange="GroupSelectChanged(this.options[this.options.selectedIndex].value)">
+				{{ range $index,$line := .groupSelect }}
+				{{if eq $groupSelectedID $line.id }}
+				<option value="{{ $line.id }}" selected> {{ $line.text }} </option>
+				{{else}}
+				<option value="{{ $line.id }}" > {{ $line.text }} </option>
+				{{end}}
+				{{end}}
+			</select> &nbsp;
+			{{ end }}
+			{{ if .addButtonTitle }}
+			<button id="buttonAdd" onclick="displayAddObjectForm() "> + {{ .addButtonTitle }} </button>&nbsp;
+			{{ end }}
+		</form>
+	</div>
+
+	{{ if .isSearchForm }}
+	<div class="searchForm">
+		<form id="searchForm" name="search" method="post" target="_self" onsubmit="return false">
+			<input type="text" name="searchContent" placeholder="Search..." autocomplete="off" onblur="doSearch(this.value)" />
+		</form>
+	</div>
+	{{ end }}
+</div>
+
+<form id="objectList" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			<th  align="left">
+			<input type="checkbox" id="objectListTH" name="objectListTH[]" onclick='selectAllObjectCheckbox(this.checked)'>
+			</th>
+			{{range $index,$line := .thData }}
+			<th>
+				{{if eq $line.OrderUri "" }}
+					{{ $line.Title }}
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{ $line.OrderUri}}")' >
+						{{ $line.Title }}
+					</a>
+					{{if $line.OrderSelected }}
+						{{if eq $line.OrderDirection "1" }}
+							<i class="fa fa-arrow-down"></i>
+						{{else}}
+							<i class="fa fa-arrow-up"></i>
+						{{end}}
+					{{end}}
+				{{end}}
+			</th>
+			{{end}}
+			<th > &nbsp; &nbsp;&nbsp;</th>
+		</tr>
+
+		{{range $index,$line := .objListData }}
+		<tr>
+			<td width="5%"> <input type="checkbox"  id="objectid[]" name="objectid[]" value="{{ $line.objectID }}" onclick='selectObjectCheckbox(this.checked)'></td>
+			{{range $key,$value := $.thData }}
+				<td >
+					{{ index $line (print $value.ID) }}
+				</td>
+			{{end}}
+
+			<td>
+				<a href="#" id="popmenuid" onclick='showPopMenu(event,{{ $line.popmenuitems}}, {{ $line.objectID }})'> ... </a>
+			</td>
+		</tr>
+		{{end}}
+	</table>
+</form>
+
+<table class="foot-table">
+	<tr>
+		<td>
+			<div class="div-foot">当前第{{ .currentPage }}页
+				{{if eq (len .prePageUri)  0 }}
+					前一页
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{.prePageUri}}")' >前一页</a>
+				{{end}}
+				{{if eq (len .nextPageUri) 0 }}
+					后一页
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{.nextPageUri}}")' >后一页</a>
+				{{end}}
+			 共{{ .totalPage }}页 </div>
+		</td>
+	</tr>
+</table>	
+
+<div class="yum-add" id="addform">
+	<form id="infrastructureAddHostForm" name="infrastructureAddHostForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
+		<div class="popform-title">添加新节点</div>
+		<div class="yum-item">
+			所属项目：
+			<select name="addHostprojectid" id="addHostprojectid">
+
+			</select> &nbsp;
+		</div>
+
+		<div class="yum-item">
+			节点主机名： <input id="hostname" type="text" name="hostname"> 用于节点管理和识别的主机名
+			<input id="userid" type="hidden" name="userid" value="{{ .userid}}">
+		</div>
+		<div class="yum-item">
+			IP地址： <input id="ip" type="text" name="ip"> *被添加节点用于管理的IP地址或主机名。
+		</div>
+		<div class="yum-radio">
+			地址类型：<input type="radio" name="iptype" value="4" checked="checked">IPv4 &nbsp;&nbsp;
+			<input type="radio" name="iptype" value="6">IPv6 &nbsp;&nbsp;&nbsp;&nbsp;  <input type="checkbox" name="passiveMode" id="passiveMode" value="1" onClick='changeAgentMode()'> 被动模式
+			<div id="divisTLS" style="display: inline"><input type="checkbox" name="agentIsTls" id="agentIsTls" value="1" onClick="enableISTLS()" > 启用TLS连接</div>
+			<div id="divinsecureSkipVerify" style="display: none"><input type="checkbox" name="insecureSkipVerify" id="insecureSkipVerify" value="1" > 忽略客户端证书检查</div>
+		</div>
+		<div class="yum-item" id="divAgentPort">
+			Agent端口： <input id="agentPort" type="text" name="agentPort"> *主动模式时，客户端侦听的端口号
+		</div>
+		
+		<div class="yum-item" id="divCommandUri">
+			指令接收地址： <input id="commandUri" type="text" name="commandUri"> *主动模式时，客户端接收指令的URI地址
+		</div>
+		<div class="yum-item" id="divcommandStatusUri">
+			指令状态查询地址： <input id="commandStatusUri" type="text" name="commandStatusUri"> *主动模式时，从客户端获取指令状态的URI地址
+		</div>
+		<div class="yum-item" id="divcommandLogsUri">
+			指令日志获取地址： <input id="commandLogsUri" type="text" name="commandLogsUri"> *主动模式时，从客户端获取指令日志的URI地址
+		</div>
+		<div class="yum-item" id="caInput" style="display: none">
+			CA证书： <input id="agentCa"  type="file" name="agentCa" style="display: none" onChange='changefilevalue("agentCaDiv","agentCa")'>
+			<input id="agentCaButton" type="button" name="agentCaButton" value="上传文件" onclick='clickagentCaButton("agentCa")' class="inputfilebutton">
+			<div id="agentCaDiv" style="display: inline-block"></div>
+			*客户端的CA证书
+		</div>
+		<div class="yum-item" id="certInput" style="display: none">
+			TLS证书： <input id="agentCert"  type="file" name="agentCert" style="display: none" onChange='changefilevalue("agentCertDiv","agentCert")'>
+			<input id="agentCertButton" type="button" name="agentCertButton" value="上传文件" onclick='clickagentCaButton("agentCert")' class="inputfilebutton">
+			<div id="agentCertDiv" style="display: inline-block"></div>
+			*客户端的证书
+		</div>
+		<div class="yum-item" id="keyInput" style="display: none">
+			证书密钥： <input id="agentKey"  type="file" name="agentKey" style="display: none" onChange='changefilevalue("agentKeyDiv","agentKey")'>
+			<input id="agentKeyButton" type="button" name="agentKeyButton" value="上传文件" onclick='clickagentCaButton("agentKey")' class="inputfilebutton">
+			<div id="agentKeyDiv" style="display: inline-block"></div>
+			*客户端证书密钥密钥
+		</div>
+		
+		<div class="yum-item">
+			选择添加到主机上的Yum信息：
+		</div>
+		<div >
+			<table width="100%" align="center" id="yumlist" class="addform-table">
+				<th width="10%" align="left">
+					<input type="checkbox" id="yumidth" name="yumidth[]" onclick='selectAllYumCheckbox(this.checked)'>
+				</th>
+				<th width="50%">名称</th>
+				<th width="20%">类别</th>
+				<th width="20%">用途</th>
+			</table>
+		</div>
+		<div class="popform-button">
+			<button id="add " onclick="submitAddHost() ">确定</button>
+			<button id="cacel " onclick="cancelAddHost() ">关闭</button>
+		</div>
+	</form>
+</div>
+
+<div class="pop-menu" id="popmenu">
+</div>
+
+

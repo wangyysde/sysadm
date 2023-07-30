@@ -26,5 +26,8 @@ type runningData struct {
 
 type ObjectEntity interface {
 	GetObjectInfoByID(id string) (interface{}, error)
-	setDefaultForObject()
+	GetObjectCount(searchContent string, ids, searchKeys []string, conditions map[string]string) (int, error)
+	GetObjectList(searchContent string, ids, searchKeys []string, conditions map[string]string,
+		startPos, step int, orders map[string]string) ([]interface{}, error)
+	AddObject(data interface{}) error
 }

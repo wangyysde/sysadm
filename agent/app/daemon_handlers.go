@@ -18,15 +18,14 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
-	"encoding/json"
 
-	apiserver "sysadm/apiserver/app"
-	"sysadm/redis"
-	"sysadm/sysadmerror"
 	"github.com/wangyysde/sysadmServer"
+	apiserver "sysadm/apiserver/app"
+	"sysadm/sysadmerror"
 )
 
 func addHandlers(r *sysadmServer.Engine) (errs []sysadmerror.Sysadmerror) {
@@ -246,31 +245,31 @@ func getCommandLogs(c *sysadmServer.Context) {
 	var cmdLogReq apiserver.LogReq = apiserver.LogReq{}
 	var errs []sysadmerror.Sysadmerror
 
-	logs := make([]apiserver.Log,0)
+	logs := make([]apiserver.Log, 0)
 	logData := apiserver.LogData{
-		CommandSeq: "0000000000000000000",
+		CommandSeq:     "0000000000000000000",
 		NodeIdentifier: *runData.nodeIdentifer,
-		Logs: logs,
-		Total: 0,
-		EndFlag: false,
-		NotCommand: true,
+		Logs:           logs,
+		Total:          0,
+		EndFlag:        false,
+		NotCommand:     true,
 	}
 
 	e := c.BindJSON(&cmdLogReq)
-	if e != nil { 
+	if e != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082006, "error", "the request for getting command logs is not valid %s ", e))
-		_, err := responseCommandLogToServer(c, logData, false) 
+		_, err := responseCommandLogToServer(c, logData, false)
 		errs = append(errs, err...)
-		logErrors(errs) 
+		logErrors(errs)
 		return
 	}
 
 	commandSeq := strings.TrimSpace(cmdLogReq.CommandSeq)
 	if strings.TrimSpace(commandSeq) == "" || !apiserver.IsCommandSeqValid(commandSeq) {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082007, "error", "command sequence %s is not valid ", commandSeq))
-		_, err := responseCommandLogToServer(c, logData, false) 
+		_, err := responseCommandLogToServer(c, logData, false)
 		errs = append(errs, err...)
-		logErrors(errs) 
+		logErrors(errs)
 		return
 	}
 	logData.CommandSeq = commandSeq
@@ -283,7 +282,7 @@ func getCommandLogs(c *sysadmServer.Context) {
 		newNodeIdentifer, err := apiserver.BuildNodeIdentifer(strings.ToUpper(strings.TrimSpace(nodeIdentiferStr)))
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082008, "error", "change node identifer error %s", err))
-			_, err := responseCommandLogToServer(c, logData, false) 
+			_, err := responseCommandLogToServer(c, logData, false)
 			errs = append(errs, err...)
 			logErrors(errs)
 			return
@@ -299,14 +298,14 @@ func getCommandLogs(c *sysadmServer.Context) {
 	if !exist {
 		logData.EndFlag = true
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082009, "debug", "no command los for command %s ", commandSeq))
-		_, err := responseCommandLogToServer(c, logData, false) 
+		_, err := responseCommandLogToServer(c, logData, false)
 		errs = append(errs, err...)
 		logErrors(errs)
 		return
 	}
 	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082010, "error", "an error has occurred when check whether command logs of command %s is exist. error %s ", commandSeq,e))
-		_, err := responseCommandLogToServer(c, logData, false) 
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082010, "error", "an error has occurred when check whether command logs of command %s is exist. error %s ", commandSeq, e))
+		_, err := responseCommandLogToServer(c, logData, false)
 		errs = append(errs, err...)
 		logErrors(errs)
 	}
@@ -324,7 +323,7 @@ func getCommandLogs(c *sysadmServer.Context) {
 	logData.EndFlag = endFlag
 
 	total := 0
-	for i :=0; i<maxNum; i++ {
+	for i := 0; i < maxNum; i++ {
 		logJson, e := redis.LPop(runData.redisEntity, runData.redisctx, key)
 		if e != nil {
 			continue
@@ -335,18 +334,15 @@ func getCommandLogs(c *sysadmServer.Context) {
 		if e != nil {
 			continue
 		}
-		
-		logs = append(logs,log)
+
+		logs = append(logs, log)
 		total = total + 1
 	}
 
 	logData.Total = total
 	logData.Logs = logs
-	_, err = responseCommandLogToServer(c, logData, true) 
-	errs = append(errs,err...)
+	_, err = responseCommandLogToServer(c, logData, true)
+	errs = append(errs, err...)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10082011, "info", "logs of command %s has be sent to apiserver ", commandSeq))
 	logErrors(errs)
 }
-
-
-

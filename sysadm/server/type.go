@@ -20,9 +20,10 @@ package server
 import (
 	"os"
 
+	"github.com/wangyysde/sysadmServer"
 	sysadmDB "sysadm/db"
 	"sysadm/sysadm/config"
-	"github.com/wangyysde/sysadmServer"
+	"sysadm/sysadmLog"
 )
 
 // Start parameters of the program
@@ -53,6 +54,8 @@ type RuningData struct {
 	OldStartParas *StartParas
 	// the old runing parameters of program after the program reload or restart
 	OldRunningParas *RunningParas
+	// log entity
+	sysadmLogEntity *sysadmLog.LoggerConfig
 }
 
 type actionHandler struct {
@@ -62,5 +65,5 @@ type actionHandler struct {
 	method       []string
 }
 
-var RuntimeData RuningData = RuningData{StartParas: &StartParas{}, RuningParas: &RunningParas{}, OldStartParas: nil, OldRunningParas: nil}
+var RuntimeData RuningData = RuningData{StartParas: &StartParas{}, RuningParas: &RunningParas{}, OldStartParas: nil, OldRunningParas: nil, sysadmLogEntity: nil}
 var CliData StartParas = StartParas{ConfigPath: ""}

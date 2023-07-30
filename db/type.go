@@ -25,59 +25,61 @@ import (
 )
 
 type DbConfig struct {
-	Type string `json:"type"`
-	Host string `json:"host"`
-	HostIP net.IP `json:"hostIP"`
-	Port int `json:"port"`
-	User string `json:"user"`
-	Password string `json:"password"`
-	DbName string `json:"dbname"`
-	SslMode string `json:"sslmode"`
-	SslCa string `json:"sslca"`
-	SslCert string `json:"sslcert"`
-	SslKey string `json:"sslkey"`
-	MaxOpenConns int `json:"maxopenconns"`
-	MaxIdleConns int `json:"maxidleconns"`
-	Connect *sql.DB `json:"connect"`
-	Entity DbEntity `json:"entity"`
- }
+	Type         string   `json:"type"`
+	Host         string   `json:"host"`
+	HostIP       net.IP   `json:"hostIP"`
+	Port         int      `json:"port"`
+	User         string   `json:"user"`
+	Password     string   `json:"password"`
+	DbName       string   `json:"dbname"`
+	SslMode      string   `json:"sslmode"`
+	SslCa        string   `json:"sslca"`
+	SslCert      string   `json:"sslcert"`
+	SslKey       string   `json:"sslkey"`
+	MaxOpenConns int      `json:"maxopenconns"`
+	MaxIdleConns int      `json:"maxidleconns"`
+	Connect      *sql.DB  `json:"connect"`
+	RunModeDebug bool     `json:"runModeDebug"`
+	Entity       DbEntity `json:"entity"`
+}
 
- type DbEntity interface {
-	OpenDbConnect() ([]sysadmerror.Sysadmerror)
-	CloseDB()([]sysadmerror.Sysadmerror)
-	InsertData(string,FieldData) (int, []sysadmerror.Sysadmerror)
+type DbEntity interface {
+	OpenDbConnect() []sysadmerror.Sysadmerror
+	CloseDB() []sysadmerror.Sysadmerror
+	InsertData(string, FieldData) (int, []sysadmerror.Sysadmerror)
 	QueryData(sd *SelectData) ([]FieldData, []sysadmerror.Sysadmerror)
 	DeleteData(dd *SelectData) (int64, []sysadmerror.Sysadmerror)
 	UpdateData(string, FieldData, map[string]string) (int, []sysadmerror.Sysadmerror)
-	BuildWhereFieldExact(string) (string)
-	BuildWhereFieldExactWithSlice([]string) (string)
-	BuildInsertQuery(tb string,data FieldData) (string, []sysadmerror.Sysadmerror)
+	BuildWhereFieldExact(string) string
+	BuildWhereFieldExactWithSlice([]string) string
+	BuildInsertQuery(tb string, data FieldData) (string, []sysadmerror.Sysadmerror)
 	BuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, []sysadmerror.Sysadmerror)
 	BuildDeleteQuery(dd *SelectData) (string, []sysadmerror.Sysadmerror)
-	GetDbConfig()(*DbConfig)
- }
-
+	GetDbConfig() *DbConfig
+	NewInsertData(tb string, data FieldData) error
+	NewQueryData(sd *SelectData) ([]map[string]interface{}, error)
+	NewUpdateData(tb string, data FieldData, where map[string]string) error
+	NewDeleteData(dd *SelectData) error
+}
 
 // key is the filed name and value is the value that will be set to the field.
- type FieldData map[string]interface{}
+type FieldData map[string]interface{}
 
- type OrderData struct {
-	Key string
+type OrderData struct {
+	Key   string
 	Order int
- }
+}
 
-  type SelectData struct {
-	Tb []string
+type SelectData struct {
+	Tb        []string
 	OutFeilds []string
-	Where map[string]string
-	Order []OrderData
-	Group []string 
-	Limit []int
- }
+	Where     map[string]string
+	Order     []OrderData
+	Group     []string
+	Limit     []int
+}
 
- type Tx struct {
+type Tx struct {
 	Entity DbEntity `json:"entity"`
-	Tx *sql.Tx
- }
-
- 
+	Tx     *sql.Tx
+}

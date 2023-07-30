@@ -22,13 +22,21 @@ import (
 	"strings"
 )
 
+func New() Project {
+	ret := Project{}
+	ret.Name = DefaultObjectName
+	ret.TableName = DefaultTableName
+	ret.PkName = DefaultPkName
+	return ret
+}
+
 func (p Project) GetObjectInfoByID(id string) (interface{}, error) {
 	id = strings.TrimSpace(id)
 	if id == "" {
 		return nil, fmt.Errorf("can not get project information with empty ID")
 	}
 
-	dbData, e := getObjectInfoByID(p.TableName, p.PkName, id)
+	dbData, e := GetObjectInfoByID(p.TableName, p.PkName, id)
 	if e != nil {
 		return nil, e
 	}
@@ -39,8 +47,75 @@ func (p Project) GetObjectInfoByID(id string) (interface{}, error) {
 	return projectData, e
 }
 
-func (p Project) setDefaultForObject() {
-	p.Name = "project"
-	p.TableName = "project"
-	p.PkName = "projectid"
+func (p Project) GetObjectCount(searchContent string, ids, searchKeys []string, conditions map[string]string) (int, error) {
+	searchContent = strings.TrimSpace(searchContent)
+	if ok, e := ValidKeysInSchema(searchKeys, &ProjectSchema{}); !ok {
+		return -1, fmt.Errorf("search key are not valid, error %s", e)
+	}
+
+	var conditionKeys []string
+	for k, _ := range conditions {
+		conditionKeys = append(conditionKeys, k)
+	}
+	if ok, e := ValidKeysInSchema(conditionKeys, &ProjectSchema{}); !ok {
+		return -1, fmt.Errorf("the keys of conditions must be the object fields name.error %s", e)
+	}
+
+	return GetObjectCount(p.TableName, p.PkName, searchContent, ids, searchKeys, conditions)
+}
+
+func (p Project) GetObjectList(searchContent string, ids, searchKeys []string, conditions map[string]string,
+	startPos, step int, orders map[string]string) ([]interface{}, error) {
+
+	var ret []interface{}
+	searchContent = strings.TrimSpace(searchContent)
+	if ok, e := ValidKeysInSchema(searchKeys, &ProjectSchema{}); !ok {
+		return ret, fmt.Errorf("search key are not valid.error %s ", e)
+	}
+
+	var conditionKeys []string
+	for k, _ := range conditions {
+		conditionKeys = append(conditionKeys, k)
+	}
+	if ok, e := ValidKeysInSchema(conditionKeys, &ProjectSchema{}); !ok {
+		return ret, fmt.Errorf("the keys of conditions must be the object fields name.error %s", e)
+	}
+
+	var orderKeys []string
+	for k, _ := range orders {
+		orderKeys = append(orderKeys, k)
+	}
+	if ok, e := ValidKeysInSchema(orderKeys, &ProjectSchema{}); !ok {
+		return ret, fmt.Errorf("the keys of orders must be the object fields name.error %s", e)
+	}
+
+	dbData, e := GetObjectList(p.TableName, p.PkName, searchContent, ids, searchKeys, conditions, startPos, step, orders)
+	if e != nil {
+		return ret, e
+	}
+
+	var tmpRes []interface{}
+	for _, v := range dbData {
+		project := &ProjectSchema{}
+		if e := Unmarshal(v, project); e != nil {
+			return ret, e
+		}
+		tmpRes = append(tmpRes, *project)
+	}
+
+	return tmpRes, nil
+}
+
+func (p Project) AddObject(data interface{}) error {
+	projectSchemaData, ok := data.(ProjectSchema)
+	if !ok {
+		return fmt.Errorf("the data try to add is not valid")
+	}
+
+	insertData, e := Marshal(projectSchemaData)
+	if e != nil {
+		return e
+	}
+
+	return AddObject(p.TableName, p.PkName, insertData)
 }

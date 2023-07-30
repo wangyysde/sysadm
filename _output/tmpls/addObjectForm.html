@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="/css/addObject.css">
+<script type="text/javascript" src="/js/addObjectJs.js"></script>
+<script type="text/javascript" src="/js/sysadmfunctions.js"></script>
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index,$line := .addtionalCss }}
+<link rel="stylesheet" href="{{ $line }}">
+{{end}}
+
+<script language="javascript1.2">
+    var pageUrl = {{.baseUri}};
+</script>
+
+<section class="content-header">
+    <h1>
+        {{ .mainCategory }}
+        <small>{{ .subCategory }}</small>
+    </h1>
+</section>
+
+<div id="addObjectFormDiv">
+    {{if .enctype }}
+        <form id="addObjectForm" name="addObjectForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
+    {{else}}
+        <form id="addObjectForm" name="addObjectForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
+    {{end}}
+
+        <div class="formTitle">{{ .subCategory }}</div>
+
+         {{range $index, $line := .data }}
+        <div class="lineDiv">
+            {{range $i,$item := $line.Items }}
+            {{if eq $item.Kind "TEXT" }}
+             <span> {{$item.Title -}}: </span>
+               <input id="{{$item.ID}}" type="text" name="{{$item.Name}}" {{if gt $item.Size 0}} size="{{$item.Size}}" {{end}}  {{if $item.Disable }} disabled {{end}} value="{{$item.DefaultValue}}" {{if $item.ActionUri }} onblur="addObjvalidTextValue({{$item.ActionUri}},this)" {{end}} >
+                <span id="note">{{$item.Note}}</span>
+            {{end}}
+
+            {{if eq $item.Kind "SELECT" }}
+              <span> {{$item.Title -}}: </span>
+              <select name="{{$item.Name}}" id="{{$item.ID}}" {{if $item.ActionUri }} onChange="addObjSelectChanged({{$item.ActionUri}},{{$item.SubObjID}},this.options[this.options.selectedIndex].value)" {{end}}>
+                {{range $ii,$option := $item.ItemData }}
+                   {{if $option.Checked}}
+                      <option value="{{ $option.Value }}" selected> {{ $option.Text }} </option>
+                   {{else}}
+                      <option value="{{ $option.Value }}" > {{ $option.Text }} </option>
+                   {{end}}
+                {{end}}
+              </select>
+            <span id="note">{{$item.Note}}</span>
+            {{end}}
+
+            {{if eq $item.Kind "CHECKBOX" }}
+              <span>{{$item.Title -}}: </span>
+                 {{range $ii,$option := $item.ItemData }}
+                     <input type="checkbox"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='addObjCheckboxClick($item.ActionUri,{{$item.ID}},this.checked)' {{end}}>
+                     {{$option.Text}}
+                {{end}}
+            {{end}}
+
+            {{if eq $item.Kind "RADIO" }}
+              <span>{{$item.Title -}}: </span>
+                   {{range $ii,$option := $item.ItemData }}
+                      <input type="radio"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='addObjRadioClick($item.ActionUri,{{$item.ID}},this.checked)' {{end}}>
+                      {{$option.Text}}
+                   {{end}}
+            {{end}}
+
+            {{- if eq $item.Kind "FILE" -}}
+            <span>{{- $item.Title -}}: </span>
+                <input id="{{$item.ID}}"  type="file" name="{{$item.Name}}" style="display: none" onChange='addObjChangeFilevalue("{{- $item.ID -}}Div","{{- $item.ID -}}")'>
+                <input id="{{- $item.ID -}}Button" type="button" name="{{- $item.Name -}}Button" value="上传文件" onclick='addObjClickFileButton("{{- $item.ID -}}")' class="addObjInputFileButton">
+                <div id="{{- $item.ID -}}Div" style="display: inline-block"></div>
+                <span id="note"> {{$item.Note}} </span>
+            {{end}}
+
+            {{if eq $item.Kind "TEXTAREA" }}
+            <span>{{- $item.Title -}}: </span>
+            <textarea id="{{$item.ID}}" name="{{$item.Name}}" {{if gt $item.Size 0}} cols="{{$item.Size}}" {{else}} cols="40" {{end}} {{if gt $item.Rows 0}} rows="{{$item.Rows}}" {{else}} rows="5" {{end}} value="{{$item.DefaultValue}}" {{if $item.ActionUri }} onblur="addObjvalidTextareaValue({{$item.ActionUri}},this.value)" {{end}} ></textarea>
+            {{$item.Note}}
+            {{end}}
+
+            {{if eq $item.Kind "HIDDEN" }}
+            <input id="{{$item.ID}}" type="hidden" name="{{$item.Name}}"  value="{{$item.DefaultValue}}" >
+            {{end}}
+
+           {{end}}
+        </div>
+        {{end}}
+        <br>
+        <br>
+        <div class="addObjButton">
+            <button id="add " onclick="addObjSubmit({{.postUri}}, {{.submitRedirect}}) ">确定</button>
+            <button id="cacel " onclick="addObjCancel({{.submitRedirect}}) ">关闭</button>
+        </div>
+    </form>
+</div>

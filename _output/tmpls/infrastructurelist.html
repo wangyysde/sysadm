@@ -16,8 +16,8 @@
 		{{ end }}
 		var newOption;
 		var osVersion = document.getElementById("osversionid");
-		osVersion.options.length = 0; 
-		
+		osVersion.options.length = 0;
+
 		var selectVersionID = 0;
 		if(osid == "0") {
 			newOption = new Option("--请选择版本--", "0");
@@ -34,7 +34,7 @@
 				osVersion.options.add(newOption);
 			}
 		}
-		ChangeYumList(selectVersionID); 
+		ChangeYumList(selectVersionID);
 	}
 
 	function ChangeYumList(versionid){

@@ -1,5 +1,5 @@
 /*
-SQLyog Enterprise - MySQL GUI v8.14 
+SQLyog Enterprise - MySQL GUI v8.14
 MySQL - 5.7.30 : Database - sysadm
 *********************************************************************
 */
@@ -326,3 +326,115 @@ CREATE TABLE `ids` (
 
 insert into `ids`(`tableName`,`fieldName`,`nextValue`) values ('host','hostid',1);
 insert into `ids`(`tableName`,`fieldName`,`nextValue`) values ('command','commandID',1);
+
+/* 全球各国家名称、代码表 */
+CREATE TABLE `country`(
+    chineseName VARCHAR(50) NOT NULL DEFAULT '' COMMENT '国家中文名称',
+    englishName VARCHAR(50) NOT NULL DEFAULT '' COMMENT '国家英文名称',
+    code CHAR(2) NOT NULL DEFAULT '' COMMENT '国家代码',
+    display TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否显示在前台,0表示否，1表示是'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/* 全国区县表 */
+DROP TABLE IF EXISTS `county`;
+create table `county` (
+    code char(6) not null default '' comment '区县代码',
+    name varchar(50) not null default '' comment '区县名称',
+    cityCode char(6) not null default '' comment '上级地级市代码'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/* 全国地级市列表 */
+DROP TABLE IF EXISTS `city`;
+create table `city` (
+    code char(6) not null default '' comment '市级代码',
+    name varchar(50) not null default '' comment '区级名称',
+    provinceCode char(6) not null default '' comment '上级省市代码',
+    countyList varchar(1024) not null default '' comment '下级县区代码列表，用,号分割'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/* 全国省市列表 */
+DROP TABLE IF EXISTS `province`;
+create table `province` (
+    code char(6) not null default '' comment '省级代码',
+    name varchar(50) not null default '' comment '省级名称',
+    cityList varchar(1024) not null default '' comment '下级市级代码列表，用,号分割'
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/* 数据中心表 */
+DROP TABLE IF EXISTS `datacenter`;
+
+CREATE TABLE `datacenter` (
+  `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '数据中心ID，此ID为主键，不可重复',
+  `country` char(2) NOT NULL DEFAULT 'CN' COMMENT '数据中心所在的国家编码，对应country表里的code字段',
+  `province` char(6) DEFAULT NULL COMMENT '数据中心所在的省市编码，对应于province表内的code',
+  `city` char(6) DEFAULT NULL COMMENT '数据中心所在的地级市编码，对应于city表内的code',
+  `county` char(6) DEFAULT NULL COMMENT '数据中心所在的县区编码，对应于county表内的code',
+  `cnName` varchar(255) NOT NULL COMMENT '数据中心中文名称',
+  `enName` varchar(255) DEFAULT NULL COMMENT '数据中心英文名称',
+  `address` varchar(255) DEFAULT NULL COMMENT '数据中心地址',
+  `dutyTel` varchar(20) DEFAULT NULL COMMENT '值班电话',
+  `type` tinyint(1) NOT NULL COMMENT '数据中心类型 0电信 1 联通 3 移动 4 广电 5 双线BGP 6 三线BGP 7 四线BGP 8 国外',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态0未启用 1已启用 2 已停用',
+  `isDeleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0正常 1已删除',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `createBy` int(10) unsigned DEFAULT NULL COMMENT '创建人,对应user表的userid',
+  `updateBy` int(10) unsigned DEFAULT NULL COMMENT '更新人,对应user表的userid',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/*Data for the table `datacenter` */
+
+insert  into `datacenter`(`id`,`no`,`country`,`province`,`city`,`county`,`cnName`,`enName`,`address`,`dutyTel`,`type`,`status`,`isDeleted`,`createTime`,`updateTime`,`createBy`,`updateBy`,`remark`) values (1,0,'CN','310000','310000','310107','电信真如机房',NULL,'上海市普陀区真大路6号','021-xxxxxxxx',0,1,0,'2023-07-04 14:28:57','2023-07-04 14:42:33',1,NULL,NULL),(2,1,'CN','110000','110000','110105','北京兆维电信IDC',NULL,'北京市朝阳区酒仙桥路14号兆维工业园区D区','010-xxxxxx',1,1,0,'2023-07-04 14:41:55','2023-07-04 14:42:43',1,NULL,NULL);
+
+/* 可用区表 */
+DROP TABLE IF EXISTS `availablezone`;
+
+CREATE TABLE `availablezone` (
+  `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '可用区ID，此ID为主键，不可重复',
+  `cnName` varchar(255) NOT NULL COMMENT '可用区中文名称',
+  `enName` varchar(255) DEFAULT NULL COMMENT '可用区英文名称',
+  `datacenterid` int(10) unsigned NOT NULL COMMENT '可用区所属的数据中心ID',
+  `dutyTel` varchar(20) DEFAULT NULL COMMENT '值班电话',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态0未启用 1已启用 2 已停用',
+  `isDeleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0正常 1已删除',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `createBy` int(10) unsigned DEFAULT NULL COMMENT '创建人,对应user表的userid',
+  `updateBy` int(10) unsigned DEFAULT NULL COMMENT '更新人,对应user表的userid',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/*Data for the table `availabezone` */
+insert  into `availablezone`(`id`,`no`,`cnName`,`enName`,`datacenterid`,`dutyTel`,`status`,`isDeleted`,`createTime`,`updateTime`,`createBy`,`updateBy`,`remark`) values (1,0,'AZ1','AZ1',1,'021-XXXXXXXX',1,0,'2023-07-04 14:51:38','2023-07-04 14:51:41',1,NULL,'测试可用区'),(2,1,'BJ_AZ1','BJ_AZ1',2,'010-XXXXXXX',1,0,'2023-07-04 14:52:46','2023-07-04 14:52:46',1,NULL,'北京可用区1');
+
+/* k8s 集群信息表 */
+DROP TABLE IF EXISTS `k8scluster`;
+create table `k8scluster` (
+    `id` int unsigned not null comment '集群ID，非自增，由雪花算法生成',
+    `dcid` int unsigned not null comment '集群所属的数据中心ID',
+    `azid` int unsigned not null comment '集群所属的可用区ID',
+    `cnName` varchar(255) not null comment '集群中文名称',
+    `enName` varchar(255) comment '集群英文名称',
+    `apiserver` varchar(255) not null comment 'kube apiserver 连接地址和端口',
+    `clusterUser` varchar(255) comment '连接集群的集群用户名',
+    `ca` longtext not null comment '连接集群的CA证书',
+    `cert` longtext not null comment '连接集群的证书',
+    `key` longtext not null comment '连接集群的密钥',
+    `version` varchar(50) comment '集群的kubernetes版本',
+    `cri` varchar(50) comment '集群的cri',
+    `podcidr` varchar(50) comment '集群的pod cidr',
+    `servicecidr` varchar(50) comment '集群的service cidr',
+    `cni` varchar(50) comment '集群的cni',
+    `dutyTel` varchar(20) comment '值班电话',
+    `status` tinyint(1) not null default 1 comment '状态0未启用 1已启用 2 已停用',
+    `isDeleted` tinyint(1) not null default 0 comment '是否删除 0正常 1已删除',
+    `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `createBy` int(10) unsigned comment '创建人,对应user表的userid',
+    `updateBy` int(10) unsigned comment '更新人,对应user表的userid',
+    `remark` varchar(255) comment '备注',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;

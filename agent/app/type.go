@@ -18,13 +18,13 @@
 package app
 
 import (
+	"context"
 	"net/http"
 	"os"
-	"context"
 
+	apiserver "sysadm/apiserver/app"
 	"sysadm/config"
 	"sysadm/httpclient"
-	apiserver "sysadm/apiserver/app"
 	"sysadm/redis"
 )
 
@@ -126,9 +126,6 @@ type AgentConf struct {
 
 	// insecret listen port of agent listening when it is running ad daemon
 	InsecretPort int `form:"insecretPort" json:"insecretPort" yaml:"insecretPort" xml:"insecretPort"`
-
-	// redis client connectiion parameters
-	RedisConf redis.ClientConf `form:"redis" json:"redis" yaml:"redis" xml:"redis"`
 }
 
 // nodeIdentifer is used to save node identifer information what agent will send to server
@@ -158,7 +155,7 @@ var CliOps CliOptions = CliOptions{
 // runTimeData used to record the data what are used frequently in runtime.
 type runTimeData struct {
 	// In passive mode server can tell agent change nodeIdentifer. this field used to record the node identifer what has be built by getNodeIdentifer func
-	nodeIdentifer *apiserver.NodeIdentifier 
+	nodeIdentifer *apiserver.NodeIdentifier
 
 	// the complete url address where agent get a command to execute from server. this url address can be changed when the server ask agent to do so.
 	getCommandUrl string
@@ -169,7 +166,7 @@ type runTimeData struct {
 	// keep http or https client for reuse. we should recreate http client if the value of this field is nil
 	httpClient *http.Client
 
-	// keep redis' entity 
+	// keep redis' entity
 	redisEntity redis.RedisEntity
 
 	// redis context

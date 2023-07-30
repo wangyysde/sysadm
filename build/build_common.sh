@@ -1,6 +1,6 @@
 PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
 DEFAULT_IMAGE_VER="v1.0.1"
-BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
+BASE_IMG="hb.sysadm.cn/os/centos:centos7.9.2009"
 EMAIL="net_use@bzhy.com"
 DEFAULT_REGISTRY_URL="hb.sysadm.cn/sysadm/"
 DEFAULT_DEPLOY_SERVER="192.53.117.73"

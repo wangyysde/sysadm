@@ -26,6 +26,7 @@ import (
 
 	"github.com/wangyysde/sysadmServer"
 	sessions "github.com/wangyysde/sysadmSessions"
+	"sysadm/utils"
 )
 
 // SetSessionOptions set sessons options accroding parameters
@@ -136,4 +137,26 @@ func ClearSession(c *sysadmServer.Context) error {
 	session.Clear()
 
 	return nil
+}
+
+func IsLogin(c *sysadmServer.Context, sessionName string) (bool, int, error) {
+	if c == nil {
+		return false, 0, fmt.Errorf("can not check whether login on an empty connection")
+	}
+
+	sessionName = strings.TrimSpace(sessionName)
+	if sessionName == "" {
+		return false, 0, fmt.Errorf("session name should not be empty")
+	}
+
+	useridStr, e := GetSessionValue(c, "userid", sessionName)
+	if e != nil {
+		return false, 0, e
+	}
+	useridInt, e := utils.Interface2Int(useridStr)
+	if e != nil {
+		return false, 0, e
+	}
+
+	return true, useridInt, nil
 }

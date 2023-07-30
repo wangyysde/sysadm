@@ -1,0 +1,4 @@
+time=2021-09-15T22:00:50+08:00 level=info msg=aaaa name=MyName age=12 fields.msg=test my msg sex=true
+time=2021-09-15T22:00:50+08:00 level=info sex=true fields.msg=Not message name=MyName age=12
+time=2021-09-15T22:00:50+08:00 level=error fields.msg=Not message name=MyName age=12 sex=true
+time=2021-09-15T22:00:50+08:00 level=info msg=test message

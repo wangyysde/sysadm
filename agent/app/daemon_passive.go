@@ -26,174 +26,173 @@ import (
 	"syscall"
 	"time"
 
+	apiserver "sysadm/apiserver/app"
 	"sysadm/httpclient"
 	"sysadm/sysadmerror"
 	sysadmutils "sysadm/utils"
-	apiserver "sysadm/apiserver/app"
 )
 
-func run_DaemonPassive() ([]sysadmerror.Sysadmerror){
+func run_DaemonPassive() []sysadmerror.Sysadmerror {
 	var errs []sysadmerror.Sysadmerror
 	confNodeIdentifer := RunConf.Global.NodeIdentifer
 	nodeIdentifer, err := apiserver.BuildNodeIdentifer(confNodeIdentifer)
 	if err != nil {
-		errs := append(errs, sysadmerror.NewErrorWithStringLevel(50090101,"fatal","get node identifier error %s",err))
+		errs := append(errs, sysadmerror.NewErrorWithStringLevel(50090101, "fatal", "get node identifier error %s", err))
 		return errs
 	}
 	runData.nodeIdentifer = &nodeIdentifer
-	
+
 	url := buildUrl(RunConf.Global.Uri)
-	runData.getCommandUrl  = url 
+	runData.getCommandUrl = url
 
 	runData.getCommandParames = &httpclient.RequestParams{}
 	runData.getCommandParames.Method = http.MethodPost
 	runData.getCommandParames.Url = url
-	
-	signal.Notify(exitChan, syscall.SIGHUP,syscall.SIGINT,syscall.SIGTERM)
+
+	signal.Notify(exitChan, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
 	defer forkNewProcess()
 	getCommandLoop()
-	
+
 	return errs
 }
 
-func forkNewProcess(){
-   var errs []sysadmerror.Sysadmerror
+func forkNewProcess() {
+	var errs []sysadmerror.Sysadmerror
 
-   s := <-exitChan
-   if s == syscall.SIGHUP || s ==  syscall.SIGINT  || s == syscall.SIGTERM {
-     os.Exit(0)
-   }
-   
-   pid, _, err := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
-   if  err != 0 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090102,"fatal","can not fork a new process %s.",err))
+	s := <-exitChan
+	if s == syscall.SIGHUP || s == syscall.SIGINT || s == syscall.SIGTERM {
+		os.Exit(0)
+	}
+
+	pid, _, err := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
+	if err != 0 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090102, "fatal", "can not fork a new process %s.", err))
 		logErrors(errs)
 		os.Exit(10)
-   }
-     
-    // exit normally for parent process
-    if pid > 0 {
-        os.Exit(0)
-    }
-    
-    // set permission mask for child process 
-    _ = syscall.Umask(0) 
-     // set a new session for child process. 
-    sid, s_errno := syscall.Setsid()
-    if s_errno != nil || sid < 0 {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090103,"fatal","syscall.Setsid error.errorno %d .",s_errno))
+	}
+
+	// exit normally for parent process
+	if pid > 0 {
+		os.Exit(0)
+	}
+
+	// set permission mask for child process
+	_ = syscall.Umask(0)
+	// set a new session for child process.
+	sid, s_errno := syscall.Setsid()
+	if s_errno != nil || sid < 0 {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090103, "fatal", "syscall.Setsid error.errorno %d .", s_errno))
 		logErrors(errs)
 		os.Exit(11)
-    }
-    
-   getCommandLoop() 
+	}
+
+	getCommandLoop()
 }
 
-func getCommandLoop(){
+func getCommandLoop() {
 	var errs []sysadmerror.Sysadmerror
 	var shouldExit bool = false
-	go func(){
+	go func() {
 		s := <-exitChan
-   		if s == syscall.SIGHUP || s ==  syscall.SIGINT || s == syscall.SIGTERM {
-     		shouldExit = true
-   		}
+		if s == syscall.SIGHUP || s == syscall.SIGINT || s == syscall.SIGTERM {
+			shouldExit = true
+		}
 	}()
 
 	if runData.httpClient == nil {
 		if err := buildHttpClient(); err != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090104,"fatal","build http client error %s.",err))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090104, "fatal", "build http client error %s.", err))
 			logErrors(errs)
 			os.Exit(12)
 		}
 
 	}
-	
+
 	getCommandInterval := time.Duration(RunConf.Agent.Period)
 	for {
 		if shouldExit {
-			return 
+			return
 		}
-		
+
 		if runData.httpClient == nil {
 			if err := buildHttpClient(); err != nil {
-				errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090105,"warning","build http client error %s.we will try it again",err))
+				errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090105, "warning", "build http client error %s.we will try it again", err))
 				logErrors(errs)
 				errs = errs[0:0]
-				time.Sleep(getCommandInterval * time.Second) 
+				time.Sleep(getCommandInterval * time.Second)
 				continue
 			}
 
 		}
 
-		nodeIdentifer :=  runData.nodeIdentifer
+		nodeIdentifer := runData.nodeIdentifer
 		nodeIdentiferMap := map[string]interface{}{
 			"nodeIdentifer": *nodeIdentifer,
 		}
 
-		nodeIdentiferJson, err :=  json.Marshal(nodeIdentiferMap)
+		nodeIdentiferJson, err := json.Marshal(nodeIdentiferMap)
 		if err != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090106,"warning","encoding node identifer to json string error %s. we will try it again",err))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090106, "warning", "encoding node identifer to json string error %s. we will try it again", err))
 			logErrors(errs)
 			errs = errs[0:0]
-			time.Sleep(getCommandInterval * time.Second) 
+			time.Sleep(getCommandInterval * time.Second)
 			continue
 		}
 
 		requestParas := runData.getCommandParames
-				
-		body, err := httpclient.NewSendRequest(requestParas,runData.httpClient,strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
+
+		body, err := httpclient.NewSendRequest(requestParas, runData.httpClient, strings.NewReader(sysadmutils.Bytes2str(nodeIdentiferJson)))
 		if err != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090107,"warning","can not get command from server error %s",err))
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090107, "warning", "can not get command from server error %s", err))
 			logErrors(errs)
 			errs = errs[0:0]
-			time.Sleep(getCommandInterval * time.Second) 
+			time.Sleep(getCommandInterval * time.Second)
 			continue
 		}
-		
+
 		logErrors(errs)
 		errs = errs[0:0]
 		go handleHTTPBody(body)
-		time.Sleep(getCommandInterval * time.Second) 
+		time.Sleep(getCommandInterval * time.Second)
 	}
 }
 
-func buildHttpClient() error{
-	var rt http.RoundTripper = nil 
-	
-	dailer, err :=  httpclient.BuildDailer(DefaultTcpTimeout,DefaultKeepAliveProbeInterval,RunConf.Global.SourceIP)
-	
+func buildHttpClient() error {
+	var rt http.RoundTripper = nil
+
+	dailer, err := httpclient.BuildDailer(DefaultTcpTimeout, DefaultKeepAliveProbeInterval, RunConf.Global.SourceIP)
+
 	if err != nil {
 		return err
 	}
 
-	tlsConf, err := httpclient.BuildTlsClientConfig(RunConf.Global.Tls.Ca,RunConf.Global.Tls.Cert,RunConf.Global.Tls.Key,RunConf.WorkingDir,RunConf.Global.Tls.InsecureSkipVerify)
+	tlsConf, err := httpclient.BuildTlsClientConfig(RunConf.Global.Tls.Ca, RunConf.Global.Tls.Cert, RunConf.Global.Tls.Key, RunConf.WorkingDir, RunConf.Global.Tls.InsecureSkipVerify)
 	if err != nil {
 		return err
 	}
 
-	rt, err = httpclient.BuildTlsRoundTripper(dailer,tlsConf,defaultTLSHandshakeTimeout,defaultIdleConnTimeout,defaultMaxIdleConns,defaultMaxIdleConnsPerHost,defaultMaxConnsPerHost,defaultReadBufferSize,defaultWriteBufferSize,defaultDisableKeepAives,defaultDisableCompression,true)
+	rt, err = httpclient.BuildTlsRoundTripper(dailer, tlsConf, defaultTLSHandshakeTimeout, defaultIdleConnTimeout, defaultMaxIdleConns, defaultMaxIdleConnsPerHost, defaultMaxConnsPerHost, defaultReadBufferSize, defaultWriteBufferSize, defaultDisableKeepAives, defaultDisableCompression, true)
 	if err != nil {
 		return err
 	}
-	
-	client := httpclient.BuildHttpClient(rt,defaultHTTPTimeOut)
 
-	runData.httpClient =  client
+	client := httpclient.BuildHttpClient(rt, defaultHTTPTimeOut)
 
-	return nil 
+	runData.httpClient = client
+
+	return nil
 }
 
-func handleHTTPBody(body []byte){
+func handleHTTPBody(body []byte) {
 	var errs []sysadmerror.Sysadmerror
-	var gotCommand apiserver.CommandData  = apiserver.CommandData{}
+	var gotCommand apiserver.CommandData = apiserver.CommandData{}
 
-	err := json.Unmarshal(body,&gotCommand)
+	err := json.Unmarshal(body, &gotCommand)
 	if err != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090108,"error","we got a command %s from server,but can not unmarshal it to object error %s",body,err))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090108, "error", "we got a command %s from server,but can not unmarshal it to object error %s", body, err))
 		logErrors(errs)
-		return 
+		return
 	}
 
-	doRouteCommand(&gotCommand,nil)
+	doRouteCommand(&gotCommand, nil)
 }
-

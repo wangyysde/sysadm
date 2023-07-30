@@ -1,0 +1,117 @@
+<script type="text/javascript" src="/js/objectlist.js"></script>
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+<script language="javascript1.2">
+	var popMenuItems = new Array();
+	var pageUrl = {{.baseUri}};
+	{{range $index,$line := .allPopMenuItems }}
+	popMenuItems[{{ $index }}] = {{ $line}};
+	{{end}}
+</script>
+
+<section class="content-header">
+	<h1>
+		{{ .mainCategory }}
+		<small>{{ .subCategory }}</small>
+	</h1>
+</section>
+
+{{ $groupSelectedID := .groupSelectID }}
+<div>
+	<div class="selectForm">
+		<form id="groupSelect" name="groupSelect" method="post" target="_self" onsubmit="return false">
+			{{if gt (len .groupSelect) 0 }}
+			<select name="groupSelectID" onChange="GroupSelectChanged(this.options[this.options.selectedIndex].value)">
+				{{ range $index,$line := .groupSelect }}
+				{{if eq $groupSelectedID $line.id }}
+				<option value="{{ $line.id }}" selected> {{ $line.text }} </option>
+				{{else}}
+				<option value="{{ $line.id }}" > {{ $line.text }} </option>
+				{{end}}
+				{{end}}
+			</select> &nbsp;
+			{{ end }}
+			{{ if .addButtonTitle }}
+			<button id="buttonAdd" onclick="displayAddObjectForm() "> + {{ .addButtonTitle }} </button>&nbsp;
+			{{ end }}
+		</form>
+	</div>
+
+	{{ if .isSearchForm }}
+	<div class="searchForm">
+		<form id="searchForm" name="search" method="post" target="_self" onsubmit="return false">
+			<input type="text" name="searchContent" placeholder="Search..." autocomplete="off" onblur="doSearch(this.value)" />
+		</form>
+	</div>
+	{{ end }}
+</div>
+
+<form id="objectList" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			<th  align="left">
+			<input type="checkbox" id="objectListTH" name="objectListTH[]" onclick='selectAllObjectCheckbox(this.checked)'>
+			</th>
+			{{range $index,$line := .thData }}
+			<th>
+				{{if eq $line.OrderUri "" }}
+					{{ $line.Title }}
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{ $line.OrderUri}}")' >
+						{{ $line.Title }}
+					</a>
+					{{if $line.OrderSelected }}
+						{{if eq $line.OrderDirection "1" }}
+							<i class="fa fa-arrow-down"></i>
+						{{else}}
+							<i class="fa fa-arrow-up"></i>
+						{{end}}
+					{{end}}
+				{{end}}
+			</th>
+			{{end}}
+			<th > &nbsp; &nbsp;&nbsp;</th>
+		</tr>
+
+		{{range $index,$line := .objListData }}
+		<tr>
+			<td width="5%"> <input type="checkbox"  id="objectid[]" name="objectid[]" value="{{ $line.objectID }}" onclick='selectObjectCheckbox(this.checked)'></td>
+			{{range $key,$value := $.thData }}
+				<td >
+					{{ index $line (print $value.ID) }}
+				</td>
+			{{end}}
+
+			<td>
+				<a href="#" id="popmenuid" onclick='showPopMenu(event,{{ $line.popmenuitems}}, {{ $line.objectID }})'> ... </a>
+			</td>
+		</tr>
+		{{end}}
+	</table>
+</form>
+
+<table class="foot-table">
+	<tr>
+		<td>
+			<div class="div-foot">当前第{{ .currentPage }}页
+				{{if eq (len .prePageUri)  0 }}
+					前一页
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{.prePageUri}}")' >前一页</a>
+				{{end}}
+				{{if eq (len .nextPageUri) 0 }}
+					后一页
+				{{else}}
+					<a href="#" onclick='listContenChanged("{{.nextPageUri}}")' >后一页</a>
+				{{end}}
+			 共{{ .totalPage }}页 </div>
+		</td>
+	</tr>
+</table>	
+
+<div class="pop-menu" id="popmenu">
+</div>
+
+

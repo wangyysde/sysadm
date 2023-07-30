@@ -46,7 +46,7 @@ func DaemonStart(cmd *cobra.Command, cmdPath string) {
 	}
 	RuntimeData.RuningParas.DefinedConfig = definedConfig
 
-	// Get the install dir path of  sysadm 
+	// Get the install dir path of  sysadm
 	if _, err = getSysadmRootPath(cmdPath); err != nil {
 		sysadmServer.Logf("error", "error:%s", err)
 		os.Exit(2)
@@ -55,6 +55,9 @@ func DaemonStart(cmd *cobra.Command, cmdPath string) {
 	// set loggers according to the configurations.
 	setLogger()
 	defer closeLogger()
+
+	// set SysadmLogger
+	setSysadmLogger()
 
 	// building configuration of DB , checking the configurations are available, instance DB instance
 	dbConfig, errs := buildDBConfig(definedConfig, cmdPath)
@@ -83,11 +86,11 @@ func DaemonStart(cmd *cobra.Command, cmdPath string) {
 	r.Delims(templateDelimLeft, templateDelimRight)
 
 	/*
-		r.SetFuncMap(template.FuncMap{
-	        "safe": func(str string) template.HTML {
-	            return template.HTML(str)
-	        },
-	    })
+			r.SetFuncMap(template.FuncMap{
+		        "safe": func(str string) template.HTML {
+		            return template.HTML(str)
+		        },
+		    })
 	*/
 
 	// initating session
@@ -123,6 +126,13 @@ func DaemonStart(cmd *cobra.Command, cmdPath string) {
 	logErrors(errs)
 	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
 		os.Exit(11)
+	}
+
+	// 添加K8S集群事件侦听器
+	errs = addK8sclusterHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(15)
 	}
 
 	// adding syssetting  handlers
@@ -245,7 +255,7 @@ func closeLogger() {
 	}
 }
 
-// Get the install dir path of  sysadm 
+// Get the install dir path of  sysadm
 func getSysadmRootPath(cmdPath string) (string, error) {
 	dir, error := filepath.Abs(filepath.Dir(cmdPath))
 	if error != nil {
@@ -313,6 +323,7 @@ func buildDBConfig(definedConfig *config.Config, cmdPath string) (*sysadmDB.DbCo
 		SslKey:       definedConfig.DB.Sslkey,
 		MaxOpenConns: definedConfig.DB.DbMaxConnect,
 		MaxIdleConns: definedConfig.DB.DbIdleConnect,
+		RunModeDebug: sysadmServer.IsDebugging(),
 	}
 	dbConfig, errs := sysadmDB.InitDbConfig(&dbConf, cmdPath)
 

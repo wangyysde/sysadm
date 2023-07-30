@@ -17,16 +17,14 @@
 
 package server
 
- var formTemplateDir = "formstmpl/"
- var formBaseUri = "/forms/"
- var templateDelimLeft ="{{"
- var templateDelimRight ="}}"
- var mainTitle = "sysadm系统"
- var sessionPath = "/"
- var sessionName = "sysadm"
- var sessionDomain = "sysadm"
- var sessionAge = 1800 
- var apiVersion = "v1.0"
- var numPerPage = 8
-
- 
+var formTemplateDir = "formstmpl/"
+var formBaseUri = "/forms/"
+var templateDelimLeft = "{{"
+var templateDelimRight = "}}"
+var mainTitle = "sysadm系统"
+var sessionPath = "/"
+var sessionName = "sysadm"
+var sessionDomain = "sysadm"
+var sessionAge = 1800
+var apiVersion = "v1.0"
+var numPerPage = 1

@@ -22,25 +22,25 @@ import (
 	"strings"
 )
 
- var Levels = []string{
-    "trace",
-    "debug",
-    "info",
-    "warning",
-    "error",
-    "fatal",
-    "panic",
+var Levels = []string{
+	"trace",
+	"debug",
+	"info",
+	"warning",
+	"error",
+	"fatal",
+	"panic",
 }
 
 type Sysadmerror struct {
-	ErrorNo int 
-	ErrorLevel int 
-	ErrorMsg string 
+	ErrorNo    int
+	ErrorLevel int
+	ErrorMsg   string
 }
 
 // Get the index of error level.
 // Return int of index if found otherwise return 1 which is the index of "debug"
-func GetLevelNum(level string) int { 
+func GetLevelNum(level string) int {
 
 	for key := range Levels {
 		if strings.ToLower(Levels[key]) == strings.ToLower(level) {
@@ -52,7 +52,7 @@ func GetLevelNum(level string) int {
 
 // Get the string of error level 
 // Return the string of the error level if the level was found, otherwise return "debug"
-func GetLevelString(level int) string{
+func GetLevelString(level int) string {
 	if level < 0 || level > 6 {
 		return "debug"
 	}
@@ -95,9 +95,9 @@ func NewErrorWithNumLevel(errno int, errLevel int, errMsg string, args ...interf
 	}
 
 	err := Sysadmerror{
-		ErrorNo: errno,
+		ErrorNo:    errno,
 		ErrorLevel: errLevel,
-		ErrorMsg: errmsg,
+		ErrorMsg:   errmsg,
 	}
 
 	return err
@@ -108,11 +108,11 @@ func NewErrorWithNumLevel(errno int, errLevel int, errMsg string, args ...interf
 func NewErrorWithStringLevel(errno int, errLevel string, errMsg string, args ...interface{}) Sysadmerror {
 	errmsg := fmt.Sprintf(errMsg, args...)
 	level := GetLevelNum(errLevel)
-	
+
 	err := Sysadmerror{
-		ErrorNo: errno,
+		ErrorNo:    errno,
 		ErrorLevel: level,
-		ErrorMsg: errmsg,
+		ErrorMsg:   errmsg,
 	}
 
 	return err
@@ -127,7 +127,7 @@ func GetMaxLevel(errs []Sysadmerror) int {
 	}
 
 	maxLevel := 0
-	for _,v := range errs {
+	for _, v := range errs {
 		l := v.ErrorLevel
 		if l > maxLevel {
 			maxLevel = l
@@ -136,3 +136,4 @@ func GetMaxLevel(errs []Sysadmerror) int {
 
 	return maxLevel
 }
+
