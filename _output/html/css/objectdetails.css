@@ -1,0 +1,56 @@
+.objectDetailPage {
+    position: relative;
+    width: 100%;
+    top: 30px;
+    left: 10px;
+    font-size: 12px;
+    color: #000;
+    padding: 5px;
+    padding-bottom: 50px;
+}
+
+.lineDiv {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    color: #000;
+}
+
+.separator {
+    color: #045283;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.label {
+    color: #444;
+    font-weight: bold;
+}
+
+.lineButton {
+    position: relative;
+    width: 200px;
+    margin: 0 auto;
+    padding-top: 10px;
+
+}
+
+.lineButton button {
+    width: 100px;
+    height: 30px;
+    border: 1px;
+    font-size: 18px;
+    color: #045283;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    align-self: center;
+    cursor: pointer;
+    text-align: center;
+    border-style: solid
+}

@@ -43,10 +43,10 @@ func (k K8scluster) GetObjectInfoByID(id string) (interface{}, error) {
 		return nil, e
 	}
 
-	availablezoneData := K8sclusterSchema{}
-	e = sysadmObjects.Unmarshal(dbData, &availablezoneData)
+	k8sclusterData := K8sclusterSchema{}
+	e = sysadmObjects.Unmarshal(dbData, &k8sclusterData)
 
-	return availablezoneData, e
+	return k8sclusterData, e
 }
 
 func (k K8scluster) GetObjectCount(searchContent string, ids, searchKeys []string, conditions map[string]string) (int, error) {

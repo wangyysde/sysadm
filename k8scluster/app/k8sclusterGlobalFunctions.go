@@ -91,7 +91,7 @@ func AddHandlers(r *sysadmServer.Engine) error {
 		display.GET("/addform", addformHandler)
 		display.GET("/list", listHandler)
 		display.GET("/getazbydcidforselect", getazbydcidforselectHandler)
-
+		display.GET("/detail", clusterDetailHandler)
 	}
 
 	return nil

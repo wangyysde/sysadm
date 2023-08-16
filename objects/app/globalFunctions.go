@@ -63,7 +63,7 @@ func GetObjectInfoByID(tableName, pkName, id string) (db.FieldData, error) {
 	}
 
 	whereMap := make(map[string]string, 0)
-	whereMap[pkName] = id
+	whereMap[pkName] = "=" + id
 	selectData := db.SelectData{
 		Tb:        []string{tableName},
 		OutFeilds: []string{"*"},

@@ -70,3 +70,19 @@ type ObjItemInfo struct {
 type ObjLineData struct {
 	Items []ObjItemInfo
 }
+
+type ItemForDetail struct {
+	Label string
+
+	Value string
+
+	ActionUrl string
+
+	ActionType string
+
+	IsSeparator bool
+}
+
+type LineDataForDetail struct {
+	Items []ItemForDetail
+}

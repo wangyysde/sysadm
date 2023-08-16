@@ -1,0 +1,53 @@
+.poppage {
+    display: none;
+    position: absolute;
+    left: 400px;
+    top: 100px;
+    width: 600px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #045283;
+    font-size: 12px;
+    border: 1px solid #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 50px;
+}
+
+.poppage span {
+    position: relative;
+    align-content: center;
+    top: 30px;
+    color: #ff0000;
+    font-size: 18px;
+    padding-left: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.poppageButton  {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+    top: 70px;
+    text-align: center;
+}
+.poppageButton button {
+    width: 100px;
+    height: 30px;
+    border: 1px;
+    border-style: solid;
+    font-size: 18px;
+    color: #045283;
+    outline: none;
+    cursor: pointer;
+    background-color: #fff;
+    align-self: center;
+    cursor: pointer;
+    text-align: center;
+    border-color: #045283;
+}

@@ -287,3 +287,18 @@ func InitAddObjectFormTemplateData(baseUri, mainCategory, subCategory, enctype, 
 
 	return tplData, nil
 }
+
+func InitTemplateForShowObjectDetails(mainCategory, subCategory, redirectUrl, baseUri string) (map[string]interface{}, error) {
+	tplData := make(map[string]interface{}, 0)
+
+	redirectUrl = strings.TrimSpace(redirectUrl)
+	mainCategory = strings.TrimSpace(mainCategory)
+	subCategory = strings.TrimSpace(subCategory)
+
+	tplData["redirectUrl"] = redirectUrl
+	tplData["baseUri"] = baseUri
+	tplData["mainCategory"] = mainCategory
+	tplData["subCategory"] = subCategory
+
+	return tplData, nil
+}

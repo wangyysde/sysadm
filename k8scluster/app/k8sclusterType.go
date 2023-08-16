@@ -64,8 +64,6 @@ type K8sclusterSchema struct {
 	Podcidr string `form:"podcidr" json:"podcidr" yaml:"podcidr" xml:"podcidr" db:"podcidr"`
 	// 集群的service cidr
 	Servicecidr string `form:"servicecidr" json:"servicecidr" yaml:"servicecidr" xml:"servicecidr" db:"servicecidr"`
-	// 集群的cni
-	Cni string `form:"cni" json:"cni" yaml:"cni" xml:"cni" db:"cni"`
 	// 值班电话
 	DutyTel string `form:"dutyTel" json:"dutyTel" yaml:"dutyTel" xml:"dutyTel" db:"dutyTel"`
 	// 状态0未启用 1已启用 2 已停用

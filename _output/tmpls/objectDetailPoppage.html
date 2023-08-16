@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/css/objectdetails.css">
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index,$line := .addtionalCss }}
+<link rel="stylesheet" href="{{ $line }}">
+{{end}}
+
+<div id="objectDetails">
+        <div class="formTitle">{{ .subCategory }}</div>
+
+         {{range $index, $line := .data }}
+        <div class="lineDiv">
+            {{range $i,$item := $line.Items }}
+              {{if $item.IsSeparator }}
+                 ==============================================  {{- $item.Label -}}  =======================
+              {{else}}
+                 {{- $item.Label -}} {{- $item.Value -}}
+              {{end}}
+            {{end}}
+        </div>
+        {{end}}
+
+        <div class="addObjButton">
+            <button id="poppagebutton " onclick="closeDetailPage()">关闭</button>
+        </div>
+    </form>
+</div>

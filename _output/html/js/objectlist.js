@@ -4,14 +4,14 @@ function showPopMenu(event,itemids,objid) {
     var menuContent = "";
     for(i = 0; i < items.length; i++){
         var popmenustr = popMenuItems[items[i]];
-        var popmenuArray = popmenustr.split(",");
-        if(i>0) {
-            menuContent = menuContent + '<br><li><a href="#" onclick=\'doMenuItem("' + objid + '","' + popmenuArray[1] + '","' + popmenuArray[2] + '")\'>' +  popmenuArray[0] +'</a></li>';
-        } else {
-            menuContent = menuContent + '<li><a href="#" onclick=\'doMenuItem("' + objid + '","' + popmenuArray[1] + '","' + popmenuArray[2] + '")\'>' +  popmenuArray[0] +'</a></li>';
+        if(popmenustr) {
+            var popmenuArray = popmenustr.split(",");
+            if (i > 0) {
+                menuContent = menuContent + '<br><li><a href="#" onclick=\'doMenuItem("' + objid + '","' + popmenuArray[1] + '","' + popmenuArray[2] + '","' + popmenuArray[3] + '")\'>' + popmenuArray[0] + '</a></li>';
+            } else {
+                menuContent = menuContent + '<li><a href="#" onclick=\'doMenuItem("' + objid + '","' + popmenuArray[1] + '","' + popmenuArray[2] + '","' + popmenuArray[3] + '")\'>' + popmenuArray[0] + '</a></li>';
+            }
         }
-
-
     }
     var popMenu = document.getElementById("popmenu");
     popMenu.innerHTML = menuContent;
@@ -34,15 +34,57 @@ function closePopMenu(e){
 }
 
 // this function be called when user click a item of popmenu
-function doMenuItem(objID,action,actionType){
+function doMenuItem(objID,action,actionType,method){
     var popMenu = document.getElementById("popmenu");
     popMenu.style.display = "none";
     popMenu.style.zIndex = 2000;
 
-    var doUrl = pageUrl + "?" + action+"&objID=" + objID;
-    doAjax(doUrl,actionType);
+    var doUrl = pageUrl + action+"?objID=" + objID;
+
+    if(method == "poppage"){
+        doAjaxForPoppage(doUrl,actionType);
+        return;
+    }
+    if(method == "tip") {
+        doAjax(doUrl, actionType);
+        return;
+    }
+
+    if(method == "page"){
+        $('#container').load(doUrl);
+        return;
+    }
+
+    if(method == "window"){
+        window.open(doUrl,"_blank");
+        return;
+    }
+
 }
 
+function closeDetailPage(){
+    var poppage = document.getElementById("poppage");
+    poppage.style.display = "none";
+    poppage.style.zIndex = 0;
+    var maskLayer = document.getElementById("maskLayer");
+    maskLayer.style.zIndex = 0;
+}
+
+function openPoppage(content){
+    content =  content + "<br><br>";
+    content = content + "<div class=\"poppageButton\">";
+    content = content + "<button  onclick=\"closeDetailPage()\">关闭</button>";
+    content = content + "</div>";
+    var maskLayer = document.getElementById("maskLayer");
+    maskLayer.style.zIndex = 2000;
+    var poppage = document.getElementById("poppage");
+    poppage.style.display = "block";
+    poppage.style.zIndex = 2100;
+    poppage.innerHTML = content;
+    poppage.focus();
+
+    return;
+}
 // check or uncheck all all object checkbox on object list page
 function selectAllObjectCheckbox(isChecked) {
     if(isChecked) {
@@ -146,6 +188,34 @@ function doAjax(actionUrl,actionType) {
                 }, 5000);
             }
         }
+    });
+}
+
+function doAjaxForPoppage(actionUrl,actionType) {
+    $.ajax({
+        type: actionType,
+        contentType: false,
+        cache: false,
+        processData: false,
+        url: actionUrl,
+        data: "",
+        //async: false,
+        error: function(xmlObj, request) {
+            var errMsg = "";
+            if (xmlObj.responseText == null) {
+                errMsg = "连接服务器出错";
+            } else {
+                errMsg = xmlObj.responseText;
+            }
+            openPoppage("<span>" + errMsg + "</span>");
+        },
+        success: function (result){
+    //        msg = xmlObj.responseText;
+            openPoppage(result);
+        }
+       // success: function(result) {
+       //     openPoppage(result);
+       // }
     });
 }
 

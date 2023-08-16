@@ -427,7 +427,6 @@ create table `k8scluster` (
     `cri` varchar(50) comment '集群的cri',
     `podcidr` varchar(50) comment '集群的pod cidr',
     `servicecidr` varchar(50) comment '集群的service cidr',
-    `cni` varchar(50) comment '集群的cni',
     `dutyTel` varchar(20) comment '值班电话',
     `status` tinyint(1) not null default 1 comment '状态0未启用 1已启用 2 已停用',
     `isDeleted` tinyint(1) not null default 0 comment '是否删除 0正常 1已删除',

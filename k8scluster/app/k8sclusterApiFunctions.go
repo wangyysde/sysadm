@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sysadm/k8sclient"
 	sysadmObjects "sysadm/objects/app"
 	"sysadm/sysadmLog"
 	"sysadm/sysadmapi/apiutils"
@@ -268,7 +269,18 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
+	clusterID, kubeVersion, cri, podcidr, svccidr, e := getClusterInfo(dcidInt, azidInt, clusterUser, apiserver, string(caContent), string(certContent), string(keyContent))
+	if e != nil {
+		response = apiutils.BuildResponseDataForError(700070025, "连接集群出错，请确认集群连接数据是否正确")
+		err := sysadmLog.NewErrorWithStringLevel(700070025, "error", "%s", e)
+		errs = append(errs, err)
+		c.JSON(http.StatusOK, response)
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
 	addData := K8sclusterSchema{
+		Id:          clusterID,
 		Dcid:        uint(dcidInt),
 		Azid:        uint(azidInt),
 		CnName:      cnName,
@@ -278,8 +290,12 @@ func addPostHandler(c *sysadmServer.Context) {
 		Ca:          string(caContent),
 		Cert:        string(certContent),
 		Key:         string(keyContent),
+		Version:     kubeVersion,
+		Cri:         cri,
+		Podcidr:     podcidr,
+		Servicecidr: svccidr,
 		DutyTel:     dutyTel,
-		Status:      0,
+		Status:      1,
 		IsDeleted:   0,
 		CreateBy:    uint(userid),
 		Remark:      formData["remark"].([]string)[0],
@@ -303,4 +319,47 @@ func addPostHandler(c *sysadmServer.Context) {
 	errs = append(errs, err)
 	c.JSON(http.StatusOK, response)
 	runData.logEntity.LogErrors(errs)
+}
+
+func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string) (string, string, string, string, string, error) {
+	idData, e := utils.NewWorker(uint64(dcid), uint64(azid))
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+	clusterID, e := idData.GetID()
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	clusterUser = strings.TrimSpace(clusterUser)
+	apiserver = strings.TrimSpace(apiserver)
+	ca = strings.TrimSpace(ca)
+	cert = strings.TrimSpace(cert)
+	key = strings.TrimSpace(key)
+	restConf, e := k8sclient.BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	kubeVersion, e := k8sclient.GetKubernetesVersion(restConf)
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	cri, e := k8sclient.GetCRIInfo(restConf)
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	podcidr, e := k8sclient.GetPodCIDR(restConf)
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	svccidr, e := k8sclient.GetSvcCIDR(restConf)
+	if e != nil {
+		return "", "", "", "", "", e
+	}
+
+	return clusterID, kubeVersion, cri, podcidr, svccidr, nil
 }

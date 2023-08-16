@@ -43,7 +43,7 @@ var defaultOrderDirection = "1"
 
 // all popmenu items defined Format:
 // item name, action name, action method
-var allPopMenuItems = []string{"查看详情,detail,GET", "节点列表,list,GET", "删除集群,del,POST", "查看日志,getlog,GET", "kubeconf下载,getkubeconf,GET"}
+var allPopMenuItems = []string{"查看详情,detail,GET,page", "节点列表,list,GET,page", "删除集群,del,POST,tip", "kubeconf下载,getkubeconf,GET,window"}
 
 // define all list items(cols) name
 var allListItems = map[string]string{"TD1": "集群ID", "TD2": "数据中心/可用区", "TD3": "集群名", "TD4": "版本", "TD5": "状态"}
@@ -52,7 +52,7 @@ func listHandler(c *sysadmServer.Context) {
 	var errs []sysadmLog.Sysadmerror
 	errs = append(errs, sysadmLog.NewErrorWithStringLevel(700050001, "debug", "now handling k8s cluster list"))
 	messageTemplateFile := "showmessage.html"
-	listTemplateFile := "objectllist.html"
+	listTemplateFile := "objectlist.html"
 	messageTplData := make(map[string]interface{}, 0)
 	// get userid
 	userid, e := user.GetSessionValue(c, "userid", runData.sessionName)
@@ -249,9 +249,9 @@ func getPopMenuItemsId(status, isDeleted int) string {
 	case 0:
 		popmenuitemidstr = "0"
 	case 1:
-		popmenuitemidstr = "0,1,2,3,4"
+		popmenuitemidstr = "0,1,2,3"
 	case 2:
-		popmenuitemidstr = "0,1,2,3,4"
+		popmenuitemidstr = "0,1,2,3"
 	default:
 		popmenuitemidstr = "0"
 	}

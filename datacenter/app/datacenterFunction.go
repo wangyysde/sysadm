@@ -42,10 +42,10 @@ func (d Datacenter) GetObjectInfoByID(id string) (interface{}, error) {
 		return nil, e
 	}
 
-	availablezoneData := Datacenter{}
-	e = sysadmObjects.Unmarshal(dbData, &availablezoneData)
+	dcData := DatacenterSchema{}
+	e = sysadmObjects.Unmarshal(dbData, &dcData)
 
-	return availablezoneData, e
+	return dcData, e
 }
 
 func (d Datacenter) GetObjectCount(searchContent string, ids, searchKeys []string, conditions map[string]string) (int, error) {

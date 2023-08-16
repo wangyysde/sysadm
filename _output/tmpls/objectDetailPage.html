@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="/css/objectdetails.css">
+<script type="text/javascript" src="/js/objectdetails.js"></script>
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index,$line := .addtionalCss }}
+<link rel="stylesheet" href="{{ $line }}">
+{{end}}
+
+<script language="javascript1.2">
+    var pageUrl = {{.baseUri}};
+</script>
+
+<section class="content-header">
+    <h1>
+        {{ .mainCategory }}
+        <small>{{ .subCategory }}</small>
+    </h1>
+</section>
+
+<div class="objectDetailPage">
+         {{range $index, $line := .data }}
+        <div class="lineDiv">
+            {{range $i,$item := $line.Items }}
+              {{if $item.IsSeparator }}
+                <div class="separator">---   {{- $item.Label -}}  --- </div>
+              {{else}}
+                 {{if $item.ActionUrl }}
+                    {{if $item.ActionType }}
+                        <div class="label"> {{- $item.Label -}} </div> <a href="#" onclick="{{- $item.ActionType -}}"> {{- $item.Value -}} </a>
+                    {{else}}
+                         <div class="label">  {{- $item.Label -}} </div> <a href="{{- $.baseUri -}} {{- $item.ActionUrl -}}" > {{- $item.Value -}} </a>
+                    {{end}}
+                 {{else}}
+                      <div class="label">  {{- $item.Label -}} </div>  {{- $item.Value -}}
+                 {{end}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              {{end}}
+            {{end}}
+        </div>
+        {{end}}
+
+        <div class="lineButton">
+            <button  id="poppagebutton " onclick="redirectPage({{- .redirectUrl -}})">关闭</button>
+        </div>
+    </form>
+</div>
