@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"strings"
 	sysadmObjects "sysadm/objects/app"
-	"sysadm/utils"
 )
 
 func New() K8scluster {
@@ -123,20 +122,30 @@ func (k K8scluster) AddObject(data interface{}) error {
 		return fmt.Errorf("the data try to add is not valid")
 	}
 
-	idData, e := utils.NewWorker(uint64(k8sSchemaData.Dcid), uint64(k8sSchemaData.Azid))
-	if e != nil {
-		return e
-	}
-	clusterID, e := idData.GetID()
-	if e != nil {
-		return e
-	}
-
-	k8sSchemaData.Id = clusterID
 	insertData, e := sysadmObjects.Marshal(k8sSchemaData)
 	if e != nil {
 		return e
 	}
 
 	return sysadmObjects.AddObject(k.TableName, "", insertData)
+}
+
+func (k K8scluster) AddObjectByTx(data interface{}) (map[string]interface{}, string, error) {
+	addData := make(map[string]interface{}, 0)
+
+	schemaData, ok := data.(K8sclusterSchema)
+	if !ok {
+		return addData, "", fmt.Errorf("there is an error occurred when coverting data to K8S Cluster schema")
+	}
+
+	addData, e := sysadmObjects.Marshal(schemaData)
+	if e != nil {
+		return addData, "", e
+	}
+
+	return addData, k.TableName, nil
+}
+
+func (k K8scluster) GetObjectIDFieldName() (string, string, error) {
+	return "", "", fmt.Errorf("cluster ID should not automatic increment")
 }

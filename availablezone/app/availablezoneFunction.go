@@ -160,3 +160,23 @@ func (a Availablezone) AddObject(data interface{}) error {
 
 	return sysadmObjects.AddObject(a.TableName, a.PkName, insertData)
 }
+
+func (a Availablezone) AddObjectByTx(data interface{}) (map[string]interface{}, string, error) {
+	addData := make(map[string]interface{}, 0)
+
+	schemaData, ok := data.(AvailablezoneSchema)
+	if !ok {
+		return addData, "", fmt.Errorf("there is an error occurred when coverting data to Availablezone Schema schema")
+	}
+
+	addData, e := sysadmObjects.Marshal(schemaData)
+	if e != nil {
+		return addData, "", e
+	}
+
+	return addData, a.TableName, nil
+}
+
+func (a Availablezone) GetObjectIDFieldName() (string, string, error) {
+	return a.TableName, a.PkName, nil
+}

@@ -37,6 +37,10 @@ func SetRunDataForDBConf(dbConf *sysadmDB.DbConfig) error {
 	return nil
 }
 
+func GetRunDataForDBConf() *sysadmDB.DbConfig {
+	return runData.dbConf
+}
+
 // SetWorkingRoot set working root path to global variable
 func SetWorkingRoot(workingRoot string) error {
 	workingRoot = strings.TrimSpace(workingRoot)
@@ -47,6 +51,10 @@ func SetWorkingRoot(workingRoot string) error {
 	runData.workingRoot = workingRoot
 
 	return nil
+}
+
+func GetWorkingRoot() string {
+	return strings.TrimSpace(runData.workingRoot)
 }
 
 // getObjectInfoByID get object information from DB by its id.
@@ -79,7 +87,7 @@ func GetObjectInfoByID(tableName, pkName, id string) (db.FieldData, error) {
 	return dbData[0], nil
 }
 
-// getObjectCount get object count from db accroding to conditions
+// GetObjectCount get object count from db accroding to conditions
 // this function should be called by an entity of an object
 // success: return count of object and nil
 // error: return -1 and an error
@@ -147,7 +155,7 @@ func GetObjectCount(tableName, pkName, searchContent string, ids, searchKeys []s
 	return num, nil
 }
 
-// getObjectList get object list from DB
+// GetObjectList get object list from DB
 // this function should be called by an entity of an object. searchKeys should be  the fields name of object table
 // the value of key of conditions should be the fields name of object table, and the value of it should be a sql statement
 // for where.
@@ -417,4 +425,79 @@ func AddObject(tableName, pkName string, data map[string]interface{}) error {
 	dbEntity := runData.dbConf.Entity
 
 	return dbEntity.NewInsertData(tableName, dbData)
+}
+
+func GetObjectMaxID(dbEntity sysadmDB.DbEntity, tableName, idField string) (uint, error) {
+	tableName = strings.TrimSpace(tableName)
+	idField = strings.TrimSpace(idField)
+
+	if tableName == "" || idField == "" {
+		return 0, fmt.Errorf("table name, field name of id is empty")
+	}
+
+	if dbEntity == nil {
+		dbEntity = runData.dbConf.Entity
+	}
+
+	if dbEntity == nil {
+		return 0, fmt.Errorf("DB Entity is nil")
+	}
+
+	sql := "max(" + idField + ") as id"
+	selectData := db.SelectData{
+		Tb:        []string{tableName},
+		OutFeilds: []string{sql},
+	}
+	dbData, e := dbEntity.NewQueryData(&selectData)
+	if e != nil || len(dbData) < 1 {
+		return 0, fmt.Errorf("there is an error occurred when building SQL statement")
+	}
+
+	row := dbData[0]
+	numTmp, ok := row["id"]
+	if !ok {
+		return 0, fmt.Errorf("there is an error occurred when getting object ID")
+	}
+
+	id, e := utils.Interface2Uint64(numTmp)
+	if e != nil {
+		return 0, e
+	}
+
+	return uint(id), nil
+}
+
+func prepareUpdateObjNextIDData(tbName, idField string, dbEntity sysadmDB.DbEntity) (sysadmDB.FieldData, map[string]string, error) {
+	updateData := make(sysadmDB.FieldData, 0)
+	where := make(map[string]string, 0)
+
+	tbName = strings.TrimSpace(tbName)
+	idField = strings.TrimSpace(idField)
+	if tbName == "" || idField == "" {
+		return updateData, where, fmt.Errorf("table name or field name of id is empty")
+	}
+
+	if dbEntity == nil {
+		dbEntity = runData.dbConf.Entity
+	}
+
+	if dbEntity == nil {
+		return updateData, where, fmt.Errorf("DB Entity is nil")
+	}
+
+	updateData["nextValue"] = "nextValue + 1"
+
+	where["tableName"] = tbName
+	where["fieldName"] = idField
+
+	return updateData, where, nil
+}
+
+func UpdateObjectNextID(dbEntity sysadmDB.DbEntity, tbName, idField string) error {
+	fieldData, where, e := prepareUpdateObjNextIDData(tbName, idField, dbEntity)
+	if e != nil {
+		return e
+	}
+
+	return dbEntity.NewUpdateData(tbName, fieldData, where)
 }

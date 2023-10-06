@@ -38,6 +38,8 @@ type K8scluster struct {
 type K8sclusterSchema struct {
 	// 集群ID，非自增，由雪花算法生成
 	Id string `form:"id" json:"id" yaml:"id" xml:"id" db:"id"`
+	// k8s集群自身的ID,这个值的获取见k8sclient组件的GetKubernetesClusterID函数
+	K8sClusterID string `form:"k8sClusterID" json:"k8sClusterID" yaml:"k8sClusterID" xml:"k8sClusterID" db:"k8sClusterID"`
 	// 集群所属的数据中心ID
 	Dcid uint `form:"dcid" json:"dcid" yaml:"dcid" xml:"dcid" db:"dcid"`
 	// 集群所属的可用区ID

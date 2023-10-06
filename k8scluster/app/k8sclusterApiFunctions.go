@@ -20,6 +20,7 @@ package app
 import (
 	"fmt"
 	"github.com/wangyysde/sysadmServer"
+	"k8s.io/client-go/rest"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -269,7 +270,7 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
-	clusterID, kubeVersion, cri, podcidr, svccidr, e := getClusterInfo(dcidInt, azidInt, clusterUser, apiserver, string(caContent), string(certContent), string(keyContent))
+	k8sClusterID, clusterID, kubeVersion, cri, podcidr, svccidr, restConf, e := getClusterInfo(dcidInt, azidInt, clusterUser, apiserver, string(caContent), string(certContent), string(keyContent))
 	if e != nil {
 		response = apiutils.BuildResponseDataForError(700070025, "连接集群出错，请确认集群连接数据是否正确")
 		err := sysadmLog.NewErrorWithStringLevel(700070025, "error", "%s", e)
@@ -279,56 +280,77 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
-	addData := K8sclusterSchema{
-		Id:          clusterID,
-		Dcid:        uint(dcidInt),
-		Azid:        uint(azidInt),
-		CnName:      cnName,
-		EnName:      enName,
-		Apiserver:   apiserver,
-		ClusterUser: clusterUser,
-		Ca:          string(caContent),
-		Cert:        string(certContent),
-		Key:         string(keyContent),
-		Version:     kubeVersion,
-		Cri:         cri,
-		Podcidr:     podcidr,
-		Servicecidr: svccidr,
-		DutyTel:     dutyTel,
-		Status:      1,
-		IsDeleted:   0,
-		CreateBy:    uint(userid),
-		Remark:      formData["remark"].([]string)[0],
-	}
+	conditions := make(map[string]string, 0)
+	conditions["k8sclusterk8sClusterID"] = k8sClusterID
 
 	// try to add cluster data into DB
 	var clusterEntity sysadmObjects.ObjectEntity
 	clusterEntity = New()
+	var emptyString []string
+	existCount, e := clusterEntity.GetObjectCount("", emptyString, emptyString, conditions)
+	if existCount > 0 || e != nil {
+		response = apiutils.BuildResponseDataForError(700070026, "需要添加的集群已存在或查询出现错误")
+		err := sysadmLog.NewErrorWithStringLevel(700070026, "error", "k8s cluster exist or got an error %s", e)
+		errs = append(errs, err)
+		c.JSON(http.StatusOK, response)
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+	addData := K8sclusterSchema{
+		Id:           clusterID,
+		K8sClusterID: k8sClusterID,
+		Dcid:         uint(dcidInt),
+		Azid:         uint(azidInt),
+		CnName:       cnName,
+		EnName:       enName,
+		Apiserver:    apiserver,
+		ClusterUser:  clusterUser,
+		Ca:           string(caContent),
+		Cert:         string(certContent),
+		Key:          string(keyContent),
+		Version:      kubeVersion,
+		Cri:          cri,
+		Podcidr:      podcidr,
+		Servicecidr:  svccidr,
+		DutyTel:      dutyTel,
+		Status:       1,
+		IsDeleted:    0,
+		CreateBy:     uint(userid),
+		Remark:       formData["remark"].([]string)[0],
+	}
+
 	e = clusterEntity.AddObject(addData)
 	if e != nil {
-		response = apiutils.BuildResponseDataForError(700070025, fmt.Sprintf("添加集群信息出错，错误信息为:%s", e))
-		err := sysadmLog.NewErrorWithStringLevel(700070025, "error", "add cluster information error %s", e)
+		response = apiutils.BuildResponseDataForError(700070027, fmt.Sprintf("添加集群信息出错，错误信息为:%s", e))
+		err := sysadmLog.NewErrorWithStringLevel(700070027, "error", "add cluster information error %s", e)
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
 		return
 	}
 
+	e = tryReconizeHostsInCluster(addData, restConf, userid)
+	if e != nil {
+		err := sysadmLog.NewErrorWithStringLevel(700070028, "warn", "there is an error occurred when trying reconize host %s", e)
+		errs = append(errs, err)
+	}
 	response = apiutils.BuildResponseDataForSuccess("集群已经添加成功")
-	err := sysadmLog.NewErrorWithStringLevel(700070026, "info", "cluster infromation has be added")
+	err := sysadmLog.NewErrorWithStringLevel(700070029, "info", "cluster infromation has be added")
 	errs = append(errs, err)
 	c.JSON(http.StatusOK, response)
 	runData.logEntity.LogErrors(errs)
 }
 
-func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string) (string, string, string, string, string, error) {
+// 为了避免重复添加，需要获取K8S集群的ID进行判断。当前k8s集群不支持集群层的ID,但是建议使用kube-system命名空间的uid代替集群的ID
+// 参见：https://github.com/open-telemetry/semantic-conventions/blob/156f9424fe5d83d8543119224c3af6ae9af518cf/specification/resource/semantic_conventions/k8s.md?plain=1#L28-L51
+func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string) (string, string, string, string, string, string, *rest.Config, error) {
 	idData, e := utils.NewWorker(uint64(dcid), uint64(azid))
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 	clusterID, e := idData.GetID()
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 
 	clusterUser = strings.TrimSpace(clusterUser)
@@ -338,28 +360,33 @@ func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string
 	key = strings.TrimSpace(key)
 	restConf, e := k8sclient.BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
+	}
+
+	kubernetesClusterID, e := k8sclient.GetKubernetesClusterID(restConf)
+	if e != nil {
+		return "", "", "", "", "", "", nil, e
 	}
 
 	kubeVersion, e := k8sclient.GetKubernetesVersion(restConf)
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 
 	cri, e := k8sclient.GetCRIInfo(restConf)
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 
 	podcidr, e := k8sclient.GetPodCIDR(restConf)
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 
 	svccidr, e := k8sclient.GetSvcCIDR(restConf)
 	if e != nil {
-		return "", "", "", "", "", e
+		return "", "", "", "", "", "", nil, e
 	}
 
-	return clusterID, kubeVersion, cri, podcidr, svccidr, nil
+	return kubernetesClusterID, clusterID, kubeVersion, cri, podcidr, svccidr, restConf, nil
 }

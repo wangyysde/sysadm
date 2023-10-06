@@ -66,3 +66,27 @@ func (p Postgre) NewUpdateData(tb string, data FieldData, where map[string]strin
 	// TODO
 	return nil
 }
+
+// NewBuildInsertQuery  build insert SQL statement according to tb and data.
+// return string what can be execute query  and nil  if without error.return "" and nil
+func (p Postgre) NewBuildInsertQuery(tb string, data FieldData) (string, error) {
+	// TODO
+
+	return "", nil
+}
+
+// NewBuildUpdateQuery build update SQL statement according to tb and data.
+// return string what can be execute query and nil  if without error . return "" and error
+func (p Postgre) NewBuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, error) {
+	// TODO
+
+	return "", nil
+}
+
+// NewBuildDeleteQuery build update SQL statement according to dd .
+// return string what can be execute query and nil if without error.otherewise return "" and error
+func (p Postgre) NewBuildDeleteQuery(dd *SelectData) (string, error) {
+	// TODO
+
+	return "", nil
+}

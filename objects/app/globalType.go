@@ -17,7 +17,9 @@
 
 package app
 
-import sysadmDB "sysadm/db"
+import (
+	sysadmDB "sysadm/db"
+)
 
 type runningData struct {
 	dbConf      *sysadmDB.DbConfig
@@ -30,4 +32,11 @@ type ObjectEntity interface {
 	GetObjectList(searchContent string, ids, searchKeys []string, conditions map[string]string,
 		startPos, step int, orders map[string]string) ([]interface{}, error)
 	AddObject(data interface{}) error
+	AddObjectByTx(data interface{}) (map[string]interface{}, string, error)
+	GetObjectIDFieldName() (string, string, error)
+}
+
+type ObjectTx struct {
+	Tx     *sysadmDB.Tx
+	Entity ObjectEntity
 }

@@ -18,16 +18,39 @@
 package k8sclient
 
 import (
+	"context"
 	"fmt"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/rest"
 	"strings"
 )
 
+// GetKubernetesClusterID 是用于根据restConf获取一个kubernetes集群的ClusterID.当前,k8s集群没有自身独立的ClusterID,
+// 但是kube-system命令空间是用于运行k8s组件的，所以kube-system命名空间会伴随着整个k8s集群的生命周期的，所以获取kube-system
+// 命名空间的uid作为k8s集群的ClusterID
+func GetKubernetesClusterID(restConf *rest.Config) (string, error) {
+	if restConf == nil {
+		return "", fmt.Errorf("rest configuration is empty")
+	}
+
+	clientSet, e := BuildClientset(restConf)
+	if e != nil {
+		return "", e
+	}
+
+	nsKubeSystemInfo, e := clientSet.CoreV1().Namespaces().Get(context.Background(), "kube-system", metav1.GetOptions{})
+	if e != nil {
+		return "", e
+	}
+
+	return string(nsKubeSystemInfo.UID), nil
+}
+
 func GetKubernetesVersion(restConf *rest.Config) (string, error) {
 	if restConf == nil {
-		return "", fmt.Errorf("can not get nodes count on an empty client")
+		return "", fmt.Errorf("rest configuration is empty")
 	}
 
 	ds := discovery.NewDiscoveryClientForConfigOrDie(restConf)

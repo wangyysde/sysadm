@@ -285,3 +285,98 @@ func (p MySQL) NewDeleteData(dd *SelectData) error {
 
 	return err
 }
+
+// NewBuildInsertQuery  build insert SQL statement according to tb and data.
+// return string what can be execute query  and nil  if without error.return "" and nil
+func (p MySQL) NewBuildInsertQuery(tb string, data FieldData) (string, error) {
+
+	if len(tb) < 1 {
+		return "", fmt.Errorf("Table name(%s) is not valid.", tb)
+	}
+
+	if len(data) < 1 {
+		return "", fmt.Errorf("Can not insert empty data into table.")
+	}
+
+	insertStr := "INSERT INTO `" + tb + "`("
+	valueStr := "Values ("
+	i := 1
+	for key, value := range data {
+		if i == 1 {
+			insertStr = insertStr + "`" + key + "`"
+			valueStr = valueStr + "\"" + utils.Interface2String(value) + "\""
+
+		} else {
+			insertStr = insertStr + ",`" + key + "`"
+			valueStr = valueStr + ",\"" + utils.Interface2String(value) + "\""
+		}
+		i = i + 1
+	}
+	insertStr = insertStr + ") "
+	valueStr = valueStr + ")"
+
+	return (insertStr + valueStr), nil
+}
+
+// NewBuildUpdateQuery build update SQL statement according to tb and data.
+// return string what can be execute query and nil  if without error . return "" and error
+func (p MySQL) NewBuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, error) {
+	if tb == "" || len(data) < 1 {
+		return "", fmt.Errorf("tables or feilds which will be update is empty")
+	}
+
+	querySQL := "update `" + tb + "` set "
+	first := true
+	for key, value := range data {
+		if first {
+			querySQL = querySQL + "`" + key + "`=" + utils.Interface2String(value) + ""
+			first = false
+		} else {
+			querySQL = querySQL + "," + "`" + key + "`=" + utils.Interface2String(value) + ""
+		}
+	}
+
+	first = true
+	for key, value := range where {
+		if first {
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
+			first = false
+		} else {
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
+		}
+	}
+
+	return querySQL, nil
+
+}
+
+// NewBuildDeleteQuery build update SQL statement according to dd .
+// return string what can be execute query and nil if without error.otherewise return "" and error
+func (p MySQL) NewBuildDeleteQuery(dd *SelectData) (string, error) {
+	if len(dd.Tb) < 1 {
+		return "", fmt.Errorf("tables is empty")
+	}
+
+	querySQL := "delete from "
+	first := true
+	for _, t := range dd.Tb {
+		if first {
+			querySQL = querySQL + "`" + t + "`"
+			first = false
+		} else {
+			querySQL = querySQL + "," + "`" + t + "`"
+		}
+	}
+
+	first = true
+	for key, value := range dd.Where {
+		if first {
+			querySQL = querySQL + " where `" + key + "`='" + value + "'"
+			first = false
+		} else {
+			querySQL = querySQL + " and `" + key + "`='" + value + "'"
+		}
+	}
+
+	return querySQL, nil
+}

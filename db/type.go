@@ -60,6 +60,9 @@ type DbEntity interface {
 	NewQueryData(sd *SelectData) ([]map[string]interface{}, error)
 	NewUpdateData(tb string, data FieldData, where map[string]string) error
 	NewDeleteData(dd *SelectData) error
+	NewBuildInsertQuery(tb string, data FieldData) (string, error)
+	NewBuildUpdateQuery(tb string, data FieldData, where map[string]string) (string, error)
+	NewBuildDeleteQuery(dd *SelectData) (string, error)
 }
 
 // key is the filed name and value is the value that will be set to the field.

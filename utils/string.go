@@ -76,3 +76,44 @@ func ConvString2Slice(sourceStr string) []string {
 	return strings.Split(sourceStr, ",")
 
 }
+
+// UniqueStringSlice 对子符串类型的切片元素值进行去重，返回的不带重复元素值的新的子符串切片
+func UniqueStringSlice(data []string) []string {
+	var ret []string
+	for _, v := range data {
+		v = strings.TrimSpace(v)
+		found := false
+		for _, result := range ret {
+			if v == strings.TrimSpace(result) {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			ret = append(ret, v)
+		}
+	}
+
+	return ret
+}
+
+// UniqueIntSlice 对Int类型的切片元素值进行去重，返回的不带重复元素值的新的Int类型切片
+func UniqueIntSlice(data []int) []int {
+	var ret []int
+	for _, v := range data {
+		found := false
+		for _, result := range ret {
+			if v == result {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			ret = append(ret, v)
+		}
+	}
+
+	return ret
+}

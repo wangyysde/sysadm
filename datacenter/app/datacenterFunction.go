@@ -120,3 +120,23 @@ func (d Datacenter) AddObject(data interface{}) error {
 
 	return sysadmObjects.AddObject(d.TableName, d.PkName, insertData)
 }
+
+func (d Datacenter) AddObjectByTx(data interface{}) (map[string]interface{}, string, error) {
+	addData := make(map[string]interface{}, 0)
+
+	schemaData, ok := data.(DatacenterSchema)
+	if !ok {
+		return addData, "", fmt.Errorf("there is an error occurred when coverting data to Datacenter Schema schema")
+	}
+
+	addData, e := sysadmObjects.Marshal(schemaData)
+	if e != nil {
+		return addData, "", e
+	}
+
+	return addData, d.TableName, nil
+}
+
+func (d Datacenter) GetObjectIDFieldName() (string, string, error) {
+	return d.TableName, d.PkName, nil
+}

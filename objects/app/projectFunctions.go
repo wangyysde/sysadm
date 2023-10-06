@@ -119,3 +119,23 @@ func (p Project) AddObject(data interface{}) error {
 
 	return AddObject(p.TableName, p.PkName, insertData)
 }
+
+func (p Project) AddObjectByTx(data interface{}) (map[string]interface{}, string, error) {
+	addData := make(map[string]interface{}, 0)
+
+	schemaData, ok := data.(ProjectSchema)
+	if !ok {
+		return addData, "", fmt.Errorf("there is an error occurred when coverting data to Project Schema schema")
+	}
+
+	addData, e := Marshal(schemaData)
+	if e != nil {
+		return addData, "", e
+	}
+
+	return addData, p.TableName, nil
+}
+
+func (p Project) GetObjectIDFieldName() (string, string, error) {
+	return p.TableName, p.PkName, nil
+}

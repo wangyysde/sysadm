@@ -120,3 +120,23 @@ func (u User) AddObject(data interface{}) error {
 
 	return sysadmObjects.AddObject(u.TableName, "", insertData)
 }
+
+func (u User) AddObjectByTx(data interface{}) (map[string]interface{}, string, error) {
+	addData := make(map[string]interface{}, 0)
+
+	schemaData, ok := data.(UserSchema)
+	if !ok {
+		return addData, "", fmt.Errorf("there is an error occurred when coverting data to User Schema schema")
+	}
+
+	addData, e := sysadmObjects.Marshal(schemaData)
+	if e != nil {
+		return addData, "", e
+	}
+
+	return addData, u.TableName, nil
+}
+
+func (u User) GetObjectIDFieldName() (string, string, error) {
+	return u.TableName, u.PkName, nil
+}
