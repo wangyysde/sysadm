@@ -18,12 +18,16 @@
 package k8sclient
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"strings"
 	"sysadm/utils"
+	"testing"
 )
 
 var restConf *rest.Config = nil
@@ -32,7 +36,7 @@ var dbPasswd = "Sysadm12345"
 var dbHost = "k8s.sysadm.cn"
 var dbPort = 30306
 var dbName = "k8ssysadm"
-var clusterID = "26932263920893984"
+var clusterID = "69792150774120480"
 
 func getClusterData() (string, string, string, string, string, string, error) {
 	dbDsnstr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbUser, dbPasswd, dbHost, dbPort, dbName)
@@ -82,6 +86,32 @@ func getClusterData() (string, string, string, string, string, string, error) {
 	if !strings.HasPrefix(apiserver, "https:") {
 		apiserver = "https://" + apiserver
 	}
-	
+
 	return id, apiserver, clusterUser, ca, cert, key, nil
+}
+
+func TestGetKubernetesClient(t *testing.T) {
+	clusterID, apiserver, clusterUser, ca, cert, key, e := getClusterData()
+	if e != nil {
+		t.Fatal("%s", e)
+	}
+
+	restConf, e := BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
+	if e != nil {
+		t.Fatal("%s", e)
+	}
+
+	k8sClient, e := kubernetes.NewForConfig(restConf)
+	if e != nil {
+		t.Fatal("%s", e)
+	}
+
+	deployList, e := k8sClient.AppsV1().Deployments("").List(context.Background(), metav1.ListOptions{})
+	if e != nil {
+		t.Fatal("%s", e)
+	}
+	t.Logf("got total %d deployments\n", len(deployList.Items))
+
+	fmt.Printf("test ok\n")
+
 }

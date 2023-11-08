@@ -1,0 +1,13 @@
+{{if .errorBox }}
+    <div class="errorBox" id="errorBox">
+{{else}}
+	<div class="infoBox" id="infoBox">
+{{end}}
+{{if .errorBox }}
+   <div align="center">
+	<img src="/images/stop.png" height="50px">
+   </div>
+{{end}}
+	<div><span>{{.message }}</span></div>
+</div>
+

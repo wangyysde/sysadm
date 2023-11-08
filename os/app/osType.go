@@ -40,6 +40,10 @@ type OSSchema struct {
 	OSID int `form:"osID" json:"osID" yaml:"osID" xml:"id" db:"osID"`
 	// 操作系统发行版名称，如centos,readhat, ubantu等，不区分大小写
 	Name string `form:"name" json:"name" yaml:"name" xml:"name" db:"name"`
+	// 体系统架构
+	Architecture string `form:"architecture" json:"architecture" yaml:"architecture" xml:"architecture" db:"architecture"`
+	// 位数
+	Bit int `form:"bit" json:"bit" yaml:"bit" xml:"bit" db:"bit"`
 	// 描述
 	Description string `form:"description" json:"description" yaml:"description" xml:"description" db:"description"`
 }

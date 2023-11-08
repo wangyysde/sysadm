@@ -70,14 +70,6 @@ func listHost(c *sysadmServer.Context) {
 		return
 	}
 
-	// get projects list
-	tplData, e = getProjectList(c, apiServer, "showmessage.html", tplData)
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030007, "error", "get error project list error %s", e))
-		logErrors(errs)
-		return
-	}
-
 	requestData, err, ok := getRequestData(c)
 	errs = append(errs, err...)
 	if !ok {
@@ -143,19 +135,6 @@ func listHost(c *sysadmServer.Context) {
 		return
 	}
 
-	// get project name
-	tplData, err, ok = buildHostProjectInfo(tplData)
-	errs = append(errs, err...)
-	if !ok {
-		logErrors(errs)
-		errorTplData := map[string]interface{}{
-			"errormessage": "get project name error ",
-		}
-		templateFile := "showmessage.html"
-		c.HTML(http.StatusOK, templateFile, errorTplData)
-		return
-	}
-
 	// get host status text
 	tplData = buildHostStatusInfo(tplData)
 
@@ -173,12 +152,6 @@ func listHost(c *sysadmServer.Context) {
 
 		return
 	}
-
-	selectedprojectid := requestData["projectid"]
-	if selectedprojectid == "" {
-		selectedprojectid = "0"
-	}
-	tplData["selectedprojectid"] = selectedprojectid
 
 	templateFile := "infrastructurelist.html"
 	c.HTML(http.StatusOK, templateFile, tplData)
@@ -311,76 +284,6 @@ func getYumList(c *sysadmServer.Context, apiServer *ApiServer, msgTpl string, tp
 	}
 	tplData["osVerList"] = javascriptOsVersionStr
 	tplData["osList"] = osList
-
-	return tplData, nil
-}
-
-func getProjectList(c *sysadmServer.Context, apiServer *ApiServer, msgTpl string, tplData map[string]interface{}) (map[string]interface{}, error) {
-	var errs []sysadmerror.Sysadmerror
-
-	// get project for select menu
-	moduleName := "project"
-	actionName := "list"
-
-	apiServerData := apiutils.BuildApiServerData(moduleName, actionName, apiServer.ApiVersion, apiServer.Tls.IsTls,
-		apiServer.Server.Address, apiServer.Server.Port, apiServer.Tls.Ca, apiServer.Tls.Cert, apiServer.Tls.Key)
-	if apiServerData == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101005, "error", "api server parameters error"))
-		logErrors(errs)
-		tplData := map[string]interface{}{
-			"errormessage": "api server parameters error",
-		}
-		c.HTML(http.StatusOK, msgTpl, tplData)
-		return tplData, fmt.Errorf("api server parameters error")
-	}
-
-	urlRaw, err := apiutils.BuildApiUrl(apiServerData)
-	errs = append(errs, err...)
-	if urlRaw == "" {
-		err := apiutils.SendResponseForErrorMessage(c, 1101007, "api server parameters error")
-		errs = append(errs, err...)
-		logErrors(errs)
-		tplData := map[string]interface{}{
-			"errormessage": "api server parameters error",
-		}
-		c.HTML(http.StatusOK, msgTpl, tplData)
-		return tplData, fmt.Errorf("api server parameters error")
-	}
-
-	requestParas := httpclient.RequestParams{}
-	requestParas.Url = urlRaw
-	requestParas.Method = http.MethodPost
-	body, err := httpclient.SendRequest(&requestParas)
-	errs = append(errs, err...)
-	ret, err := apiutils.ParseResponseBody(body)
-	errs = append(errs, err...)
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(1101004, "debug", "now handling project list %#v", ret))
-	logErrors(errs)
-	if !ret.Status {
-		errCode := ret.ErrorCode
-		msgLines := ret.Message
-		msgLine := msgLines[0]
-		errMsg := msgLine["msg"].(string)
-		tplData := map[string]interface{}{
-			"errormessage": fmt.Sprintf("errorCode: %d Msg: %s", errCode, errMsg),
-		}
-		c.HTML(http.StatusOK, msgTpl, tplData)
-		return tplData, fmt.Errorf("errorCode: %d Msg: %s", errCode, errMsg)
-	}
-
-	// preparing project select data
-	var projectInfo []map[string]string
-	projectInfo = append(projectInfo, map[string]string{"0": "全部项目"})
-	res := ret.Message
-	for _, line := range res {
-		lineMap := make(map[string]string, 0)
-		id := utils.Interface2String(line["projectid"])
-		name := utils.Interface2String(line["name"])
-		lineMap[id] = name
-		projectInfo = append(projectInfo, lineMap)
-	}
-
-	tplData["projectinfo"] = projectInfo
 
 	return tplData, nil
 }
@@ -735,38 +638,6 @@ func buildOsAndVersionInfo(tplData map[string]interface{}) (map[string]interface
 
 		line["OsVerInfo"] = osName + "/" + verName
 
-		newHostData = append(newHostData, line)
-	}
-
-	tplData["HostData"] = newHostData
-
-	return tplData, errs, true
-}
-
-func buildHostProjectInfo(tplData map[string]interface{}) (map[string]interface{}, []sysadmerror.Sysadmerror, bool) {
-	var errs []sysadmerror.Sysadmerror
-
-	projectinfo := tplData["projectinfo"].([]map[string]string)
-	hostData := tplData["HostData"].([]map[string]string)
-
-	var newHostData []map[string]string
-	for _, line := range hostData {
-		projectid := line["projectid"]
-		projectName := ""
-		for _, projectLine := range projectinfo {
-			if name, ok := projectLine[projectid]; ok {
-				projectName = name
-				break
-			}
-
-		}
-
-		if projectName == "" {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030013, "error", "get project name error"))
-			return tplData, errs, false
-		}
-
-		line["projectName"] = projectName
 		newHostData = append(newHostData, line)
 	}
 

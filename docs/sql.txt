@@ -101,12 +101,20 @@ create table `blob` (
 	CONSTRAINT `FK_tag` FOREIGN KEY (`tagid`) REFERENCES `tag` (`tagid`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+DROP TABLE IF EXISTS `os`;
+
 CREATE TABLE `os` (
-  `osID` INT(3) NOT NULL COMMENT 'specify the yum for which OS distrubition,such as centos,readhat, ubantu',
-  `name` VARCHAR(10) NOT NULL COMMENT 'distribution name.such as centos,redhat. this field must be unique',
-  `description` VARCHAR(255) DEFAULT NULL COMMENT 'distribution description',
+  `osID` int(3) NOT NULL COMMENT 'pecify the yum for which OS distrubition,such as centos,readhat, ubantu',
+  `name` varchar(10) NOT NULL COMMENT 'distribution name.such as centos,redhat. this field must be unique',
+  `architecture` varchar(50) NOT NULL DEFAULT 'x86' COMMENT '体系构架',
+  `bit` int(3) DEFAULT '64' COMMENT '位数',
+  `description` varchar(255) DEFAULT NULL COMMENT 'distribution description',
   PRIMARY KEY (`osID`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `os` */
+
+insert  into `os`(`osID`,`name`,`architecture`,`bit`,`description`) values (1,'centos','x86',64,'CentOS'),(2,'redhat','x86',64,'RedHat Enterprise'),(3,'ubantu','x86',64,'Ubantu');
 
 CREATE TABLE `type` (
   `typeID` int(3) NOT NULL AUTO_INCREMENT,
@@ -417,11 +425,12 @@ create table `city` (
 
 /* 全国省市列表 */
 DROP TABLE IF EXISTS `province`;
-create table `province` (
-    code char(6) not null default '' comment '省级代码',
-    name varchar(50) not null default '' comment '省级名称',
-    cityList varchar(1024) not null default '' comment '下级市级代码列表，用,号分割'
-) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+CREATE TABLE `province` (
+  `code` char(6) NOT NULL DEFAULT '' COMMENT '省级代码',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '省级名称',
+  `cityList` varchar(1024) NOT NULL DEFAULT '' COMMENT '下级市级代码列表，用,号分割',
+  `countryCode` char(2) DEFAULT 'CN' COMMENT '所属于的国家'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
 
 /* 数据中心表 */
 DROP TABLE IF EXISTS `datacenter`;
@@ -436,7 +445,7 @@ CREATE TABLE `datacenter` (
   `enName` varchar(255) DEFAULT NULL COMMENT '数据中心英文名称',
   `address` varchar(255) DEFAULT NULL COMMENT '数据中心地址',
   `dutyTel` varchar(20) DEFAULT NULL COMMENT '值班电话',
-  `type` tinyint(1) NOT NULL COMMENT '数据中心类型 0电信 1 联通 3 移动 4 广电 5 双线BGP 6 三线BGP 7 四线BGP 8 国外',
+  `type` tinyint(1) NOT NULL COMMENT '数据中心类型 1电信 2 联通 3 移动 4 广电 5 双线BGP 6 三线BGP 7 四线BGP 8 国外',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态0未启用 1已启用 2 已停用',
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0正常 1已删除',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -501,3 +510,39 @@ create table `k8scluster` (
     `remark` varchar(255) comment '备注',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+DROP TABLE IF EXISTS `objectinfo`;
+CREATE TABLE `objectinfo` (
+  `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '对象ID',
+  `cnName` varchar(255) NOT NULL COMMENT '对象中文名称，平台整个环境下不可重复',
+  `enName` varchar(255) NOT NULL COMMENT '对象英文名称，平台整个环境下不可重复',
+  `tableName` varchar(255) NOT NULL COMMENT '对象所对应的在数据库中表名',
+  `pkName` varchar(255) NOT NULL COMMENT '对象数据库表中标识对象的主键的字段名',
+  `canRunCommand` tinyint(1) NOT NULL DEFAULT '0' COMMENT '对象上是否可以运行命令.0表示否,1表示是',
+  `isCommandRelated` tinyint(1) NOT NULL DEFAULT '0' COMMENT '对象是否可以与命令关联, 即对象的状态是否可以影响命令的执行.0 表示否, 1表示是',
+  `deprecated` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否废弃，0表示否，1表示是',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/*Data for the table `objectinfo` */
+
+insert  into `objectinfo`(`id`,`cnName`,`enName`,`tableName`,`pkName`,`canRunCommand`,`isCommandRelated`,`deprecated`) values (1,'可用区','availablezone','availablezone','id',0,0,0),(2,'命令','command','commandDefined','id',0,0,0),(3,'数据中心','datacenter','datacenter','id',0,0,0),(4,'主机','host','host','hostid',1,1,0),(5,'集群','k8scluster','k8scluster','id',0,1,0),(6,'操作系统','os','os','osID',0,0,0),(7,'区域','region','country','code',0,0,0),(8,'用户','user','user','userid',0,0,0),(9,'版本','version','version','versionID',0,0,0),(10,'Yum','yum','yum','yumid',0,0,0);
+
+
+
+/* objecttable 对象关联表.表示一个对象有多个子对象或元素需要分表存储时，本表记录的是这些子对象和元素的表信息 */
+DROP TABLE IF EXISTS `objecttable`;
+CREATE TABLE `objecttable` (
+  `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '对象ID',
+  `objectID` int(4) unsigned comment '主对象的ID，即对应objectinfo表中id字段的值',
+  `cnName` varchar(255) NOT NULL COMMENT '对象中文名称，平台整个环境下不可重复',
+  `enName` varchar(255) NOT NULL COMMENT '对象中文名称，平台整个环境下不可重复',
+  `tableName` varchar(255) not null comment '对象所对应的在数据库中表名',
+  `pkName` varchar(255) not null comment '对象数据库表中标识对象的主键的字段名',
+  `canRunCommand` tinyint(1) not null default 0 comment '对象上是否可以运行命令.0表示否,1表示是',
+  `isCommandRelated` tinyint(1) not null default 0 comment '对象是否可以与命令关联, 即对象的状态是否可以影响命令的执行.0 表示否, 1表示是',
+  `deprecated` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否废弃，0表示否，1表示是',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+

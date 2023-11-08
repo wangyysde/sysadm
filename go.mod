@@ -3,6 +3,7 @@ module sysadm
 go 1.19
 
 require (
+	github.com/adhocore/gronx v1.6.6
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/lib/pq v1.10.6

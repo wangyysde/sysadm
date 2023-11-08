@@ -71,7 +71,7 @@ func GetObjectInfoByID(tableName, pkName, id string) (db.FieldData, error) {
 	}
 
 	whereMap := make(map[string]string, 0)
-	whereMap[pkName] = "=" + id
+	whereMap[pkName] = "='" + id + "'"
 	selectData := db.SelectData{
 		Tb:        []string{tableName},
 		OutFeilds: []string{"*"},
@@ -500,4 +500,36 @@ func UpdateObjectNextID(dbEntity sysadmDB.DbEntity, tbName, idField string) erro
 	}
 
 	return dbEntity.NewUpdateData(tbName, fieldData, where)
+}
+
+func GetCommandRelatedObjectList() ([]interface{}, error) {
+	var ret []interface{}
+
+	// don't change original conditions
+	conditions := make(map[string]string, 0)
+	conditions["isCommandRelated"] = "=1"
+	conditions["deprecated"] = "=0"
+	selectData := db.SelectData{
+		Tb:        []string{DefautlObjectInfoTable},
+		OutFeilds: []string{"*"},
+		Where:     conditions,
+	}
+
+	dbEntity := runData.dbConf.Entity
+	dbData, e := dbEntity.NewQueryData(&selectData)
+
+	if e != nil {
+		return ret, fmt.Errorf("can not get object list. error %s", e)
+	}
+
+	var tmpRes []interface{}
+	for _, v := range dbData {
+		command := &ObjectInfoSchema{}
+		if e := Unmarshal(v, command); e != nil {
+			return ret, e
+		}
+		tmpRes = append(tmpRes, *command)
+	}
+
+	return tmpRes, nil
 }

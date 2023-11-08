@@ -154,21 +154,6 @@ func checkAddHostData(data *ApiHost, c *sysadmServer.Context) (error, []sysadmer
 	}
 	formData := multiform.Value
 
-	// get project ID
-	projectIDSlice, ok := formData["addHostprojectid"]
-	if !ok {
-		err := fmt.Errorf("parsing post data error")
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020101, "err", "%s", err))
-		return err, errs
-	}
-	projectIDStr := strings.TrimSpace(projectIDSlice[0])
-	projectID, e := strconv.Atoi(projectIDStr)
-	if projectID == 0 || e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(3020102, "error", "the project for host should be selected"))
-		return fmt.Errorf("the project for host should be selected"), errs
-	}
-	data.ProjectID = projectID
-
 	hostnameSlice, ok := formData["hostname"]
 	errMsg, hostname := "", ""
 	if !ok {
@@ -421,7 +406,7 @@ func addHostToDB(tx *db.Tx, data *ApiHost) (int, []sysadmerror.Sysadmerror) {
 
 	insertData := make(db.FieldData, 0)
 	insertData["userid"] = data.Userid
-	insertData["projectid"] = data.ProjectID
+	insertData["projectid"] = 0
 	insertData["hostname"] = data.Hostname
 	insertData["osID"] = data.OsID
 	insertData["osversionid"] = data.OsVersionID

@@ -23,3 +23,12 @@ var defaultPkName = "osID"
 var DefaultModuleName = "os"
 var DefaultApiVersion = "1.0"
 var runData = runingData{}
+
+const (
+	OsArchAarch string = "aarch"
+	OsArchPpc   string = "ppc"
+	OsArchx86   string = "x86"
+
+	OsBit32 int = 32
+	OsBit64 int = 64
+)

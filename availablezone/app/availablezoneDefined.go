@@ -22,4 +22,11 @@ var DefaultTableName = "availablezone"
 var DefaultPkName = "id"
 var DefaultModuleName = "availablezone"
 var DefaultApiVersion = "1.0"
+
+const (
+	StatusUnused   int = 0
+	StatusEnabled  int = 1
+	StatusDisabled int = 2
+)
+
 var runData = runingData{}

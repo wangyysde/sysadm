@@ -19,6 +19,7 @@ package app
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	sysadmCommand "sysadm/command/app"
 	sysadmDB "sysadm/db"
@@ -186,7 +187,7 @@ func AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, sta
 	}
 
 	hostSchemaData := HostSchema{
-		UserId:        string(userid),
+		UserId:        strconv.Itoa(userid),
 		ProjectID:     0,
 		Hostname:      hostname,
 		OSID:          osID,

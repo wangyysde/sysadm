@@ -67,7 +67,7 @@ func SetPageInfo(pageInfo sysadmSetting.PageInfo) {
 	runData.pageInfo = pageInfo
 }
 
-// 添加K8S集群处理的事件侦听器
+// 添加可用区处理的事件侦听器
 func AddHandlers(r *sysadmServer.Engine) error {
 	if r == nil {
 		return fmt.Errorf("can not add handlers on nil ")
@@ -88,6 +88,7 @@ func AddHandlers(r *sysadmServer.Engine) error {
 	{
 		//	display.GET("/add", addK8scluster)
 		display.GET("/list", listHandler)
+		display.GET("/addform", addformHandler)
 	}
 
 	return nil

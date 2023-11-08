@@ -18,3 +18,10 @@
 package app
 
 var runData runningData = runningData{}
+
+const (
+	DefautlObjectInfoTable   string = "objectinfo"
+	DefaultObjectInfoPkName  string = "id"
+	DefaultObjectTable       string = "objecttable"
+	DefaultObjectTablePkName string = "id"
+)

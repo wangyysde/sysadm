@@ -129,5 +129,5 @@ func (o ObjectTx) UpdateObjectNextID() error {
 		return fmt.Errorf("transaction has not began")
 	}
 
-	return tx.NewUpdateData(tbName, filedData, where)
+	return tx.NewUpdateData("ids", filedData, where)
 }

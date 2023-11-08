@@ -85,7 +85,7 @@ function doAjax(actionUrl,actionType,isMultiPart) {
     } else {
         data = "";
     }
-    var ajaxRet = {"msg": "未知错误aaa", "error": true};
+    var ajaxRet = {"msg": "未知错误", "error": true};
     $.ajax({
         type: actionType,
         // dataType: "json",
@@ -166,5 +166,33 @@ function addObjCancel(cancelRedirect) {
         $('#container').load(url);
     }
 
+    return;
+}
+
+function addObjRadioClick(actionUrl,actionKind,objID,relatedIsDisplay, subObjID,radioOption){
+    // actionKind 所定义的函定义参见GO语言编写的objectsUI包中 objectsUIDefined.go中的定义
+    if(actionKind == "1"){
+        subObjStr = "span" + subObjID;
+        var obj = document.getElementById(subObjStr);
+        if(obj){
+            if(relatedIsDisplay){
+                obj.style.display = "block";
+            } else {
+                obj.style.display = "none";
+            }
+            return;
+        }
+        alert("批定的子对象" + subObjID + "不存在");
+        return;
+    }
+
+    if(actionKind == "2"){
+        if(typeof  addObjRadioClick == "function"){
+            return addObjRadioClick(actionUrl,objID, relatedIsDisplay,subObjID,radioOption);
+        }
+        alert("JS的动作类型为自定义函数，但是页面内没有定义addObjRadioClick函数");
+        return ;
+    }
+    alert("所指定的动作类型不正确");
     return;
 }

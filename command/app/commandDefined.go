@@ -53,6 +53,7 @@ const (
 	// 定时执行一次或周期性执行,支持linux下crontab格式定义执行的时间和周期
 	AutomationKindCrontab AutomationKind = 4
 
+	// 命令的事务性暂不实现
 	// 命令执行的先后顺序及相关性只限制在本节点范围内，即无需判断其它节点上是否有依赖命令
 	TransationScopeHost CommandTransactionScope = 0
 	// 命令执行的先后顺序及相关性限制在同一个集群内
@@ -70,6 +71,7 @@ const (
 	// 固定值
 	ParaKindFixed ParaKind = 1
 	// 对象字段值
+	// 从对象字段获取和通过另一个命令获取实现比较比较复杂，暂不支持这两种方法
 	ParaKindObjFieldValue ParaKind = 2
 	// 通过另一个命令获取
 	ParaKindGetByCommand ParaKind = 3
@@ -78,6 +80,11 @@ const (
 	CommandDefinedDeprecated int = 1
 	// 未被废弃的命令定义
 	CommandDefinedUnDeprecated int = 0
+
+	// 同步命令
+	CommandKindSynchronized int = 0
+	// 异步命令
+	CommandKindAsynchronized int = 1
 )
 
 var runData = runingData{}

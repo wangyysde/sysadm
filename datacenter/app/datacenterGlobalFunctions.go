@@ -67,27 +67,28 @@ func SetPageInfo(pageInfo sysadmSetting.PageInfo) {
 	runData.pageInfo = pageInfo
 }
 
-// 添加K8S集群处理的事件侦听器
+// 设置数据中心处理事件侦听器
 func AddHandlers(r *sysadmServer.Engine) error {
 	if r == nil {
 		return fmt.Errorf("can not add handlers on nil ")
 	}
 
-	/*
-		// 为api设置事件处理器
-		groupPath := "/api/" + defaultApiVersion + "/" + defaultModuleName
-		v1 := r.Group(groupPath)
-		{
-			v1.POST("/add", addK8scluster)
-		}
-	*/
+	// 为api设置事件处理器
+	groupPath := "/api/" + DefaultApiVersion + "/" + DefaultModuleName
+	v1 := r.Group(groupPath)
+	{
+		v1.POST("/validCnName", validCnNameHandler)
+		v1.POST("/validEnName", validEnNameHandler)
+	}
 
 	// 为前端显示设置事件处理器
-	groupPath := "/" + DefaultModuleName
+	groupPath = "/" + DefaultModuleName
 	display := r.Group(groupPath)
 	{
-		//	display.GET("/add", addK8scluster)
 		display.GET("/list", listHandler)
+		display.GET("/addform", addformHandler)
+		display.GET("/getprovincebycountrycodeforselect", getprovincebycountrycodeforselectHandler)
+		display.GET("/getcitybyprovincecodeforselect", getcitybyprovincecodeforselectHandler)
 	}
 
 	return nil

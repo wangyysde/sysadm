@@ -23,3 +23,18 @@ var DefaultPkName = "id"
 var DefaultModuleName = "datacenter"
 var DefaultApiVersion = "1.0"
 var runData = runingData{}
+
+const (
+	StatusUnused   int = 0
+	StatusEnabled  int = 1
+	StatusDisabled int = 2
+
+	LineTypeCT       int = 1
+	LineTypeCUCC     int = 2
+	LinetypeCMCC     int = 3
+	LineTypeCBN      int = 4
+	LineTypeBGP2     int = 5
+	LineTypeBGP3     int = 6
+	LineTypeBGP4     int = 7
+	LineTypeOverseas int = 8
+)

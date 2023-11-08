@@ -281,7 +281,7 @@ func addPostHandler(c *sysadmServer.Context) {
 	}
 
 	conditions := make(map[string]string, 0)
-	conditions["k8sclusterk8sClusterID"] = k8sClusterID
+	conditions["k8sClusterID"] = "='" + k8sClusterID + "'"
 
 	// try to add cluster data into DB
 	var clusterEntity sysadmObjects.ObjectEntity

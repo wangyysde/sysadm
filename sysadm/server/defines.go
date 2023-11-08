@@ -27,4 +27,4 @@ var sessionName = "sysadm"
 var sessionDomain = "sysadm"
 var sessionAge = 1800
 var apiVersion = "v1.0"
-var numPerPage = 1
+var numPerPage = 5

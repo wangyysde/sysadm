@@ -57,6 +57,7 @@ func (t *Tx) NewInsertData(tb string, data FieldData) error {
 		return err
 	}
 
+	fmt.Printf("query statement: %s\n ", query)
 	tx := t.Tx
 	_, e := tx.Exec(query)
 	if e != nil {
@@ -76,6 +77,7 @@ func (t *Tx) NewUpdateData(tb string, data FieldData, where map[string]string) e
 		return err
 	}
 
+	fmt.Printf("update statement: %s\n", query)
 	tx := t.Tx
 	_, e := tx.Exec(query)
 	if e != nil {

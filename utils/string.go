@@ -20,6 +20,7 @@ Errorcode: 120xxx
 package utils
 
 import (
+	"github.com/adhocore/gronx"
 	"strings"
 	"unsafe"
 )
@@ -116,4 +117,10 @@ func UniqueIntSlice(data []int) []int {
 	}
 
 	return ret
+}
+
+func ValidCront(crontab string) bool {
+	gronx := gronx.New()
+	return gronx.IsValid(crontab)
+
 }

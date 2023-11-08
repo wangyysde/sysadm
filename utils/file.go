@@ -25,6 +25,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"sysadm/sysadmerror"
@@ -222,4 +223,9 @@ func ReadUploadedFile(file *multipart.FileHeader) ([]byte, error) {
 		}
 	}
 	return ret, nil
+}
+
+func ValidPath(path string) bool {
+	var pathRegex = regexp.MustCompile(`^[a-zA-Z]:\([w-]+\)*w([w-]+.)*w+$|^(/[w-]+)*(/[w-]+.w+)$`)
+	return pathRegex.MatchString(path)
 }

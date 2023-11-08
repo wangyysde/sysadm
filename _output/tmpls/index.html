@@ -183,7 +183,20 @@
                         </ul>
                     </li>
 
-                    <li class="active"><a href="javascript:void(0)" class="myLeftMenu" data="/project/list"><i class="fa fa-gg"></i> <span> 项目</span></a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-tachometer"></i> <span>基础设施</span>
+                            <span class="pull-right-container">
+                				<i class="fa fa-angle-left pull-right"></i>
+             				</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/datacenter/list"><i class="fa fa-home"></i>数据中心</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/availablezone/list"><i class="fa fa-mixcloud"></i>可用区管理</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/os/list"><i class="fa fa-linux"></i>操作系统信息管理</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/project/list"><i class="fa fa-gg"></i>项目管理</a></li>
+                        </ul>
+                    </li>
+
                     <li class="treeview">
                         <a href="#"><i class="fa fa-cloud"></i> <span>集群管理</span>
                         	<span class="pull-right-container">
@@ -192,9 +205,36 @@
                     	</a>
                         <ul class="treeview-menu">
 							<li><a href="javascript:void(0)" class="myLeftMenu" data="/infrastructure/list"><i class="fa fa-laptop"></i>节点管理</a></li>
-                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/k8scluster/addCluster"><i class="fa fa-paste"></i>添加集群</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/k8scluster/addform"><i class="fa fa-paste"></i>添加集群</a></li>
                             <li><a href="javascript:void(0)" class="myLeftMenu" data="/k8scluster/list"><i class="fa fa-clone"></i>集群列表</a></li>
                            
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-cogs"></i> <span>系统设置</span>
+                            <span class="pull-right-container">
+                				<i class="fa fa-angle-left pull-right"></i>
+             				</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/command/list"><i class="fa fa-flag"></i>命令列表</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/syssetting/list"><i class="fa fa-ticket"></i>系统设置</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-tree"></i> <span>工作负载</span>
+                            <span class="pull-right-container">
+                				<i class="fa fa-angle-left pull-right"></i>
+             				</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/workload/deployment/list"><i class="fa fa-anchor"></i>Deployment</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/workload/statefulset/list"><i class="fa fa-asterisk"></i>StatefulSet</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/workload/daemonset/list"><i class="fa fa-map"></i>DaemonSet</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/workload/job/list"><i class="fa fa-hashtag"></i>Job</a></li>
+                            <li><a href="javascript:void(0)" class="myLeftMenu" data="/workload/cronjob/list"><i class="fa fa-clock-o"></i>Cron Job</a></li>
                         </ul>
                     </li>
 

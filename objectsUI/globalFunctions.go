@@ -19,6 +19,7 @@ package objectsUI
 
 import (
 	"fmt"
+	"html/template"
 	"math"
 	"sort"
 	"strconv"
@@ -31,7 +32,7 @@ func InitTemplateData(baseUri, mainCategory, subCategory, addButtonTitle, isSear
 
 	baseUri = strings.TrimSpace(baseUri)
 	mainCategory = strings.TrimSpace(mainCategory)
-	subCategory = strings.TrimSpace(mainCategory)
+	subCategory = strings.TrimSpace(subCategory)
 	addButtonTitle = strings.TrimSpace(addButtonTitle)
 	isSearchForm = strings.TrimSpace(isSearchForm)
 	if baseUri == "" || mainCategory == "" || subCategory == "" {
@@ -44,6 +45,36 @@ func InitTemplateData(baseUri, mainCategory, subCategory, addButtonTitle, isSear
 	tplData["isSearchForm"] = isSearchForm
 	tplData["allPopMenuItems"] = allPopmenuItems
 	tplData["addtionalJs"] = addtionalJs
+	tplData["groupSelectID"] = requestData["groupSelectID"]
+
+	return tplData, nil
+}
+
+func InitTemplateDataForWorkload(baseUri, mainCategory, subCategory, addButtonTitle, isSearchForm string,
+	allPopmenuItems, addtionalJs, addtionalCss []string, requestData map[string]string) (map[string]interface{}, error) {
+	tplData := make(map[string]interface{}, 0)
+
+	baseUri = strings.TrimSpace(baseUri)
+	mainCategory = strings.TrimSpace(mainCategory)
+	subCategory = strings.TrimSpace(subCategory)
+	addButtonTitle = strings.TrimSpace(addButtonTitle)
+	isSearchForm = strings.TrimSpace(isSearchForm)
+	if baseUri == "" || mainCategory == "" || subCategory == "" {
+		return nil, fmt.Errorf("data is not valid")
+	}
+	tplData["baseUri"] = baseUri
+	tplData["mainCategory"] = mainCategory
+	tplData["subCategory"] = subCategory
+	tplData["addButtonTitle"] = addButtonTitle
+	isSearchForm = strings.ToLower(isSearchForm)
+	isSearchBool := false
+	if isSearchForm == "y" || isSearchForm == "yes" || isSearchForm == "true" || isSearchForm == "1" {
+		isSearchBool = true
+	}
+	tplData["isSearchForm"] = isSearchBool
+	tplData["allPopMenuItems"] = allPopmenuItems
+	tplData["addtionalJs"] = addtionalJs
+	tplData["addtionalCss"] = addtionalCss
 	tplData["groupSelectID"] = requestData["groupSelectID"]
 
 	return tplData, nil
@@ -263,6 +294,54 @@ func BuildPageNumInfo(tplData map[string]interface{}, requestData map[string]str
 	tplData["totalPage"] = totalPageStr
 }
 
+func BuildPageNumInfoForWorkloadList(tplData map[string]interface{}, requestData map[string]string, totalNum, startPos, numPerPage int,
+	defaultOrderField, defaultOrderDirection string) {
+
+	totalPages := int(math.Ceil(float64(totalNum) / float64(numPerPage)))
+	currentPage := int(math.Ceil(float64(startPos+1) / float64(numPerPage)))
+	preStart := 0
+	if startPos >= numPerPage {
+		preStart = startPos - numPerPage
+	}
+	nextStart := 0
+	if totalNum > (startPos + numPerPage) {
+		nextStart = startPos + numPerPage
+	}
+
+	searchContent := GetSearchContentFromRequest(requestData)
+	tplData["searchContent"] = searchContent
+
+	selectedOrderField := strings.TrimSpace(strings.ToUpper(requestData["orderfield"]))
+	if selectedOrderField == "" {
+		selectedOrderField = defaultOrderField
+	}
+	selectOrderDirection := strings.TrimSpace(requestData["direction"])
+	if selectOrderDirection == "" {
+		selectOrderDirection = defaultOrderDirection
+	}
+	tplData["orderfield"] = selectedOrderField
+	tplData["direction"] = selectOrderDirection
+
+	currentPageStr := strconv.Itoa(currentPage)
+	prePageStr := ""
+	if preStart > 0 || startPos > 0 {
+		prePageStr = strconv.Itoa(preStart)
+	}
+
+	nextPageStr := ""
+	if nextStart != 0 {
+		nextPageStr = strconv.Itoa(nextStart)
+
+	}
+
+	totalPageStr := strconv.Itoa(totalPages)
+
+	tplData["currentPage"] = currentPageStr
+	tplData["prePage"] = prePageStr
+	tplData["nextPage"] = nextPageStr
+	tplData["totalPage"] = totalPageStr
+}
+
 func InitAddObjectFormTemplateData(baseUri, mainCategory, subCategory, enctype, postUri, submitRedirect, cancelRedirect string, addtionalJs, addtionalCss []string) (map[string]interface{}, error) {
 	tplData := make(map[string]interface{}, 0)
 
@@ -301,4 +380,108 @@ func InitTemplateForShowObjectDetails(mainCategory, subCategory, redirectUrl, ba
 	tplData["subCategory"] = subCategory
 
 	return tplData, nil
+}
+
+// BuildMultiSelectData 根据传递过来的第一级、第二级和第三级菜单数据firstData,secondData,thirdData设置对象列表页面上下拉菜单数据。
+// 该下拉菜单最多可支持三级。如果出错返回错误信息，否则返回nil
+func BuildMultiSelectData(firstData, secondData, thirdData SelectData, tplData map[string]interface{}) error {
+
+	// set first select data
+	firstOptions := firstData.Options
+	tplData["firstGroupTitle"] = strings.TrimSpace(firstData.Title)
+	if len(firstOptions) > 0 && (strings.TrimSpace(firstData.SelectedId) == "" || strings.TrimSpace(firstData.SelectedId) == "0") {
+		tplData["firstGroupSelectedID"] = "0"
+		option := SelectOption{Id: "0", Text: "---选择选项---"}
+		firstOptions = append(firstOptions, option)
+	} else {
+		tplData["firstGroupSelectedID"] = strings.TrimSpace(firstData.SelectedId)
+	}
+	tplData["firstGroupSelect"] = firstOptions
+
+	// set second select data
+	if (strings.TrimSpace(secondData.SelectedId) != "" && strings.TrimSpace(secondData.SelectedId) != "0") && len(secondData.SelectedOptions) < 1 {
+		return fmt.Errorf("the second select has be selected but the selected options is empty")
+	}
+	tplData["secondGroupSelectedID"] = "0"
+	if tplData["firstGroupSelectedID"] != "0" && len(secondData.SelectedOptions) > 0 && secondData.SelectedId != "" {
+		tplData["secondGroupSelectedID"] = strings.TrimSpace(secondData.SelectedId)
+	}
+	tplData["secondGroupTitle"] = strings.TrimSpace(secondData.Title)
+	tplData["secondSelectedOptions"] = secondData.SelectedOptions
+	var secondSelectOptionsJSStr []template.JS
+	for _, o := range secondData.Options {
+		secondSelectOptionsJSStr = append(secondSelectOptionsJSStr, template.JS(fmt.Sprintf("secondGroupOptions['%s'] = [%s]", o.ParentID, o.OptionsList)))
+	}
+	tplData["secondGroupSelect"] = secondSelectOptionsJSStr
+
+	// set third select data
+	if (strings.TrimSpace(thirdData.SelectedId) != "" && strings.TrimSpace(thirdData.SelectedId) != "0") && len(thirdData.SelectedOptions) < 1 {
+		return fmt.Errorf("the third select has be selected but the selected options is empty")
+	}
+	tplData["thirdGroupSelectedID"] = "0"
+	if tplData["secondGroupSelectedID"] != "0" && len(thirdData.SelectedOptions) > 0 && thirdData.SelectedId != "" {
+		tplData["thirdGroupSelectedID"] = strings.TrimSpace(thirdData.SelectedId)
+	}
+	tplData["thirdGroupTitle"] = strings.TrimSpace(thirdData.Title)
+	tplData["thirdSelectedOptions"] = thirdData.SelectedOptions
+	var thirdSelectOptionsJSStr []template.JS
+	for _, o := range thirdData.Options {
+		thirdSelectOptionsJSStr = append(thirdSelectOptionsJSStr, template.JS(fmt.Sprintf("thirdGroupOptions['%s'] = [%s]", o.ParentID, o.OptionsList)))
+	}
+	tplData["thirdGroupSelect"] = thirdSelectOptionsJSStr
+
+	return nil
+}
+
+func BuildThDataForWorkloadList(requestData, allOrderFields, allListItems map[string]string, tplData map[string]interface{}, defaultOrderField, defaultOrderDirection string) {
+
+	selectedOrderField := strings.TrimSpace(strings.ToUpper(requestData["orderfield"]))
+	if selectedOrderField == "" {
+		selectedOrderField = defaultOrderField
+	}
+	selectOrderDirection := strings.TrimSpace(requestData["direction"])
+	if selectOrderDirection == "" {
+		selectOrderDirection = defaultOrderDirection
+	}
+
+	newOrderDirection := "0"
+	if selectOrderDirection == "0" {
+		newOrderDirection = "1"
+	}
+
+	thData := make([]ObjectTitle, 0)
+	var thKeys []string
+	for k, _ := range allListItems {
+		thKeys = append(thKeys, k)
+	}
+	sort.Strings(thKeys)
+
+	for _, v := range thKeys {
+		lineData := ObjectTitle{}
+		lineData.ID = v
+		lineData.Title = allListItems[v]
+		if isOrder(v, allOrderFields) {
+			lineData.IsOrder = true
+			if v == selectedOrderField {
+				lineData.OrderSelected = "yes"
+				lineData.OrderDirection = newOrderDirection
+			} else {
+				lineData.OrderSelected = ""
+				lineData.OrderDirection = defaultOrderDirection
+			}
+		}
+
+		thData = append(thData, lineData)
+	}
+
+	tplData["thData"] = thData
+}
+
+func ConvertMap2HTML(data map[string]string) template.HTML {
+	ret := ""
+	for k, v := range data {
+		ret = ret + "<div>" + k + ":" + v + "</div>"
+	}
+
+	return template.HTML(ret)
 }

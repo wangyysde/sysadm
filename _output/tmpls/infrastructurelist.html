@@ -2,10 +2,8 @@
 <script type="text/javascript" src="/js/infrastructurelist.js"></script>
 
 <script type="text/javascript">
-	var projectHost = new Array();
 	var osVersionHost = new Array();
 	{{range $index,$line := .HostData}}
-	projectHost[{{ $line.hostid }}] = {{ $line.projectid }};
 	osVersionHost[{{ $line.hostid }}] = {{ $line.OsVerInfo }};
 	{{ end }}
 
@@ -106,21 +104,9 @@
 	</ol>
 </section>
 
-{{ $haveSelectProject := .selectedprojectid }}
 <div>
 	<div class="selectForm">
 		<form id="InfrastructureAdd" name="InfrastructureAdd" method="post" target="_self" onsubmit="return false">
-			<select name="projectid" onChange="projectChanged(this.options[this.options.selectedIndex].value)">
-				{{range $index,$line := .projectinfo}}
-				{{range $id, $name := $line}}
-				{{if eq $haveSelectProject $id }}
-				<option value="{{ $id }}" selected> {{ $name }} </option>
-				{{else}}
-				<option value="{{ $id }}" > {{ $name }} </option>
-				{{end}}
-				{{end}}
-				{{end}}
-			</select> &nbsp;
 			<button id="buttonAdd" onclick="infrastructureAddHost() "> + 添加节点</button>&nbsp;
 			<button id="buttonDel" onclick="delHostJs() " disabled> X 删除节点</button>
 		</form>
@@ -176,20 +162,6 @@
 <div class="yum-add" id="addform">
 	<form id="infrastructureAddHostForm" name="infrastructureAddHostForm" method="post" target="_self" enctype="multipart/form-data" onsubmit="return false">
 		<div class="popform-title">添加新节点</div>
-		<div class="yum-item">
-			所属项目：
-			<select name="addHostprojectid" id="addHostprojectid">
-				{{range $index,$line := .projectinfo}}
-				{{range $id, $name := $line}}
-				{{if eq $haveSelectProject $id }}
-				<option value="{{ $id }}" style="background-color: #045283;" selected > {{ $name }} </option>
-				{{else}}
-				<option value="{{ $id }}" style="background-color: #045283;" > {{ $name }} </option>
-				{{end}}
-				{{end}}
-				{{end}}
-			</select> &nbsp;
-		</div>
 
 		<div class="yum-item">
 			节点主机名： <input id="hostname" type="text" name="hostname"> 用于节点管理和识别的主机名

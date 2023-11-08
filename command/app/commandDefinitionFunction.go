@@ -19,6 +19,7 @@ package app
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -41,15 +42,15 @@ func (c Command) GetDefinitionListForCreateObj(objectName, dataFromObject string
 		return ret, fmt.Errorf("os or os's version is nul")
 	}
 	conditions := make(map[string]string, 0)
-	conditions["executionType"] = string(ExecutionTypeAuto)
-	conditions["automationKind"] = string(AutomationKindObjectCreate)
-	conditions["objectName"] = objectName
+	conditions["executionType"] = "='" + strconv.Itoa(int(ExecutionTypeAuto)) + "'"
+	conditions["automationKind"] = "='" + strconv.Itoa(int(AutomationKindObjectCreate)) + "'"
+	conditions["objectName"] = "='" + objectName + "'"
 	if dataFromObject != "" {
-		conditions["dataFromObject"] = dataFromObject
+		conditions["dataFromObject"] = "='" + dataFromObject + "'"
 	}
-	conditions["osID"] = string(osID)
-	conditions["osversionid"] = string(osversionid)
-	conditions["deprecated"] = string(CommandDefinedUnDeprecated)
+	conditions["osID"] = "='" + strconv.Itoa(osID) + "'"
+	conditions["osversionid"] = "='" + strconv.Itoa(osversionid) + "'"
+	conditions["deprecated"] = "='" + strconv.Itoa(CommandDefinedUnDeprecated) + "'"
 
 	var emptyString []string
 	return c.GetObjectList("", emptyString, emptyString, conditions, 0, 0, nil)
@@ -172,7 +173,7 @@ func (c Command) AddParaForHostByTx(tx sysadmObjects.ObjectTx, hostid uint, comm
 				pkValues = pkValues + "," + objPkValue
 			}
 			conditions := make(map[string]string, 0)
-			conditions[objPkName] = objPkValue
+			conditions[objPkName] = "='" + objPkValue + "'"
 			var emptyString []string
 			dbData, e := sysadmObjects.GetObjectList(objTbName, objPkName, "", emptyString, emptyString, conditions, 0, 0, nil)
 			if e != nil {
@@ -256,7 +257,7 @@ func GetParaDefinedListByCommandID(commandID uint) ([]CommandParasDefinedSchema,
 	}
 
 	conditions := make(map[string]string, 0)
-	conditions["commandID"] = string(commandID)
+	conditions["commandID"] = "='" + strconv.Itoa(int(commandID)) + "'"
 	var emptyString []string
 	dbData, e := sysadmObjects.GetObjectList(defaultCommandParasDefinedTableName, defaultCommandParasDefinedPkName, "",
 		emptyString, emptyString, conditions, 0, 0, nil)

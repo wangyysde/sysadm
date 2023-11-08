@@ -135,6 +135,41 @@ func DaemonStart(cmd *cobra.Command, cmdPath string) {
 		os.Exit(15)
 	}
 
+	// 添加可用区事件侦听器
+	errs = addAvailablezoneHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(16)
+	}
+
+	// 添加数据中心事件侦听器
+	errs = addDatacenterHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(17)
+	}
+
+	// 添加新的命令事件侦听器
+	errs = addNewCommandHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(18)
+	}
+
+	// 添加新的操作系统事件侦听器
+	errs = addOSHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(19)
+	}
+
+	// 添加工作负载事件侦听器
+	errs = addNewWorkloadHandlers(r)
+	logErrors(errs)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
+		os.Exit(20)
+	}
+
 	// adding syssetting  handlers
 	errs = AddSyssettingHandlers(r)
 	logErrors(errs)
