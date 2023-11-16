@@ -123,3 +123,12 @@ type SelectData struct {
 	// 菜单项列
 	Options []SelectOption `form:"options" json:"options" yaml:"options" xml:"options" db:"options"`
 }
+
+// 定义一个用于定义sort的自定义函数类型
+type SortBy func(p, q interface{}) bool
+
+// 用于对结构体数据进行排序
+type SortData struct {
+	Data []interface{}
+	By   SortBy
+}

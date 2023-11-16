@@ -21,4 +21,7 @@ const (
 	defaultObjectName string = "workload"
 )
 
+// 1 for DESC 0 for ASC
+var defaultOrderDirection = "1"
+
 var runData = runingData{}

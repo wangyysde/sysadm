@@ -166,6 +166,83 @@ func buildSelectDataWithNs(tplData map[string]interface{}, dcList []interface{},
 	return nil
 }
 
+func buildSelectData(tplData map[string]interface{}, dcList []interface{}, requestData map[string]string) error {
+
+	selectedDC := strings.TrimSpace(requestData["dcID"])
+	if selectedDC == "" {
+		selectedDC = "0"
+	}
+	selectedCluster := strings.TrimSpace(requestData["clusterID"])
+	if selectedCluster == "" {
+		selectedCluster = "0"
+	}
+
+	// preparing datacenter options
+	var dcOptions []objectsUI.SelectOption
+	dcOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择数据中心===",
+		ParentID: "0",
+	}
+	dcOptions = append(dcOptions, dcOption)
+	for _, line := range dcList {
+		dcData, ok := line.(datacenter.DatacenterSchema)
+		if !ok {
+			return fmt.Errorf("the data is not datacenter schema")
+		}
+		dcOption := objectsUI.SelectOption{
+			Id:       strconv.Itoa(int(dcData.Id)),
+			Text:     dcData.CnName,
+			ParentID: "0",
+		}
+		dcOptions = append(dcOptions, dcOption)
+	}
+	dcSelect := objectsUI.SelectData{Title: "数据中心", SelectedId: selectedDC, Options: dcOptions}
+	tplData["dcSelect"] = dcSelect
+
+	// preparing cluster options
+	var clusterOptions []objectsUI.SelectOption
+	clusterOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择集群===",
+		ParentID: "0",
+	}
+	clusterOptions = append(clusterOptions, clusterOption)
+	if selectedDC != "0" {
+		var k8sclusterEntity sysadmObjects.ObjectEntity
+		k8sclusterEntity = sysadmK8sCluster.New()
+		conditions := make(map[string]string, 0)
+		var emptyString []string
+		conditions["isDeleted"] = "='0'"
+		conditions["dcid"] = "='" + selectedDC + "'"
+		clusterList, e := k8sclusterEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, make(map[string]string))
+		if e != nil {
+			return e
+		}
+
+		for _, line := range clusterList {
+			clusterData, ok := line.(sysadmK8sCluster.K8sclusterSchema)
+			if !ok {
+				return fmt.Errorf("the data is not cluster schema")
+			}
+
+			clusterOption := objectsUI.SelectOption{
+				Id:       clusterData.Id,
+				Text:     clusterData.CnName,
+				ParentID: strconv.Itoa(int(clusterData.Dcid)),
+			}
+			clusterOptions = append(clusterOptions, clusterOption)
+		}
+	}
+	clusterSelect := objectsUI.SelectData{Title: "集群", SelectedId: selectedCluster, Options: clusterOptions}
+	tplData["clusterSelect"] = clusterSelect
+
+	nsSelect := objectsUI.SelectData{}
+	tplData["nsSelect"] = nsSelect
+
+	return nil
+}
+
 func getRequestData(c *sysadmServer.Context, keys []string) (map[string]string, error) {
 	requestData, e := utils.NewGetRequestData(c, keys)
 	if e != nil {
@@ -186,4 +263,35 @@ func getRequestData(c *sysadmServer.Context, keys []string) (map[string]string, 
 	}
 
 	return requestData, nil
+}
+
+func newObjEntity(module string) (objectEntity, error) {
+	switch module {
+	case "ingress":
+		return &ingress{}, nil
+	case "configmap":
+		return &configmap{}, nil
+	case "pvc":
+		return &pvc{}, nil
+	case "rolebindings":
+		return &rolebindings{}, nil
+	case "role":
+		return &role{}, nil
+	case "serviceaccount":
+		return &sa{}, nil
+	case "secret":
+		return &secret{}, nil
+	case "ingressclass":
+		return &ingressclass{}, nil
+	case "storageclass":
+		return &storageclass{}, nil
+	case "pv":
+		return &pv{}, nil
+	case "clusterrole":
+		return &clusterrole{}, nil
+	case "clusterrolebind":
+		return &clusterrolebind{}, nil
+	default:
+		return nil, fmt.Errorf("module %s  has not found", module)
+	}
 }

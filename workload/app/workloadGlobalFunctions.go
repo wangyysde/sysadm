@@ -78,6 +78,9 @@ func AddHandlers(r *sysadmServer.Engine) error {
 		}
 	*/
 	// 为前端显示设置事件处理器
+	namespacedResourcePath := "/" + defaultObjectName + "/:module/*action"
+	r.GET(namespacedResourcePath, resourceHandler)
+
 	groupPath := "/" + defaultObjectName
 	display := r.Group(groupPath)
 	{
@@ -116,6 +119,18 @@ func AddHandlers(r *sysadmServer.Engine) error {
 	displayCronjob := r.Group(cronjobPath)
 	{
 		displayCronjob.GET("/list", listCronjobHandler)
+	}
+
+	nsPath := "/" + defaultObjectName + "/namespace"
+	displayNs := r.Group(nsPath)
+	{
+		displayNs.GET("/list", listNamespaceHandler)
+	}
+
+	servicePath := "/" + defaultObjectName + "/service"
+	displayService := r.Group(servicePath)
+	{
+		displayService.GET("/list", listServiceHandler)
 	}
 
 	return nil

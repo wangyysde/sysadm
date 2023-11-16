@@ -231,6 +231,16 @@ func isOrder(key string, allOrderFields map[string]string) bool {
 	return false
 }
 
+func isOrderWithFunc(key string, allOrderFields map[string]SortBy) bool {
+	for k, _ := range allOrderFields {
+		if strings.TrimSpace(strings.ToUpper(key)) == strings.TrimSpace(strings.ToUpper(k)) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func BuildPageNumInfo(tplData map[string]interface{}, requestData map[string]string, totalNum, startPos, numPerPage int,
 	defaultOrderField, defaultOrderDirection string) {
 
@@ -484,4 +494,94 @@ func ConvertMap2HTML(data map[string]string) template.HTML {
 	}
 
 	return template.HTML(ret)
+}
+
+func BuildThDataWithOrderFunc(requestData, allListItems map[string]string, tplData map[string]interface{},
+	defaultOrderField, defaultOrderDirection string, allOrderFields map[string]SortBy) {
+
+	selectedOrderField := strings.TrimSpace(strings.ToUpper(requestData["orderfield"]))
+	if selectedOrderField == "" {
+		selectedOrderField = defaultOrderField
+	}
+	selectOrderDirection := strings.TrimSpace(requestData["direction"])
+	if selectOrderDirection == "" {
+		selectOrderDirection = defaultOrderDirection
+	}
+
+	newOrderDirection := "0"
+	if selectOrderDirection == "0" {
+		newOrderDirection = "1"
+	}
+
+	thData := make([]ObjectTitle, 0)
+	var thKeys []string
+	for k, _ := range allListItems {
+		thKeys = append(thKeys, k)
+	}
+	sort.Strings(thKeys)
+
+	for _, v := range thKeys {
+		lineData := ObjectTitle{}
+		lineData.ID = v
+		lineData.Title = allListItems[v]
+		if isOrderWithFunc(v, allOrderFields) {
+			lineData.IsOrder = true
+			if v == selectedOrderField {
+				lineData.OrderSelected = "yes"
+				lineData.OrderDirection = newOrderDirection
+			} else {
+				lineData.OrderSelected = ""
+				lineData.OrderDirection = defaultOrderDirection
+			}
+		}
+
+		thData = append(thData, lineData)
+	}
+
+	tplData["thData"] = thData
+}
+
+func NewBuildThDataWithOrderFunc(requestData, allListItems map[string]string, tplData map[string]interface{},
+	defaultOrderField, defaultOrderDirection string, allOrderFields map[string]SortBy) {
+
+	selectedOrderField := strings.TrimSpace(strings.ToUpper(requestData["orderfield"]))
+	if selectedOrderField == "" {
+		selectedOrderField = defaultOrderField
+	}
+	selectOrderDirection := strings.TrimSpace(requestData["direction"])
+	if selectOrderDirection == "" {
+		selectOrderDirection = defaultOrderDirection
+	}
+
+	newOrderDirection := "0"
+	if selectOrderDirection == "0" {
+		newOrderDirection = "1"
+	}
+
+	thData := make([]ObjectTitle, 0)
+	var thKeys []string
+	for k, _ := range allListItems {
+		thKeys = append(thKeys, k)
+	}
+	sort.Strings(thKeys)
+
+	for _, v := range thKeys {
+		lineData := ObjectTitle{}
+		lineData.ID = v
+		lineData.Title = allListItems[v]
+		if isOrderWithFunc(v, allOrderFields) {
+			lineData.IsOrder = true
+			if v == selectedOrderField {
+				lineData.OrderSelected = "yes"
+				lineData.OrderDirection = newOrderDirection
+			} else {
+				lineData.OrderSelected = ""
+				lineData.OrderDirection = defaultOrderDirection
+			}
+		}
+
+		thData = append(thData, lineData)
+	}
+
+	tplData["thData"] = thData
 }

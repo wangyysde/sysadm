@@ -199,15 +199,15 @@ func prepareStatefulSetData(selectedCluster, selectedNS, defaultOrderField, defa
 
 	if direction == "1" {
 		if orderfield == "TD1" {
-			sort.Sort(sysadmObjects.SortData{Data: stsItems, By: sortStsByName})
+			sort.Sort(objectsUI.SortData{Data: stsItems, By: sortStsByName})
 		} else {
-			sort.Sort(sysadmObjects.SortData{Data: stsItems, By: sortStsByCreatetime})
+			sort.Sort(objectsUI.SortData{Data: stsItems, By: sortStsByCreatetime})
 		}
 	} else {
 		if orderfield == "TD1" {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: stsItems, By: sortStsByName}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: stsItems, By: sortStsByName}))
 		} else {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: stsItems, By: sortStsByCreatetime}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: stsItems, By: sortStsByCreatetime}))
 		}
 	}
 

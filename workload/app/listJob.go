@@ -200,15 +200,15 @@ func prepareJobData(selectedCluster, selectedNS, defaultOrderField, defaultOrder
 
 	if direction == "1" {
 		if orderfield == "TD1" {
-			sort.Sort(sysadmObjects.SortData{Data: jobItems, By: sortJobByName})
+			sort.Sort(objectsUI.SortData{Data: jobItems, By: sortJobByName})
 		} else {
-			sort.Sort(sysadmObjects.SortData{Data: jobItems, By: sortJobByCreatetime})
+			sort.Sort(objectsUI.SortData{Data: jobItems, By: sortJobByCreatetime})
 		}
 	} else {
 		if orderfield == "TD1" {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: jobItems, By: sortJobByName}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: jobItems, By: sortJobByName}))
 		} else {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: jobItems, By: sortJobByCreatetime}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: jobItems, By: sortJobByCreatetime}))
 		}
 	}
 

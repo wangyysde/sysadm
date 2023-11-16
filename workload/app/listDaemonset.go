@@ -199,15 +199,15 @@ func prepareDaemonSetSetData(selectedCluster, selectedNS, defaultOrderField, def
 
 	if direction == "1" {
 		if orderfield == "TD1" {
-			sort.Sort(sysadmObjects.SortData{Data: daemonSetItems, By: sortDaemonSetByName})
+			sort.Sort(objectsUI.SortData{Data: daemonSetItems, By: sortDaemonSetByName})
 		} else {
-			sort.Sort(sysadmObjects.SortData{Data: daemonSetItems, By: sortDaemonSetByCreatetime})
+			sort.Sort(objectsUI.SortData{Data: daemonSetItems, By: sortDaemonSetByCreatetime})
 		}
 	} else {
 		if orderfield == "TD1" {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: daemonSetItems, By: sortDaemonSetByName}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: daemonSetItems, By: sortDaemonSetByName}))
 		} else {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: daemonSetItems, By: sortDaemonSetByCreatetime}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: daemonSetItems, By: sortDaemonSetByCreatetime}))
 		}
 	}
 

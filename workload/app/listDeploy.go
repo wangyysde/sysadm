@@ -199,15 +199,15 @@ func prepareObjectData(selectedCluster, selectedNS, defaultOrderField, defaultOr
 
 	if direction == "1" {
 		if orderfield == "TD1" {
-			sort.Sort(sysadmObjects.SortData{Data: deployItems, By: sortByName})
+			sort.Sort(objectsUI.SortData{Data: deployItems, By: sortByName})
 		} else {
-			sort.Sort(sysadmObjects.SortData{Data: deployItems, By: sortByCreatetime})
+			sort.Sort(objectsUI.SortData{Data: deployItems, By: sortByCreatetime})
 		}
 	} else {
 		if orderfield == "TD1" {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: deployItems, By: sortByName}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: deployItems, By: sortByName}))
 		} else {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: deployItems, By: sortByCreatetime}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: deployItems, By: sortByCreatetime}))
 		}
 	}
 

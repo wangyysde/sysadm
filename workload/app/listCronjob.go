@@ -198,15 +198,15 @@ func prepareCronJobData(selectedCluster, selectedNS, defaultOrderField, defaultO
 
 	if direction == "1" {
 		if orderfield == "TD1" {
-			sort.Sort(sysadmObjects.SortData{Data: cronJobItems, By: sortCronJobByName})
+			sort.Sort(objectsUI.SortData{Data: cronJobItems, By: sortCronJobByName})
 		} else {
-			sort.Sort(sysadmObjects.SortData{Data: cronJobItems, By: sortCronJobByCreatetime})
+			sort.Sort(objectsUI.SortData{Data: cronJobItems, By: sortCronJobByCreatetime})
 		}
 	} else {
 		if orderfield == "TD1" {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: cronJobItems, By: sortCronJobByName}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: cronJobItems, By: sortCronJobByName}))
 		} else {
-			sort.Sort(sort.Reverse(sysadmObjects.SortData{Data: cronJobItems, By: sortCronJobByCreatetime}))
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: cronJobItems, By: sortCronJobByCreatetime}))
 		}
 	}
 

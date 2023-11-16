@@ -71,12 +71,3 @@ type ObjectTableSchema struct {
 	// 是否废弃，0表示否，1表示是
 	Deprecated int `form:"deprecated" json:"deprecated" yaml:"deprecated" xml:"deprecated" db:"deprecated"`
 }
-
-// 定义一个用于定义sort的自定义函数类型
-type SortBy func(p, q interface{}) bool
-
-// 用于对结构体数据进行排序
-type SortData struct {
-	Data []interface{}
-	By   SortBy
-}
