@@ -7,7 +7,7 @@
 *.iml
 
 # binary package for testing
-/_output/bin/*
+_output/bin
 
 # certifications for testing
 /_output/certs
