@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sort"
@@ -31,6 +32,8 @@ func (c *configmap) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortCmByName, "TD6": sortCmByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "标签", "TD4": "数据项数", "TD5": "是否可修改", "TD6": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	c.mainModuleName = "配置和存储"
 	c.moduleName = "configmap"
@@ -42,6 +45,9 @@ func (c *configmap) setObjectInfo() {
 	c.defaultOrderField = "TD1"
 	c.defaultOrderDirection = "1"
 	c.namespaced = true
+	c.moduleID = "configmap"
+	c.additionalJs = additionalJs
+	c.additionalCss = additionalCss
 }
 
 func (c *configmap) getMainModuleName() string {
@@ -84,7 +90,7 @@ func (c *configmap) getNamespaced() bool {
 	return c.namespaced
 }
 
-// for Ingress
+// for configmap
 func (c *configmap) listObjectData(selectedCluster, selectedNS string,
 	startPos int, requestData map[string]string) (int, []map[string]interface{}, error) {
 	var dataList []map[string]interface{}
@@ -180,4 +186,38 @@ func sortCmByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (c *configmap) getModuleID() string {
+	return c.moduleID
+}
+
+func (c *configmap) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (c *configmap) getAdditionalJs() []string {
+	return c.additionalJs
+}
+func (c *configmap) getAdditionalCss() []string {
+	return c.additionalCss
+}
+
+func (c *configmap) addNewResource(s *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (c *configmap) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (c *configmap) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

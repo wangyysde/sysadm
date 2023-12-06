@@ -27,17 +27,45 @@ import (
 
 func resourceHandler(c *sysadmServer.Context) {
 	module := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(strings.ToLower(c.Param("module"))), "/"), "/")
-	action := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(strings.ToLower(c.Param("action"))), "/"), "/")
+	action := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(c.Param("action")), "/"), "/")
 	var errs []sysadmLog.Sysadmerror
 
 	switch action {
-	case "list":
-		listResourceHandler(c, module)
-		return
+	case "list", "QuotaList":
+		listResourceHandler(c, module, action)
+	case "addform":
+		addFormResourceHandler(c, module)
+	case "addQuota":
+		addNewQuotaFormHandler(c)
+	case "addLimitRange":
+		addNewLimitRangehandler(c)
+	case "detail", "quotaDetail", "limitRangeDetail":
+		detailHandler(c, module, action)
 	default:
 		errs = append(errs, sysadmLog.NewErrorWithStringLevel(8000800000, "debug", "action %s for %s was not found", action, module))
 		e := fmt.Errorf("action %s for %s was not found", action, module)
 		objectsUI.OutPutMsg(c, "", "您未登录或超时", runData.logEntity, 8000800001, errs, e)
-		return
 	}
+
+	return
+}
+
+func postResourceHandler(c *sysadmServer.Context) {
+	module := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(strings.ToLower(c.Param("module"))), "/"), "/")
+	action := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(c.Param("action")), "/"), "/")
+
+	switch action {
+	case "validateNewName":
+		validateNameHandler(c, module)
+	case "add":
+		addNewObjectHandler(c, module)
+	case "del", "limitRangeDel", "delQuota":
+		delResourceHandler(c, module, action)
+	case "addNewQuota", "addNewLimitRange":
+		addNewQuotaHandler(c, action)
+	default:
+		actionNotFoundHandler(c, module, action)
+	}
+
+	return
 }

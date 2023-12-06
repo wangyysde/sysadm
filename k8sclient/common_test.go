@@ -93,22 +93,22 @@ func getClusterData() (string, string, string, string, string, string, error) {
 func TestGetKubernetesClient(t *testing.T) {
 	clusterID, apiserver, clusterUser, ca, cert, key, e := getClusterData()
 	if e != nil {
-		t.Fatal("%s", e)
+		t.Fatal(e)
 	}
 
 	restConf, e := BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
 	if e != nil {
-		t.Fatal("%s", e)
+		t.Fatal(e)
 	}
 
 	k8sClient, e := kubernetes.NewForConfig(restConf)
 	if e != nil {
-		t.Fatal("%s", e)
+		t.Fatal(e)
 	}
 
 	deployList, e := k8sClient.AppsV1().Deployments("").List(context.Background(), metav1.ListOptions{})
 	if e != nil {
-		t.Fatal("%s", e)
+		t.Fatal(e)
 	}
 	t.Logf("got total %d deployments\n", len(deployList.Items))
 

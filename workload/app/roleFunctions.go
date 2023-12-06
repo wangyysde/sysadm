@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sort"
@@ -30,6 +31,8 @@ func (r *role) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortRoleByName, "TD3": sortRoleByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	r.mainModuleName = "帐号与角色"
 	r.moduleName = "角色"
@@ -41,6 +44,9 @@ func (r *role) setObjectInfo() {
 	r.defaultOrderField = "TD1"
 	r.defaultOrderDirection = "1"
 	r.namespaced = true
+	r.moduleID = "role"
+	r.additionalJs = additionalJs
+	r.additionalCss = additionalCss
 }
 
 func (r *role) getMainModuleName() string {
@@ -166,4 +172,38 @@ func sortRoleByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (r *role) getModuleID() string {
+	return r.moduleID
+}
+
+func (r *role) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (r *role) getAdditionalJs() []string {
+	return r.additionalJs
+}
+func (r *role) getAdditionalCss() []string {
+	return r.additionalCss
+}
+
+func (r *role) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (r *role) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (r *role) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

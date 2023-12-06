@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	"html/template"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,6 +32,8 @@ func (p *pv) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortPvByName, "TD9": sortPvByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "容量", "TD3": "访问模式", "TD4": "回收策略", "TD5": "状态", "TD6": "绑定对象", "TD7": "Storage Class", "TD8": "卷模式", "TD9": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	p.mainModuleName = "配置和存储"
 	p.moduleName = "Persistent Volumes"
@@ -42,6 +45,9 @@ func (p *pv) setObjectInfo() {
 	p.defaultOrderField = "TD1"
 	p.defaultOrderDirection = "1"
 	p.namespaced = false
+	p.moduleID = "pv"
+	p.additionalJs = additionalJs
+	p.additionalCss = additionalCss
 }
 
 func (p *pv) getMainModuleName() string {
@@ -203,4 +209,38 @@ func sortPvByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (p *pv) getModuleID() string {
+	return p.moduleID
+}
+
+func (p *pv) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (p *pv) getAdditionalJs() []string {
+	return p.additionalJs
+}
+func (p *pv) getAdditionalCss() []string {
+	return p.additionalCss
+}
+
+func (p *pv) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (p *pv) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (p *pv) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

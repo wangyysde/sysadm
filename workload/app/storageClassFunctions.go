@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	"html/template"
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,6 +32,8 @@ func (s *storageclass) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortStorageClassByName, "TD7": sortStorageClassByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "提供者", "TD3": "参数", "TD4": "回收策略", "TD5": "绑定模式", "TD6": "是否允许扩容", "TD7": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	s.mainModuleName = "配置和存储"
 	s.moduleName = "Storage Classes"
@@ -42,6 +45,9 @@ func (s *storageclass) setObjectInfo() {
 	s.defaultOrderField = "TD1"
 	s.defaultOrderDirection = "1"
 	s.namespaced = false
+	s.moduleID = "storageclass"
+	s.additionalJs = additionalJs
+	s.additionalCss = additionalCss
 }
 
 func (s *storageclass) getMainModuleName() string {
@@ -183,4 +189,38 @@ func sortStorageClassByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (s *storageclass) getModuleID() string {
+	return s.moduleID
+}
+
+func (s *storageclass) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (s *storageclass) getAdditionalJs() []string {
+	return s.additionalJs
+}
+func (s *storageclass) getAdditionalCss() []string {
+	return s.additionalCss
+}
+
+func (s *storageclass) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *storageclass) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *storageclass) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

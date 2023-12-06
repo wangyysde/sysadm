@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sort"
@@ -31,6 +32,8 @@ func (s *sa) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortSaByName, "TD4": sortSaByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "关联的Secrets数", "TD4": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	s.mainModuleName = "帐号与角色"
 	s.moduleName = "服务帐号"
@@ -42,6 +45,9 @@ func (s *sa) setObjectInfo() {
 	s.defaultOrderField = "TD1"
 	s.defaultOrderDirection = "1"
 	s.namespaced = true
+	s.moduleID = "serviceaccount"
+	s.additionalJs = additionalJs
+	s.additionalCss = additionalCss
 }
 
 func (s *sa) getMainModuleName() string {
@@ -171,4 +177,38 @@ func sortSaByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (s *sa) getModuleID() string {
+	return s.moduleID
+}
+
+func (s *sa) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (s *sa) getAdditionalJs() []string {
+	return s.additionalJs
+}
+func (s *sa) getAdditionalCss() []string {
+	return s.additionalCss
+}
+
+func (s *sa) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *sa) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *sa) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	"html/template"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,6 +32,8 @@ func (c *clusterrolebind) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortClusterrolebindByName, "TD4": sortClusterrolebindByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "关联的角色", "TD3": "关联的对象", "TD4": "创建时间"}
+	additionalJs := []string{}
+	additionCss := []string{}
 
 	c.mainModuleName = "帐号与角色"
 	c.moduleName = "集群角色绑定"
@@ -42,6 +45,9 @@ func (c *clusterrolebind) setObjectInfo() {
 	c.defaultOrderField = "TD1"
 	c.defaultOrderDirection = "1"
 	c.namespaced = false
+	c.moduleID = "clusterrolebind"
+	c.additionalJs = additionalJs
+	c.additionalCss = additionCss
 }
 
 func (c *clusterrolebind) getMainModuleName() string {
@@ -173,4 +179,38 @@ func sortClusterrolebindByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (c *clusterrolebind) getModuleID() string {
+	return c.moduleID
+}
+
+func (c *clusterrolebind) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (c *clusterrolebind) getAdditionalJs() []string {
+	return c.additionalJs
+}
+func (c *clusterrolebind) getAdditionalCss() []string {
+	return c.additionalCss
+}
+
+func (c *clusterrolebind) addNewResource(s *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (c *clusterrolebind) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (c *clusterrolebind) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

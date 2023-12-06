@@ -22,6 +22,8 @@ import (
 	"fmt"
 	"github.com/wangyysde/sysadmServer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"mime/multipart"
 	"strconv"
 	"strings"
 	datacenter "sysadm/datacenter/app"
@@ -29,6 +31,7 @@ import (
 	sysadmK8sCluster "sysadm/k8scluster/app"
 	sysadmObjects "sysadm/objects/app"
 	"sysadm/objectsUI"
+	"sysadm/user"
 	"sysadm/utils"
 )
 
@@ -291,7 +294,111 @@ func newObjEntity(module string) (objectEntity, error) {
 		return &clusterrole{}, nil
 	case "clusterrolebind":
 		return &clusterrolebind{}, nil
+	case "namespace":
+		return &namespace{}, nil
 	default:
 		return nil, fmt.Errorf("module %s  has not found", module)
 	}
+}
+
+func buildClientSetByClusterID(clusterID string) (*kubernetes.Clientset, error) {
+	clusterID = strings.TrimSpace(clusterID)
+	if clusterID == "" {
+		return nil, fmt.Errorf("cluster ID is empty")
+	}
+
+	var k8sclusterEntity sysadmObjects.ObjectEntity
+	k8sclusterEntity = sysadmK8sCluster.New()
+	clusterInfo, e := k8sclusterEntity.GetObjectInfoByID(clusterID)
+	if e != nil {
+		return nil, e
+	}
+	clusterData, ok := clusterInfo.(sysadmK8sCluster.K8sclusterSchema)
+	if !ok {
+		return nil, fmt.Errorf("the data is not K8S data schema")
+	}
+	ca := []byte(clusterData.Ca)
+	cert := []byte(clusterData.Cert)
+	key := []byte(clusterData.Key)
+	restConf, e := sysadmK8sClient.BuildConfigFromParametes(ca, cert, key, clusterData.Apiserver, clusterData.Id, clusterData.ClusterUser, "default")
+	if e != nil {
+		return nil, e
+	}
+
+	clientSet, e := sysadmK8sClient.BuildClientset(restConf)
+	if e != nil {
+		return nil, e
+	}
+
+	return clientSet, nil
+}
+
+func checkUserLoginAndGetRequestData(c *sysadmServer.Context, keys []string) (map[string]string, error) {
+	requestData, e := utils.NewGetRequestData(c, keys)
+	if e != nil {
+		return requestData, e
+	}
+
+	userid, e := user.GetSessionValue(c, "userid", runData.sessionName)
+	if e != nil || userid == nil {
+		return requestData, fmt.Errorf("user has not login or not permission")
+	}
+
+	requestData["userid"] = userid.(string)
+
+	return requestData, nil
+}
+
+func getFormDataFromMultipartForm(c *sysadmServer.Context, keys []string) (map[string]string, error) {
+	data := make(map[string]string, 0)
+
+	keys = append(keys, "dcid")
+	keys = append(keys, "clusterID")
+	keys = append(keys, "namespace")
+	keys = append(keys, "addType")
+	keys = append(keys, "objContent")
+
+	formData, e := utils.GetMultipartData(c, keys)
+	if e != nil {
+		return data, e
+	}
+
+	for _, k := range keys {
+		keyData := formData[k].([]string)
+		value := ""
+		if len(keyData) > 1 {
+			for _, v := range keyData {
+				if value == "" {
+					value = v
+				} else {
+					value = value + "," + v
+				}
+			}
+		} else {
+			if len(keyData) > 0 {
+				value = keyData[0]
+			} else {
+				value = ""
+			}
+		}
+		data[k] = value
+	}
+
+	objContent := formData["objContent"].([]string)
+	yamlContent := objContent[0]
+	if data["addType"] == "1" {
+		yamlFile, e := utils.GetMultipartData(c, []string{"objFile"})
+		if e != nil {
+			return data, e
+		}
+		yamlByte, e := utils.ReadUploadedFile(yamlFile["objFile"].(*multipart.FileHeader))
+		if e != nil {
+			return data, e
+		}
+		yamlContent = utils.Interface2String(yamlByte)
+	}
+
+	data["yamlContent"] = yamlContent
+
+	return data, nil
 }

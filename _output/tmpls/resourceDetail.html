@@ -1,0 +1,103 @@
+<link rel="stylesheet" href="/css/resourceDetail.css">
+
+{{range $index, $line := .addtionalCss }}
+<link rel="stylesheet" href="{{- $line -}}">
+{{end}}
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+
+{{if .errorFlag }}
+   <div class="detailErrorMsg">
+     {{- .errorMsg }}
+   </div>
+{{else}}
+
+<div class="detailsHeader">
+    <span class="detailNavigationMain"> {{ .mainCategory }} </span>
+    <span class="detailNavigationSub"> {{ .subCategory }} </span>
+    {{if .thirdCategory }}
+        <span class="detailNavigationThird">{{ .thirdCategory }}</span>
+    {{end }}
+</div>
+
+<div class="detailsBlock">
+    <div class="detailsCardheadline">
+        <span class="detailsActivecard" onclick="detailsChangeCard(0)">资源Yaml详情</span>
+        <span onclick="detailsChangeCard(1)">资源分项详情</span>
+    </div>
+
+    <div class="detailsCardcontent">
+        <div name="cardcontentdiv" class="detailsCardcontentdiv">
+            <div id="resourceYamlContent" style="display: none"> {{- .resourceYamlContent -}} </div>
+            <div id="detailsEditor">
+
+            </div>
+        </div>
+        <div style="display: none" name="cardcontentdiv" class="detailsCardcontentdiv">
+            {{range $index, $line := .data }}
+               {{if $line.StartContainer }}
+                   <div id="container{{- $line.ID}}" >
+               {{end}}
+               <div id="line{{- $line.ID}}" class="detailDataline" >
+                   {{range $i,$item := $line.Data }}
+                       {{if eq $item.Kind "LABEL" }}
+                           <span id="span{{- $item.ID -}}" class="{{- $item.Size -}}Label{{- $item.WithLine -}}" {{if $item.NoDisplay}} style="display: none" {{end}}>
+                              {{- $item.Title }}
+                           </span>
+                       {{end}}
+
+                       {{if eq $item.Kind "WORDS" }}
+                          <span id="span{{- $item.ID -}}" name="{{- $item.Name -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+                          {{if $item.Url }}
+                             <a href="{{ $item.Url }}" {{if $item.ActionFun}} onclick="clickDetailItemWord({{- $item.Url -}},{{- $item.ActionFun -}},this)" {{end}}>
+                                 {{if $item.Awesome }}
+                                    <span class="awesomeFont"> <b class="{{- $item.Word}} "></b> </span>
+                                 {{else}}
+                                    {{- $item.Word -}}
+                                 {{end}}
+                             </a>
+                          {{else}}
+                             {{if $item.Awesome }}
+                                 <span class="awesomeFont"> <b class="{{- $item.Word}} "></b> </span>
+                             {{else}}
+                                 {{- $item.Word -}}
+                             {{end}}
+                          {{end}}
+                          </span>
+                       {{end}}
+
+                       {{if eq $item.Kind "TitleValue" }}
+                           <span id="span{{- $item.ID -}}"  class="DetailItemTitle">
+                             {{- $item.Title }}
+                           </span>
+                           <span id="spanvalue{{- $item.ID -}}" class="DetailItemValue">
+                           {{if $item.ActionUri }}
+                              <a href="{{ $item.ActionUri }}" {{if $item.ActionFun}} onclick="clickDetailItemLink($item.ActionFun}},{{- $item.ActionFun -}})" {{end}}>
+                              {{- $item.Value }}
+                              </a>
+                           {{else}}
+                              {{- $item.Value }}
+                           {{end}}
+                           </span>
+                       {{end}}
+
+
+                   {{end}}
+               </div>
+               {{if $line.EndContainer }}
+                   </div>
+               {{end}}
+            {{end}}
+        </div>
+
+    </div>
+</div>
+
+{{end}}
+
+<div class="detailPoppageButton">
+    <button  onclick="closeDetailPage()">关闭</button>
+</div>

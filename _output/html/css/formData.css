@@ -1,0 +1,152 @@
+.formDataInputline {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    top: 20px;
+    left: 30px;
+    color: #000;
+}
+
+.formDataInputline span {
+    padding-right: 10px;
+}
+
+.formDataInputline span#note {
+    font-size: 10px;
+    color: #f53535;
+    padding-left: 10px;
+}
+
+.formDataInputline select {
+    top: 5px;
+    left:10px;
+    height: 20px;
+    border:1px solid;
+    color: #000;
+    border-bottom-width: 1px;
+    border-color: #045283;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    background-color: transparent;
+}
+
+.formDataInputline input {
+    border:1px solid;
+    color: #000;
+    border-bottom-width: 1px;
+    border-color: #045283;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    background-color: transparent;
+}
+
+.formDataInputFileButton {
+    position: relative;
+    width: 80px !important;
+    height: 30px !important;
+    border: 0 !important;
+    color: #045283 !important;
+    outline: none !important;
+    cursor: pointer !important;
+    background-color: transparent;
+    outline: none;
+    display: inline-block;
+}
+
+
+
+.bigLabel {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 18px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    line-height: 50px;
+}
+
+.bigLabelWithLeft {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 18px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    border-left-color: #045283;
+    border-left-style: solid;
+    border-left-width: 2px;
+    line-height: 50px;
+}
+
+.midLabel {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 16px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    line-height: 45px;
+}
+
+.midLabelWithLeft {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 16px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    border-left-color: #045283;
+    border-left-style: solid;
+    border-left-width: 2px;
+    line-height: 45px;
+}
+
+.smallLabel {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 14px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    line-height: 40px;
+}
+
+.smallLabelWithLeft {
+    position: relative;
+    border-radius: 0;
+    border-width: 0px;
+    font-size: 14px;
+    color: #000;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    border-left-color: #045283;
+    border-left-style: solid;
+    border-left-width: 2px;
+    line-height: 40px;
+}
+
+.awesomeFont {
+    padding: 14px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    border-radius: 50%;
+    cursor: pointer;
+}

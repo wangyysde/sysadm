@@ -183,7 +183,7 @@ function doMenuItemForWorkloadList(objID,action,actionType,method,objName){
     var clusterObj = document.getElementById("clusterID");
     var nsObj = document.getElementById("namespace");
 
-    var paras = objName + "?dcID=" + dcObj.options[dcObj.selectedIndex].value + "&clusterID=" + clusterObj.options[clusterObj.selectedIndex].value;
+    var paras = "?dcID=" + dcObj.options[dcObj.selectedIndex].value + "&clusterID=" + clusterObj.options[clusterObj.selectedIndex].value;
     if(nsObj){
         paras = paras + "&namespace=" +nsObj.options[nsObj.selectedIndex].value;
     }
@@ -193,15 +193,21 @@ function doMenuItemForWorkloadList(objID,action,actionType,method,objName){
     popMenu.style.display = "none";
     popMenu.style.zIndex = 2000;
 
-    var doUrl = pageUrl + "/" + objName + "/" + action + paras + "&objID=" + objID;
+    var doUrl = pageUrl + objName + "/" + action + paras + "&objID=" + objID;
 
     if(method == "poppage"){
         doAjaxForPoppage(doUrl,actionType);
         return;
     }
     if(method == "tip") {
-        doAjax(doUrl, actionType);
-        return;
+        var respValue =  workloadDoAjax(doUrl, actionType,false);
+        var refreshUri = pageUrl + objName + "/list"  + paras;
+        $('#container').load(refreshUri);
+        if(respValue["error"]){
+            return displayTip(respValue["msg"],"RED",5000);
+        }
+
+        return displayTip(respValue["msg"],"GREEN",5000);
     }
 
     if(method == "page"){

@@ -18,17 +18,26 @@
 package app
 
 import (
+	"github.com/wangyysde/sysadmServer"
 	"sysadm/objectsUI"
 )
 
 type moduleInfo struct {
 	mainModuleName  string
 	moduleName      string
+	moduleID        string
 	allPopMenuItems []string
 	allListItems    map[string]string
 	addButtonTile   string
 	isSearchForm    string
 	namespaced      bool
+	additionalJs    []string
+	additionalCss   []string
+}
+
+type namespace struct {
+	moduleInfo
+	orderInfo
 }
 
 type ingress struct {
@@ -110,4 +119,11 @@ type objectEntity interface {
 	getDefaultOrderDirection() string
 	getAllorderFields() map[string]objectsUI.SortBy
 	getNamespaced() bool
+	getModuleID() string
+	buildAddFormData(map[string]interface{}) error
+	getAdditionalJs() []string
+	getAdditionalCss() []string
+	addNewResource(*sysadmServer.Context, string) error
+	delResource(*sysadmServer.Context, string, map[string]string) error
+	showResourceDetail(string, map[string]interface{}, map[string]string) error
 }

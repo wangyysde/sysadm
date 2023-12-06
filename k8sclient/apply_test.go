@@ -17,11 +17,47 @@
 
 package k8sclient
 
-const (
-	ObjectStatusPending   = "Pending"
-	ObjectStatusRunning   = "Running"
-	ObjectStatusSucceeded = "Succeeded"
-	ObjectStatusFailed    = "Failed"
-	ObjectStatusUnknow    = "Unknow"
-	FieldManager          = "k8sclient.sysadm.cn"
+import (
+	"fmt"
+	"io"
+	"k8s.io/client-go/kubernetes"
+	"os"
+	"testing"
 )
+
+func TestAppyYamlByClientSet(t *testing.T) {
+	clusterID, apiserver, clusterUser, ca, cert, key, e := getClusterData()
+	if e != nil {
+		t.Fatal(e)
+	}
+
+	restConf, e := BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
+	if e != nil {
+		t.Fatal(e)
+	}
+
+	k8sClient, e := kubernetes.NewForConfig(restConf)
+	if e != nil {
+		t.Fatal(e)
+	}
+
+	fp, e := os.Open("./testbyapp.yaml")
+	if e != nil {
+		t.Fatal(e)
+	}
+
+	yamlContent, e := io.ReadAll(fp)
+	if e != nil {
+		t.Fatal(e)
+	}
+	fp.Close()
+	
+	yamlContentStr := string(yamlContent)
+	e = ApplyFromYamlByClientSet(yamlContentStr, k8sClient)
+	if e != nil {
+		t.Fatal(e)
+	}
+
+	fmt.Printf("namespace created\n")
+
+}

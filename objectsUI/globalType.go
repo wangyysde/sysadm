@@ -78,6 +78,8 @@ type ObjItemInfo struct {
 
 	// note
 	Note string
+
+
 }
 
 type ObjLineData struct {

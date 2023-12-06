@@ -19,6 +19,11 @@
     <link rel="stylesheet" href="/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/css/index.css">
 
+    <script src="/js/commonFunctions.js"></script>
+
+    <script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -31,7 +36,21 @@
     <link rel="stylesheet" href="/css/google-fonts.css">
 
 </head>
-
+<script language="javascript1.2">
+    function setAceEditorValueForDetails(){
+        var resourceYamlContent = document.getElementById("resourceYamlContent");
+        if(resourceYamlContent) {
+            var yamlContent = resourceYamlContent.innerHTML;
+            var editor = ace.edit("detailsEditor");
+            editor.setShowPrintMargin(false);
+            editor.setShowInvisibles( true );
+            editor.getSession().setMode("ace/mode/yaml" );
+            editor.setValue(yamlContent);
+            editor.setReadOnly(true);
+        }
+        return;
+    }
+</script>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="maskLayer" id="maskLayer"> </div>
     <div class="wrapper">

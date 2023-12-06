@@ -23,6 +23,7 @@ import (
 	"github.com/wangyysde/sysadmServer"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	"net/http"
 	"sort"
 	"strings"
@@ -36,6 +37,9 @@ import (
 )
 
 func listNamespaceHandler(c *sysadmServer.Context) {
+	// title of add sign
+	var addButtonTitle = "创建新的命名空间"
+
 	// order fields data of cluster list page
 	var allOrderFields = map[string]string{"TD1": "name", "TD2": "", "TD4": ""}
 
@@ -47,7 +51,7 @@ func listNamespaceHandler(c *sysadmServer.Context) {
 
 	// all popmenu items defined Format:
 	// item name, action name, action method
-	var allPopMenuItems = []string{"删除,del,POST,tip"}
+	var allPopMenuItems = []string{"详情,detail,GET,poppage", "编辑,edit,GET,page", "删除,del,POST,tip", "新增配额,addQuota,GET,page", "配额列表,QuotaList,Get,page", "新增默认配额,addLimitRange,GET,page", "默认资源配额详情,limitRangeDetail,GET,poppage", "编辑默认配额,limitRangeEdit,GET,page", "删除默认配额,limitRangeDel,post,tip"}
 
 	// define all list items(cols) name
 	var allListItems = map[string]string{"TD1": "名称", "TD2": "状态", "TD3": "标签", "TD4": "创建时间"}
@@ -80,7 +84,7 @@ func listNamespaceHandler(c *sysadmServer.Context) {
 	}
 
 	// 初始化模板数据
-	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", "集群管理", "命名空间列表", "", "no",
+	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", "集群管理", "命名空间列表", addButtonTitle, "no",
 		allPopMenuItems, additionalJs, []string{}, requestData)
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 8000600004, errs, e)
@@ -223,9 +227,10 @@ func prepareNsData(selectedCluster, defaultOrderField, defaultOrderDirection str
 		lineMap["TD2"] = nsData.Status.Phase
 		lineMap["TD3"] = objectsUI.ConvertMap2HTML(nsData.Labels)
 		lineMap["TD4"] = nsData.CreationTimestamp.Format(objectsUI.DefaultTimeStampFormat)
-		popmenuitems := ""
-		if nsData.Status.Phase == coreV1.NamespaceActive {
-			popmenuitems = "0"
+
+		popmenuitems, e := preparePopMenuItems(clientSet, nsData)
+		if e != nil {
+			return 0, dataList, e
 		}
 
 		lineMap["popmenuitems"] = popmenuitems
@@ -272,4 +277,31 @@ func sortNsByStatus(p, q interface{}) bool {
 	}
 
 	return pData.Status.Phase < qData.Status.Phase
+}
+
+func preparePopMenuItems(clientSet *kubernetes.Clientset, nsData coreV1.Namespace) (string, error) {
+	popmenuitems := ""
+
+	if nsData.Status.Phase == coreV1.NamespaceActive {
+		popmenuitems = "0,1,2,3"
+		quotaList, e := clientSet.CoreV1().ResourceQuotas(nsData.Name).List(context.Background(), metav1.ListOptions{})
+		if e != nil {
+			return "", e
+		}
+
+		if len(quotaList.Items) > 0 {
+			popmenuitems = popmenuitems + ",4"
+		}
+
+		limitRangeList, e := clientSet.CoreV1().LimitRanges(nsData.Name).List(context.Background(), metav1.ListOptions{})
+		if e != nil {
+			return "", e
+		}
+		if len(limitRangeList.Items) > 0 {
+			popmenuitems = popmenuitems + ",6,7,8"
+		} else {
+			popmenuitems = popmenuitems + ",5"
+		}
+	}
+	return popmenuitems, nil
 }

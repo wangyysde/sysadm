@@ -15,13 +15,19 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
-package k8sclient
+package objectsUI
 
-const (
-	ObjectStatusPending   = "Pending"
-	ObjectStatusRunning   = "Running"
-	ObjectStatusSucceeded = "Succeeded"
-	ObjectStatusFailed    = "Failed"
-	ObjectStatusUnknow    = "Unknow"
-	FieldManager          = "k8sclient.sysadm.cn"
-)
+type TitleValue struct {
+	ID string
+
+	Title string
+
+	// 值固定为TitleValue
+	Kind string
+
+	Value string
+
+	ActionUri string
+
+	ActionFun string
+}

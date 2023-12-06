@@ -28,7 +28,7 @@ import (
 	"sysadm/user"
 )
 
-func listResourceHandler(c *sysadmServer.Context, module string) {
+func listResourceHandler(c *sysadmServer.Context, module, action string) {
 	var errs []sysadmLog.Sysadmerror
 	var additionalJs = []string{"js/sysadmfunctions.js", "/js/workloadList.js"}
 	var additionalCss = []string{}
@@ -45,7 +45,7 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 	}
 
 	// get request data
-	requestKeys := []string{"dcID", "clusterID", "namespace", "start", "orderfield", "direction", "searchContent"}
+	requestKeys := []string{"dcID", "clusterID", "namespace", "start", "orderfield", "direction", "searchContent", "objID"}
 	requestData, e := getRequestData(c, requestKeys)
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "参数错误,请确认是从正确地方连接过来的", runData.logEntity, 8000800004, errs, e)
@@ -71,6 +71,10 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 		selectedCluster = "0"
 	}
 	selectedNamespace := strings.TrimSpace(requestData["namespace"])
+	if action == "QuotaList" {
+		selectedNamespace = requestData["objID"]
+		requestData["namespace"] = requestData["objID"]
+	}
 	if selectedNamespace == "" {
 		selectedNamespace = "0"
 	}
@@ -83,8 +87,19 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 	objEntity.setObjectInfo()
 
 	// 初始化模板数据
-	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", objEntity.getMainModuleName(), objEntity.getModuleName()+"列表", objEntity.getAddButtonTitle(), objEntity.getIsSearchForm(),
-		objEntity.getAllPopMenuItems(), additionalJs, additionalCss, requestData)
+	subCategory := objEntity.getModuleName() + "列表"
+	addButtonTitle := objEntity.getAddButtonTitle()
+	isSearchForm := objEntity.getIsSearchForm()
+	allPopMenuItems := objEntity.getAllPopMenuItems()
+	if action == "QuotaList" {
+		subCategory = "命名空间 >> 资源配额列表"
+		addButtonTitle = ""
+		isSearchForm = ""
+		allPopMenuItems = quotaListPagePopmenu
+	}
+
+	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", objEntity.getMainModuleName(), subCategory, addButtonTitle, isSearchForm,
+		allPopMenuItems, additionalJs, additionalCss, requestData)
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 8000700006, errs, e)
 		return
@@ -94,7 +109,12 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 	if objEntity.getNamespaced() {
 		e = buildSelectDataWithNs(tplData, dcList, requestData)
 	} else {
-		e = buildSelectData(tplData, dcList, requestData)
+		if action == "QuotaList" {
+			e = buildSelectDataWithNs(tplData, dcList, requestData)
+		} else {
+			e = buildSelectData(tplData, dcList, requestData)
+		}
+
 	}
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 8000600007, errs, e)
@@ -102,7 +122,13 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 	}
 	startPos := objectsUI.GetStartPosFromRequest(requestData)
 
-	count, objListData, e := objEntity.listObjectData(selectedCluster, selectedNamespace, startPos, requestData)
+	var count int = 0
+	var objListData []map[string]interface{}
+	if action == "QuotaList" {
+		count, objListData, e = listQuotaData(selectedCluster, selectedNamespace, startPos, requestData)
+	} else {
+		count, objListData, e = objEntity.listObjectData(selectedCluster, selectedNamespace, startPos, requestData)
+	}
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 8000600008, errs, e)
 		return
@@ -115,11 +141,22 @@ func listResourceHandler(c *sysadmServer.Context, module string) {
 		tplData["objListData"] = objListData
 
 		// build table header for list objects
-		objectsUI.BuildThDataWithOrderFunc(requestData, objEntity.getAllListItems(), tplData, objEntity.getDefaultOrderField(), objEntity.getDefaultOrderDirection(), objEntity.getAllorderFields())
+		allListItems := objEntity.getAllListItems()
+		defaultOrderField := objEntity.getDefaultOrderField()
+		objDefaultOrderDirection := objEntity.getDefaultOrderDirection()
+		allorderFields := objEntity.getAllorderFields()
+		if action == "QuotaList" {
+			allListItems = quotaListAllListItems
+			defaultOrderField = quotaListDefaultOrderField
+			objDefaultOrderDirection = quotaListDefaultOrderDirection
+			allorderFields = quotaListAllOrderFields
+		}
+		objectsUI.BuildThDataWithOrderFunc(requestData, allListItems, tplData, defaultOrderField, objDefaultOrderDirection, allorderFields)
 
 		// prepare page number information
-		objectsUI.BuildPageNumInfoForWorkloadList(tplData, requestData, count, startPos, runData.pageInfo.NumPerPage, objEntity.getDefaultOrderField(), objEntity.getDefaultOrderDirection())
+		objectsUI.BuildPageNumInfoForWorkloadList(tplData, requestData, count, startPos, runData.pageInfo.NumPerPage, defaultOrderField, objDefaultOrderDirection)
 	}
 	runData.logEntity.LogErrors(errs)
 	c.HTML(http.StatusOK, listTemplateFile, tplData)
+
 }

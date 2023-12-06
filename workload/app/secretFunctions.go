@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sort"
@@ -30,6 +31,8 @@ func (s *secret) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortSecretByName, "TD6": sortSecretByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "类型", "TD4": "标签", "TD5": "数据项数", "TD6": "是否可编辑", "TD7": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	s.mainModuleName = "配置和存储"
 	s.moduleName = "Secrets"
@@ -40,6 +43,9 @@ func (s *secret) setObjectInfo() {
 	s.allOrderFields = allOrderFields
 	s.defaultOrderField = "TD1"
 	s.defaultOrderDirection = "1"
+	s.moduleID = "secret"
+	s.additionalJs = additionalJs
+	s.additionalCss = additionalCss
 }
 
 func (s *secret) getMainModuleName() string {
@@ -178,4 +184,38 @@ func sortSecretByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (s *secret) getModuleID() string {
+	return s.moduleID
+}
+
+func (s *secret) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (s *secret) getAdditionalJs() []string {
+	return s.additionalJs
+}
+func (s *secret) getAdditionalCss() []string {
+	return s.additionalCss
+}
+
+func (s *secret) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *secret) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (s *secret) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

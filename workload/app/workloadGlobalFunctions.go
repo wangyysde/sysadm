@@ -81,6 +81,9 @@ func AddHandlers(r *sysadmServer.Engine) error {
 	namespacedResourcePath := "/" + defaultObjectName + "/:module/*action"
 	r.GET(namespacedResourcePath, resourceHandler)
 
+	postResourcePath := "/" + defaultObjectName + "/:module/*action"
+	r.POST(postResourcePath, postResourceHandler)
+
 	groupPath := "/" + defaultObjectName
 	display := r.Group(groupPath)
 	{

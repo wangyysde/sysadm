@@ -46,6 +46,23 @@ func GetGVR(config *restclient.Config, gvk schema.GroupVersionKind) (schema.Grou
 	return mapping.Resource, nil
 }
 
+func GetGVRByClientSet(clientset *kubernetes.Clientset, gvk schema.GroupVersionKind) (schema.GroupVersionResource, error) {
+
+	gr, e := restmapper.GetAPIGroupResources(clientset.Discovery())
+	if e != nil {
+		return schema.GroupVersionResource{}, e
+	}
+
+	mapper := restmapper.NewDiscoveryRESTMapper(gr)
+
+	mapping, e := mapper.RESTMapping(gvk.GroupKind(), gvk.Version)
+	if e != nil {
+		return schema.GroupVersionResource{}, e
+	}
+
+	return mapping.Resource, nil
+}
+
 func GetApiResourcesList(config *restclient.Config) ([]*v1.APIResourceList, error) {
 	var ret []*v1.APIResourceList
 	clientset, e := kubernetes.NewForConfig(config)

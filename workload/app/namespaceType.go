@@ -15,13 +15,13 @@
 * @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
-package k8sclient
+package app
 
-const (
-	ObjectStatusPending   = "Pending"
-	ObjectStatusRunning   = "Running"
-	ObjectStatusSucceeded = "Succeeded"
-	ObjectStatusFailed    = "Failed"
-	ObjectStatusUnknow    = "Unknow"
-	FieldManager          = "k8sclient.sysadm.cn"
+import (
+	corev1 "k8s.io/api/core/v1"
 )
+
+type QuotaFormItem struct {
+	ResourceName corev1.ResourceName
+	UintStr      string
+}

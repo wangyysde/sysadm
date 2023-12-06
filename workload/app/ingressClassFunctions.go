@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sort"
@@ -30,6 +31,8 @@ func (i *ingressclass) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortIngressClassByName, "TD3": sortIngressClassByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD3": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	i.mainModuleName = "服务管理"
 	i.moduleName = "Ingress Classes"
@@ -41,6 +44,9 @@ func (i *ingressclass) setObjectInfo() {
 	i.defaultOrderField = "TD1"
 	i.defaultOrderDirection = "1"
 	i.namespaced = false
+	i.moduleID = "ingressclass"
+	i.additionalJs = additionalJs
+	i.additionalCss = additionalCss
 }
 
 func (i *ingressclass) getMainModuleName() string {
@@ -167,4 +173,38 @@ func sortIngressClassByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (i *ingressclass) getModuleID() string {
+	return i.moduleID
+}
+
+func (i *ingressclass) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (i *ingressclass) getAdditionalJs() []string {
+	return i.additionalJs
+}
+func (i *ingressclass) getAdditionalCss() []string {
+	return i.additionalCss
+}
+
+func (i *ingressclass) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (i *ingressclass) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (i *ingressclass) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

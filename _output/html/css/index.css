@@ -658,3 +658,18 @@
     font-weight: bold;
 }
 
+.addObjectSign {
+    padding: 14px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.addObjectSign:hover{
+    background: #ccc;
+    cursor: pointer;
+}

@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	"html/template"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,6 +32,8 @@ func (r *rolebindings) setObjectInfo() {
 	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortRoleBindingsByName, "TD5": sortRoleBindingsByCreatetime}
 	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "关联的角色", "TD4": "关联的对象", "TD5": "创建时间"}
+	additionalJs := []string{}
+	additionalCss := []string{}
 
 	r.mainModuleName = "帐号与角色"
 	r.moduleName = "角色绑定"
@@ -42,6 +45,9 @@ func (r *rolebindings) setObjectInfo() {
 	r.defaultOrderField = "TD1"
 	r.defaultOrderDirection = "1"
 	r.namespaced = true
+	r.moduleID = "rolebindings"
+	r.additionalJs = additionalJs
+	r.additionalCss = additionalCss
 }
 
 func (r *rolebindings) getMainModuleName() string {
@@ -174,4 +180,38 @@ func sortRoleBindingsByCreatetime(p, q interface{}) bool {
 	}
 
 	return pData.CreationTimestamp.String() < qData.CreationTimestamp.String()
+}
+
+func (r *rolebindings) getModuleID() string {
+	return r.moduleID
+}
+
+func (r *rolebindings) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (r *rolebindings) getAdditionalJs() []string {
+	return r.additionalJs
+}
+func (r *rolebindings) getAdditionalCss() []string {
+	return r.additionalCss
+}
+
+func (r *rolebindings) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (r *rolebindings) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (r *rolebindings) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }

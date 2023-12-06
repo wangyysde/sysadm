@@ -6,7 +6,7 @@
 {{end}}
 
 {{range $index, $line := .addtionalCss }}
-<link rel="stylesheet" href="{{- $line -}}">
+<link rel="stylesheet" href="/{{- $line -}}">
 {{end}}
 
 <script language="javascript1.2">
@@ -27,6 +27,7 @@
 
 {{ $dcSelectedId := .dcSelect.SelectedId }}
 {{ $searchContent := .searchContent }}
+{{ $clusterSelected := .clusterSelect.SelectedId }}
 {{ $objName := .objName }}
 <div>
 	<div class="mutilSelectForm">
@@ -48,7 +49,6 @@
 			{{else}}
 				<select name="clusterID" id="clusterID" onChange="reloadListPage('0','','','','{{.objName}}')">
 			{{end}}
-			{{ $clusterSelected := .clusterSelect.SelectedId }}
 		    {{ range $index,$line := .clusterSelect.Options }}
 		       {{if eq $clusterSelected $line.Id }}
   		           <option value="{{ $line.Id }}" selected> {{ $line.Text }} </option>
@@ -72,7 +72,13 @@
 			   </select>
 		   {{end}}
 		   {{ if .addButtonTitle }}
-			<button id="buttonAdd" onclick="displayAddObjectForm() "> + {{ .addButtonTitle }} </button>&nbsp;
+			   {{if gt (len .nsSelect.Options) 0 }}
+    				<span class="addObjectSign" onclick="displayAddObjectForm({{ $objName}})" title="{{ .addButtonTitle }}"> <b class="fa-plus"></b> </span>
+			   {{else}}
+					{{if gt $clusterSelected "0" }}
+					<span class="addObjectSign" onclick="displayAddObjectForm({{ $objName}})" title="{{ .addButtonTitle }}"> <b class="fa-plus"></b> </span>
+					{{end}}
+			   {{end}}
 			{{ end }}
 		</form>
 	</div>
@@ -157,5 +163,8 @@
 </div>
 
 <div class="poppage" id="poppage">
+</div>
+
+<div class="detailPoppage" id="detailPoppage">
 </div>
 {{end}}

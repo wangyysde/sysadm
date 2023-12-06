@@ -63,7 +63,7 @@ function doMenuItem(objID,action,actionType,method){
 }
 
 function closeDetailPage(){
-    var poppage = document.getElementById("poppage");
+    var poppage = document.getElementById("detailPoppage");
     poppage.style.display = "none";
     poppage.style.zIndex = 0;
     var maskLayer = document.getElementById("maskLayer");
@@ -71,16 +71,14 @@ function closeDetailPage(){
 }
 
 function openPoppage(content){
-    content =  content + "<br><br>";
-    content = content + "<div class=\"poppageButton\">";
-    content = content + "<button  onclick=\"closeDetailPage()\">关闭</button>";
-    content = content + "</div>";
     var maskLayer = document.getElementById("maskLayer");
     maskLayer.style.zIndex = 2000;
-    var poppage = document.getElementById("poppage");
+    var poppage = document.getElementById("detailPoppage");
     poppage.style.display = "block";
     poppage.style.zIndex = 2100;
     poppage.innerHTML = content;
+    setAceEditorValueForDetails();
+
     poppage.focus();
 
     return;
@@ -234,7 +232,21 @@ function doSearch(searchContent) {
     listContenChanged(urlParas);
 }
 
-function displayAddObjectForm(){
-    var url = pageUrl + "addform" ;
+function displayAddObjectForm(module){
+    var dcIDObj = document.getElementById("dcID");
+    var dcIDValue = dcIDObj.options[dcIDObj.options.selectedIndex].value;
+    var clusterID = document.getElementById("clusterID");
+    var clusterValue =  clusterID.options[clusterID.options.selectedIndex].value;
+    var nsValue = "";
+    var nsObj = document.getElementById("namespace");
+    if(nsObj){
+        nsValue = nsObj.options[nsObj.options.selectedIndex].value;
+    }
+    var url = pageUrl + module + "/addform" ;
+    url = url + "?dcID=" + dcIDValue + "&clusterID=" + clusterValue + "&namespace=" + nsValue;
     $('#container').load(url);
+}
+
+function addCluster(){
+    $('#container').load("/k8scluster/addform");
 }

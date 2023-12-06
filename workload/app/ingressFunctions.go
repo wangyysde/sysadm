@@ -20,6 +20,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/wangyysde/sysadmServer"
 	"html/template"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -42,6 +43,10 @@ func (i *ingress) setObjectInfo() {
 	i.defaultOrderField = "TD1"
 	i.defaultOrderDirection = "1"
 	i.namespaced = true
+	i.moduleID = "ingress"
+	i.additionalJs = []string{}
+	i.additionalCss = []string{}
+
 }
 
 func (i *ingress) getMainModuleName() string {
@@ -149,4 +154,38 @@ func (i *ingress) listObjectData(selectedCluster, selectedNS string,
 	}
 
 	return totalNum, dataList, nil
+}
+
+func (i *ingress) getModuleID() string {
+	return i.moduleID
+}
+
+func (i *ingress) buildAddFormData(tplData map[string]interface{}) error {
+	// TODO
+	return nil
+}
+
+func (i *ingress) getAdditionalJs() []string {
+	return i.additionalJs
+}
+func (i *ingress) getAdditionalCss() []string {
+	return i.additionalCss
+}
+
+func (i *ingress) addNewResource(c *sysadmServer.Context, module string) error {
+	// TODO
+
+	return nil
+}
+
+func (i *ingress) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
+	// TODO
+
+	return nil
+}
+
+func (i *ingress) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+	// TODO
+
+	return nil
 }
