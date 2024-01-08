@@ -34,6 +34,7 @@ func (r *rolebindings) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "关联的角色", "TD4": "关联的对象", "TD5": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	r.mainModuleName = "帐号与角色"
 	r.moduleName = "角色绑定"
@@ -48,6 +49,7 @@ func (r *rolebindings) setObjectInfo() {
 	r.moduleID = "rolebindings"
 	r.additionalJs = additionalJs
 	r.additionalCss = additionalCss
+	r.templateFile = templateFile
 }
 
 func (r *rolebindings) getMainModuleName() string {
@@ -214,4 +216,9 @@ func (r *rolebindings) showResourceDetail(action string, tplData map[string]inte
 	// TODO
 
 	return nil
+}
+
+func (r *rolebindings) getTemplateFile(action string) string {
+
+	return r.templateFile
 }

@@ -30,10 +30,10 @@ import (
 	"sysadm/user"
 )
 
-func addFormResourceHandler(c *sysadmServer.Context, module string) {
+func addFormResourceHandler(c *sysadmServer.Context, module, action string) {
 	var errs []sysadmLog.Sysadmerror
-	var listTemplateFile = "addObjTabs.html"
-	errs = append(errs, sysadmLog.NewErrorWithStringLevel(8000900001, "debug", "now handling %s list", module))
+	var defaultemplateFile = "addObjTabs.html"
+	errs = append(errs, sysadmLog.NewErrorWithStringLevel(8000900001, "debug", "now display %s add form", module))
 
 	// get userid
 	userid, e := user.GetSessionValue(c, "userid", runData.sessionName)
@@ -55,10 +55,6 @@ func addFormResourceHandler(c *sysadmServer.Context, module string) {
 		return
 	}
 	objEntity.setObjectInfo()
-	if objEntity.getNamespaced() && (requestData["namespace"] == "" || requestData["namespace"] == "0") {
-		objectsUI.OutPutMsg(c, "", "所需要添加的资源需要指定命名空间", runData.logEntity, 8000900005, errs, e)
-		return
-	}
 
 	// preparing datacenter data
 	var dcEntity sysadmObjects.ObjectEntity
@@ -110,13 +106,19 @@ func addFormResourceHandler(c *sysadmServer.Context, module string) {
 	tplData["dcName"] = dcName
 	tplData["clusterName"] = clusterName
 	tplData["objName"] = objEntity.getModuleName()
+	tplData["apiVersion"] = apiVersion
 	e = objEntity.buildAddFormData(tplData)
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "系统内容错误，请稍后再试，如果仍有问题，请联系系统管理员", runData.logEntity, 8000900011, errs, e)
 		return
 	}
 	runData.logEntity.LogErrors(errs)
-	c.HTML(http.StatusOK, listTemplateFile, tplData)
+
+	pageTemplateFile := defaultemplateFile
+	if objEntity.getTemplateFile(action) != "" {
+		pageTemplateFile = objEntity.getTemplateFile(action)
+	}
+	c.HTML(http.StatusOK, pageTemplateFile, tplData)
 }
 
 func addNewQuotaFormHandler(c *sysadmServer.Context) {

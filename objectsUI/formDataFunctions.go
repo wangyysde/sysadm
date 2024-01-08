@@ -182,11 +182,9 @@ func AddSelectData(id, name, selectedData, actionUri, actionFun, title, note str
 	if id == "" {
 		id = name
 	}
-
-	if size < 2 {
-		return fmt.Errorf("text input size must be less 2")
+	if size == 0 {
+		size = 1
 	}
-
 	selectOptions := []Option{}
 	i := 0
 	for k, v := range options {
@@ -266,6 +264,7 @@ func AddCheckBoxData(id, name, title, actionFun string, noDisplay bool, options 
 		Options:   options,
 	}
 	data = append(data, checkBoxData)
+	lineData.Data = data
 
 	return nil
 }
@@ -313,6 +312,7 @@ func AddRadioData(id, name, title, actionFun string, noDisplay bool, options []O
 		Options:   options,
 	}
 	data = append(data, radioData)
+	lineData.Data = data
 
 	return nil
 }

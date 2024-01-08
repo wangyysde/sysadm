@@ -53,6 +53,8 @@ func listDeploymentHandler(c *sysadmServer.Context) {
 	// define all list items(cols) name
 	var allListItems = map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "状态", "TD4": "标签", "TD5": "Pods", "TD6": "创建时间"}
 
+	var addButtonTitle = "创建无状态服务"
+
 	var additionalJs = []string{"js/sysadmfunctions.js", "/js/workloadList.js"}
 
 	var errs []sysadmLog.Sysadmerror
@@ -80,13 +82,17 @@ func listDeploymentHandler(c *sysadmServer.Context) {
 		selectedCluster = "0"
 	}
 
+	if selectedCluster == "0" {
+		addButtonTitle = ""
+	}
+
 	selectedNamespace := strings.TrimSpace(requestData["namespace"])
 	if selectedNamespace == "" {
 		selectedNamespace = "0"
 	}
 
 	// 初始化模板数据
-	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", "工作负载", "Deployment列表", "", "no",
+	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+defaultObjectName+"/", "工作负载", "Deployment列表", addButtonTitle, "no",
 		allPopMenuItems, additionalJs, []string{}, requestData)
 	if e != nil {
 		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 8000100004, errs, e)

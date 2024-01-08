@@ -33,6 +33,7 @@ func (i *ingressclass) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD3": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	i.mainModuleName = "服务管理"
 	i.moduleName = "Ingress Classes"
@@ -47,6 +48,7 @@ func (i *ingressclass) setObjectInfo() {
 	i.moduleID = "ingressclass"
 	i.additionalJs = additionalJs
 	i.additionalCss = additionalCss
+	i.templateFile = templateFile
 }
 
 func (i *ingressclass) getMainModuleName() string {
@@ -207,4 +209,9 @@ func (i *ingressclass) showResourceDetail(action string, tplData map[string]inte
 	// TODO
 
 	return nil
+}
+
+func (i *ingressclass) getTemplateFile(action string) string {
+
+	return i.templateFile
 }

@@ -45,6 +45,7 @@ func (n *namespace) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "创建时间"}
 	additionalJs := []string{"/js/namespace.js"}
 	additionalCss := []string{}
+	templateFile := ""
 
 	n.mainModuleName = mainModuleName
 	n.moduleName = moduleName
@@ -59,6 +60,7 @@ func (n *namespace) setObjectInfo() {
 	n.moduleID = "namespace"
 	n.additionalJs = additionalJs
 	n.additionalCss = additionalCss
+	n.templateFile = templateFile
 }
 
 func (n *namespace) getMainModuleName() string {
@@ -1061,4 +1063,10 @@ func quotaDel(c *sysadmServer.Context, module string, requestData map[string]str
 
 	return clientSet.CoreV1().ResourceQuotas(ns).Delete(context.Background(), quotaName, metav1.DeleteOptions{})
 
+}
+
+func (n *namespace) getTemplateFile(action string) string {
+	// TODO
+
+	return n.templateFile
 }

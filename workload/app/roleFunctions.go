@@ -33,6 +33,7 @@ func (r *role) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	r.mainModuleName = "帐号与角色"
 	r.moduleName = "角色"
@@ -47,6 +48,7 @@ func (r *role) setObjectInfo() {
 	r.moduleID = "role"
 	r.additionalJs = additionalJs
 	r.additionalCss = additionalCss
+	r.templateFile = templateFile
 }
 
 func (r *role) getMainModuleName() string {
@@ -206,4 +208,9 @@ func (r *role) showResourceDetail(action string, tplData map[string]interface{},
 	// TODO
 
 	return nil
+}
+
+func (r *role) getTemplateFile(action string) string {
+
+	return r.templateFile
 }

@@ -34,6 +34,7 @@ func (c *clusterrolebind) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "关联的角色", "TD3": "关联的对象", "TD4": "创建时间"}
 	additionalJs := []string{}
 	additionCss := []string{}
+	templateFile := ""
 
 	c.mainModuleName = "帐号与角色"
 	c.moduleName = "集群角色绑定"
@@ -48,6 +49,7 @@ func (c *clusterrolebind) setObjectInfo() {
 	c.moduleID = "clusterrolebind"
 	c.additionalJs = additionalJs
 	c.additionalCss = additionCss
+	c.templateFile = templateFile
 }
 
 func (c *clusterrolebind) getMainModuleName() string {
@@ -213,4 +215,9 @@ func (c *clusterrolebind) showResourceDetail(action string, tplData map[string]i
 	// TODO
 
 	return nil
+}
+
+func (c *clusterrolebind) getTemplateFile(action string) string {
+
+	return c.templateFile
 }

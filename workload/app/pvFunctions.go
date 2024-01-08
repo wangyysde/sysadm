@@ -34,6 +34,7 @@ func (p *pv) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "容量", "TD3": "访问模式", "TD4": "回收策略", "TD5": "状态", "TD6": "绑定对象", "TD7": "Storage Class", "TD8": "卷模式", "TD9": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	p.mainModuleName = "配置和存储"
 	p.moduleName = "Persistent Volumes"
@@ -48,6 +49,7 @@ func (p *pv) setObjectInfo() {
 	p.moduleID = "pv"
 	p.additionalJs = additionalJs
 	p.additionalCss = additionalCss
+	p.templateFile = templateFile
 }
 
 func (p *pv) getMainModuleName() string {
@@ -243,4 +245,9 @@ func (p *pv) showResourceDetail(action string, tplData map[string]interface{}, r
 	// TODO
 
 	return nil
+}
+
+func (p *pv) getTemplateFile(action string) string {
+
+	return p.templateFile
 }

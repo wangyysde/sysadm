@@ -33,6 +33,7 @@ func (c *clusterrole) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	c.mainModuleName = "帐号与角色"
 	c.moduleName = "集群角色"
@@ -47,6 +48,7 @@ func (c *clusterrole) setObjectInfo() {
 	c.moduleID = "clusterrole"
 	c.additionalJs = additionalJs
 	c.additionalCss = additionalCss
+	c.templateFile = templateFile
 
 }
 
@@ -206,4 +208,9 @@ func (c *clusterrole) showResourceDetail(action string, tplData map[string]inter
 	// TODO
 
 	return nil
+}
+
+func (c *clusterrole) getTemplateFile(action string) string {
+
+	return c.templateFile
 }

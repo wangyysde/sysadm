@@ -269,36 +269,13 @@ func getRequestData(c *sysadmServer.Context, keys []string) (map[string]string, 
 }
 
 func newObjEntity(module string) (objectEntity, error) {
-	switch module {
-	case "ingress":
-		return &ingress{}, nil
-	case "configmap":
-		return &configmap{}, nil
-	case "pvc":
-		return &pvc{}, nil
-	case "rolebindings":
-		return &rolebindings{}, nil
-	case "role":
-		return &role{}, nil
-	case "serviceaccount":
-		return &sa{}, nil
-	case "secret":
-		return &secret{}, nil
-	case "ingressclass":
-		return &ingressclass{}, nil
-	case "storageclass":
-		return &storageclass{}, nil
-	case "pv":
-		return &pv{}, nil
-	case "clusterrole":
-		return &clusterrole{}, nil
-	case "clusterrolebind":
-		return &clusterrolebind{}, nil
-	case "namespace":
-		return &namespace{}, nil
-	default:
-		return nil, fmt.Errorf("module %s  has not found", module)
+	for n, v := range modulesDefined {
+		if n == module {
+			return v, nil
+		}
 	}
+
+	return nil, fmt.Errorf("module %s  has not found", module)
 }
 
 func buildClientSetByClusterID(clusterID string) (*kubernetes.Clientset, error) {

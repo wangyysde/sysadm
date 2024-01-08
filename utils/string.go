@@ -124,3 +124,17 @@ func ValidCront(crontab string) bool {
 	return gronx.IsValid(crontab)
 
 }
+
+// 检查一个字符串切片里是否有重复元素，如果有重复元素，则返回首个发现的重复元素字符串值,
+// 否则返回空字符串。当insensitive参数为true时，表示忽略大小写敏感比较
+func IsDuplicateElementInSlice(data []string, insensitive bool) string {
+	tmpData := []string{}
+	for _, v := range data {
+		if FoundStrInSlice(tmpData, v, insensitive) {
+			return v
+		}
+		tmpData = append(tmpData, v)
+	}
+
+	return ""
+}

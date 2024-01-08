@@ -1,14 +1,18 @@
 PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
 DEFAULT_IMAGE_VER="v1.0.1"
-BASE_IMG="hb.sysadm.cn/os/centos:centos7.9.2009"
+#BASE_IMG="hb.sysadm.cn/os/centos:centos7.9.2009"
+BASE_IMG="hb.sysadm.cn/os/ubuntu:jammy-22.04.3"
 EMAIL="net_use@bzhy.com"
 DEFAULT_REGISTRY_URL="hb.sysadm.cn/sysadm/"
-DEFAULT_DEPLOY_SERVER="192.53.117.73"
+DEFAULT_DEPLOY_SERVER="k8s.sysadm.cn"
 DEFAULT_DEPLOY_SERVER_PORT="2218"
 DEFAULT_DEPLOY_DOCKER_PATH="/usr/bin/docker"
 DEFAULT_DEPLOY_DOCKERCOMPOSE_PATH="/usr/local/bin/docker-compose"
 DEFAULT_DEPLOY_CONFIG_FILE="/data/k8ssysadm/docker-compose.yml"
 DEFAULT_DEPLOY_TYPE="k8s"
+DEPLOY_TYPE_COMPOSE="compose"
+# deploying application in k8s cluster by get binary package from website
+DEPLOY_TYPE_K8SCURL="k8scurl"
 DOCKER_BIN_PATH="/usr/bin/docker"
 
 function deploy::package(){

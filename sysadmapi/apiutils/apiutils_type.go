@@ -29,22 +29,22 @@ import (
 )
 
 type TlsFile struct {
-	Ca string 
+	Ca   string
 	Cert string
-	Key string
+	Key  string
 }
 type Server struct {
-	Tls bool
+	Tls     bool
 	Address string
-	Port int
+	Port    int
 	TlsFile TlsFile
 }
 
 type ApiServerData struct {
 	ModuleName string
-	ActionName string 
+	ActionName string
 	ApiVersion string
-	Server Server
+	Server     Server
 }
 
 type ApiResponseData struct {
@@ -57,30 +57,37 @@ type ApiResponseData struct {
 	Message []map[string]interface{} `json:"message"`
 }
 
+type ResponseClientData struct {
+	// Errorcode is zero if this is a successful response, otherwise Errorcode is nonzero
+	ErrorCode int `json:"errorCode" xml:"errorCode" yaml:"errorCode"`
+	// Data is the dataset what will send to client
+	// which has one rows only:["msg"] = message (encoded by base64)
+	Data interface{} `json:"data" xml:"data" yaml:"data"`
+}
+
 type ApiInterface interface {
 	GetModuleName() string
 	GetActionList() []string
- }
+}
 
-
- type Module struct {
-	Name string
-	Path string
+type Module struct {
+	Name   string
+	Path   string
 	Entity ApiInterface
 }
 
 type HttpAuthData struct {
-	IsAuth bool
+	IsAuth   bool
 	AuthType string
 	UserName string
 	Password string
 }
 
 type ProxyRewriteData struct {
-	HeaderModifyFunc  func (r *http.Request) 
-	Method string
-	AuthData *HttpAuthData
-	UrlModifyFunc func (r *http.Request,data *ApiServerData) (string, []sysadmerror.Sysadmerror) 
-	HostModifyFunc func (r *http.Request,data *ApiServerData)(string, []sysadmerror.Sysadmerror)
-	ApiServerData *ApiServerData
+	HeaderModifyFunc func(r *http.Request)
+	Method           string
+	AuthData         *HttpAuthData
+	UrlModifyFunc    func(r *http.Request, data *ApiServerData) (string, []sysadmerror.Sysadmerror)
+	HostModifyFunc   func(r *http.Request, data *ApiServerData) (string, []sysadmerror.Sysadmerror)
+	ApiServerData    *ApiServerData
 }

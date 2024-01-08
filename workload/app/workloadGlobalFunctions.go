@@ -81,6 +81,14 @@ func AddHandlers(r *sysadmServer.Engine) error {
 	namespacedResourcePath := "/" + defaultObjectName + "/:module/*action"
 	r.GET(namespacedResourcePath, resourceHandler)
 
+	// 以json格式返回数据，且返回的数据不与具体的前端样式关联
+	resourcePathWithApiForGet := "/api/" + apiVersion + "/:module/*action"
+	r.GET(resourcePathWithApiForGet, getForApiHandlers)
+
+	// 以json格式返回数据，且返回的数据不与具体的前端样式关联
+	resourcePathWithApiForPost := "/api/" + apiVersion + "/:module/*action"
+	r.POST(resourcePathWithApiForPost, postForApiHandlers)
+
 	postResourcePath := "/" + defaultObjectName + "/:module/*action"
 	r.POST(postResourcePath, postResourceHandler)
 

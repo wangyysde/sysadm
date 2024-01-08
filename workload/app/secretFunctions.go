@@ -33,6 +33,7 @@ func (s *secret) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "类型", "TD4": "标签", "TD5": "数据项数", "TD6": "是否可编辑", "TD7": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	s.mainModuleName = "配置和存储"
 	s.moduleName = "Secrets"
@@ -46,6 +47,8 @@ func (s *secret) setObjectInfo() {
 	s.moduleID = "secret"
 	s.additionalJs = additionalJs
 	s.additionalCss = additionalCss
+	s.templateFile = templateFile
+	s.namespaced = true
 }
 
 func (s *secret) getMainModuleName() string {
@@ -218,4 +221,9 @@ func (s *secret) showResourceDetail(action string, tplData map[string]interface{
 	// TODO
 
 	return nil
+}
+
+func (s *secret) getTemplateFile(action string) string {
+
+	return s.templateFile
 }

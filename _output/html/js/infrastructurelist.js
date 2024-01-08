@@ -336,7 +336,7 @@ function selectAllHostCheckbox(isChecked) {
         for (var i = 0; i < chklist.length; i++) {
             chklist[i].checked = true;
         }
-        var buttonDel = document.getElementById("buttonDel")
+        var buttonDel = document.getElementById("buttonDel");
         buttonDel.style.color = "#ffffff";
         buttonDel.style.background = "#3c8dbc";
         buttonDel.disabled = false;

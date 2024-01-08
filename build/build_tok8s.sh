@@ -26,6 +26,13 @@ SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 KUBECTLBIN="${SYSADM_ROOT}/build/kubenetes/kubectl"
 KUBECONF="${SYSADM_ROOT}/build/kubenetes/kubeconf.conf"
 DEPLOYNANESPACE="sysadm"
+PACKAGEGETURL="yum.sysadm.cn"
+PACKAGEGETURI="sysadm"
+PACKAGESAVEPATH="/data/k8ssysadm/pvs/yumData/sysadm"
+RSYNCBIN="/usr/bin/rsync"
+RSYNCPASSWD="/etc/rsyncd.secrets"
+RSYNCUSER="sysadm"
+RSYNCDESTNAME="html"
 
 declare -A APPLICATIONS
 APPLICATIONS["sysadm"]="deploy/sysadm"
@@ -45,6 +52,7 @@ fi
 function deploy::to::k8s(){
   package=$1
   imagever=$2
+  deployType=$3
 
   appName=${APPLICATIONS[${package}]}
   if [ "X${appName}" == "X" ]; then
@@ -59,19 +67,32 @@ function deploy::to::k8s(){
       exit 2
   fi
 
-  echo "pushing image to registry"
-  ${DOCKER_BIN_PATH} push "${DEFAULT_REGISTRY_URL}${package}:${imagever}"
-  if [ $? != 0 ]; then
-    echo "push image to registry error"
-    exit 3
+  if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" ]; then
+      echo "pushing image to registry"
+      ${DOCKER_BIN_PATH} push "${DEFAULT_REGISTRY_URL}${package}:${imagever}"
+      if [ $? != 0 ]; then
+          echo "push image to registry error"
+          exit 3
+      fi
+  else
+      /usr/bin/scp "${SYSADM_ROOT}/_output/bin/${package}"  "${PACKAGEGETURL}:${PACKAGESAVEPATH}/${package}"
+      if [ $? != 0 ]; then
+          /usr/bin/echo "copy ${package} to deployment server error"
+          exit 4
+      fi
   fi
 
-  echo "pushing image to registry"
+  echo "try starting the applicaion"
   ${KUBECTLBIN} scale --kubeconfig=${KUBECONF} --replicas=1 -n ${DEPLOYNANESPACE} ${appName}
   if [ $? != 0 ]; then
       echo "deploy application error"
-      exit 4
+      exit 5
   fi
 
   echo "deploy application ${appName} sucessful"
+}
+
+function deploy::staticfile() {
+    ${RSYNCBIN} -ztruvoglp --progress --delete  --password-file=${RSYNCPASSWD} "${SYSADM_ROOT}/_output/html/" ${RSYNCUSER}@${DEFAULT_DEPLOY_SERVER}::${RSYNCDESTNAME}
+    exit 0
 }

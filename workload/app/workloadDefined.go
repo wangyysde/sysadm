@@ -19,6 +19,7 @@ package app
 
 const (
 	defaultObjectName string = "workload"
+	apiVersion        string = "1.0"
 )
 
 // 1 for DESC 0 for ASC

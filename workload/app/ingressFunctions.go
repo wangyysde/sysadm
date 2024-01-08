@@ -46,6 +46,7 @@ func (i *ingress) setObjectInfo() {
 	i.moduleID = "ingress"
 	i.additionalJs = []string{}
 	i.additionalCss = []string{}
+	i.templateFile = ""
 
 }
 
@@ -188,4 +189,9 @@ func (i *ingress) showResourceDetail(action string, tplData map[string]interface
 	// TODO
 
 	return nil
+}
+
+func (i *ingress) getTemplateFile(action string) string {
+
+	return i.templateFile
 }

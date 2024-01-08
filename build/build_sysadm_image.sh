@@ -38,7 +38,7 @@ LABEL Version=${SYSADM_VER} \\
 	Maintainer="wayne.wang<${EMAIL}>" \\
 	Built="${datetime}" \\
 	Description="sysadm component of sysadm platform"
-RUN mkdir -p /opt/sysadm/{bin,conf,logs,run,html,tmpls} && useradd sysadm 
+RUN mkdir -p /opt/sysadm/{bin,conf,logs,run,html,tmpls} && useradd sysadm && apt-get update && apt install -y curl
 COPY ./sysadm /opt/sysadm/bin/
 COPY ./entrypoint.sh /opt/sysadm/bin/
 COPY ./config.yaml /opt/sysadm/conf/

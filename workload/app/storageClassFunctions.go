@@ -34,6 +34,7 @@ func (s *storageclass) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "提供者", "TD3": "参数", "TD4": "回收策略", "TD5": "绑定模式", "TD6": "是否允许扩容", "TD7": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	s.mainModuleName = "配置和存储"
 	s.moduleName = "Storage Classes"
@@ -48,6 +49,7 @@ func (s *storageclass) setObjectInfo() {
 	s.moduleID = "storageclass"
 	s.additionalJs = additionalJs
 	s.additionalCss = additionalCss
+	s.templateFile = templateFile
 }
 
 func (s *storageclass) getMainModuleName() string {
@@ -223,4 +225,9 @@ func (s *storageclass) showResourceDetail(action string, tplData map[string]inte
 	// TODO
 
 	return nil
+}
+
+func (s *storageclass) getTemplateFile(action string) string {
+
+	return s.templateFile
 }

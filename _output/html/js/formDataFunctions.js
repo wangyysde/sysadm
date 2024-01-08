@@ -5,6 +5,10 @@ function formDataShowTip(msg,color,timeout){
         colorStr = "#ff0000";
     }
 
+    if(msg == "" ){
+        msg = "发生了未知错误，请稍后再试或联系系统管理员";
+    }
+    
     msg=msg.replace(/^\s+|\s+$/g," ");
     if(msg == ""){
         return;
@@ -174,7 +178,6 @@ function formDataCheckBoxClick(formID,module,groupID,option,fn) {
 function formDataRadioClick(formID,module,groupID,option,fn) {
     formID = formID.replace(/^\s+|\s+$/g, " ");
     groupID = groupID.replace(/^\s+|\s+$/g, " ");
-    option = option.replace(/^\s+|\s+$/g, " ");
     fn = fn.replace(/^\s+|\s+$/g, " ");
     var dcID = document.getElementById("dcID").value;
     var clusterID = document.getElementById("clusterID").value;

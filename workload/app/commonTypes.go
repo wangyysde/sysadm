@@ -22,6 +22,23 @@ import (
 	"sysadm/objectsUI"
 )
 
+var modulesDefined = map[string]objectEntity{
+	"ingress":         &ingress{},
+	"configmap":       &configmap{},
+	"pvc":             &pvc{},
+	"rolebindings":    &rolebindings{},
+	"role":            &role{},
+	"serviceaccount":  &sa{},
+	"secret":          &secret{},
+	"ingressclass":    &ingressclass{},
+	"storageclass":    &storageclass{},
+	"pv":              &pv{},
+	"clusterrole":     &clusterrole{},
+	"clusterrolebind": &clusterrolebind{},
+	"namespace":       &namespace{},
+	"deployment":      &deployment{},
+}
+
 type moduleInfo struct {
 	mainModuleName  string
 	moduleName      string
@@ -33,6 +50,7 @@ type moduleInfo struct {
 	namespaced      bool
 	additionalJs    []string
 	additionalCss   []string
+	templateFile    string
 }
 
 type namespace struct {
@@ -100,6 +118,11 @@ type clusterrolebind struct {
 	orderInfo
 }
 
+type deployment struct {
+	moduleInfo
+	orderInfo
+}
+
 type orderInfo struct {
 	allOrderFields        map[string]objectsUI.SortBy
 	defaultOrderField     string
@@ -123,6 +146,7 @@ type objectEntity interface {
 	buildAddFormData(map[string]interface{}) error
 	getAdditionalJs() []string
 	getAdditionalCss() []string
+	getTemplateFile(string) string
 	addNewResource(*sysadmServer.Context, string) error
 	delResource(*sysadmServer.Context, string, map[string]string) error
 	showResourceDetail(string, map[string]interface{}, map[string]string) error

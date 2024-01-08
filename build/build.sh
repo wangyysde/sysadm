@@ -21,13 +21,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-#PACKAGE_LIST="sysadm,registryctl,infrastructure,agent,apiserver"
-#DEFAULT_IMAGE_VER="v1.0.1"
-#DEFAULT_REGISTRY_URL="sysadm.sysadm.cn:5001/sysadm/"
-#DEFAULT_DEPLOY_SERVER="192.53.117.73"
-#DEFAULT_DEPLOY_SERVER_PORT="2218"
-
-
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
     . "${SYSADM_ROOT}/build/build_common.sh"
@@ -142,12 +135,12 @@ if [ $# != 0 ]; then
 fi
 [ "X${DEPLOYTYPE}" == "X" ] && DEPLOYTYPE=${DEFAULT_DEPLOY_TYPE}
 
-if [ "${DEPLOY}" == "y" -o "${DEPLOY}" == "Y" ]; then
-  BUILD_IMAGE="y"
-  DEPLOY_BY_DOCKECOMPOSE="y"
-else
-   BUILD_IMAGE="n"
-fi
+# if [ "${DEPLOY}" == "y" -o "${DEPLOY}" == "Y" ]; then
+#  BUILD_IMAGE="y"
+#  DEPLOY_BY_DOCKECOMPOSE="y"
+# else
+#   BUILD_IMAGE="n"
+# fi
 
 if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" ]; then
   DEPLOY_BY_DOCKECOMPOSE="n"
@@ -162,6 +155,13 @@ else
 fi
 
 [ "X${IMAGEVER}" == "X" ] && IMAGEVER=${DEFAULT_IMAGE_VER} 
+
+if [ "X${DEPLOYTYPE}" == "Xrsync" ]; then
+   . "${SYSADM_ROOT}/build/build_tok8s.sh"
+   deploy::staticfile
+   exit 0
+fi
+
 
 BUILD_LIST_ARRAY=(${BUILD_LIST//,/ })
 for p in ${BUILD_LIST_ARRAY[@]}
@@ -186,8 +186,12 @@ do
   fi
 
   if [ "${DEPLOY}" == "y" -o "${DEPLOY}" == "Y" ]; then
-      if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" ]; then
-          deploy::to::k8s "${p}" "${IMAGEVER}"
+      if [ "X${DEPLOYTYPE}" == "X${DEFAULT_DEPLOY_TYPE}" -o "X${DEPLOYTYPE}" == "X${DEPLOY_TYPE_K8SCURL}" ]; then
+          deploy::to::k8s "${p}" "${IMAGEVER}" "${DEPLOYTYPE}"
+      fi
+
+      if [ "X${DEPLOYTYPE}" == "X${DEPLOY_TYPE_COMPOSE}" ]; then
+          deploy::package "${p}" "${IMAGEVER}"
       fi
   fi
 done

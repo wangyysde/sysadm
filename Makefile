@@ -9,8 +9,9 @@ REGISTRYvER ?= v2.7.0
 BUILD_IMAGE ?=
 DEPLOY ?=
 IMAGEVER ?= v1.4
+# DEPLOYTYPE is one of "", "k8s","k8scurl","rsync", "compose"
 DEPLOYTYPE ?=
-
+WHAT ?=
 .PHONY: all
 ifeq ($(PRINT_HELP),y)
 all:

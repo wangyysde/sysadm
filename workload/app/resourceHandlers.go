@@ -34,7 +34,7 @@ func resourceHandler(c *sysadmServer.Context) {
 	case "list", "QuotaList":
 		listResourceHandler(c, module, action)
 	case "addform":
-		addFormResourceHandler(c, module)
+		addFormResourceHandler(c, module, action)
 	case "addQuota":
 		addNewQuotaFormHandler(c)
 	case "addLimitRange":
@@ -44,7 +44,7 @@ func resourceHandler(c *sysadmServer.Context) {
 	default:
 		errs = append(errs, sysadmLog.NewErrorWithStringLevel(8000800000, "debug", "action %s for %s was not found", action, module))
 		e := fmt.Errorf("action %s for %s was not found", action, module)
-		objectsUI.OutPutMsg(c, "", "您未登录或超时", runData.logEntity, 8000800001, errs, e)
+		objectsUI.OutPutMsg(c, "", "操作错误，请稍后再试或联系系统管理员", runData.logEntity, 8000800001, errs, e)
 	}
 
 	return

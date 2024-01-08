@@ -34,6 +34,7 @@ func (s *sa) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "关联的Secrets数", "TD4": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	s.mainModuleName = "帐号与角色"
 	s.moduleName = "服务帐号"
@@ -48,6 +49,7 @@ func (s *sa) setObjectInfo() {
 	s.moduleID = "serviceaccount"
 	s.additionalJs = additionalJs
 	s.additionalCss = additionalCss
+	s.templateFile = templateFile
 }
 
 func (s *sa) getMainModuleName() string {
@@ -211,4 +213,9 @@ func (s *sa) showResourceDetail(action string, tplData map[string]interface{}, r
 	// TODO
 
 	return nil
+}
+
+func (s *sa) getTemplateFile(action string) string {
+
+	return s.templateFile
 }

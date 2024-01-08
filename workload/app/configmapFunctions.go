@@ -34,6 +34,7 @@ func (c *configmap) setObjectInfo() {
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "标签", "TD4": "数据项数", "TD5": "是否可修改", "TD6": "创建时间"}
 	additionalJs := []string{}
 	additionalCss := []string{}
+	templateFile := ""
 
 	c.mainModuleName = "配置和存储"
 	c.moduleName = "configmap"
@@ -48,6 +49,7 @@ func (c *configmap) setObjectInfo() {
 	c.moduleID = "configmap"
 	c.additionalJs = additionalJs
 	c.additionalCss = additionalCss
+	c.templateFile = templateFile
 }
 
 func (c *configmap) getMainModuleName() string {
@@ -220,4 +222,9 @@ func (c *configmap) showResourceDetail(action string, tplData map[string]interfa
 	// TODO
 
 	return nil
+}
+
+func (c *configmap) getTemplateFile(action string) string {
+
+	return c.templateFile
 }
