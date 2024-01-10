@@ -89,6 +89,10 @@ func listResourceHandler(c *sysadmServer.Context, module, action string) {
 	// 初始化模板数据
 	subCategory := objEntity.getModuleName() + "列表"
 	addButtonTitle := objEntity.getAddButtonTitle()
+	if selectedCluster == "0" {
+		addButtonTitle = ""
+	}
+
 	isSearchForm := objEntity.getIsSearchForm()
 	allPopMenuItems := objEntity.getAllPopMenuItems()
 	if action == "QuotaList" {
@@ -157,6 +161,9 @@ func listResourceHandler(c *sysadmServer.Context, module, action string) {
 		objectsUI.BuildPageNumInfoForWorkloadList(tplData, requestData, count, startPos, runData.pageInfo.NumPerPage, defaultOrderField, objDefaultOrderDirection)
 	}
 	runData.logEntity.LogErrors(errs)
+	if objEntity.getTemplateFile(action) != "" {
+		listTemplateFile = objEntity.getTemplateFile(action)
+	}
 	c.HTML(http.StatusOK, listTemplateFile, tplData)
 
 }

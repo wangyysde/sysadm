@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,8 @@
 
 package app
 
-var denyDeployWokloadNSList = []string{"kube-node-lease", "kube-public", "kube-system"}
+var denyCrontJobWokloadNSList = []string{"kube-node-lease", "kube-system"}
 
-var defaultLabelKey = "deployment.app.name"
-var extraLabels = map[string]string{"app.kubernetes.io/managed-by": "sysadm"}
+var defaultCrontJobLabelKey = "crontjob.app.name"
 
-var deploymentTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addWorkload.html"}
+var crontjobTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addWorkload.html"}

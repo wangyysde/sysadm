@@ -1344,7 +1344,7 @@ function addWorkload(formID, module, dcID, clusterID, namespace, actionType){
     }
 
     var actionUri = "/api/" + apiVersion + "/" + module + "/add?clusterID=" + clusterID;
-    var respValue = addWorkloadAjax("addDeployment",actionUri,"POST", true);
+    var respValue = addWorkloadAjax(formID,actionUri,"POST", true);
     $('#container').load(lastUrl);
     if(respValue.errorCode != 0 ){
         formDataShowTip(respValue.data,"RED",0);
@@ -1439,6 +1439,18 @@ function workloadDelHttpHeader(formID,module,dcID,clusterID,namespace,lineID,ite
     var objParent = obj.parentNode;
     var parentObj = objParent.parentNode;
     parentObj.remove();
+
+    return;
+}
+
+function workloadAddSelectorBlock(formID,module,dcID,clusterID,namespace,lineID,itemID,uri,obj){
+    var selectorContainerObj = document.getElementById("container"+lineID);
+    var childNodes = selectorContainerObj.querySelector('div');
+    var htmlContent = childNodes.innerHTML;
+    var newSelectorObj = document.createElement("div");
+    newSelectorObj.className = childNodes.className;
+    newSelectorObj.innerHTML = htmlContent;
+    selectorContainerObj.appendChild(newSelectorObj);
 
     return;
 }

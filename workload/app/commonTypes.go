@@ -37,6 +37,11 @@ var modulesDefined = map[string]objectEntity{
 	"clusterrolebind": &clusterrolebind{},
 	"namespace":       &namespace{},
 	"deployment":      &deployment{},
+	"daemonset":       &daemonSet{},
+	"statefulset":     &statefulSet{},
+	"job":             &job{},
+	"cronjob":         &cronjob{},
+	"service":         &service{},
 }
 
 type moduleInfo struct {
@@ -119,6 +124,31 @@ type clusterrolebind struct {
 }
 
 type deployment struct {
+	moduleInfo
+	orderInfo
+}
+
+type daemonSet struct {
+	moduleInfo
+	orderInfo
+}
+
+type statefulSet struct {
+	moduleInfo
+	orderInfo
+}
+
+type job struct {
+	moduleInfo
+	orderInfo
+}
+
+type cronjob struct {
+	moduleInfo
+	orderInfo
+}
+
+type service struct {
 	moduleInfo
 	orderInfo
 }

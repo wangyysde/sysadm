@@ -113,7 +113,7 @@
               {{end}}
               <span> {{$item.Title -}} </span>
               <input id="{{$item.ID}}" type="text" name="{{$item.Name}}" {{if gt $item.Size 0}} size="{{$item.Size}}" {{end}}  {{if $item.Disable }} disabled {{end}} value="{{$item.DefaultValue}}" {{if $item.Title}} title="{{- $item.Title -}}" {{end}} {{if $item.ActionUri }} onblur="formDataTextInputValueChange({{$.formData.ID}},{{- $.formData.Method -}},{{- $.objID -}},{{$item.ActionUri}},this, {{$item.ActionFun}})" {{end}} >
-               {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span> {{end}}
+                     {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span></span> {{end}}
               </span>
             {{end}}
 

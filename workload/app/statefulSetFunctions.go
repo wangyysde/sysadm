@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	applyconfigAppv1 "k8s.io/client-go/applyconfigurations/apps/v1"
 	applyconfigMetav1 "k8s.io/client-go/applyconfigurations/meta/v1"
+	"sort"
 	"strconv"
 	"strings"
 	"sysadm/k8sclient"
@@ -32,79 +33,80 @@ import (
 	"sysadm/utils"
 )
 
-func (d *deployment) setObjectInfo() {
-	allOrderFields := map[string]objectsUI.SortBy{"TD1": deploymentSortByName, "TD6": deploymentSortByCreatetime}
+func (s *statefulSet) setObjectInfo() {
+	allOrderFields := map[string]objectsUI.SortBy{"TD1": nil, "TD6": nil}
 	allPopMenuItems := []string{"Scale,scale,POST,tip", "编辑,edit,GET,page", "重启,restart,POST,tip", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "状态", "TD4": "标签", "TD5": "Pods", "TD6": "创建时间"}
 	additionalJs := []string{"js/sysadmfunctions.js", "/js/workloadList.js"}
 	additionalCss := []string{}
-	templateFile := "addWorkload.html"
+	templateFile := "workloadlist.html"
 
-	d.mainModuleName = "工作负载"
-	d.moduleName = "无状态服务"
-	d.allPopMenuItems = allPopMenuItems
-	d.allListItems = allListItems
-	d.addButtonTile = "创建无状态服务"
-	d.isSearchForm = "no"
-	d.allOrderFields = allOrderFields
-	d.defaultOrderField = "TD1"
-	d.defaultOrderDirection = "1"
-	d.namespaced = true
-	d.moduleID = "deployment"
-	d.additionalJs = additionalJs
-	d.additionalCss = additionalCss
-	d.templateFile = templateFile
+	s.mainModuleName = "工作负载"
+	s.moduleName = "有状态服务"
+	s.allPopMenuItems = allPopMenuItems
+	s.allListItems = allListItems
+	s.addButtonTile = "添加有状态服务"
+	s.isSearchForm = "no"
+	s.allOrderFields = allOrderFields
+	s.defaultOrderField = "TD1"
+	s.defaultOrderDirection = "1"
+	s.namespaced = true
+	s.moduleID = "statefulSet"
+	s.additionalJs = additionalJs
+	s.additionalCss = additionalCss
+	s.templateFile = templateFile
 
 }
 
-func (d *deployment) getMainModuleName() string {
-	return d.mainModuleName
+func (s *statefulSet) getMainModuleName() string {
+	return s.mainModuleName
 }
 
-func (d *deployment) getModuleName() string {
-	return d.moduleName
+func (s *statefulSet) getModuleName() string {
+	return s.moduleName
 }
 
-func (d *deployment) getAddButtonTitle() string {
-	return d.addButtonTile
+func (s *statefulSet) getAddButtonTitle() string {
+	return s.addButtonTile
 }
 
-func (d *deployment) getIsSearchForm() string {
-	return d.isSearchForm
+func (s *statefulSet) getIsSearchForm() string {
+	return s.isSearchForm
 }
 
-func (d *deployment) getAllPopMenuItems() []string {
-	return d.allPopMenuItems
+func (s *statefulSet) getAllPopMenuItems() []string {
+	return s.allPopMenuItems
 }
 
-func (d *deployment) getAllListItems() map[string]string {
-	return d.allListItems
+func (s *statefulSet) getAllListItems() map[string]string {
+	return s.allListItems
 }
 
-func (d *deployment) getDefaultOrderField() string {
-	return d.defaultOrderField
+func (s *statefulSet) getDefaultOrderField() string {
+	return s.defaultOrderField
 }
 
-func (d *deployment) getDefaultOrderDirection() string {
-	return d.defaultOrderDirection
+func (s *statefulSet) getDefaultOrderDirection() string {
+	return s.defaultOrderDirection
 }
 
-func (d *deployment) getAllorderFields() map[string]objectsUI.SortBy {
-	return d.allOrderFields
+func (s *statefulSet) getAllorderFields() map[string]objectsUI.SortBy {
+	return s.allOrderFields
 }
 
-func (d *deployment) getNamespaced() bool {
-	return d.namespaced
+func (s *statefulSet) getNamespaced() bool {
+	return s.namespaced
 }
 
-// for deployment
-func (d *deployment) listObjectData(selectedCluster, selectedNS string,
+// for ingressclass
+func (s *statefulSet) listObjectData(selectedCluster, selectedNS string,
 	startPos int, requestData map[string]string) (int, []map[string]interface{}, error) {
 	var dataList []map[string]interface{}
 
 	if selectedCluster == "" || selectedCluster == "0" {
 		return 0, dataList, nil
 	}
+
 	nsStr := ""
 	if selectedNS != "0" {
 		nsStr = selectedNS
@@ -115,12 +117,12 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 		return 0, dataList, e
 	}
 
-	deployList, e := clientSet.AppsV1().Deployments(nsStr).List(context.Background(), metav1.ListOptions{})
+	stsList, e := clientSet.AppsV1().StatefulSets(nsStr).List(context.Background(), metav1.ListOptions{})
 	if e != nil {
 		return 0, dataList, e
 	}
 
-	totalNum := len(deployList.Items)
+	totalNum := len(stsList.Items)
 	if totalNum < 1 {
 		return 0, dataList, nil
 	}
@@ -128,17 +130,30 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 	orderfield := requestData["orderfield"]
 	direction := requestData["direction"]
 	if orderfield == "" {
-		orderfield = d.getDefaultOrderField()
+		orderfield = s.defaultOrderField
 	}
 	if direction == "" || (direction != "0" && direction != "1") {
-		direction = d.getDefaultOrderDirection()
+		direction = s.defaultOrderDirection
 	}
 
-	var deployItems []interface{}
-	for _, item := range deployList.Items {
-		deployItems = append(deployItems, item)
+	var stsItems []interface{}
+	for _, item := range stsList.Items {
+		stsItems = append(stsItems, item)
 	}
-	sortWorkloadData(deployItems, direction, orderfield, d.getAllorderFields())
+
+	if direction == "1" {
+		if orderfield == "TD1" {
+			sort.Sort(objectsUI.SortData{Data: stsItems, By: sortStsByName})
+		} else {
+			sort.Sort(objectsUI.SortData{Data: stsItems, By: sortStsByCreatetime})
+		}
+	} else {
+		if orderfield == "TD1" {
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: stsItems, By: sortStsByName}))
+		} else {
+			sort.Sort(sort.Reverse(objectsUI.SortData{Data: stsItems, By: sortStsByCreatetime}))
+		}
+	}
 
 	endCount := totalNum
 	if endCount > startPos+runData.pageInfo.NumPerPage {
@@ -146,28 +161,28 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 	}
 
 	for i := startPos; i < endCount; i++ {
-		interfaceData := deployItems[i]
-		deployData, ok := interfaceData.(appsv1.Deployment)
+		interfaceData := stsItems[i]
+		stsData, ok := interfaceData.(appsv1.StatefulSet)
 		if !ok {
-			return 0, dataList, fmt.Errorf("the data is not Deployment schema")
+			return 0, dataList, fmt.Errorf("the data is not StatefulSet schema")
 		}
 		lineMap := make(map[string]interface{}, 0)
-		lineMap["objectID"] = deployData.Name
-		lineMap["TD1"] = deployData.Name
-		lineMap["TD2"] = deployData.Namespace
+		lineMap["objectID"] = stsData.Name
+		lineMap["TD1"] = stsData.Name
+		lineMap["TD2"] = stsData.Namespace
 		statusStr := "运行中"
-		if deployData.Status.ReadyReplicas == 0 {
+		if stsData.Status.ReadyReplicas == 0 {
 			statusStr = "未运行"
 		}
-		if deployData.Status.ReadyReplicas < deployData.Status.Replicas {
+		if stsData.Status.ReadyReplicas < stsData.Status.Replicas {
 			statusStr = "部分运行"
 		}
 		lineMap["TD3"] = statusStr
-		lineMap["TD4"] = objectsUI.ConvertMap2HTML(deployData.Labels)
-		lineMap["TD5"] = strconv.Itoa(int(deployData.Status.ReadyReplicas)) + "/" + strconv.Itoa(int(deployData.Status.Replicas))
-		lineMap["TD6"] = deployData.CreationTimestamp.Format(objectsUI.DefaultTimeStampFormat)
+		lineMap["TD4"] = objectsUI.ConvertMap2HTML(stsData.Labels)
+		lineMap["TD5"] = strconv.Itoa(int(stsData.Status.ReadyReplicas)) + "/" + strconv.Itoa(int(stsData.Status.Replicas))
+		lineMap["TD6"] = stsData.CreationTimestamp.Format(objectsUI.DefaultTimeStampFormat)
 		popmenuitems := ""
-		if int(deployData.Status.Replicas) > 0 {
+		if int(stsData.Status.Replicas) > 0 {
 			popmenuitems = "0,1,3"
 		} else {
 			popmenuitems = "0,1,2,3"
@@ -177,21 +192,22 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 	}
 
 	return totalNum, dataList, nil
+
 }
 
-func (d *deployment) getModuleID() string {
-	return d.moduleID
+func (s *statefulSet) getModuleID() string {
+	return s.moduleID
 }
 
-func (d *deployment) buildAddFormData(tplData map[string]interface{}) error {
-	tplData["thirdCategory"] = "创建Deployment"
-	formData, e := objectsUI.InitFormData("addDeployment", "addDeployment", "POST", "_self", "yes", "addWorkload", "")
+func (s *statefulSet) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建有状态服务"
+	formData, e := objectsUI.InitFormData("addStatefulSet", "addStatefulSet", "POST", "_self", "yes", "addWorkload", "")
 	if e != nil {
 		return e
 	}
 	tplData["formData"] = formData
 
-	e = buildDeployBasiceFormData(tplData)
+	e = buildStatefulSetBasiceFormData(tplData)
 	if e != nil {
 		return e
 	}
@@ -209,14 +225,14 @@ func (d *deployment) buildAddFormData(tplData map[string]interface{}) error {
 	return nil
 }
 
-func (d *deployment) getAdditionalJs() []string {
-	return d.additionalJs
+func (s *statefulSet) getAdditionalJs() []string {
+	return s.additionalJs
 }
-func (d *deployment) getAdditionalCss() []string {
-	return d.additionalCss
+func (s *statefulSet) getAdditionalCss() []string {
+	return s.additionalCss
 }
 
-func (d *deployment) addNewResource(c *sysadmServer.Context, module string) error {
+func (s *statefulSet) addNewResource(c *sysadmServer.Context, module string) error {
 	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name", "replics", "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]"}
 	requestKeys = append(requestKeys, "selectorKey[]")
 	requestKeys = append(requestKeys, "selectorValue[]")
@@ -229,7 +245,7 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 
 	ns := formData["nsSelected"].([]string)
 	name := formData["name"].([]string)
-	deployApplyConfig := applyconfigAppv1.Deployment(name[0], ns[0])
+	statefulSetApplyConfig := applyconfigAppv1.StatefulSet(name[0], ns[0])
 
 	// 配置labels
 	labelKeys := formData["labelKey[]"].([]string)
@@ -245,12 +261,12 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 			labels[k] = value
 		}
 	} else {
-		labels[defaultLabelKey] = name[0]
+		labels[defaultStatefulSetLabelKey] = name[0]
 	}
 	for k, v := range extraLabels {
 		labels[k] = v
 	}
-	deployApplyConfig = deployApplyConfig.WithLabels(labels)
+	statefulSetApplyConfig = statefulSetApplyConfig.WithLabels(labels)
 
 	// 配置注解
 	annotationKey := formData["annotationKey[]"].([]string)
@@ -263,10 +279,10 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		value := annotationValue[i]
 		annotations[k] = value
 	}
-	deployApplyConfig = deployApplyConfig.WithAnnotations(annotations)
+	statefulSetApplyConfig = statefulSetApplyConfig.WithAnnotations(annotations)
 
 	// 准备副本数
-	deploySpecApplyConfig := applyconfigAppv1.DeploymentSpecApplyConfiguration{}
+	statefulSetSpecApplyConfig := applyconfigAppv1.StatefulSetSpecApplyConfiguration{}
 	replicsSlice := formData["replics"].([]string)
 	replicsStr := replicsSlice[0]
 	replicsInt, e := strconv.Atoi(replicsStr)
@@ -274,7 +290,7 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		return e
 	}
 	replicsInt32 := int32(replicsInt)
-	deploySpecApplyConfig.Replicas = &replicsInt32
+	statefulSetSpecApplyConfig.Replicas = &replicsInt32
 
 	// 配置selector
 	selectorKeys := formData["selectorKey[]"].([]string)
@@ -291,14 +307,14 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		matchLabels = labels
 	}
 	labelSelector := applyconfigMetav1.LabelSelectorApplyConfiguration{MatchLabels: matchLabels}
-	deploySpecApplyConfig.Selector = &labelSelector
+	statefulSetSpecApplyConfig.Selector = &labelSelector
 
 	podTemplateSpecApplyConfiguration, e := buildPodTemplateSpecApplyConfig(formData, matchLabels, annotations)
 	if e != nil {
 		return e
 	}
-	deploySpecApplyConfig.Template = podTemplateSpecApplyConfiguration
-	deployApplyConfig = deployApplyConfig.WithSpec(&deploySpecApplyConfig)
+	statefulSetSpecApplyConfig.Template = podTemplateSpecApplyConfiguration
+	statefulSetApplyConfig = statefulSetApplyConfig.WithSpec(&statefulSetSpecApplyConfig)
 
 	clusterIDSlice := formData["clusterID"].([]string)
 	clusterID := clusterIDSlice[0]
@@ -310,41 +326,39 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		Force:        true,
 		FieldManager: k8sclient.FieldManager,
 	}
-	_, e = clientSet.AppsV1().Deployments(ns[0]).Apply(context.Background(), deployApplyConfig, applyOption)
+	_, e = clientSet.AppsV1().StatefulSets(ns[0]).Apply(context.Background(), statefulSetApplyConfig, applyOption)
 
 	return e
 
 }
 
-func (d *deployment) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
+func (s *statefulSet) delResource(ss *sysadmServer.Context, module string, requestData map[string]string) error {
 	// TODO
 
 	return nil
 }
 
-func (d *deployment) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+func (s *statefulSet) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
 	// TODO
 
 	return nil
 }
 
-func (d *deployment) getTemplateFile(action string) string {
+func (s *statefulSet) getTemplateFile(action string) string {
 	switch action {
 	case "list":
-		return deploymentTemplateFiles["list"]
+		return statefulSetTemplateFiles["list"]
 	case "addform":
-		return deploymentTemplateFiles["addform"]
-	default:
-		return ""
+		return statefulSetTemplateFiles["addform"]
 	}
 
-	return d.templateFile
+	return ""
 }
 
-func buildDeployBasiceFormData(tplData map[string]interface{}) error {
+func buildStatefulSetBasiceFormData(tplData map[string]interface{}) error {
 	clusterID := tplData["clusterID"].(string)
 	if clusterID == "" || clusterID == "0" {
-		return fmt.Errorf("cluster must be specified when add a new deployment")
+		return fmt.Errorf("cluster must be specified when add a new statefulSet")
 	}
 	clientSet, e := buildClientSetByClusterID(clusterID)
 	if e != nil {
@@ -357,7 +371,7 @@ func buildDeployBasiceFormData(tplData map[string]interface{}) error {
 	nsExistList := []string{}
 	for _, item := range nsObjectList.Items {
 		found := false
-		for _, n := range denyDeployWokloadNSList {
+		for _, n := range denyStatefulSetWokloadNSList {
 			if strings.TrimSpace(strings.ToLower(item.Name)) == n {
 				found = true
 			}
@@ -434,12 +448,12 @@ func buildDeployBasiceFormData(tplData map[string]interface{}) error {
 	return nil
 }
 
-func deploymentSortByName(p, q interface{}) bool {
-	pData, ok := p.(appsv1.Deployment)
+func sortStsByName(p, q interface{}) bool {
+	pData, ok := p.(appsv1.StatefulSet)
 	if !ok {
 		return false
 	}
-	qData, ok := q.(appsv1.Deployment)
+	qData, ok := q.(appsv1.StatefulSet)
 	if !ok {
 		return false
 	}
@@ -447,12 +461,12 @@ func deploymentSortByName(p, q interface{}) bool {
 	return pData.Name < qData.Name
 }
 
-func deploymentSortByCreatetime(p, q interface{}) bool {
-	pData, ok := p.(appsv1.Deployment)
+func sortStsByCreatetime(p, q interface{}) bool {
+	pData, ok := p.(appsv1.StatefulSet)
 	if !ok {
 		return false
 	}
-	qData, ok := q.(appsv1.Deployment)
+	qData, ok := q.(appsv1.StatefulSet)
 	if !ok {
 		return false
 	}

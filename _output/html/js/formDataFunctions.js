@@ -308,3 +308,11 @@ function forumDataCancelForm(formID,module,actionType,fn){
     $('#container').load(lastUrl);
     return;
 }
+
+function addObjChangeFilevalue(divID,inputID){
+    var inputObj = document.getElementById(inputID);
+    var divObj = document.getElementById(divID);
+    var objValue = inputObj.value;
+    var pos = objValue.lastIndexOf("\\");
+    divObj.innerHTML = objValue.substring(pos+1);
+}

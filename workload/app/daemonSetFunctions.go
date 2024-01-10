@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,79 +32,80 @@ import (
 	"sysadm/utils"
 )
 
-func (d *deployment) setObjectInfo() {
-	allOrderFields := map[string]objectsUI.SortBy{"TD1": deploymentSortByName, "TD6": deploymentSortByCreatetime}
-	allPopMenuItems := []string{"Scale,scale,POST,tip", "编辑,edit,GET,page", "重启,restart,POST,tip", "删除,del,POST,tip"}
+func (d *daemonSet) setObjectInfo() {
+	allOrderFields := map[string]objectsUI.SortBy{"TD1": sortDaemonSetByName, "TD6": sortDaemonSetByCreatetime}
+	allPopMenuItems := []string{"编辑,edit,GET,page", "删除,del,POST,tip"}
 	allListItems := map[string]string{"TD1": "名称", "TD2": "命名空间", "TD3": "状态", "TD4": "标签", "TD5": "Pods", "TD6": "创建时间"}
 	additionalJs := []string{"js/sysadmfunctions.js", "/js/workloadList.js"}
 	additionalCss := []string{}
 	templateFile := "addWorkload.html"
 
 	d.mainModuleName = "工作负载"
-	d.moduleName = "无状态服务"
+	d.moduleName = "守护进程服务"
 	d.allPopMenuItems = allPopMenuItems
 	d.allListItems = allListItems
-	d.addButtonTile = "创建无状态服务"
+	d.addButtonTile = "创建守护进程服务"
 	d.isSearchForm = "no"
 	d.allOrderFields = allOrderFields
 	d.defaultOrderField = "TD1"
 	d.defaultOrderDirection = "1"
 	d.namespaced = true
-	d.moduleID = "deployment"
+	d.moduleID = "daemonSet"
 	d.additionalJs = additionalJs
 	d.additionalCss = additionalCss
 	d.templateFile = templateFile
 
 }
 
-func (d *deployment) getMainModuleName() string {
+func (d *daemonSet) getMainModuleName() string {
 	return d.mainModuleName
 }
 
-func (d *deployment) getModuleName() string {
+func (d *daemonSet) getModuleName() string {
 	return d.moduleName
 }
 
-func (d *deployment) getAddButtonTitle() string {
+func (d *daemonSet) getAddButtonTitle() string {
 	return d.addButtonTile
 }
 
-func (d *deployment) getIsSearchForm() string {
+func (d *daemonSet) getIsSearchForm() string {
 	return d.isSearchForm
 }
 
-func (d *deployment) getAllPopMenuItems() []string {
+func (d *daemonSet) getAllPopMenuItems() []string {
 	return d.allPopMenuItems
 }
 
-func (d *deployment) getAllListItems() map[string]string {
+func (d *daemonSet) getAllListItems() map[string]string {
 	return d.allListItems
 }
 
-func (d *deployment) getDefaultOrderField() string {
+func (d *daemonSet) getDefaultOrderField() string {
 	return d.defaultOrderField
 }
 
-func (d *deployment) getDefaultOrderDirection() string {
+func (d *daemonSet) getDefaultOrderDirection() string {
 	return d.defaultOrderDirection
 }
 
-func (d *deployment) getAllorderFields() map[string]objectsUI.SortBy {
+func (d *daemonSet) getAllorderFields() map[string]objectsUI.SortBy {
 	return d.allOrderFields
 }
 
-func (d *deployment) getNamespaced() bool {
+func (d *daemonSet) getNamespaced() bool {
 	return d.namespaced
 }
 
-// for deployment
-func (d *deployment) listObjectData(selectedCluster, selectedNS string,
+// for daemonSet
+func (d *daemonSet) listObjectData(selectedCluster, selectedNS string,
 	startPos int, requestData map[string]string) (int, []map[string]interface{}, error) {
 	var dataList []map[string]interface{}
 
 	if selectedCluster == "" || selectedCluster == "0" {
 		return 0, dataList, nil
 	}
+
 	nsStr := ""
 	if selectedNS != "0" {
 		nsStr = selectedNS
@@ -115,12 +116,12 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 		return 0, dataList, e
 	}
 
-	deployList, e := clientSet.AppsV1().Deployments(nsStr).List(context.Background(), metav1.ListOptions{})
+	daemonSetList, e := clientSet.AppsV1().DaemonSets(nsStr).List(context.Background(), metav1.ListOptions{})
 	if e != nil {
 		return 0, dataList, e
 	}
 
-	totalNum := len(deployList.Items)
+	totalNum := len(daemonSetList.Items)
 	if totalNum < 1 {
 		return 0, dataList, nil
 	}
@@ -134,11 +135,12 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 		direction = d.getDefaultOrderDirection()
 	}
 
-	var deployItems []interface{}
-	for _, item := range deployList.Items {
-		deployItems = append(deployItems, item)
+	var daemonSetItems []interface{}
+	for _, item := range daemonSetList.Items {
+		daemonSetItems = append(daemonSetItems, item)
 	}
-	sortWorkloadData(deployItems, direction, orderfield, d.getAllorderFields())
+
+	sortWorkloadData(daemonSetItems, direction, orderfield, d.getAllorderFields())
 
 	endCount := totalNum
 	if endCount > startPos+runData.pageInfo.NumPerPage {
@@ -146,32 +148,27 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 	}
 
 	for i := startPos; i < endCount; i++ {
-		interfaceData := deployItems[i]
-		deployData, ok := interfaceData.(appsv1.Deployment)
+		interfaceData := daemonSetItems[i]
+		daemonSetData, ok := interfaceData.(appsv1.DaemonSet)
 		if !ok {
-			return 0, dataList, fmt.Errorf("the data is not Deployment schema")
+			return 0, dataList, fmt.Errorf("the data is not DaemonSet schema")
 		}
 		lineMap := make(map[string]interface{}, 0)
-		lineMap["objectID"] = deployData.Name
-		lineMap["TD1"] = deployData.Name
-		lineMap["TD2"] = deployData.Namespace
+		lineMap["objectID"] = daemonSetData.Name
+		lineMap["TD1"] = daemonSetData.Name
+		lineMap["TD2"] = daemonSetData.Namespace
 		statusStr := "运行中"
-		if deployData.Status.ReadyReplicas == 0 {
+		if daemonSetData.Status.NumberAvailable == 0 {
 			statusStr = "未运行"
 		}
-		if deployData.Status.ReadyReplicas < deployData.Status.Replicas {
+		if daemonSetData.Status.NumberAvailable < daemonSetData.Status.DesiredNumberScheduled {
 			statusStr = "部分运行"
 		}
 		lineMap["TD3"] = statusStr
-		lineMap["TD4"] = objectsUI.ConvertMap2HTML(deployData.Labels)
-		lineMap["TD5"] = strconv.Itoa(int(deployData.Status.ReadyReplicas)) + "/" + strconv.Itoa(int(deployData.Status.Replicas))
-		lineMap["TD6"] = deployData.CreationTimestamp.Format(objectsUI.DefaultTimeStampFormat)
-		popmenuitems := ""
-		if int(deployData.Status.Replicas) > 0 {
-			popmenuitems = "0,1,3"
-		} else {
-			popmenuitems = "0,1,2,3"
-		}
+		lineMap["TD4"] = objectsUI.ConvertMap2HTML(daemonSetData.Labels)
+		lineMap["TD5"] = strconv.Itoa(int(daemonSetData.Status.NumberAvailable)) + "/" + strconv.Itoa(int(daemonSetData.Status.DesiredNumberScheduled))
+		lineMap["TD6"] = daemonSetData.CreationTimestamp.Format(objectsUI.DefaultTimeStampFormat)
+		popmenuitems := "0,1"
 		lineMap["popmenuitems"] = popmenuitems
 		dataList = append(dataList, lineMap)
 	}
@@ -179,19 +176,19 @@ func (d *deployment) listObjectData(selectedCluster, selectedNS string,
 	return totalNum, dataList, nil
 }
 
-func (d *deployment) getModuleID() string {
+func (d *daemonSet) getModuleID() string {
 	return d.moduleID
 }
 
-func (d *deployment) buildAddFormData(tplData map[string]interface{}) error {
-	tplData["thirdCategory"] = "创建Deployment"
-	formData, e := objectsUI.InitFormData("addDeployment", "addDeployment", "POST", "_self", "yes", "addWorkload", "")
+func (d *daemonSet) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建守护服务"
+	formData, e := objectsUI.InitFormData("addDaemonSet", "addDaemonSet", "POST", "_self", "yes", "addWorkload", "")
 	if e != nil {
 		return e
 	}
 	tplData["formData"] = formData
 
-	e = buildDeployBasiceFormData(tplData)
+	e = buildDaemonSetBasiceFormData(tplData)
 	if e != nil {
 		return e
 	}
@@ -209,17 +206,19 @@ func (d *deployment) buildAddFormData(tplData map[string]interface{}) error {
 	return nil
 }
 
-func (d *deployment) getAdditionalJs() []string {
+func (d *daemonSet) getAdditionalJs() []string {
 	return d.additionalJs
 }
-func (d *deployment) getAdditionalCss() []string {
+func (d *daemonSet) getAdditionalCss() []string {
 	return d.additionalCss
 }
 
-func (d *deployment) addNewResource(c *sysadmServer.Context, module string) error {
-	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name", "replics", "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]"}
+func (d *daemonSet) addNewResource(c *sysadmServer.Context, module string) error {
+	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name", "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]"}
 	requestKeys = append(requestKeys, "selectorKey[]")
 	requestKeys = append(requestKeys, "selectorValue[]")
+	requestKeys = append(requestKeys, "nodeselectorKey[]")
+	requestKeys = append(requestKeys, "nodeselectorValue[]")
 	requestKeys = append(requestKeys, "containerData[]")
 	requestKeys = append(requestKeys, "storageMountData[]")
 	formData, e := utils.GetMultipartData(c, requestKeys)
@@ -229,7 +228,7 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 
 	ns := formData["nsSelected"].([]string)
 	name := formData["name"].([]string)
-	deployApplyConfig := applyconfigAppv1.Deployment(name[0], ns[0])
+	daemonSetApplyConfig := applyconfigAppv1.DaemonSet(name[0], ns[0])
 
 	// 配置labels
 	labelKeys := formData["labelKey[]"].([]string)
@@ -245,12 +244,12 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 			labels[k] = value
 		}
 	} else {
-		labels[defaultLabelKey] = name[0]
+		labels[defaultDaemonSetLabelKey] = name[0]
 	}
 	for k, v := range extraLabels {
 		labels[k] = v
 	}
-	deployApplyConfig = deployApplyConfig.WithLabels(labels)
+	daemonSetApplyConfig = daemonSetApplyConfig.WithLabels(labels)
 
 	// 配置注解
 	annotationKey := formData["annotationKey[]"].([]string)
@@ -263,18 +262,21 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		value := annotationValue[i]
 		annotations[k] = value
 	}
-	deployApplyConfig = deployApplyConfig.WithAnnotations(annotations)
 
-	// 准备副本数
-	deploySpecApplyConfig := applyconfigAppv1.DeploymentSpecApplyConfiguration{}
-	replicsSlice := formData["replics"].([]string)
-	replicsStr := replicsSlice[0]
-	replicsInt, e := strconv.Atoi(replicsStr)
-	if e != nil {
-		return e
+	nodeselectorKey := formData["nodeselectorKey[]"].([]string)
+	nodeselectorValue := formData["nodeselectorValue[]"].([]string)
+	if len(nodeselectorKey) != len(nodeselectorValue) {
+		return fmt.Errorf("nodeSelector key is not equal to nodeSelector value")
 	}
-	replicsInt32 := int32(replicsInt)
-	deploySpecApplyConfig.Replicas = &replicsInt32
+	nodeSelectors := make(map[string]string, 0)
+	for i, k := range nodeselectorKey {
+		value := nodeselectorValue[i]
+		nodeSelectors[k] = value
+	}
+
+	daemonSetApplyConfig = daemonSetApplyConfig.WithAnnotations(annotations)
+
+	daemonSetSpecApplyConfig := applyconfigAppv1.DaemonSetSpecApplyConfiguration{}
 
 	// 配置selector
 	selectorKeys := formData["selectorKey[]"].([]string)
@@ -291,15 +293,16 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		matchLabels = labels
 	}
 	labelSelector := applyconfigMetav1.LabelSelectorApplyConfiguration{MatchLabels: matchLabels}
-	deploySpecApplyConfig.Selector = &labelSelector
+	daemonSetSpecApplyConfig.Selector = &labelSelector
 
 	podTemplateSpecApplyConfiguration, e := buildPodTemplateSpecApplyConfig(formData, matchLabels, annotations)
 	if e != nil {
 		return e
 	}
-	deploySpecApplyConfig.Template = podTemplateSpecApplyConfiguration
-	deployApplyConfig = deployApplyConfig.WithSpec(&deploySpecApplyConfig)
+	podTemplateSpecApplyConfiguration.Spec.NodeSelector = nodeSelectors
 
+	daemonSetSpecApplyConfig.Template = podTemplateSpecApplyConfiguration
+	daemonSetApplyConfig = daemonSetApplyConfig.WithSpec(&daemonSetSpecApplyConfig)
 	clusterIDSlice := formData["clusterID"].([]string)
 	clusterID := clusterIDSlice[0]
 	clientSet, e := buildClientSetByClusterID(clusterID)
@@ -310,41 +313,41 @@ func (d *deployment) addNewResource(c *sysadmServer.Context, module string) erro
 		Force:        true,
 		FieldManager: k8sclient.FieldManager,
 	}
-	_, e = clientSet.AppsV1().Deployments(ns[0]).Apply(context.Background(), deployApplyConfig, applyOption)
+	_, e = clientSet.AppsV1().DaemonSets(ns[0]).Apply(context.Background(), daemonSetApplyConfig, applyOption)
 
 	return e
 
 }
 
-func (d *deployment) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
+func (d *daemonSet) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
 	// TODO
 
 	return nil
 }
 
-func (d *deployment) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
+func (d *daemonSet) showResourceDetail(action string, tplData map[string]interface{}, requestData map[string]string) error {
 	// TODO
 
 	return nil
 }
 
-func (d *deployment) getTemplateFile(action string) string {
+func (d *daemonSet) getTemplateFile(action string) string {
 	switch action {
 	case "list":
-		return deploymentTemplateFiles["list"]
+		return daemonsetTemplateFiles["list"]
 	case "addform":
-		return deploymentTemplateFiles["addform"]
+		return daemonsetTemplateFiles["addform"]
 	default:
 		return ""
-	}
 
-	return d.templateFile
+	}
+	return ""
 }
 
-func buildDeployBasiceFormData(tplData map[string]interface{}) error {
+func buildDaemonSetBasiceFormData(tplData map[string]interface{}) error {
 	clusterID := tplData["clusterID"].(string)
 	if clusterID == "" || clusterID == "0" {
-		return fmt.Errorf("cluster must be specified when add a new deployment")
+		return fmt.Errorf("cluster must be specified when add a new daemonSet")
 	}
 	clientSet, e := buildClientSetByClusterID(clusterID)
 	if e != nil {
@@ -357,7 +360,7 @@ func buildDeployBasiceFormData(tplData map[string]interface{}) error {
 	nsExistList := []string{}
 	for _, item := range nsObjectList.Items {
 		found := false
-		for _, n := range denyDeployWokloadNSList {
+		for _, n := range denyDaemonSetWokloadNSList {
 			if strings.TrimSpace(strings.ToLower(item.Name)) == n {
 				found = true
 			}
@@ -391,10 +394,6 @@ func buildDeployBasiceFormData(tplData map[string]interface{}) error {
 
 	lineData = objectsUI.InitLineData("nameLine", false, false, false)
 	_ = objectsUI.AddTextData("name", "name", "", "应用名称", "validateNewName", "addWorkloadValidateNewName", "长度小于63个字母数字或-且以字母数据开开头和结尾的字符串", 30, false, false, lineData)
-	basicData = append(basicData, lineData)
-
-	lineData = objectsUI.InitLineData("replicsLine", false, false, false)
-	_ = objectsUI.AddTextData("replics", "replics", "", "副本数", "", "", "大于等于0的整数", 10, false, false, lineData)
 	basicData = append(basicData, lineData)
 
 	lineData = objectsUI.InitLineData("newNsLabel", true, true, false)
@@ -431,15 +430,27 @@ func buildDeployBasiceFormData(tplData map[string]interface{}) error {
 	basicData = append(basicData, lineData)
 	tplData["BasicData"] = basicData
 
+	lineData = objectsUI.InitLineData("nodeselectorLabel", true, true, false)
+	_ = objectsUI.AddTextData("nodeselectorKey", "nodeselectorKey[]", "", "节点选择器", "", "", "设置了节点标签选择器，则守护进程只在匹配的节点上运行", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("noddeselectorValue", "nodeselectorValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("nodeselectorLabel", "nodeselectorLabel", "fa-trash", "#", "workloadDelSelector", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("nodeselectorLabel", false, false, false)
+	_ = objectsUI.AddWordsInputData("nodeselectorWord", "nodeselectorWord", "添加匹配条件", "#", "workloadAddSelectorBlock", false, false, lineData)
+	basicData = append(basicData, lineData)
+	tplData["BasicData"] = basicData
+
 	return nil
 }
 
-func deploymentSortByName(p, q interface{}) bool {
-	pData, ok := p.(appsv1.Deployment)
+func sortDaemonSetByName(p, q interface{}) bool {
+	pData, ok := p.(appsv1.DaemonSet)
 	if !ok {
 		return false
 	}
-	qData, ok := q.(appsv1.Deployment)
+	qData, ok := q.(appsv1.DaemonSet)
 	if !ok {
 		return false
 	}
@@ -447,12 +458,12 @@ func deploymentSortByName(p, q interface{}) bool {
 	return pData.Name < qData.Name
 }
 
-func deploymentSortByCreatetime(p, q interface{}) bool {
-	pData, ok := p.(appsv1.Deployment)
+func sortDaemonSetByCreatetime(p, q interface{}) bool {
+	pData, ok := p.(appsv1.DaemonSet)
 	if !ok {
 		return false
 	}
-	qData, ok := q.(appsv1.Deployment)
+	qData, ok := q.(appsv1.DaemonSet)
 	if !ok {
 		return false
 	}
