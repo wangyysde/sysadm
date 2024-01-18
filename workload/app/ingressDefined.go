@@ -17,8 +17,8 @@
 
 package app
 
-var denyServiceWokloadNSList = []string{"kube-node-lease", "kube-system"}
+var denyIngressNSList = []string{"kube-node-lease", "kube-system"}
 
-var defaultServiceLabelKey = "service.app.name"
+var defaultIngressLabelKey = "ingress.app.name"
 
-var serviceTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}
+var ingressTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}

@@ -45,6 +45,7 @@ func postForApiHandlers(c *sysadmServer.Context) {
 
 	module := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(strings.ToLower(c.Param("module"))), "/"), "/")
 	action := strings.TrimRight(strings.TrimLeft(strings.TrimSpace(c.Param("action")), "/"), "/")
+	errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500004, "info", "handler for module  %s name with action %s", module, action))
 	var objEntity objectEntity = nil
 	for m, o := range modulesDefined {
 		if m == module {
@@ -54,35 +55,10 @@ func postForApiHandlers(c *sysadmServer.Context) {
 	}
 
 	if objEntity == nil {
-		e := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001500004, "json", "操作错误，请稍后再试或联系系统管理员")
-		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500004, "error", "module %s was not found", module))
+		e := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001500005, "json", "操作错误，请稍后再试或联系系统管理员")
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500005, "error", "module %s was not found", module))
 		if e != nil {
-			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500005, "error", "%s", e))
-		}
-		runData.logEntity.LogErrors(errs)
-		return
-	}
-
-	if objEntity.getNamespaced() {
-		postForApiWithNamespacedHandler(c, module, action)
-		return
-	}
-
-	postForApiNonNamespacedHandler(c, module, action)
-	return
-
-}
-
-func postForApiWithNamespacedHandler(c *sysadmServer.Context, module, action string) {
-	var errs []sysadmLog.Sysadmerror
-	errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500006, "info", "namespaced handler for module  %s name with action %s", module, action))
-	requestKeys := []string{"clusterID", "namespace"}
-	requestData, e := getRequestData(c, requestKeys)
-	if e != nil {
-		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001500007, "json", "操作错误，请稍后再试或联系系统管理员")
-		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500007, "error", "%s", e))
-		if e1 != nil {
-			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500008, "error", "%s", e1))
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500006, "error", "%s", e))
 		}
 		runData.logEntity.LogErrors(errs)
 		return
@@ -90,33 +66,21 @@ func postForApiWithNamespacedHandler(c *sysadmServer.Context, module, action str
 
 	switch action {
 	case "add":
-		postNamespacedResourceAddHandler(c, module, action, requestData)
-		return
-
+		postResourceAddHandler(c, module, action)
 	default:
 		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500009, "error", "action %s was not defined", action))
 		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001500009, "json", "操作错误，请稍后再试或联系系统管理员")
 		if e1 != nil {
 			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001500010, "error", "%s", e1))
 		}
-		runData.logEntity.LogErrors(errs)
-
-		return
 	}
 
 	runData.logEntity.LogErrors(errs)
+
 	return
 }
 
-func postForApiNonNamespacedHandler(c *sysadmServer.Context, module, action string) {
-	// TODO
-	var errs []sysadmLog.Sysadmerror
-	errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001510001, "info", "non namespaced handler for module  %s name with action %s", module, action))
-	runData.logEntity.LogErrors(errs)
-	return
-}
-
-func postNamespacedResourceAddHandler(c *sysadmServer.Context, module, action string, requestData map[string]string) {
+func postResourceAddHandler(c *sysadmServer.Context, module, action string) {
 	var errs []sysadmLog.Sysadmerror
 	formData, e := utils.GetMultipartData(c, []string{"dcid", "clusterID", "namespace", "addType", "objContent", "objFile"})
 	if e != nil {
@@ -142,7 +106,7 @@ func postNamespacedResourceAddHandler(c *sysadmServer.Context, module, action st
 	}
 
 	if addType == "2" {
-		postNamespacedResourceAdd(c, module, action, requestData)
+		postResourceAdd(c, module, action)
 		return
 	}
 
@@ -198,7 +162,7 @@ func postNamespacedResourceAddHandler(c *sysadmServer.Context, module, action st
 	return
 }
 
-func postNamespacedResourceAdd(c *sysadmServer.Context, module, action string, requestData map[string]string) {
+func postResourceAdd(c *sysadmServer.Context, module, action string) {
 	var errs []sysadmLog.Sysadmerror
 
 	objEntity, e := newObjEntity(module)

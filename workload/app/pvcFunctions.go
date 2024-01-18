@@ -36,10 +36,10 @@ func (p *pvc) setObjectInfo() {
 	templateFele := ""
 
 	p.mainModuleName = "配置和存储"
-	p.moduleName = "pvc"
+	p.moduleName = "存储卷声明"
 	p.allPopMenuItems = allPopMenuItems
 	p.allListItems = allListItems
-	p.addButtonTile = ""
+	p.addButtonTile = "创建存储卷声明"
 	p.isSearchForm = "no"
 	p.allOrderFields = allOrderFields
 	p.defaultOrderField = "TD1"
@@ -219,7 +219,14 @@ func (p *pvc) getModuleID() string {
 }
 
 func (p *pvc) buildAddFormData(tplData map[string]interface{}) error {
-	// TODO
+	tplData["thirdCategory"] = "创建存储卷声明"
+	formData, e := objectsUI.InitFormData("addPvc", "addPvc", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
+	//TODO
 	return nil
 }
 
@@ -249,6 +256,14 @@ func (p *pvc) showResourceDetail(action string, tplData map[string]interface{}, 
 }
 
 func (p *pvc) getTemplateFile(action string) string {
+	switch action {
+	case "list":
+		return pvcTemplateFiles["list"]
+	case "addform":
+		return pvcTemplateFiles["addform"]
+	default:
+		return ""
+	}
 
-	return p.templateFile
+	return ""
 }

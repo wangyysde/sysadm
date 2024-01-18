@@ -21,6 +21,7 @@ import (
 	"context"
 	"github.com/wangyysde/sysadmServer"
 	coreV1 "k8s.io/api/core/v1"
+	networkingV1 "k8s.io/api/networking/v1"
 	apimachineryvalidation "k8s.io/apimachinery/pkg/api/validation"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net/http"
@@ -131,6 +132,10 @@ func getNamespacedResourceNameListHandler(c *sysadmServer.Context, module, actio
 		objList, er = clientSet.CoreV1().ConfigMaps(requestData["namespace"]).List(context.Background(), metav1.ListOptions{})
 	case "secret":
 		objList, er = clientSet.CoreV1().Secrets(requestData["namespace"]).List(context.Background(), metav1.ListOptions{})
+	case "service":
+		objList, er = clientSet.CoreV1().Services(requestData["namespace"]).List(context.Background(), metav1.ListOptions{})
+	case "serviceaccount":
+		objList, er = clientSet.CoreV1().ServiceAccounts(requestData["namespace"]).List(context.Background(), metav1.ListOptions{})
 	}
 
 	if er != nil {
@@ -174,6 +179,24 @@ func getNamespacedResourceNameListHandler(c *sysadmServer.Context, module, actio
 		for _, v := range secretList.Items {
 			nameList = append(nameList, v.Name)
 		}
+	case "service":
+		serviceList, ok := objList.(*coreV1.ServiceList)
+		if !ok {
+			errorMsg = "the data is not service List Schema"
+			break
+		}
+		for _, v := range serviceList.Items {
+			nameList = append(nameList, v.Name)
+		}
+	case "serviceaccount":
+		saList, ok := objList.(*coreV1.ServiceAccountList)
+		if !ok {
+			errorMsg = "the data is not service account List Schema"
+			break
+		}
+		for _, v := range saList.Items {
+			nameList = append(nameList, v.Name)
+		}
 	}
 
 	if errorMsg != "" {
@@ -195,9 +218,37 @@ func getNamespacedResourceNameListHandler(c *sysadmServer.Context, module, actio
 }
 
 func getForApiNonNamespacedHandler(c *sysadmServer.Context, module, action string) {
-	// TODO
 	var errs []sysadmLog.Sysadmerror
 	errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400028, "info", "non namespaced handler for module  %s name with action %s", module, action))
+	requestKeys := []string{"clusterID", "objValue"}
+	requestData, e := getRequestData(c, requestKeys)
+	if e != nil {
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400029, "json", "操作错误，请稍后再试或联系系统管理员")
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400029, "error", "%s", e))
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400030, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
+	switch action {
+	case "getNameList":
+		getNonNamespacedResourceNameListHandler(c, module, requestData)
+		return
+	case "validateNewName":
+		validateNonNamespacedResourceNewName(c, module, requestData)
+	default:
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400031, "error", "action %s was not defined", action))
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400031, "json", "操作错误，请稍后再试或联系系统管理员")
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400032, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+
+		return
+	}
+
 	runData.logEntity.LogErrors(errs)
 	return
 }
@@ -288,5 +339,83 @@ func validateNamespacedResourceNewName(c *sysadmServer.Context, module string, r
 		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400027, "error", "%s", e1))
 	}
 	runData.logEntity.LogErrors(errs)
+	return
+}
+
+func getNonNamespacedResourceNameListHandler(c *sysadmServer.Context, module string, requestData map[string]string) {
+	var errs []sysadmLog.Sysadmerror
+
+	clientSet, e := buildClientSetByClusterID(requestData["clusterID"])
+	if e != nil {
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400033, "error", "%s", e))
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400033, "json", "操作错误，请稍后再试或联系系统管理员")
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400034, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
+	var objList interface{} = nil
+	var er error = nil
+	switch module {
+	case "ingressclass":
+		objList, er = clientSet.NetworkingV1().IngressClasses().List(context.Background(), metav1.ListOptions{})
+	default:
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400035, "error", "action of getNameList for module %s was not defined", module))
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400035, "json", "操作错误，请稍后再试或联系系统管理员")
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400036, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+	if er != nil {
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400037, "error", "%s", er))
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400037, "json", "操作错误，请稍后再试或联系系统管理员")
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400038, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
+	var nameList = []string{}
+	errorMsg := ""
+	switch module {
+	case "ingressclass":
+		ingressClassList, ok := objList.(*networkingV1.IngressClassList)
+		if !ok {
+			errorMsg = "the data is not ingress Classes List Schema"
+			break
+		}
+		for _, v := range ingressClassList.Items {
+			nameList = append(nameList, v.Name)
+		}
+	}
+
+	if errorMsg != "" {
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400039, "error", "%s", errorMsg))
+		e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 80001400039, "json", "操作错误，请稍后再试或联系系统管理员")
+		if e1 != nil {
+			errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400040, "error", "%s", e1))
+		}
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
+	e1 := apiutils.ResponseDataToClient(c, nil, http.StatusOK, 0, "json", nameList)
+	if e1 != nil {
+		errs = append(errs, sysadmLog.NewErrorWithStringLevel(80001400041, "error", "%s", e1))
+	}
+	runData.logEntity.LogErrors(errs)
+	return
+}
+
+func validateNonNamespacedResourceNewName(c *sysadmServer.Context, module string, requestData map[string]string) {
+	// var errs []sysadmLog.Sysadmerror
+
+	//TODO
+
 	return
 }

@@ -39,7 +39,7 @@ func (r *role) setObjectInfo() {
 	r.moduleName = "角色"
 	r.allPopMenuItems = allPopMenuItems
 	r.allListItems = allListItems
-	r.addButtonTile = ""
+	r.addButtonTile = "创建角色"
 	r.isSearchForm = "no"
 	r.allOrderFields = allOrderFields
 	r.defaultOrderField = "TD1"
@@ -181,6 +181,13 @@ func (r *role) getModuleID() string {
 }
 
 func (r *role) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建角色"
+	formData, e := objectsUI.InitFormData("addRole", "addRole", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
 	// TODO
 	return nil
 }
@@ -211,6 +218,14 @@ func (r *role) showResourceDetail(action string, tplData map[string]interface{},
 }
 
 func (r *role) getTemplateFile(action string) string {
+	switch action {
+	case "list":
+		return roleTemplateFiles["list"]
+	case "addform":
+		return roleTemplateFiles["addform"]
+	default:
+		return ""
+	}
+	return ""
 
-	return r.templateFile
 }

@@ -17,8 +17,8 @@
 
 package app
 
-var denyServiceWokloadNSList = []string{"kube-node-lease", "kube-system"}
+var denyPvcWokloadNSList = []string{"kube-node-lease", "kube-system"}
 
-var defaultServiceLabelKey = "service.app.name"
+var defaultPvcLabelKey = "pvc.app.name"
 
-var serviceTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}
+var pvcTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoFormResource.html"}

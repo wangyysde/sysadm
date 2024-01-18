@@ -39,7 +39,7 @@ func (c *clusterrole) setObjectInfo() {
 	c.moduleName = "集群角色"
 	c.allPopMenuItems = allPopMenuItems
 	c.allListItems = allListItems
-	c.addButtonTile = ""
+	c.addButtonTile = "创建集群角色"
 	c.isSearchForm = "no"
 	c.allOrderFields = allOrderFields
 	c.defaultOrderField = "TD1"
@@ -181,6 +181,13 @@ func (c *clusterrole) getModuleID() string {
 }
 
 func (c *clusterrole) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建集群角色"
+	formData, e := objectsUI.InitFormData("addClusterRole", "addClusterRole", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
 	// TODO
 	return nil
 }
@@ -211,6 +218,14 @@ func (c *clusterrole) showResourceDetail(action string, tplData map[string]inter
 }
 
 func (c *clusterrole) getTemplateFile(action string) string {
+	switch action {
+	case "list":
+		return clusterRoleTemplateFiles["list"]
+	case "addform":
+		return clusterRoleTemplateFiles["addform"]
+	default:
+		return ""
+	}
+	return ""
 
-	return c.templateFile
 }

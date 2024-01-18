@@ -212,6 +212,11 @@
     background-color: transparent;
 }
 
+.WorkloadForInputline span {
+    vertical-align: top;
+}
+
+
 .addNewContainerForm {
     width: 180px;
     height: 30px;

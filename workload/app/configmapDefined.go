@@ -17,8 +17,8 @@
 
 package app
 
-var denyServiceWokloadNSList = []string{"kube-node-lease", "kube-system"}
+var denyConfigMapWokloadNSList = []string{"kube-node-lease", "kube-public", "kube-system"}
 
-var defaultServiceLabelKey = "service.app.name"
+var defaultConfigMapLabelKey = "configmap.app.name"
 
-var serviceTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}
+var configMapTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}

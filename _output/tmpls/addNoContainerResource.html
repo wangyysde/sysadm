@@ -1,0 +1,216 @@
+<link rel="stylesheet" href="/css/formData.css">
+<link rel="stylesheet" href="/css/addWorkload.css">
+
+<script type="text/javascript" src="/js/formDataFunctions.js"></script>
+<script type="text/javascript" src="/js/addWorkload.js"></script>
+<script type="text/javascript" src="/js/base64.js"></script>
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index, $line := .addtionalCss }}
+<link rel="stylesheet" href="{{- $line -}}">
+{{end}}
+
+<script language="javascript1.2">
+    var pageUrl = {{.baseUri}};
+    var apiVersion = {{- .apiVersion -}};
+    var lastUrl = pageUrl + {{- .objID -}} + "/list" + "?dcID=" + {{- .dcID -}} + "&clusterID=" + {{- .clusterID -}} + "&namespace=" + {{- .namespace -}};
+    var editor = ace.edit("addWorkloadEditor");
+    var addFormId = {{- .formData.ID -}};
+    editor.setShowPrintMargin(false);
+    editor.setShowInvisibles( true );
+    editor.getSession().setMode("ace/mode/yaml" );
+
+</script>
+
+<!-- 导航信息和表单类型选卡 -->
+<div class="addWorkloadNavigation">
+    <span class="addWorkloadNavigationMain"> {{ .mainCategory }} </span>
+    <span class="addWorkloadNavigationSub"> {{ .subCategory }} </span>
+    {{if .thirdCategory }}
+    <span class="addWorkloadNavigationThird">{{ .thirdCategory }}</span>
+    {{end }}
+    <span class="addWorkloadNavigationBlock">
+        <span class="addWorkloadNavigationActiveCard" onclick="addWorkloadChangeType(0)">输入Yaml创建</span>
+        <span  onclick="addWorkloadChangeType(1)">从文件创建</span>
+        <span  onclick="addWorkloadChangeType(2)">从表单创建</span>
+    </span>
+</div>
+
+<!-- 表单及公共隐藏表单项 -->
+<form id="{{.formData.ID}}" name="{{.formData.Name}}" method="{{.formData.Method}}" target="{{.formData.Target}}" {{if .formData.Enctype}} enctype="multipart/form-data" {{end}} onsubmit="return false">
+<input type="hidden" name="dcID" id="dcID" value="{{.dcID}}">
+<input type="hidden" name="clusterID" id="clusterID" value="{{.clusterID}}">
+<input type="hidden" name="namespace"  id="namespace" value="{{.namespace}}">
+<input type="hidden" name="addType"  id="addType" value="0">
+<input type="hidden" name="objContent" id="objContent" value="">
+
+<!-- 通过yaml创建资源对应的选卡内容 -->
+<div name="addWorkloadFormTypeContent" class="addWorkloadContentArea">
+{{if .namespace }}
+    <div class="addWorkloadFormPartInfoForYaml">  输入 YAML，在{{.dcName }}数据中心的{{.clusterName}}集群内的{{.namespace}}命名空间里创建{{.objName}}资源</div>
+{{else}}
+    <div class="addWorkloadFormPartInfoForYaml">  输入 YAML，在{{.dcName }}数据中心的{{.clusterName}}集群内创建{{.objName}}资源</div>
+{{end}}
+    <div id="addWorkloadEditor">   </div>
+</div>
+
+<!-- 通过上传文件创建资源对应的选卡内容  -->
+<div  name="addWorkloadFormTypeContent" class="addWorkloadContentArea" style="display: none">
+{{if .namespace }}
+    <div class="addWorkloadFormPartInfoForYaml"> 上传包含YAML或JSON内容的文件，在{{.dcName }}数据中心的{{.clusterName}}集群内的{{.namespace}}命名空间里创建{{.objName}}资源</div>
+{{else}}
+    <div class="addWorkloadFormPartInfoForYaml"> 上传包含YAML或JSON内容的文件，在{{.dcName }}数据中心的{{.clusterName}}集群内创建{{.objName}}资源</div>
+{{end}}
+    <input id="objFile"  type="file" name="objFile" style="display: none" onChange='addObjChangeFilevalue("objFileDiv","objFile")'>
+    <input id="objFileButton" type="button" name="objFileButton" value="上传文件" onclick='addObjClickFileButton("objFile")' class="addWorkloadInputFileButton">
+    <div id="objFileDiv" style="display: inline-block"></div>
+</div>
+
+<!-- 通过表单创建资源对应的选卡内容 -->
+<div  name="addWorkloadFormTypeContent" class="addWorkloadContentArea" style="display: none">
+   <!-- 表单分部选卡 -->
+    <div class="formPartCartHeadLine">
+        <!-- 提示信息栏 -->
+        <span class="addWorkloadFormPartInfo">
+            {{if .namespace }}
+            正在{{.dcName }}数据中心的{{.clusterName}}集群内的{{.namespace}}命名空间里创建{{.objName}}资源
+            {{else}}
+            正在{{.dcName }}数据中心的{{.clusterName}}集群内创建{{.objName}}资源
+            {{end}}
+        </span>
+    </div>
+
+    <!-- 基本信息 -->
+    <div name="addWorkloadFormPartContent" >
+        {{range $index, $line := .BasicData }}
+          {{if $line.StartContainer }}
+            <div id="container{{- $line.ID}}"  {{if $line.NoDisplay }} style="display: none" {{end}}>
+          {{end}}
+
+          <!-- 每一行开始 -->
+          <div id="line{{- $line.ID}}" class="WorkloadForInputline" {{if $line.NoDisplay }} style="display: none" {{end}}>
+          <!-- 循环显示每一行内的所有表单项 -->
+          {{range $i,$item := $line.Data }}
+            {{if eq $item.Kind "LABEL" }}
+              <span id="span{{- $item.ID -}}" class="{{- $item.Size -}}Label{{- $item.WithLine -}}" {{if $item.NoDisplay}} style="display: none" {{end}}>
+                 {{- $item.Title }}
+              </span>
+            {{end}}
+
+            {{if eq $item.Kind "TEXT" }}
+              {{ if $item.NoDisplay }}
+                <span id="span{{- $item.ID -}}" style="display: none">
+              {{else}}
+                 <span id="span{{- $item.ID -}}" >
+              {{end}}
+              <span> {{$item.Title -}} </span>
+              <input id="{{$item.ID}}" type="text" name="{{$item.Name}}" {{if gt $item.Size 0}} size="{{$item.Size}}" {{end}}  {{if $item.Disable }} disabled {{end}} value="{{$item.DefaultValue}}" {{if $item.Title}} title="{{- $item.Title -}}" {{end}} {{if $item.ActionUri }} onblur="formDataTextInputValueChange({{$.formData.ID}},{{- $.formData.Method -}},{{- $.objID -}},{{$item.ActionUri}},this, {{$item.ActionFun}})" {{end}} >
+                     {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span></span> {{end}}
+              </span>
+            {{end}}
+
+            {{if eq $item.Kind "SELECT" }}
+              {{ if $item.NoDisplay }}
+                 <span id="span{{- $item.ID -}}" style="display: none">
+              {{else}}
+                 <span id="span{{- $item.ID -}}" >
+              {{end}}
+              <span> {{$item.Title -}} </span>
+              <select name="{{$item.Name}}" id="{{$item.ID}}" {{if $item.Size }} size="{{$item.Size}}" {{end}} {{if $item.Disable }} disabled {{end}}  {{if $item.Title}} title="{{- $item.Title -}}" {{end}} {{if $item.ActionUri }} onChange="formDataSelectInputValueChange({{$.formData.ID}},{{- $.objID -}},{{$item.ActionUri}}, this, {{$item.ActionFun}})" {{end}}>
+                 {{range $ii,$option := $item.Options }}
+                    {{if eq $item.SelectedValue $option.Value}}
+                        <option value="{{ $option.Value }}" selected> {{ $option.Text }} </option>
+                    {{else}}
+                        <option value="{{ $option.Value }}" > {{ $option.Text }} </option>
+                    {{end}}
+                 {{end}}
+              </select>
+              {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span> {{end}}
+              </span>
+            {{end}}
+
+            {{if eq $item.Kind "CHECKBOX" }}
+               <span id="span{{- $item.ID -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+                  <span>{{$item.Title -}} </span>
+                  {{range $ii,$option := $item.Options }}
+                     <input type="checkbox"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $option.Disabled}} disabled {{end}}  {{if $item.ActionFun }} onclick='formDataCheckBoxClick({{$.formData.ID}},{{- $.objID -}},{{$item.ID}},this, {{$item.ActionFun}})' {{end}}>
+                     {{$option.Text}}
+                 {{end}}
+               </span>
+            {{end}}
+
+            {{if eq $item.Kind "RADIO" }}
+               <span id="span{{- $item.ID -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+               <span>{{$item.Title -}}: </span>
+               {{range $ii,$option := $item.Options }}
+                  <input type="radio"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $option.Disabled}} disabled {{end}}  {{if $item.ActionFun }} onclick='formDataRadioClick({{$.formData.ID}},{{- $.objID -}},{{$item.ID}},this, {{$item.ActionFun}})' {{end}}>
+                  {{$option.Text}}
+              {{end}}
+              </span>
+            {{end}}
+
+            {{- if eq $item.Kind "FILE" -}}
+              <span id="span{{- $item.ID -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+                 <span>{{- $item.Title -}}: </span>
+                 <input id="{{$item.ID}}"  type="file" name="{{$item.Name}}" style="display: none" {{if $item.DefaultValue }} {{- $item.DefaultValue -}} {{end}} onChange='formDataFileInputValueChange("{{- $item.ID -}}Div","{{- $item.ID -}}")'>
+                 <input id="{{- $item.ID -}}Button" type="button" name="{{- $item.Name -}}Button" value="上传文件" onclick='formDataFileInputButtonClick("{{- $item.ID -}}")' class="formDataInputFileButton">
+                 <div id="{{- $item.ID -}}Div" style="display: inline-block"> {{if $item.DefaultValue }} {{- $item.DefaultValue -}} {{end}} </div>
+                 {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span> {{end}}
+             </span>
+            {{end}}
+
+            {{- if eq $item.Kind "TEXTAREA" -}}
+               <span id="span{{- $item.ID -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+                  <span>{{- $item.Title -}}: </span>
+                  <textarea id="{{$item.ID}}" name="{{$item.Name}}" cols="{{$item.ColNum}}"  rows="{{$item.RowNum}}"  value="{{$item.DefaultValue}}" {{if $item.ReadOnly}} readonly {{end}} {{if $item.ActionUri }} onblur="formDataTextareaInputValueChange({{$.formData.ID}},{{$item.ActionUri}},this, {{$item.ActionFun}})" {{end}} ></textarea>
+                  {{if $item.Note}} <span title="{{- $item.Note}}" style="cursor: pointer"> <span class="awesomeFont"> <b class="fa-question-circle"></b> </span> {{end}}
+               </span>
+            {{end}}
+
+            {{if eq $item.Kind "HIDDEN" }}
+                <input id="{{$item.ID}}" type="hidden" name="{{$item.Name}}"  value="{{$item.DefaultValue}}" >
+            {{end}}
+
+            {{if eq $item.Kind "WORDS" }}
+              <span id="span{{- $item.ID -}}" name="{{- $item.Name -}}" {{if $item.NoDisplay }} style="display: none" {{end}}>
+              {{if $item.Url }}
+                <a href="{{ $item.Url }}" {{if $item.ActionFun}} onclick="formDataWordsInputClick({{$.formData.ID}},{{- $.objID -}},{{- $line.ID -}},{{$item.ID}},{{- $item.Url -}},{{- $item.ActionFun -}},this)" {{end}}>
+                {{if $item.Awesome }}
+                   <span class="awesomeFont"> <b class="{{- $item.Word}} "></b> </span>
+                {{else}}
+                   {{- $item.Word -}}
+                {{end}}
+                </a>
+              {{else}}
+                {{if $item.Awesome }}
+                   <span class="awesomeFont"> <b class="{{- $item.Word}} "></b> </span>
+                {{else}}
+                   {{- $item.Word -}}
+                {{end}}
+              {{end}}
+              </span>
+            {{end}}
+
+         <!-- 行内表单项显示完成 -->
+          {{end}}
+          </div>
+          {{if $line.EndContainer }}
+            </div>
+          {{end}}
+        {{end}}
+
+    </div>
+
+</div>
+
+<!-- 提交按钮行 -->
+<div class="addWorkloadButtonline">
+   <button id="submitContent" onclick="forumDataSubmitForm({{.formData.ID}},{{.objID}},{{.formData.Method}},{{.formData.SubmitFn}})" >确定</button>
+   <button id="cancelContent" onclick="forumDataCancelForm({{.formData.ID}},{{.objID}},{{.formData.Method}},{{.formData.CancelFn}})" >取消</button>
+</div>
+
+</form>
+

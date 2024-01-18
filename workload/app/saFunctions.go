@@ -40,7 +40,7 @@ func (s *sa) setObjectInfo() {
 	s.moduleName = "服务帐号"
 	s.allPopMenuItems = allPopMenuItems
 	s.allListItems = allListItems
-	s.addButtonTile = ""
+	s.addButtonTile = "添加服务帐号"
 	s.isSearchForm = "no"
 	s.allOrderFields = allOrderFields
 	s.defaultOrderField = "TD1"
@@ -186,6 +186,13 @@ func (s *sa) getModuleID() string {
 }
 
 func (s *sa) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建服务帐号"
+	formData, e := objectsUI.InitFormData("addSa", "addSa", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
 	// TODO
 	return nil
 }
@@ -216,6 +223,13 @@ func (s *sa) showResourceDetail(action string, tplData map[string]interface{}, r
 }
 
 func (s *sa) getTemplateFile(action string) string {
-
-	return s.templateFile
+	switch action {
+	case "list":
+		return saTemplateFiles["list"]
+	case "addform":
+		return saTemplateFiles["addform"]
+	default:
+		return ""
+	}
+	return ""
 }

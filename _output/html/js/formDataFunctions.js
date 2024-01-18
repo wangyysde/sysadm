@@ -132,7 +132,6 @@ function formDataTextInputValueChange(formID,formMethod,module, uri,obj,fn){
 function formDataSelectInputValueChange(formID,module, uri,obj,fn){
     formID = formID.replace(/^\s+|\s+$/g," ");
     uri = uri.replace(/^\s+|\s+$/g," ");
-    obj = obj.replace(/^\s+|\s+$/g," ");
     fn = fn.replace(/^\s+|\s+$/g," ");
     var dcID = document.getElementById("dcID").value;
     var clusterID = document.getElementById("clusterID").value;
@@ -161,7 +160,6 @@ function formDataSelectInputValueChange(formID,module, uri,obj,fn){
 function formDataCheckBoxClick(formID,module,groupID,option,fn) {
     formID = formID.replace(/^\s+|\s+$/g, " ");
     groupID = groupID.replace(/^\s+|\s+$/g, " ");
-    option = option.replace(/^\s+|\s+$/g, " ");
     fn = fn.replace(/^\s+|\s+$/g, " ");
     var dcID = document.getElementById("dcID").value;
     var clusterID = document.getElementById("clusterID").value;

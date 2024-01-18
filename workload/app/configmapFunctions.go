@@ -23,9 +23,13 @@ import (
 	"github.com/wangyysde/sysadmServer"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	applyconfigCorev1 "k8s.io/client-go/applyconfigurations/core/v1"
 	"sort"
 	"strconv"
+	"strings"
+	"sysadm/k8sclient"
 	"sysadm/objectsUI"
+	"sysadm/utils"
 )
 
 func (c *configmap) setObjectInfo() {
@@ -37,10 +41,10 @@ func (c *configmap) setObjectInfo() {
 	templateFile := ""
 
 	c.mainModuleName = "配置和存储"
-	c.moduleName = "configmap"
+	c.moduleName = "配置字典"
 	c.allPopMenuItems = allPopMenuItems
 	c.allListItems = allListItems
-	c.addButtonTile = ""
+	c.addButtonTile = "创建配置字典"
 	c.isSearchForm = "no"
 	c.allOrderFields = allOrderFields
 	c.defaultOrderField = "TD1"
@@ -195,7 +199,18 @@ func (c *configmap) getModuleID() string {
 }
 
 func (c *configmap) buildAddFormData(tplData map[string]interface{}) error {
-	// TODO
+	tplData["thirdCategory"] = "创建数据字典"
+	formData, e := objectsUI.InitFormData("addConfigMap", "addConfigMap", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
+	e = buildConfigMapAddFormData(tplData)
+	if e != nil {
+		return e
+	}
+
 	return nil
 }
 
@@ -207,9 +222,91 @@ func (c *configmap) getAdditionalCss() []string {
 }
 
 func (c *configmap) addNewResource(s *sysadmServer.Context, module string) error {
-	// TODO
+	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name", "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]"}
+	requestKeys = append(requestKeys, "configmapkey[]", "isBinaryData[]", "configmapData[]")
+	formData, e := utils.GetMultipartData(s, requestKeys)
+	if e != nil {
+		return e
+	}
+	ns := formData["nsSelected"].([]string)
+	name := formData["name"].([]string)
+	configmapApplyConfig := applyconfigCorev1.ConfigMap(name[0], ns[0])
+	// 配置labels
+	labelKeys := formData["labelKey[]"].([]string)
+	labelValue := formData["labelValue[]"].([]string)
+	if len(labelKeys) != len(labelValue) {
+		return fmt.Errorf("label's key is not equal to label's value")
+	}
 
-	return nil
+	labels := make(map[string]string, 0)
+	if len(labelKeys) > 0 {
+		for i, k := range labelKeys {
+			value := labelValue[i]
+			labels[k] = value
+		}
+	} else {
+		labels[defaultConfigMapLabelKey] = name[0]
+	}
+	for k, v := range extraLabels {
+		labels[k] = v
+	}
+	configmapApplyConfig = configmapApplyConfig.WithLabels(labels)
+
+	// 配置注解
+	annotationKey := formData["annotationKey[]"].([]string)
+	annotationValue := formData["annotationValue[]"].([]string)
+	if len(annotationKey) != len(annotationValue) {
+		return fmt.Errorf("annotation's key is not equal to annotation's value")
+	}
+	annotations := make(map[string]string, 0)
+	for i, k := range annotationKey {
+		value := annotationValue[i]
+		annotations[k] = value
+	}
+	configmapApplyConfig = configmapApplyConfig.WithAnnotations(annotations)
+
+	configmapkeys := formData["configmapkey[]"].([]string)
+	isBinaryDatas := formData["isBinaryData[]"].([]string)
+	configmapDatas := formData["configmapData[]"].([]string)
+	if len(configmapkeys) < 1 {
+		return fmt.Errorf("there is not data in the new configmap")
+	}
+	asciiData := make(map[string]string)
+	binaryData := make(map[string][]byte)
+	var kSlice []string
+	for i, k := range configmapkeys {
+		if utils.FoundStrInSlice(kSlice, k, true) {
+			return fmt.Errorf("the k %s is duplicate", k)
+		}
+		kSlice = append(kSlice, k)
+		isBinary := isBinaryDatas[i]
+		if isBinary == "1" {
+			cmDataByte := []byte(strings.TrimSpace(configmapDatas[i]))
+			k = strings.TrimSpace(k)
+			binaryData[k] = cmDataByte
+		} else {
+			strData := configmapDatas[i]
+			asciiData[k] = strData
+		}
+	}
+
+	configmapApplyConfig = configmapApplyConfig.WithBinaryData(binaryData)
+	configmapApplyConfig = configmapApplyConfig.WithData(asciiData)
+
+	clusterIDSlice := formData["clusterID"].([]string)
+	clusterID := clusterIDSlice[0]
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	applyOption := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: k8sclient.FieldManager,
+	}
+
+	_, e = clientSet.CoreV1().ConfigMaps(ns[0]).Apply(context.Background(), configmapApplyConfig, applyOption)
+
+	return e
 }
 
 func (c *configmap) delResource(s *sysadmServer.Context, module string, requestData map[string]string) error {
@@ -226,5 +323,113 @@ func (c *configmap) showResourceDetail(action string, tplData map[string]interfa
 
 func (c *configmap) getTemplateFile(action string) string {
 
-	return c.templateFile
+	switch action {
+	case "list":
+		return configMapTemplateFiles["list"]
+	case "addform":
+		return configMapTemplateFiles["addform"]
+	}
+
+	return ""
+}
+
+func buildConfigMapAddFormData(tplData map[string]interface{}) error {
+	clusterID := tplData["clusterID"].(string)
+	if clusterID == "" || clusterID == "0" {
+		return fmt.Errorf("cluster must be specified when add a new configMap")
+	}
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	nsObjectList, e := clientSet.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+	if e != nil {
+		return e
+	}
+	nsExistList := []string{}
+	for _, item := range nsObjectList.Items {
+		found := false
+		for _, n := range denyStatefulSetWokloadNSList {
+			if strings.TrimSpace(strings.ToLower(item.Name)) == n {
+				found = true
+			}
+		}
+
+		if found {
+			continue
+		}
+		nsExistList = append(nsExistList, item.Name)
+
+	}
+
+	// 准备命名空间下拉菜单option数据
+	nsOptions := make(map[string]string, 0)
+	defaultSelectedNs := ""
+	for _, n := range nsExistList {
+		nsOptions[n] = n
+		if defaultSelectedNs == "" {
+			defaultSelectedNs = n
+		}
+	}
+
+	// 准备基本信息表单内容
+	var basicData []interface{}
+	lineData := objectsUI.InitLineData("basicInfoID", false, false, false)
+	_ = objectsUI.AddLabelData("basicInfoID", "mid", "Left", "基本信息", false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("namespaceSelectLine", false, false, false)
+	e = objectsUI.AddSelectData("nsSelectedID", "nsSelected", defaultSelectedNs, "", "", "选择命名空间", "", 1, false, false, nsOptions, lineData)
+	if e != nil {
+		return e
+	}
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("nameLine", false, false, false)
+	_ = objectsUI.AddTextData("name", "name", "", "字典名称", "validateNewName", "addWorkloadValidateNewName", "长度小于63个字母数字或-且以字母数据开开头和结尾的字符串", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newNsLabel", true, true, false)
+	_ = objectsUI.AddTextData("labelKey", "labelKey[]", "", "标签", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("labelValue", "labelValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("delLabel", "delLabel", "fa-trash", "#", "workloadDelLabel", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("addlabelanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("addLabel", "addLabel", "增加标签", "#", "workloadAddLabel", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newAnnotationLabel", true, true, false)
+	_ = objectsUI.AddTextData("annotationKey", "annotationKey[]", "", "注解", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("annotationValue", "annotationValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "fa-trash", "#", "workloadDelAnnotaion", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("annotationanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "增加注解", "#", "workloadAddAnnotation", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("configMapDataZoneID", false, false, false)
+	_ = objectsUI.AddLabelData("configMapDataZoneID", "mid", "Left", "字典数据", false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("configmapkeyID", true, true, false)
+	_ = objectsUI.AddTextData("configmapkeyID[]", "configmapkey[]", "", "Key", "", "", "", 20, false, false, lineData)
+
+	dataTypeOptions := make(map[string]string, 0)
+	dataTypeOptions["0"] = "文本数据"
+	dataTypeOptions["1"] = "二进制数据"
+	_ = objectsUI.AddSelectData("isBinaryData", "isBinaryData[]", "0", "", "", "数据类型： ", "", 1, false, false, dataTypeOptions, lineData)
+	_ = objectsUI.AddTextareaData("configmapDataID[]", "configmapData[]", "", "  数据", "", "", "", 60, 5, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("selectorLabel[]", "selectorLabel", "fa-trash", "#", "workloadDelSelector", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("configmapkeyID", false, false, true)
+	_ = objectsUI.AddWordsInputData("configmapkeyID", "configmapkey", "添加数据项", "#", "workloadAddSelectorBlock", false, false, lineData)
+	basicData = append(basicData, lineData)
+	tplData["BasicData"] = basicData
+
+	return nil
 }

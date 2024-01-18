@@ -17,8 +17,8 @@
 
 package app
 
-var denyServiceWokloadNSList = []string{"kube-node-lease", "kube-system"}
+var denyClusterRoleWokloadNSList = []string{"kube-node-lease", "kube-system"}
 
-var defaultServiceLabelKey = "service.app.name"
+var defaultClusterRoleLabelKey = "pv.app.name"
 
-var serviceTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}
+var clusterRoleTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoFormResource.html"}

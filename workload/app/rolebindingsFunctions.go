@@ -40,7 +40,7 @@ func (r *rolebindings) setObjectInfo() {
 	r.moduleName = "角色绑定"
 	r.allPopMenuItems = allPopMenuItems
 	r.allListItems = allListItems
-	r.addButtonTile = ""
+	r.addButtonTile = "添加角色绑定"
 	r.isSearchForm = "no"
 	r.allOrderFields = allOrderFields
 	r.defaultOrderField = "TD1"
@@ -189,6 +189,13 @@ func (r *rolebindings) getModuleID() string {
 }
 
 func (r *rolebindings) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建角色绑定"
+	formData, e := objectsUI.InitFormData("addRoleBindings", "addRoleBindings", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
 	// TODO
 	return nil
 }
@@ -219,6 +226,12 @@ func (r *rolebindings) showResourceDetail(action string, tplData map[string]inte
 }
 
 func (r *rolebindings) getTemplateFile(action string) string {
-
-	return r.templateFile
+	switch action {
+	case "list":
+		return roleBindingsTemplateFiles["list"]
+	case "addform":
+		return roleBindingsTemplateFiles["addform"]
+	default:
+		return ""
+	}
 }

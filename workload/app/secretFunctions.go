@@ -19,12 +19,19 @@ package app
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"github.com/wangyysde/sysadmServer"
+	apiCoreV1 "k8s.io/api/core/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	applyconfigCoreV1 "k8s.io/client-go/applyconfigurations/core/v1"
 	"sort"
+	"strings"
+	"sysadm/k8sclient"
 	"sysadm/objectsUI"
+	"sysadm/utils"
 )
 
 func (s *secret) setObjectInfo() {
@@ -36,10 +43,10 @@ func (s *secret) setObjectInfo() {
 	templateFile := ""
 
 	s.mainModuleName = "配置和存储"
-	s.moduleName = "Secrets"
+	s.moduleName = "密文"
 	s.allPopMenuItems = allPopMenuItems
 	s.allListItems = allListItems
-	s.addButtonTile = ""
+	s.addButtonTile = "添加密文"
 	s.isSearchForm = "no"
 	s.allOrderFields = allOrderFields
 	s.defaultOrderField = "TD1"
@@ -194,7 +201,147 @@ func (s *secret) getModuleID() string {
 }
 
 func (s *secret) buildAddFormData(tplData map[string]interface{}) error {
-	// TODO
+	tplData["thirdCategory"] = "创建密文"
+	formData, e := objectsUI.InitFormData("addSecret", "addSecret", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
+	clusterID := tplData["clusterID"].(string)
+	if clusterID == "" || clusterID == "0" {
+		return fmt.Errorf("cluster must be specified when add a new secret")
+	}
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	nsObjectList, e := clientSet.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+	if e != nil {
+		return e
+	}
+	nsExistList := []string{}
+	for _, item := range nsObjectList.Items {
+		found := false
+		for _, n := range denyStatefulSetWokloadNSList {
+			if strings.TrimSpace(strings.ToLower(item.Name)) == n {
+				found = true
+			}
+		}
+
+		if found {
+			continue
+		}
+		nsExistList = append(nsExistList, item.Name)
+
+	}
+
+	// 准备命名空间下拉菜单option数据
+	nsOptions := make(map[string]string, 0)
+	defaultSelectedNs := ""
+	for _, n := range nsExistList {
+		nsOptions[n] = n
+		if defaultSelectedNs == "" {
+			defaultSelectedNs = n
+		}
+	}
+
+	// 准备基本信息表单内容
+	var basicData []interface{}
+	lineData := objectsUI.InitLineData("basicInfoID", false, false, false)
+	_ = objectsUI.AddLabelData("basicInfoID", "mid", "Left", "基本信息", false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("namespaceSelectLine", false, false, false)
+	e = objectsUI.AddSelectData("nsSelectedID", "nsSelected", defaultSelectedNs, "", "", "选择命名空间", "", 1, false, false, nsOptions, lineData)
+	if e != nil {
+		return e
+	}
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("nameLine", false, false, false)
+	_ = objectsUI.AddTextData("name", "name", "", "字典名称", "validateNewName", "addWorkloadValidateNewName", "长度小于63个字母数字或-且以字母数据开开头和结尾的字符串", 30, false, false, lineData)
+	var immutableOptions []objectsUI.Option
+	immutableOptions, _ = objectsUI.AddCheckBoxOption("创建后不可修改", "1", false, false, immutableOptions)
+	_ = objectsUI.AddCheckBoxData("immutableID", "immutable", "", "", false, immutableOptions, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newNsLabel", true, true, false)
+	_ = objectsUI.AddTextData("labelKey", "labelKey[]", "", "标签", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("labelValue", "labelValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("delLabel", "delLabel", "fa-trash", "#", "workloadDelLabel", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("addlabelanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("addLabel", "addLabel", "增加标签", "#", "workloadAddLabel", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newAnnotationLabel", true, true, false)
+	_ = objectsUI.AddTextData("annotationKey", "annotationKey[]", "", "注解", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("annotationValue", "annotationValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "fa-trash", "#", "workloadDelAnnotaion", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("annotationanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "增加注解", "#", "workloadAddAnnotation", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("configMapDataZoneID", false, false, false)
+	_ = objectsUI.AddLabelData("configMapDataZoneID", "mid", "Left", "字典数据", false, lineData)
+	basicData = append(basicData, lineData)
+
+	var secretTypeOptions []objectsUI.Option
+	secretTypeOption := objectsUI.Option{Text: "Opaque", Value: "0", Checked: true, Disabled: false}
+	secretTypeOptions = append(secretTypeOptions, secretTypeOption)
+	secretTypeOption = objectsUI.Option{Text: "镜像仓库密码", Value: "1", Checked: false, Disabled: false}
+	secretTypeOptions = append(secretTypeOptions, secretTypeOption)
+	secretTypeOption = objectsUI.Option{Text: "Service Account Token", Value: "2", Checked: false, Disabled: false}
+	secretTypeOptions = append(secretTypeOptions, secretTypeOption)
+	secretTypeOption = objectsUI.Option{Text: "TLS", Value: "3", Checked: false, Disabled: false}
+	secretTypeOptions = append(secretTypeOptions, secretTypeOption)
+	lineData = objectsUI.InitLineData("secretTypeLineID", false, false, false)
+	_ = objectsUI.AddRadioData("secretTypeID", "secretType", "密文类型", "secretTypeChangedForAddSecret", false, secretTypeOptions, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("OpaquekeyID", true, true, false)
+	_ = objectsUI.AddTextData("opaquekeyID[]", "opaquekey[]", "", "Key", "", "", "", 20, false, false, lineData)
+	_ = objectsUI.AddTextareaData("opaqueDataID[]", "opaqueData[]", "", "  数据", "", "", "", 60, 5, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("selectorLabel[]", "selectorLabel", "fa-trash", "#", "workloadDelSelector", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("OpaqueAnchorID", false, false, false)
+	_ = objectsUI.AddWordsInputData("opaquekeyID", "opaquekey", "添加数据项", "#", "workloadAddSelectorBlock", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("registryServerLine", false, false, true)
+	_ = objectsUI.AddTextData("registryServerID", "registryServer", "", "镜像仓库地址:", "", "", "不带HTTP和HTTPS的镜像仓库访问地址,如hb.sysad.cn", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("registryUsernameLine", false, false, true)
+	_ = objectsUI.AddTextData("registryUsernameID", "registryusername", "", "用户名:", "", "", "登陆镜像仓库的用户名", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("registryPasswordLine", false, false, true)
+	_ = objectsUI.AddTextData("registryPasswordID", "registryPassword", "", "用户名:", "", "", "登陆镜像仓库的密码", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	saOptions := make(map[string]string, 0)
+	saOptions["0"] = "===选择SA==="
+	lineData = objectsUI.InitLineData("saSelectLine", false, false, true)
+	_ = objectsUI.AddSelectData("saSelectID", "saSelected", "0", "", "", "选择SA", "", 1, false, false, saOptions, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("certLine", false, false, true)
+	_ = objectsUI.AddTextareaData("certID[]", "cert", "", "证书内容: ", "", "", "", 60, 5, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("keyLine", false, false, true)
+	_ = objectsUI.AddTextareaData("keyID[]", "key", "", "密钥内容: ", "", "", "", 60, 5, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	tplData["BasicData"] = basicData
 	return nil
 }
 
@@ -206,9 +353,137 @@ func (s *secret) getAdditionalCss() []string {
 }
 
 func (s *secret) addNewResource(c *sysadmServer.Context, module string) error {
-	// TODO
+	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name"}
+	requestKeys = append(requestKeys, "immutable", "secretType", "opaquekey[]", "opaqueData[]", "registryServer")
+	requestKeys = append(requestKeys, "registryusername", "registryPassword", "saSelected", "cert", "key")
+	requestKeys = append(requestKeys, "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]")
+	formData, e := utils.GetMultipartData(c, requestKeys)
+	if e != nil {
+		return e
+	}
+	ns := formData["nsSelected"].([]string)
+	name := formData["name"].([]string)
+	secretApplyConfig := applyconfigCoreV1.Secret(name[0], ns[0])
 
-	return nil
+	// 配置labels
+	labelKeys := formData["labelKey[]"].([]string)
+	labelValue := formData["labelValue[]"].([]string)
+	if len(labelKeys) != len(labelValue) {
+		return fmt.Errorf("label's key is not equal to label's value")
+	}
+
+	labels := make(map[string]string, 0)
+	if len(labelKeys) > 0 {
+		for i, k := range labelKeys {
+			value := labelValue[i]
+			labels[k] = value
+		}
+	} else {
+		labels[defaultSecretLabelKey] = name[0]
+	}
+	for k, v := range extraLabels {
+		labels[k] = v
+	}
+	secretApplyConfig = secretApplyConfig.WithLabels(labels)
+
+	// 配置注解
+	annotationKey := formData["annotationKey[]"].([]string)
+	annotationValue := formData["annotationValue[]"].([]string)
+	if len(annotationKey) != len(annotationValue) {
+		return fmt.Errorf("annotation's key is not equal to annotation's value")
+	}
+	annotations := make(map[string]string, 0)
+	for i, k := range annotationKey {
+		value := annotationValue[i]
+		annotations[k] = value
+	}
+	secretApplyConfig = secretApplyConfig.WithAnnotations(annotations)
+
+	immutable := formData["immutable"].([]string)
+	isMmutable := false
+	if len(immutable) > 0 {
+		immutableStr := strings.TrimSpace(immutable[0])
+		if immutableStr == "1" {
+			isMmutable = true
+		}
+	}
+	secretApplyConfig.Immutable = &isMmutable
+
+	secretData := make(map[string][]byte, 0)
+	secretStringData := make(map[string]string, 0)
+
+	secretTypeStr := strings.TrimSpace(formData["secretType"].([]string)[0])
+	var secretType *apiCoreV1.SecretType
+	switch secretTypeStr {
+	case "0":
+		tmpSecretType := apiCoreV1.SecretTypeOpaque
+		secretType = &tmpSecretType
+		opaquekeys := formData["opaquekey[]"].([]string)
+		opaqueDatas := formData["opaqueData[]"].([]string)
+		var addedKeys []string
+		for i, k := range opaquekeys {
+			k = strings.TrimSpace(k)
+			if utils.FoundStrInSlice(addedKeys, k, true) {
+				return fmt.Errorf("the data key %s is duplicate")
+			}
+			addedKeys = append(addedKeys, k)
+			data := strings.TrimSpace(opaqueDatas[i])
+			secretStringData[k] = data
+		}
+	case "1":
+		tmpSecretType := apiCoreV1.SecretTypeDockerConfigJson
+		secretType = &tmpSecretType
+		registryusername := strings.TrimSpace(formData["registryusername"].([]string)[0])
+		registryPassword := strings.TrimSpace(formData["registryPassword"].([]string)[0])
+		registryServer := strings.TrimSpace(formData["registryServer"].([]string)[0])
+		authStr := registryusername + ":" + registryPassword
+		authEncodeStr := base64.StdEncoding.EncodeToString([]byte(authStr))
+		auths := RegistryAuths{}
+		auth := RegistryHost{registryServer: RegistryAuth{Auth: authEncodeStr}}
+		auths.Auths = auth
+		jsonStr, e := json.Marshal(auths)
+		if e != nil {
+			return e
+		}
+		secretStringData[".dockerconfigjson"] = string(jsonStr)
+	case "2":
+		saSelected := strings.TrimSpace(formData["saSelected"].([]string)[0])
+		if saSelected == "0" {
+			return fmt.Errorf("service accout %s is not valid")
+		}
+		tmpSecretType := apiCoreV1.SecretTypeServiceAccountToken
+		secretType = &tmpSecretType
+		annotations := secretApplyConfig.Annotations
+		annotations["kubernetes.io/service-account.name"] = saSelected
+		secretApplyConfig = secretApplyConfig.WithAnnotations(annotations)
+	case "3":
+		cert := strings.TrimSpace(formData["cert"].([]string)[0])
+		key := strings.TrimSpace(formData["key"].([]string)[0])
+		tmpSecretType := apiCoreV1.SecretTypeTLS
+		secretType = &tmpSecretType
+		certEncodeStr := base64.StdEncoding.EncodeToString([]byte(cert))
+		keyEncodeStr := base64.StdEncoding.EncodeToString([]byte(key))
+		secretData["tls.crt"] = []byte(certEncodeStr)
+		secretData["tls.key"] = []byte(keyEncodeStr)
+	}
+	secretApplyConfig.Type = secretType
+	secretApplyConfig.Data = secretData
+	secretApplyConfig.StringData = secretStringData
+
+	clusterIDSlice := formData["clusterID"].([]string)
+	clusterID := clusterIDSlice[0]
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	applyOption := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: k8sclient.FieldManager,
+	}
+
+	_, e = clientSet.CoreV1().Secrets(ns[0]).Apply(context.Background(), secretApplyConfig, applyOption)
+
+	return e
 }
 
 func (s *secret) delResource(c *sysadmServer.Context, module string, requestData map[string]string) error {
@@ -224,6 +499,15 @@ func (s *secret) showResourceDetail(action string, tplData map[string]interface{
 }
 
 func (s *secret) getTemplateFile(action string) string {
+	switch action {
+	case "list":
+		return secretTemplateFiles["list"]
+	case "addform":
+		return secretTemplateFiles["addform"]
+	default:
+		return ""
 
-	return s.templateFile
+	}
+	return ""
+
 }

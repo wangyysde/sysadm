@@ -39,7 +39,7 @@ func (i *ingressclass) setObjectInfo() {
 	i.moduleName = "Ingress Classes"
 	i.allPopMenuItems = allPopMenuItems
 	i.allListItems = allListItems
-	i.addButtonTile = ""
+	i.addButtonTile = "添加IngressClasses"
 	i.isSearchForm = "no"
 	i.allOrderFields = allOrderFields
 	i.defaultOrderField = "TD1"

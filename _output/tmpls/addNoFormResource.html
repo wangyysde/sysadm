@@ -1,0 +1,79 @@
+<!-- 本文件来自于addNoContainerResource.html 除去了"从表单创建"部分内容 -->
+<link rel="stylesheet" href="/css/formData.css">
+<link rel="stylesheet" href="/css/addWorkload.css">
+
+<script type="text/javascript" src="/js/formDataFunctions.js"></script>
+<script type="text/javascript" src="/js/addWorkload.js"></script>
+<script type="text/javascript" src="/js/base64.js"></script>
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index, $line := .addtionalCss }}
+<link rel="stylesheet" href="{{- $line -}}">
+{{end}}
+
+<script language="javascript1.2">
+    var pageUrl = {{.baseUri}};
+    var apiVersion = {{- .apiVersion -}};
+    var lastUrl = pageUrl + {{- .objID -}} + "/list" + "?dcID=" + {{- .dcID -}} + "&clusterID=" + {{- .clusterID -}} + "&namespace=" + {{- .namespace -}};
+    var editor = ace.edit("addWorkloadEditor");
+    var addFormId = {{- .formData.ID -}};
+    editor.setShowPrintMargin(false);
+    editor.setShowInvisibles( true );
+    editor.getSession().setMode("ace/mode/yaml" );
+
+</script>
+
+<!-- 导航信息和表单类型选卡 -->
+<div class="addWorkloadNavigation">
+    <span class="addWorkloadNavigationMain"> {{ .mainCategory }} </span>
+    <span class="addWorkloadNavigationSub"> {{ .subCategory }} </span>
+    {{if .thirdCategory }}
+    <span class="addWorkloadNavigationThird">{{ .thirdCategory }}</span>
+    {{end }}
+    <span class="addWorkloadNavigationBlock">
+        <span class="addWorkloadNavigationActiveCard" onclick="addWorkloadChangeType(0)">输入Yaml创建</span>
+        <span  onclick="addWorkloadChangeType(1)">从文件创建</span>
+    </span>
+</div>
+
+<!-- 表单及公共隐藏表单项 -->
+<form id="{{.formData.ID}}" name="{{.formData.Name}}" method="{{.formData.Method}}" target="{{.formData.Target}}" {{if .formData.Enctype}} enctype="multipart/form-data" {{end}} onsubmit="return false">
+<input type="hidden" name="dcID" id="dcID" value="{{.dcID}}">
+<input type="hidden" name="clusterID" id="clusterID" value="{{.clusterID}}">
+<input type="hidden" name="namespace"  id="namespace" value="{{.namespace}}">
+<input type="hidden" name="addType"  id="addType" value="0">
+<input type="hidden" name="objContent" id="objContent" value="">
+
+<!-- 通过yaml创建资源对应的选卡内容 -->
+<div name="addWorkloadFormTypeContent" class="addWorkloadContentArea">
+{{if .namespace }}
+    <div class="addWorkloadFormPartInfoForYaml">  输入 YAML，在{{.dcName }}数据中心的{{.clusterName}}集群内的{{.namespace}}命名空间里创建{{.objName}}资源</div>
+{{else}}
+    <div class="addWorkloadFormPartInfoForYaml">  输入 YAML，在{{.dcName }}数据中心的{{.clusterName}}集群内创建{{.objName}}资源</div>
+{{end}}
+    <div id="addWorkloadEditor">   </div>
+</div>
+
+<!-- 通过上传文件创建资源对应的选卡内容  -->
+<div  name="addWorkloadFormTypeContent" class="addWorkloadContentArea" style="display: none">
+{{if .namespace }}
+    <div class="addWorkloadFormPartInfoForYaml"> 上传包含YAML或JSON内容的文件，在{{.dcName }}数据中心的{{.clusterName}}集群内的{{.namespace}}命名空间里创建{{.objName}}资源</div>
+{{else}}
+    <div class="addWorkloadFormPartInfoForYaml"> 上传包含YAML或JSON内容的文件，在{{.dcName }}数据中心的{{.clusterName}}集群内创建{{.objName}}资源</div>
+{{end}}
+    <input id="objFile"  type="file" name="objFile" style="display: none" onChange='addObjChangeFilevalue("objFileDiv","objFile")'>
+    <input id="objFileButton" type="button" name="objFileButton" value="上传文件" onclick='addObjClickFileButton("objFile")' class="addWorkloadInputFileButton">
+    <div id="objFileDiv" style="display: inline-block"></div>
+</div>
+
+<!-- 提交按钮行 -->
+<div class="addWorkloadButtonline">
+   <button id="submitContent" onclick="forumDataSubmitForm({{.formData.ID}},{{.objID}},{{.formData.Method}},{{.formData.SubmitFn}})" >确定</button>
+   <button id="cancelContent" onclick="forumDataCancelForm({{.formData.ID}},{{.objID}},{{.formData.Method}},{{.formData.CancelFn}})" >取消</button>
+</div>
+
+</form>
+

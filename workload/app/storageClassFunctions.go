@@ -37,10 +37,10 @@ func (s *storageclass) setObjectInfo() {
 	templateFile := ""
 
 	s.mainModuleName = "配置和存储"
-	s.moduleName = "Storage Classes"
+	s.moduleName = "存储类"
 	s.allPopMenuItems = allPopMenuItems
 	s.allListItems = allListItems
-	s.addButtonTile = ""
+	s.addButtonTile = "创建存储类"
 	s.isSearchForm = "no"
 	s.allOrderFields = allOrderFields
 	s.defaultOrderField = "TD1"
@@ -198,7 +198,14 @@ func (s *storageclass) getModuleID() string {
 }
 
 func (s *storageclass) buildAddFormData(tplData map[string]interface{}) error {
-	// TODO
+	tplData["thirdCategory"] = "创建存储类"
+	formData, e := objectsUI.InitFormData("addStorageClass", "addStorageClass", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
+	//TODO
 	return nil
 }
 
@@ -228,6 +235,14 @@ func (s *storageclass) showResourceDetail(action string, tplData map[string]inte
 }
 
 func (s *storageclass) getTemplateFile(action string) string {
+	switch action {
+	case "list":
+		return storageClassTemplateFiles["list"]
+	case "addform":
+		return storageClassTemplateFiles["addform"]
+	default:
+		return ""
+	}
 
-	return s.templateFile
+	return ""
 }

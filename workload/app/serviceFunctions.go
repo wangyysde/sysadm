@@ -24,8 +24,13 @@ import (
 	"html/template"
 	coreV1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
+	applyconfigCoreV1 "k8s.io/client-go/applyconfigurations/core/v1"
 	"strconv"
+	"strings"
+	"sysadm/k8sclient"
 	"sysadm/objectsUI"
+	"sysadm/utils"
 )
 
 func (s *service) setObjectInfo() {
@@ -199,8 +204,6 @@ func (s *service) buildAddFormData(tplData map[string]interface{}) error {
 		return e
 	}
 
-	//TODO
-
 	return nil
 }
 
@@ -212,9 +215,169 @@ func (s *service) getAdditionalCss() []string {
 }
 
 func (s *service) addNewResource(c *sysadmServer.Context, module string) error {
-	// TODO
+	requestKeys := []string{"dcid", "clusterID", "namespace", "addType", "nsSelected", "name", "serviceType", "portName[]", "protocol[]", "port[]", "targetPort[]", "nodePort[]"}
+	requestKeys = append(requestKeys, "externalIPs", "selectorKey[]")
+	requestKeys = append(requestKeys, "selectorValue[]")
+	requestKeys = append(requestKeys, "labelKey[]", "labelValue[]", "annotationKey[]", "annotationValue[]")
+	formData, e := utils.GetMultipartData(c, requestKeys)
+	if e != nil {
+		return e
+	}
+	ns := formData["nsSelected"].([]string)
+	name := formData["name"].([]string)
+	serviceApplyConfig := applyconfigCoreV1.Service(name[0], ns[0])
 
-	return nil
+	// 配置labels
+	labelKeys := formData["labelKey[]"].([]string)
+	labelValue := formData["labelValue[]"].([]string)
+	if len(labelKeys) != len(labelValue) {
+		return fmt.Errorf("label's key is not equal to label's value")
+	}
+
+	labels := make(map[string]string, 0)
+	if len(labelKeys) > 0 {
+		for i, k := range labelKeys {
+			value := labelValue[i]
+			labels[k] = value
+		}
+	} else {
+		labels[defaultServiceLabelKey] = name[0]
+	}
+	for k, v := range extraLabels {
+		labels[k] = v
+	}
+	serviceApplyConfig = serviceApplyConfig.WithLabels(labels)
+
+	// 配置注解
+	annotationKey := formData["annotationKey[]"].([]string)
+	annotationValue := formData["annotationValue[]"].([]string)
+	if len(annotationKey) != len(annotationValue) {
+		return fmt.Errorf("annotation's key is not equal to annotation's value")
+	}
+	annotations := make(map[string]string, 0)
+	for i, k := range annotationKey {
+		value := annotationValue[i]
+		annotations[k] = value
+	}
+	serviceApplyConfig = serviceApplyConfig.WithAnnotations(annotations)
+
+	serviceSpecApplyConfiguration := applyconfigCoreV1.ServiceSpecApplyConfiguration{}
+
+	serviceTypeStr := strings.TrimSpace(formData["serviceType"].([]string)[0])
+	serviceType := coreV1.ServiceTypeClusterIP
+	switch coreV1.ServiceType(serviceTypeStr) {
+	case coreV1.ServiceTypeClusterIP:
+		serviceType = coreV1.ServiceTypeClusterIP
+	case coreV1.ServiceTypeNodePort:
+		serviceType = coreV1.ServiceTypeNodePort
+	case coreV1.ServiceTypeLoadBalancer:
+		serviceType = coreV1.ServiceTypeLoadBalancer
+	case coreV1.ServiceTypeExternalName:
+		serviceType = coreV1.ServiceTypeExternalName
+	}
+	serviceSpecApplyConfiguration.Type = &serviceType
+
+	externalIP := strings.TrimSpace(formData["externalIPs"].([]string)[0])
+	if externalIP != "" {
+		externalIPs := strings.Split(externalIP, ";")
+		serviceSpecApplyConfiguration.ExternalIPs = externalIPs
+	}
+
+	var applyPorts []applyconfigCoreV1.ServicePortApplyConfiguration
+	portNames := formData["portName[]"].([]string)
+	protocols := formData["protocol[]"].([]string)
+	ports := formData["port[]"].([]string)
+	targetPorts := formData["targetPort[]"].([]string)
+	nodePorts := formData["nodePort[]"].([]string)
+	for i, n := range portNames {
+		servicePortApplyConfiguration := applyconfigCoreV1.ServicePortApplyConfiguration{}
+		protocolStr := strings.TrimSpace(protocols[i])
+		n = strings.TrimSpace(n)
+		portStr := ports[i]
+		if n != "" {
+			portName := n
+			servicePortApplyConfiguration.Name = &portName
+		} else {
+			portName := strings.ToLower(protocolStr) + "-" + portStr
+			servicePortApplyConfiguration.Name = &portName
+		}
+
+		protocol := coreV1.ProtocolTCP
+		switch protocolStr {
+		case "TCP":
+			protocol = coreV1.ProtocolTCP
+		case "UDP":
+			protocol = coreV1.ProtocolUDP
+		case "SCTP":
+			protocol = coreV1.ProtocolSCTP
+		default:
+			protocol = coreV1.ProtocolTCP
+		}
+		servicePortApplyConfiguration.Protocol = &protocol
+
+		if strings.TrimSpace(portStr) != "" {
+			portInt, e := strconv.Atoi(portStr)
+			if e != nil {
+				return e
+			}
+			portInt32 := int32(portInt)
+			servicePortApplyConfiguration.Port = &portInt32
+		}
+
+		targetPortStr := targetPorts[i]
+		if strings.TrimSpace(targetPortStr) != "" {
+			targetPortInt, e := strconv.Atoi(targetPortStr)
+			if e != nil {
+				return e
+			}
+			targetPortInt32 := int32(targetPortInt)
+			intOrStr := intstr.IntOrString{Type: intstr.Int, IntVal: targetPortInt32}
+			servicePortApplyConfiguration.TargetPort = &intOrStr
+		}
+
+		if serviceType == coreV1.ServiceTypeNodePort {
+			nodePortStr := nodePorts[i]
+			if nodePortStr != "" {
+				nodePortInt, e := strconv.Atoi(nodePortStr)
+				if e != nil {
+					return e
+				}
+				nodePortInt32 := int32(nodePortInt)
+				servicePortApplyConfiguration.NodePort = &nodePortInt32
+			}
+		}
+
+		applyPorts = append(applyPorts, servicePortApplyConfiguration)
+	}
+	serviceSpecApplyConfiguration.Ports = applyPorts
+
+	selectorKeys := formData["selectorKey[]"].([]string)
+	selectorValue := formData["selectorValue[]"].([]string)
+	if len(selectorKeys) != len(selectorValue) {
+		return fmt.Errorf("selector's key is not equal to selector's value")
+	}
+	selectors := make(map[string]string, 0)
+	for i, k := range selectorKeys {
+		value := selectorValue[i]
+		selectors[k] = value
+	}
+	serviceSpecApplyConfiguration.Selector = selectors
+	serviceApplyConfig = serviceApplyConfig.WithSpec(&serviceSpecApplyConfiguration)
+
+	clusterIDSlice := formData["clusterID"].([]string)
+	clusterID := clusterIDSlice[0]
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	applyOption := metav1.ApplyOptions{
+		Force:        true,
+		FieldManager: k8sclient.FieldManager,
+	}
+
+	_, e = clientSet.CoreV1().Services(ns[0]).Apply(context.Background(), serviceApplyConfig, applyOption)
+
+	return e
 
 }
 
@@ -244,7 +407,121 @@ func (s *service) getTemplateFile(action string) string {
 }
 
 func buildServiceBasiceFormData(tplData map[string]interface{}) error {
-	// TODO
+	clusterID := tplData["clusterID"].(string)
+	if clusterID == "" || clusterID == "0" {
+		return fmt.Errorf("cluster must be specified when add a new deployment")
+	}
+	clientSet, e := buildClientSetByClusterID(clusterID)
+	if e != nil {
+		return e
+	}
+	nsObjectList, e := clientSet.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+	if e != nil {
+		return e
+	}
+	nsExistList := []string{}
+	for _, item := range nsObjectList.Items {
+		found := false
+		for _, n := range denyDeployWokloadNSList {
+			if strings.TrimSpace(strings.ToLower(item.Name)) == n {
+				found = true
+			}
+		}
+
+		if found {
+			continue
+		}
+		nsExistList = append(nsExistList, item.Name)
+
+	}
+
+	// 准备命名空间下拉菜单option数据
+	nsOptions := make(map[string]string, 0)
+	defaultSelectedNs := ""
+	for _, n := range nsExistList {
+		nsOptions[n] = n
+		if defaultSelectedNs == "" {
+			defaultSelectedNs = n
+		}
+	}
+
+	// 准备基本信息表单内容
+	var basicData []interface{}
+	lineData := objectsUI.InitLineData("namespaceSelectLine", false, false, false)
+	e = objectsUI.AddSelectData("nsSelectedID", "nsSelected", defaultSelectedNs, "", "", "选择命名空间", "", 1, false, false, nsOptions, lineData)
+	if e != nil {
+		return e
+	}
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("nameLine", false, false, false)
+	_ = objectsUI.AddTextData("name", "name", "", "服务名称", "validateNewName", "addWorkloadValidateNewName", "长度小于63个字母数字或-且以字母数据开开头和结尾的字符串", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	serviceTypeOptions := make(map[string]string, 0)
+	serviceTypeOptions[string(coreV1.ServiceTypeClusterIP)] = "ClusterIP"
+	serviceTypeOptions[string(coreV1.ServiceTypeNodePort)] = "NodePort"
+	serviceTypeOptions[string(coreV1.ServiceTypeLoadBalancer)] = "LoadBalancer"
+	serviceTypeOptions[string(coreV1.ServiceTypeExternalName)] = "ExternalName"
+	lineData = objectsUI.InitLineData("serviceTypeLine", false, false, false)
+	_ = objectsUI.AddSelectData("serviceType", "serviceType", string(coreV1.ServiceTypeClusterIP), "", "", "服务类型", "", 1, false, false, serviceTypeOptions, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("externalIPsLine", false, false, false)
+	_ = objectsUI.AddTextData("externalIPs", "externalIPs", "", "外部IP地址", "", "", "可不填，多个时用;分隔，例IP1;IP2", 30, false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("portData", true, true, false)
+	_ = objectsUI.AddTextData("portName", "portName[]", "", "端口名称", "", "", "可以不填", 10, false, false, lineData)
+	portOptions := make(map[string]string, 0)
+	portOptions["TCP"] = "TCP"
+	portOptions["UDP"] = "UDP"
+	portOptions["SCTP"] = "SCTP"
+	_ = objectsUI.AddSelectData("protocol", "protocol[]", "TCP", "", "", "协议", "", 1, false, false, portOptions, lineData)
+	_ = objectsUI.AddTextData("port", "port[]", "", "外部端口", "", "", "集群内不同应用互访问和LB,ClusterIP外部端口号", 10, false, false, lineData)
+	_ = objectsUI.AddTextData("targetPort", "targetPort[]", "", "目标端口", "", "", "目标端口，即容器服务侦听的端口号", 10, false, false, lineData)
+	_ = objectsUI.AddTextData("nodePort", "nodePort[]", "", "NodePort端口", "", "", "NodePort.当服务类型为NodePort时必填", 10, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("selectorLabel", "selectorLabel", "fa-trash", "#", "workloadDelSelector", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("portData", false, false, false)
+	_ = objectsUI.AddWordsInputData("portData", "portData", "添加端口数据", "#", "workloadAddSelectorBlock", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("selectorLabel", true, true, false)
+	_ = objectsUI.AddTextData("selectornKey", "selectorKey[]", "", "标签选择器", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("selectorValue", "selectorValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("selectorLabel", "selectorLabel", "fa-trash", "#", "workloadDelSelector", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("selectoranchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("selectorLabel", "selectorLabel", "添加选择器", "#", "workloadAddSelector", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newNsLabel", true, true, false)
+	_ = objectsUI.AddTextData("labelKey", "labelKey[]", "", "标签", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("labelValue", "labelValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("delLabel", "delLabel", "fa-trash", "#", "workloadDelLabel", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("addlabelanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("addLabel", "addLabel", "增加标签", "#", "workloadAddLabel", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("newAnnotationLabel", true, true, false)
+	_ = objectsUI.AddTextData("annotationKey", "annotationKey[]", "", "注解", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("equal", "equal", "=", "", "", false, false, lineData)
+	_ = objectsUI.AddTextData("annotationValue", "annotationValue[]", "", "值", "", "", "", 30, false, false, lineData)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "fa-trash", "#", "workloadDelAnnotaion", false, true, lineData)
+	basicData = append(basicData, lineData)
+
+	lineData = objectsUI.InitLineData("annotationanchor", false, false, false)
+	_ = objectsUI.AddWordsInputData("annotationLabel", "annotationLabel", "增加注解", "#", "workloadAddAnnotation", false, false, lineData)
+	basicData = append(basicData, lineData)
+
+	tplData["BasicData"] = basicData
 
 	return nil
 }

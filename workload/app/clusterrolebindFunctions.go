@@ -40,7 +40,7 @@ func (c *clusterrolebind) setObjectInfo() {
 	c.moduleName = "集群角色绑定"
 	c.allPopMenuItems = allPopMenuItems
 	c.allListItems = allListItems
-	c.addButtonTile = ""
+	c.addButtonTile = "添加集群角色绑定"
 	c.isSearchForm = "no"
 	c.allOrderFields = allOrderFields
 	c.defaultOrderField = "TD1"
@@ -188,7 +188,14 @@ func (c *clusterrolebind) getModuleID() string {
 }
 
 func (c *clusterrolebind) buildAddFormData(tplData map[string]interface{}) error {
-	// TODO
+	tplData["thirdCategory"] = "创建集群角色绑定"
+	formData, e := objectsUI.InitFormData("addClusterRoleBinding", "addClusterRoleBinding", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
+
+	//TODO
 	return nil
 }
 
@@ -218,6 +225,12 @@ func (c *clusterrolebind) showResourceDetail(action string, tplData map[string]i
 }
 
 func (c *clusterrolebind) getTemplateFile(action string) string {
-
-	return c.templateFile
+	switch action {
+	case "list":
+		return roleBindingsTemplateFiles["list"]
+	case "addform":
+		return roleBindingsTemplateFiles["addform"]
+	default:
+		return ""
+	}
 }

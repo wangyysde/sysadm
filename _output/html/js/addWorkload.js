@@ -1454,3 +1454,201 @@ function workloadAddSelectorBlock(formID,module,dcID,clusterID,namespace,lineID,
 
     return;
 }
+
+function switchDisplayStatusForCheckBoxBlock(formID,module,dcID,clusterID,namespace,groupID,option){
+    var parentIDStr = "line" + groupID;
+    var displayStatus = "none";
+    if(option.checked){
+        displayStatus = "";
+    }
+
+    var parentObj = document.getElementById(parentIDStr);
+    var spans = parentObj.querySelectorAll("span");
+    for(i = 0; i <spans.length; i++){
+        var span = spans[i];
+        span.style.display = displayStatus;
+    }
+    var checkBoxParent = option.parentNode;
+    checkBoxParent.style.display = "";
+
+    return;
+}
+
+function nsChangedForIngressAdd(formID,module,dcID,clusterID,namespace,uri,obj){
+    var nsValue = obj.options[obj.selectedIndex].value;
+    var actionUri = "/api/" + apiVersion + "/service/" + uri + "?clusterID=" + clusterID +"&namespace=" + nsValue;
+
+    var respValue = addWorkloadAjax(formID,actionUri,"GET", false);
+    if(respValue.errorCode != 0){
+        formDataShowTip(respValue.data,"RED",0);
+        obj.focus();
+        return;
+    }
+
+    var defaultServiceObj = document.getElementById("defaultServiceID");
+    var matchServiceIDObj = document.getElementById("matchServiceID");
+    var serviceList =  respValue.data;
+    defaultServiceObj.length = 0;
+    matchServiceIDObj.length = 0;
+    if(serviceList.length > 0) {
+        for (i = 0; i < serviceList.length; i++) {
+            var defaultNewOption = new Option(serviceList[i], serviceList[i]);
+            var matchServiceOption = new Option(serviceList[i], serviceList[i]);
+            matchServiceIDObj.options.add(matchServiceOption);
+            defaultServiceObj.options.add(defaultNewOption);
+        }
+    } else {
+        var newOption = new Option("请先在"+ ns + "命名空间内配置服务", "0",true,true);
+        var matchServiceOption = new Option("请先在"+ ns + "命名空间内配置服务", "0",true,true);
+        matchServiceIDObj.options.add(matchServiceOption);
+        defaultServiceObj.options.add(newOption);
+    }
+
+    var actionUri = "/api/" + apiVersion + "/secret/" + uri + "?clusterID=" + clusterID +"&namespace=" + nsValue;
+    var respValue = addWorkloadAjax(formID,actionUri,"GET", false);
+    if(respValue.errorCode != 0){
+        formDataShowTip(respValue.data,"RED",0);
+        obj.focus();
+        return;
+    }
+    var addIngressSecretObj = document.getElementById("secretID");
+    addIngressSecretObj.length = 0;
+    var secretList = respValue.data;
+    if(secretList.length > 0) {
+        for (i = 0; i < secretList.length; i++) {
+            var newOption = new Option(secretList[i], secretList[i]);
+            addIngressSecretObj.options.add(newOption);
+        }
+    } else {
+        var newOption = new Option("请先在"+ ns + "命名空间内配置密文", "0",true,true);
+        addIngressSecretObj.options.add(newOption);
+    }
+
+    return;
+}
+
+function switchDisplaySecretForIngressAdd(formID,module,dcID,clusterID,namespace,groupID,option){
+    var displayStatus = "none";
+    if(option.checked){
+        displayStatus = "";
+    }
+
+    var secretObj = document.getElementById("secretID");
+    var spanSecretObj = document.getElementById("spansecretID");
+    secretObj.style.display = displayStatus;
+    spanSecretObj.style.display = displayStatus;
+    return;
+}
+
+function secretTypeChangedForAddSecret(formID,module,dcID,clusterID,namespace,groupID,option){
+    var secretType = option.value;
+    switch (secretType){
+        case "0":
+            secretOpaqueSwitch("1");
+            secretRegistrySwitch("0");
+            secretSaSwitch("0",formID,dcID,clusterID);
+            secretTlsSwitch("0");
+            break;
+        case "1":
+            secretOpaqueSwitch("0");
+            secretRegistrySwitch("1");
+            secretSaSwitch("0",formID,dcID,clusterID);
+            secretTlsSwitch("0");
+            break;
+        case "2":
+            secretOpaqueSwitch("0");
+            secretRegistrySwitch("0");
+            secretSaSwitch("1",formID,dcID,clusterID);
+            secretTlsSwitch("0");
+            break;
+        case "3":
+            secretOpaqueSwitch("0");
+            secretRegistrySwitch("0");
+            secretSaSwitch("0",formID,dcID,clusterID);
+            secretTlsSwitch("1");
+            break;
+        default:
+            secretOpaqueSwitch("1");
+            secretRegistrySwitch("0");
+            secretSaSwitch("0",formID,dcID,clusterID);
+            secretTlsSwitch("0");
+            break;
+    }
+    return;
+}
+
+function secretOpaqueSwitch(status){
+    var displayStr = "none";
+    var blockObj = document.getElementById("containerOpaquekeyID");
+    var wordLineObj = document.getElementById("lineOpaqueAnchorID");
+    if(status == "1"){
+        displayStr = "";
+    }
+    blockObj.style.display = displayStr;
+    wordLineObj.style.display = displayStr;
+
+    return;
+}
+
+function secretRegistrySwitch(status){
+    var displayStr = "none";
+    if(status == "1"){
+        displayStr = "";
+    }
+    var registryServerLineObj = document.getElementById("lineregistryServerLine");
+    var registryUsernameLineObj = document.getElementById("lineregistryUsernameLine");
+    var registryPasswordLineObj = document.getElementById("lineregistryPasswordLine");
+    registryServerLineObj.style.display = displayStr;
+    registryUsernameLineObj.style.display = displayStr;
+    registryPasswordLineObj.style.display = displayStr;
+
+    return;
+}
+
+function secretSaSwitch(status,formID,dcID,clusterID) {
+    var displayStr = "none";
+    if (status == "1") {
+        displayStr = "";
+        var nsSelectedObj = document.getElementById("nsSelectedID");
+        var ns = nsSelectedObj.options[nsSelectedObj.selectedIndex].value;
+
+        var actionUri = "/api/" + apiVersion + "/serviceaccount/getNameList/?clusterID=" + clusterID +"&dcID=" + dcID + "&namespace=" + ns;
+        var respValue = addWorkloadAjax(formID,actionUri,"GET", false);
+        if(respValue.errorCode != 0){
+            formDataShowTip(respValue.data,"RED",0);
+            obj.focus();
+            return;
+        }
+        var serviceList =  respValue.data;
+        var saSelectObj = document.getElementById("saSelectID");
+        saSelectObj.options.length = 0;
+        if(serviceList.length > 0) {
+            for (i = 0; i < serviceList.length; i++) {
+                var newOption = new Option(serviceList[i], serviceList[i]);
+                saSelectObj.options.add(newOption);
+            }
+        } else {
+            var newOption = new Option("请首先创建Service Account", "0",true,true);
+            saSelectObj.options.add(newOption);
+        }
+    }
+
+    var saSelectLineObj = document.getElementById("linesaSelectLine");
+    saSelectLineObj.style.display = displayStr;
+
+    return;
+}
+
+function secretTlsSwitch(status) {
+    var displayStr = "none";
+    if (status == "1") {
+        displayStr = "";
+    }
+
+    var certLineObj = document.getElementById("linecertLine");
+    var keyLineObj = document.getElementById("linekeyLine");
+    certLineObj.style.display = displayStr;
+    keyLineObj.style.display = displayStr;
+
+    return;
+}

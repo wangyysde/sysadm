@@ -37,10 +37,10 @@ func (p *pv) setObjectInfo() {
 	templateFile := ""
 
 	p.mainModuleName = "配置和存储"
-	p.moduleName = "Persistent Volumes"
+	p.moduleName = "存储卷"
 	p.allPopMenuItems = allPopMenuItems
 	p.allListItems = allListItems
-	p.addButtonTile = ""
+	p.addButtonTile = "添加存储卷"
 	p.isSearchForm = "no"
 	p.allOrderFields = allOrderFields
 	p.defaultOrderField = "TD1"
@@ -218,6 +218,12 @@ func (p *pv) getModuleID() string {
 }
 
 func (p *pv) buildAddFormData(tplData map[string]interface{}) error {
+	tplData["thirdCategory"] = "创建存储卷"
+	formData, e := objectsUI.InitFormData("addPv", "addPv", "POST", "_self", "yes", "addWorkload", "")
+	if e != nil {
+		return e
+	}
+	tplData["formData"] = formData
 	// TODO
 	return nil
 }
@@ -248,6 +254,13 @@ func (p *pv) showResourceDetail(action string, tplData map[string]interface{}, r
 }
 
 func (p *pv) getTemplateFile(action string) string {
-
-	return p.templateFile
+	switch action {
+	case "list":
+		return pvTemplateFiles["list"]
+	case "addform":
+		return pvTemplateFiles["addform"]
+	default:
+		return ""
+	}
+	return ""
 }

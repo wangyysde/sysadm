@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mysql
+  name: mysqlnew
+  namespace: test
+spec:
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ports:
+  - nodePort: 30316
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+    name: tcp-3306
+  - nodePort: 30316
+    port: 3306
+    protocol: UDP
+    targetPort: 3306
+    name: udp-3306  
+  selector:
+    app: mysql
+    component: mysql
+  type: NodePort

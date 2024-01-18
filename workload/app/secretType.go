@@ -17,8 +17,12 @@
 
 package app
 
-var denyServiceWokloadNSList = []string{"kube-node-lease", "kube-system"}
+type RegistryAuth struct {
+	Auth string `json:"auth" yaml:"auth" xml:"auth"`
+}
 
-var defaultServiceLabelKey = "service.app.name"
+type RegistryHost map[string]RegistryAuth
 
-var serviceTemplateFiles = map[string]string{"list": "workloadlist.html", "addform": "addNoContainerResource.html"}
+type RegistryAuths struct {
+	Auths RegistryHost `json:"auths" yaml:"auths" xml:"auths"`
+}
