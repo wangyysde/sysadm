@@ -1,0 +1,452 @@
+/* =============================================================
+* @Author:  Wayne Wang <net_use@bzhy.com>
+*
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
+* @HomePage http://www.sysadm.cn
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at:
+* http://www.apache.org/licenses/LICENSE-2.0
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and  limitations under the License.
+* @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
+ */
+
+package app
+
+import (
+	"context"
+	"fmt"
+	"github.com/wangyysde/sysadmServer"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"net/http"
+	"sort"
+	"strconv"
+	"strings"
+	sysadmAZ "sysadm/availablezone/app"
+	datacenter "sysadm/datacenter/app"
+	sysadmK8sClient "sysadm/k8sclient"
+	sysadmK8sCluster "sysadm/k8scluster/app"
+	sysadmObjects "sysadm/objects/app"
+	"sysadm/objectsUI"
+	sysadmOS "sysadm/os/app"
+	"sysadm/sysadmLog"
+	sysadmVersion "sysadm/version/app"
+)
+
+func listHostHandler(c *sysadmServer.Context, action string) {
+	var listTemplateFile = "hostlist.html"
+	var errs []sysadmLog.Sysadmerror
+
+	errs = append(errs, sysadmLog.NewErrorWithStringLevel(7001400007, "debug", "now list host data"))
+	requestKeys := []string{"dcID", "azID", "clusterID", "userid", "start", "orderfield", "direction", "searchContent", "objID"}
+	requestData, e := objectsUI.GetRequestData(c, requestKeys)
+	if e != nil {
+		objectsUI.OutPutMsg(c, "", "系统出错，请稍后再试或联系系统管理员", runData.logEntity, 7001400008, errs, e)
+		return
+	}
+
+	tplData, e := objectsUI.InitTemplateDataForWorkload("/"+objectName+"/", "集群管理",
+		"节点管理", "添加节点", "",
+		allPopMenuItems, []string{}, []string{}, requestData)
+	if e != nil {
+		objectsUI.OutPutMsg(c, "", "系统出错，请稍后再试或联系系统管理员", runData.logEntity, 7001400009, errs, e)
+		return
+	}
+	tplData["objName"] = "节点列表"
+
+	// 为前端下拉菜单的数据中心部分准备数据
+	var dcEntity sysadmObjects.ObjectEntity
+	dcEntity = datacenter.New()
+	conditions := make(map[string]string, 0)
+	conditions["isDeleted"] = "=0"
+	order := make(map[string]string, 0)
+	var emptyString []string
+	dcList, e := dcEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, order)
+	if e != nil {
+		objectsUI.OutPutMsg(c, "", "系统出错，请稍后再试或联系系统管理员", runData.logEntity, 7001400009, errs, e)
+		return
+	}
+	e = buildSelectData(tplData, dcList, requestData)
+	if e != nil {
+		objectsUI.OutPutMsg(c, "", "系统出错，请稍后再试或联系系统管理员", runData.logEntity, 7001400010, errs, e)
+		return
+	}
+
+	startPos := objectsUI.GetStartPosFromRequest(requestData)
+
+	dcSelect := tplData["dcSelect"].(objectsUI.SelectData)
+	azSelect := tplData["azSelect"].(objectsUI.SelectData)
+	clusterSelect := tplData["clusterSelect"].(objectsUI.SelectData)
+	count, objListData, e := listHostData(dcSelect.SelectedId, azSelect.SelectedId, clusterSelect.SelectedId, startPos, requestData)
+	if e != nil {
+		objectsUI.OutPutMsg(c, "", "", runData.logEntity, 7001400011, errs, e)
+		return
+	}
+	if count == 0 {
+		tplData["noData"] = "当前系统中没有数据"
+	} else {
+		tplData["noData"] = ""
+		tplData["objListData"] = objListData
+		objectsUI.BuildThDataWithOrderFunc(requestData, allListItems, tplData, "TD1", "1", allOrderFields)
+		// prepare page number information
+		objectsUI.BuildPageNumInfoForWorkloadList(tplData, requestData, count, startPos, runData.pageInfo.NumPerPage, "TD1", "1")
+	}
+
+	c.HTML(http.StatusOK, listTemplateFile, tplData)
+}
+
+func buildSelectData(tplData map[string]interface{}, dcList []interface{}, requestData map[string]string) error {
+
+	selectedDC := strings.TrimSpace(requestData["dcID"])
+	if selectedDC == "" {
+		selectedDC = "0"
+	}
+	selectedAZ := strings.TrimSpace(requestData["azID"])
+	if selectedAZ == "" {
+		selectedAZ = "0"
+	}
+	selectedCluster := strings.TrimSpace(requestData["clusterID"])
+	if selectedCluster == "" {
+		selectedCluster = "0"
+	}
+
+	// preparing datacenter options
+	var dcOptions []objectsUI.SelectOption
+	dcOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择数据中心===",
+		ParentID: "0",
+	}
+	dcOptions = append(dcOptions, dcOption)
+	for _, line := range dcList {
+		dcData, ok := line.(datacenter.DatacenterSchema)
+		if !ok {
+			return fmt.Errorf("the data is not datacenter schema")
+		}
+		dcOption := objectsUI.SelectOption{
+			Id:       strconv.Itoa(int(dcData.Id)),
+			Text:     dcData.CnName,
+			ParentID: "0",
+		}
+		dcOptions = append(dcOptions, dcOption)
+	}
+	dcSelect := objectsUI.SelectData{Title: "数据中心", SelectedId: selectedDC, Options: dcOptions}
+	tplData["dcSelect"] = dcSelect
+
+	// preparing AZ options
+	var azOptions []objectsUI.SelectOption
+	if selectedDC != "0" {
+		azOption := objectsUI.SelectOption{
+			Id:       "0",
+			Text:     "===所有可用区===",
+			ParentID: "0",
+		}
+		azOptions = append(azOptions, azOption)
+		var azEntity sysadmObjects.ObjectEntity
+		azEntity = sysadmAZ.New()
+		conditions := make(map[string]string, 0)
+		var emptyString []string
+		conditions["isDeleted"] = "='0'"
+		conditions["datacenterid"] = "='" + selectedDC + "'"
+		azList, e := azEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, make(map[string]string))
+		if e != nil {
+			return e
+		}
+		for _, line := range azList {
+			azData, ok := line.(sysadmAZ.AvailablezoneSchema)
+			if !ok {
+				return fmt.Errorf("the data is not available zone schema")
+			}
+			azOption := objectsUI.SelectOption{
+				Id:       strconv.Itoa(int(azData.Id)),
+				Text:     azData.CnName,
+				ParentID: strconv.Itoa(int(azData.Datacenterid)),
+			}
+			azOptions = append(azOptions, azOption)
+		}
+	} else {
+		azOption := objectsUI.SelectOption{
+			Id:       "0",
+			Text:     "===选择可用区===",
+			ParentID: "0",
+		}
+		azOptions = append(azOptions, azOption)
+	}
+	azSelect := objectsUI.SelectData{Title: "可用区", SelectedId: selectedAZ, Options: azOptions}
+	tplData["azSelect"] = azSelect
+
+	// preparing cluster options
+	var clusterOptions []objectsUI.SelectOption
+	if selectedAZ != "0" {
+		clusterOption := objectsUI.SelectOption{
+			Id:       "0",
+			Text:     "===全部集群===",
+			ParentID: "0",
+		}
+		clusterOptions = append(clusterOptions, clusterOption)
+		var k8sclusterEntity sysadmObjects.ObjectEntity
+		k8sclusterEntity = sysadmK8sCluster.New()
+		conditions := make(map[string]string, 0)
+		var emptyString []string
+		conditions["isDeleted"] = "='0'"
+		conditions["azid"] = "='" + selectedAZ + "'"
+		clusterList, e := k8sclusterEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, make(map[string]string))
+		if e != nil {
+			return e
+		}
+		for _, line := range clusterList {
+			clusterData, ok := line.(sysadmK8sCluster.K8sclusterSchema)
+			if !ok {
+				return fmt.Errorf("the data is not cluster schema")
+			}
+			clusterOption := objectsUI.SelectOption{
+				Id:       clusterData.Id,
+				Text:     clusterData.CnName,
+				ParentID: strconv.Itoa(int(clusterData.Dcid)),
+			}
+			clusterOptions = append(clusterOptions, clusterOption)
+		}
+	} else {
+		clusterOption := objectsUI.SelectOption{
+			Id:       "0",
+			Text:     "===选择集群===",
+			ParentID: "0",
+		}
+		clusterOptions = append(clusterOptions, clusterOption)
+	}
+	clusterSelect := objectsUI.SelectData{Title: "集群", SelectedId: selectedCluster, Options: clusterOptions}
+	tplData["clusterSelect"] = clusterSelect
+
+	return nil
+}
+
+func listHostData(selectedDC, selectedAZ, selectedCluster string, startPos int,
+	requestData map[string]string) (int, []map[string]interface{}, error) {
+	var dataList []map[string]interface{}
+
+	if selectedAZ == "0" && selectedCluster == "0" {
+		return 0, dataList, nil
+	}
+
+	var hostEntity sysadmObjects.ObjectEntity
+	hostEntity, e := New(runData.dbConf, runData.workingRoot)
+	if e != nil {
+		return 0, dataList, e
+	}
+	conditions := make(map[string]string, 0)
+	if selectedCluster != "0" {
+		conditions["k8sclusterid"] = "='" + selectedCluster + "'"
+	} else {
+		if selectedAZ != "0" {
+			conditions["azid"] = "='" + selectedAZ + "'"
+		} else {
+			if selectedDC != "0" {
+				conditions["dcid"] = "='" + selectedDC + "'"
+			}
+		}
+	}
+	hostList, e := hostEntity.GetObjectList("", []string{}, []string{}, conditions, 0, 0, make(map[string]string))
+	if e != nil {
+		return 0, dataList, e
+	}
+	totalNum := len(hostList)
+	if totalNum < 1 {
+		return 0, dataList, nil
+	}
+
+	orderfield := requestData["orderfield"]
+	direction := requestData["direction"]
+	if orderfield == "" {
+		orderfield = "TD1"
+	}
+	if direction == "" || (direction != "0" && direction != "1") {
+		direction = "1"
+	}
+
+	sortHostListData(hostList, direction, orderfield, allOrderFields)
+	endCount := totalNum
+	if endCount > startPos+runData.pageInfo.NumPerPage {
+		endCount = startPos + runData.pageInfo.NumPerPage
+	}
+	var dcEntity sysadmObjects.ObjectEntity
+	dcEntity = datacenter.New()
+	var azEntity sysadmObjects.ObjectEntity
+	azEntity = sysadmAZ.New()
+	var osEntity sysadmObjects.ObjectEntity
+	osEntity = sysadmOS.New()
+	var versionEntity sysadmObjects.ObjectEntity
+	versionEntity = sysadmVersion.New()
+	var k8sEntity sysadmObjects.ObjectEntity
+	k8sEntity = sysadmK8sCluster.New()
+	for i := startPos; i < endCount; i++ {
+		interfaceData := hostList[i]
+		hostData, ok := interfaceData.(HostSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not host schema")
+		}
+		lineMap := make(map[string]interface{}, 0)
+		lineMap["objectID"] = hostData.HostId
+		lineMap["TD1"] = hostData.Hostname
+
+		dcInfo, e := dcEntity.GetObjectInfoByID(strconv.Itoa(int(hostData.Dcid)))
+		if e != nil {
+			return 0, dataList, e
+		}
+		dcData, ok := dcInfo.(datacenter.DatacenterSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not datacenter schema")
+		}
+		lineMap["TD2"] = dcData.CnName
+
+		azInfo, e := azEntity.GetObjectInfoByID(strconv.Itoa(int(hostData.Azid)))
+		if e != nil {
+			return 0, dataList, e
+		}
+		azData, ok := azInfo.(sysadmAZ.AvailablezoneSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not available zone schema")
+		}
+		lineMap["TD3"] = azData.CnName
+		osInfo, e := osEntity.GetObjectInfoByID(strconv.Itoa(hostData.OSID))
+		if e != nil {
+			return 0, dataList, e
+		}
+		osData, ok := osInfo.(sysadmOS.OSSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not OS schema")
+		}
+		osStr := osData.Name
+		versionInfo, e := versionEntity.GetObjectInfoByID(strconv.Itoa(hostData.OSVersionID))
+		if e != nil {
+			return 0, dataList, e
+		}
+		versionData, ok := versionInfo.(sysadmVersion.VersionSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not version schema")
+		}
+		versionStr := versionData.Name
+		lineMap["TD4"] = osStr + "/" + versionStr
+		k8sInfo, e := k8sEntity.GetObjectInfoByID(hostData.K8sClusterID)
+		if e != nil {
+			return 0, dataList, e
+		}
+		k8sData, ok := k8sInfo.(sysadmK8sCluster.K8sclusterSchema)
+		if !ok {
+			return 0, dataList, fmt.Errorf("the data is not K8S Cluster schema")
+		}
+		lineMap["TD5"] = k8sData.CnName
+		popmenuitems := "0"
+		hostStatus := ""
+		switch hostData.Status {
+		case string(HostStatusRunning):
+			hostStatus = "运行中"
+			popmenuitems = popmenuitems + ",1,6"
+		case string(HostStatusMaintenance):
+			hostStatus = "维护中"
+			popmenuitems = popmenuitems + ",1,6"
+		case string(HostStatusOffline):
+			hostStatus = "已下线"
+			popmenuitems = popmenuitems + ",6"
+		case string(HostStatusDeleted):
+			hostStatus = "已删除"
+		case string(HostStatusReady):
+			hostStatus = "正常"
+			popmenuitems = popmenuitems + ",1,6"
+		}
+		if hostData.Status == string(HostStatusMemoryPressure) {
+			if hostStatus == "" {
+				hostStatus = "内存压力"
+			} else {
+				hostStatus = hostStatus + "," + "内存压力"
+			}
+		}
+		if hostData.Status == string((HostStatusDiskPressure)) {
+			if hostStatus == "" {
+				hostStatus = "磁盘压力"
+			} else {
+				hostStatus = hostStatus + "," + "磁盘压力"
+			}
+		}
+		if hostData.Status == string((HostPIDPressure)) {
+			if hostStatus == "" {
+				hostStatus = "PID压力"
+			} else {
+				hostStatus = hostStatus + "," + "PID压力"
+			}
+		}
+		if hostData.Status == string((HostNetworkUnavailable)) {
+			if hostStatus == "" {
+				hostStatus = "网络不可用"
+			} else {
+				hostStatus = hostStatus + "," + "网络不可用"
+			}
+		}
+		lineMap["TD6"] = hostStatus
+		popmenuitems = buildPopItemList(popmenuitems, hostData)
+		lineMap["popmenuitems"] = popmenuitems
+		dataList = append(dataList, lineMap)
+	}
+
+	return totalNum, dataList, nil
+}
+
+func sortHostListData(data []interface{}, direction, orderField string, allOrderFields map[string]objectsUI.SortBy) {
+	for k, fn := range allOrderFields {
+		if k == orderField {
+			if direction == "1" {
+				sort.Sort(objectsUI.SortData{Data: data, By: fn})
+			} else {
+				sort.Sort(sort.Reverse(objectsUI.SortData{Data: data, By: fn}))
+			}
+			break
+		}
+	}
+
+	return
+}
+
+func buildPopItemList(popItems string, hostData HostSchema) string {
+	clusterID := strings.TrimSpace(hostData.K8sClusterID)
+	if clusterID == "" {
+		popItems = popItems + ",7"
+	}
+	var k8sEntity sysadmObjects.ObjectEntity
+	k8sEntity = sysadmK8sCluster.New()
+	k8sInfo, e := k8sEntity.GetObjectInfoByID(hostData.K8sClusterID)
+	if e != nil {
+		return popItems
+	}
+	k8sData, ok := k8sInfo.(sysadmK8sCluster.K8sclusterSchema)
+	if !ok {
+		return popItems
+	}
+
+	restConf, e := sysadmK8sClient.BuildConfigFromParasWithConnectType(k8sData.ConnectType, k8sData.Apiserver, k8sData.K8sClusterID, k8sData.ClusterUser, "",
+		k8sData.Ca, k8sData.Cert, k8sData.Key, k8sData.Token, k8sData.KubeConfig)
+	if e != nil {
+		return popItems
+	}
+	k8sClient, e := kubernetes.NewForConfig(restConf)
+	if e != nil {
+		return popItems
+	}
+	hostName := strings.TrimSpace(hostData.Hostname)
+	nodeData, e := k8sClient.CoreV1().Nodes().Get(context.Background(), hostName, metav1.GetOptions{})
+	if e != nil {
+		return popItems
+	}
+
+	unschedule := nodeData.Spec.Unschedulable
+	if unschedule {
+		popItems = ",4,5"
+	} else {
+		popItems = ",2,3,5"
+	}
+
+	return popItems
+}

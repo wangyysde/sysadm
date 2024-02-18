@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/css/addObject.css">
 <script type="text/javascript" src="/js/addObjectJs.js"></script>
+<script type="text/javascript" src="/js/k8sclusterAdd.js"></script>
 <script type="text/javascript" src="/js/sysadmfunctions.js"></script>
 
 {{range $index,$line := .addtionalJs }}
@@ -31,7 +32,7 @@
         <div class="formTitle">{{ .subCategory }}</div>
 
          {{range $index, $line := .data }}
-        <div class="lineDiv" {{if $line.NoDisplay }} style="display: none" {{end}} >
+        <div {{if $line.LineID}} id="{{- $line.LineID }}" {{end}} class="lineDiv" {{if $line.NoDisplay }} style="display: none" {{end}} >
             {{range $i,$item := $line.Items }}
             {{if eq $item.Kind "TEXT" }}
              <span> {{$item.Title -}}: </span>
@@ -56,7 +57,7 @@
             {{if eq $item.Kind "CHECKBOX" }}
               <span>{{$item.Title -}}: </span>
                  {{range $ii,$option := $item.ItemData }}
-                     <input type="checkbox"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='addObjCheckboxClick($item.ActionUri,{{$item.ID}},this.checked)' {{end}}>
+                     <input type="checkbox"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='addObjCheckboxClick({{- $item.ActionUri -}},{{$item.ID}},this.checked)' {{end}}>
                      {{$option.Text}}
                 {{end}}
             {{end}}
@@ -64,20 +65,20 @@
             {{if eq $item.Kind "RADIO" }}
               <span>{{$item.Title -}}: </span>
                    {{range $ii,$option := $item.ItemData }}
-                      <input type="radio"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='addObjRadioClick($item.ActionUri,{{$item.ID}},this.checked)' {{end}}>
+                      <input type="radio"  id="{{$item.ID}}" name="{{$item.Name}}" value="{{- $option.Value -}}" {{if $option.Checked}} checked="checked" {{end}} {{if $item.ActionUri }} onclick='k8sclusterAddRadioClick({{- $item.ActionUri -}},{{- $item.Name -}},this)' {{end}}>
                       {{$option.Text}}
                    {{end}}
             {{end}}
 
             {{if eq $item.Kind "STRING" }}
-                <span {{if $item.NoDisplay }} style="display: none" {{end}}>
+                <span  {{if $item.NoDisplay }} style="display: none" {{end}}>
                     {{- $item.Title -}}
                 </span>
             {{end}}
 
             {{if eq $item.Kind "BUTTON" }}
                 <span {{if $item.NoDisplay }} style="display: none" {{end}}>
-                     <input id="{{- $item.ID -}}Button" type="button"  value="{{- $item.ID -}}" {{if $item.ActionUri}} onclick='addObjClickButton("{{- $item.ID -}}", "{{- $item.ActionUri }}")' {{end}}>
+                     <input class="copyTokenCommandButton" id="{{- $item.ID -}}Button" type="button"  value="复制" {{if $item.IsAction}} onclick='k8sclusterAddClickButton()' {{end}}>
                 </span>
             {{end}}
 

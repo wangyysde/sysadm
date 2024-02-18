@@ -36,7 +36,7 @@ func addformHandler(c *sysadmServer.Context) {
 	errs = append(errs, sysadmLog.NewErrorWithStringLevel(700060001, "debug", "try to display add object form page"))
 
 	messageTemplateFile := "showmessage.html"
-	addTemplateFile := "addObjectForm.html"
+	addTemplateFile := "k8sclusterAdd.html"
 	var emptyString []string
 	baseUri := "/" + DefaultModuleName + "/"
 	enctype := `multipart/form-data`
@@ -83,29 +83,45 @@ func addformHandler(c *sysadmServer.Context) {
 	azSelect := objectsUI.ObjItemInfo{Title: "所属可用区", ID: "azid", Name: "azid", Kind: "SELECT", ActionUri: "", ItemData: azOptions}
 	lineItems = append(lineItems, azSelect)
 
-	lineData := objectsUI.ObjLineData{Items: lineItems}
+	lineData := objectsUI.ObjLineData{LineID: "dcSelectLine", Items: lineItems}
 	tplDataLines = append(tplDataLines, lineData)
 
 	cnName := objectsUI.ObjItemInfo{Title: "集群中文名称", ID: "cnName", Name: "cnName", Kind: "TEXT", Size: 30, ActionUri: "api/" + DefaultApiVersion + "/" + DefaultModuleName + "/" + "validCNName", Note: "集群的中文名称，长度不大于255个字符"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{cnName}})
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "cnNameLine", Items: []objectsUI.ObjItemInfo{cnName}})
 
 	enName := objectsUI.ObjItemInfo{Title: "集群英文名称", ID: "enName", Name: "enName", Kind: "TEXT", Size: 30, ActionUri: "api/" + DefaultApiVersion + "/" + DefaultModuleName + "/" + "validENName", Note: "集群的英文名称，长度不大于255个字符"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{enName}})
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "enNameLine", Items: []objectsUI.ObjItemInfo{enName}})
+
+	var connectionTypeOptions []objectsUI.SubItems
+	connectionTypeOptions = append(connectionTypeOptions, objectsUI.SubItems{Value: "0", Text: "证书方式连接", Checked: true})
+	connectionTypeOptions = append(connectionTypeOptions, objectsUI.SubItems{Value: "1", Text: "Token方式连接", Checked: false})
+	connectionTypeOptions = append(connectionTypeOptions, objectsUI.SubItems{Value: "2", Text: "KubeConfig", Checked: false})
+
+	connectType := objectsUI.ObjItemInfo{Title: "连接方式", ID: "connectTypeID", Name: "connectType", Kind: "RADIO", ActionUri: "connectTypeChanged", ItemData: connectionTypeOptions}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{connectType}})
 
 	apiserver := objectsUI.ObjItemInfo{Title: "kube-apiserver地址和端口", ID: "apiserver", Name: "apiserver", Kind: "TEXT", Size: 30, ActionUri: "api/" + DefaultApiVersion + "/" + DefaultModuleName + "/" + "validApiserverAddress", Note: "连接集群的kube-apiserver的地址和端口，如x.x.x.x:6443"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{apiserver}})
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "apiServerLine", Items: []objectsUI.ObjItemInfo{apiserver}})
 
-	clusterUser := objectsUI.ObjItemInfo{Title: "连接集群的用户名", ID: "clusterUser", Name: "clusterUser", Kind: "TEXT", Size: 30, DefaultValue: "admin", ActionUri: "api/" + DefaultApiVersion + "/" + DefaultModuleName + "/" + "validClusterUser", Note: "连接集群的用户名，默认是admin"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{clusterUser}})
+	ca := objectsUI.ObjItemInfo{Title: "CA", ID: "caID", Name: "ca", Kind: "TEXTAREA", Size: 40, Rows: 5, NoDisplay: false}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "caLine", NoDisplay: false, Items: []objectsUI.ObjItemInfo{ca}})
 
-	ca := objectsUI.ObjItemInfo{Title: "CA证书", ID: "ca", Name: "ca", Kind: "FILE", Size: 30, Note: "连接集群的CA证书"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{ca}})
+	cert := objectsUI.ObjItemInfo{Title: "证书", ID: "certID", Name: "cert", Kind: "TEXTAREA", Size: 40, Rows: 5, NoDisplay: false}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "certLine", NoDisplay: false, Items: []objectsUI.ObjItemInfo{cert}})
 
-	cert := objectsUI.ObjItemInfo{Title: "证书", ID: "cert", Name: "cert", Kind: "FILE", Size: 30, Note: "连接集群的证书"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{cert}})
+	key := objectsUI.ObjItemInfo{Title: "密钥", ID: "keyID", Name: "key", Kind: "TEXTAREA", Size: 40, Rows: 5, NoDisplay: false}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "keyLine", NoDisplay: false, Items: []objectsUI.ObjItemInfo{key}})
 
-	key := objectsUI.ObjItemInfo{Title: "密钥", ID: "key", Name: "key", Kind: "FILE", Size: 30, Note: "连接集群的密钥"}
-	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{key}})
+	tokenCreateText := objectsUI.ObjItemInfo{Title: "点击右边按钮复制新打开的页面内的token的命令,并在集群的主节点上执行，之后所生成的Token值填入到入下列文本框中",
+		ID: "tokenCreateID", Kind: "STRING", NoDisplay: false}
+	tokenCreateButton := objectsUI.ObjItemInfo{Title: "复制", ID: "tokenCreateButtonID", NoDisplay: false, Kind: "BUTTON", IsAction: true}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "tokenStringLine", NoDisplay: true, Items: []objectsUI.ObjItemInfo{tokenCreateText, tokenCreateButton}})
+
+	token := objectsUI.ObjItemInfo{Title: "Token", ID: "tokenID", Name: "token", Kind: "TEXTAREA", Size: 40, Rows: 5, NoDisplay: false}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "tokenLine", NoDisplay: true, Items: []objectsUI.ObjItemInfo{token}})
+
+	kubeconfig := objectsUI.ObjItemInfo{Title: "KubeConfig", ID: "kubeConfigID", Name: "kubeConfig", Kind: "FILE", Size: 30, Note: "上传kubeConfig文件", NoDisplay: false}
+	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{LineID: "kubeConfigLine", NoDisplay: true, Items: []objectsUI.ObjItemInfo{kubeconfig}})
 
 	dutyTel := objectsUI.ObjItemInfo{Title: "值班电话", ID: "dutyTel", Name: "dutyTel", Kind: "TEXT", Size: 30, ActionUri: "api/" + DefaultApiVersion + "/" + DefaultModuleName + "/" + "validDutyTel", Note: "值班电话"}
 	tplDataLines = append(tplDataLines, objectsUI.ObjLineData{Items: []objectsUI.ObjItemInfo{dutyTel}})

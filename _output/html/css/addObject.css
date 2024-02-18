@@ -25,6 +25,10 @@
 }
 
 .lineDiv span {
+    vertical-align: top;
+}
+
+.lineDiv span {
     padding-right: 10px;
 }
 
@@ -95,5 +99,21 @@
     border-top-width: 1px;
     border-left-width: 1px;
     border-right-width: 1px;
+    align-self: center;
+}
+
+.copyTokenCommandButton {
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    color: #045283 !important;
+    outline: none;
+    cursor: pointer !important;
+    background-color: transparent !important;
+    border-bottom-width: 1px !important;
+    border-color: #045283 !important;
+    border-top-width: 1px !important;
+    border-left-width: 1px !important;
+    border-right-width: 1px !important;
     align-self: center;
 }

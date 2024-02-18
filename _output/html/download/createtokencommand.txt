@@ -1,0 +1,43 @@
+cat << EOF > sysadm-create-token.yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sysadm
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sysadm-admin
+  namespace: sysadm
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sysadm-admin-crb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: sysadm-admin
+  namespace: sysadm
+
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: sysadm-admin
+  name: sysadm-admin-token
+  namespace: sysadm
+EOF
+
+kubectl apply -f sysadm-create-token.yaml
+echo -e "\033[1;34m将下面这一行红色输出结果填入到 sysadm 界面的 Token 字段：\033[0m"
+echo -e "\033[31m$(kubectl -n sysadm get secret $(kubectl -n sysadm get secret sysadm-admin-token | grep sysadm-admin-token | awk '{print $1}') -o go-template='{{.data.token}}' | base64 -d)\033[0m"
+

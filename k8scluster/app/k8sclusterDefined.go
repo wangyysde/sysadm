@@ -24,3 +24,4 @@ var DefaultModuleName = "k8scluster"
 var DefaultApiVersion = "1.0"
 var runData = runingData{}
 var allStatus = map[int]string{0: "未启用", 1: "已启用", 2: "已停用"}
+var k8sClusterConnectType = map[string]string{"0": "证书方式连接", "1": "Token方式连接", "2": "KubeConfig"}

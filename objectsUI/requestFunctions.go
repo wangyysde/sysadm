@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"strings"
 	"sysadm/sysadmLog"
+	"sysadm/utils"
 )
 
 func OutPutErrorMsg(c *sysadmServer.Context, templateFile string, logEntity *sysadmLog.LoggerConfig, errcode int,
@@ -93,4 +94,26 @@ func OutputResourceDetail(c *sysadmServer.Context, templateFile, errorMsg string
 	tplData["errorFlag"] = errorFlag
 	c.HTML(http.StatusOK, templateFile, tplData)
 	return
+}
+
+func GetRequestData(c *sysadmServer.Context, keys []string) (map[string]string, error) {
+	requestData, e := utils.NewGetRequestData(c, keys)
+	if e != nil {
+		return requestData, e
+	}
+
+	objectIds := ""
+	objectIDMap, _ := utils.GetRequestDataArray(c, []string{"objectid[]"})
+	if objectIDMap != nil {
+		objectIDSlice, ok := objectIDMap["objectid[]"]
+		if ok {
+			objectIds = strings.Join(objectIDSlice, ",")
+		}
+	}
+	requestData["objectIds"] = objectIds
+	if strings.TrimSpace(requestData["start"]) == "" {
+		requestData["start"] = "0"
+	}
+
+	return requestData, nil
 }

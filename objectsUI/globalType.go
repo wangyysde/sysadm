@@ -76,14 +76,20 @@ type ObjItemInfo struct {
 	// ItemData for select checkbox and radio
 	ItemData []SubItems
 
+	// 是否需要调用事件的JS函数
+	IsAction bool
+
+	// 如果本字段不为空，则调用以该字段值为名字的JS函数，否则调用的JS函数
+	ActionFn string
+
 	// note
 	Note string
-
-
 }
 
 type ObjLineData struct {
-	Items []ObjItemInfo
+	Items     []ObjItemInfo
+	NoDisplay bool
+	LineID    string
 }
 
 type ItemForDetail struct {

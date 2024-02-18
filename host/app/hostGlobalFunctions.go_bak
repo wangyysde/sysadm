@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,12 +47,6 @@ func SetRunData(dbConf *sysadmDB.DbConfig, logEntity *sysadmLog.LoggerConfig, wo
 		return e
 	}
 
-	runData.objectEntiy = K8scluster{
-		Name:      DefaultObjectName,
-		TableName: DefaultTableName,
-		PkName:    DefaultPkName,
-	}
-
 	return nil
 }
 
@@ -67,42 +61,27 @@ func SetPageInfo(pageInfo sysadmSetting.PageInfo) {
 	runData.pageInfo = pageInfo
 }
 
-// 添加K8S集群处理的事件侦听器
+// 添加可用区处理的事件侦听器
 func AddHandlers(r *sysadmServer.Engine) error {
 	if r == nil {
 		return fmt.Errorf("can not add handlers on nil ")
 	}
-	// 为api设置事件处理器
-	groupPath := "/api/" + DefaultApiVersion + "/" + DefaultModuleName
-	v1 := r.Group(groupPath)
-	{
-		v1.POST("/add", addPostHandler)
-		v1.POST("/validCNName", validCNNameHandler)
-		v1.POST("/validENName", validENNameHandler)
-		v1.POST("/validApiserverAddress", validApiserverAddressHandler)
-		v1.POST("/validClusterUser", validClusterUserHandler)
-		v1.POST("/validDutyTel", validDutyTelHandler)
-	}
 
 	// 为前端显示设置事件处理器
-	groupPath = "/" + DefaultModuleName
-	display := r.Group(groupPath)
-	{
-		display.GET("/addform", addformHandler)
-		display.GET("/list", listHandler)
-		display.GET("/getazbydcidforselect", getazbydcidforselectHandler)
-		display.GET("/detail", clusterDetailHandler)
-	}
+	getResourcePath := "/" + objectName + "/:action"
+	r.GET(getResourcePath, getResourceHandlers)
 
-	// 主机前端事件处理器
-	hostGroupPath := "/" + hostObjectName
-	hostDisplay := r.Group(hostGroupPath)
-	{
-		hostDisplay.GET("/list", listHostHandler)
-		hostDisplay.GET("/addform", addHostFormHandler)
-		hostDisplay.GET("/getazoptionbydc", getAZOptionsByDCHandler)
-		hostDisplay.GET("/getclusteroptionbyaz", getClusterOptionsByAZ)
-	}
+	// 以json格式返回数据，且返回的数据不与具体的前端样式关联
+	getResourcePathWithApi := "/api/" + apiVersion + "/:action"
+	r.GET(getResourcePathWithApi, getResourceWithApiHandlers)
+
+	// 为前端显示设置事件处理器
+	postResourcePath := "/" + objectName + "/:action"
+	r.POST(postResourcePath, postResourceHandlers)
+
+	// 以json格式返回数据，且返回的数据不与具体的前端样式关联
+	postResourcePathWithApi := "/api/" + apiVersion + "/:action"
+	r.POST(postResourcePathWithApi, postResourceWithApiHandlers)
 
 	return nil
 }

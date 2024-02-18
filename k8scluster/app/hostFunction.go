@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +21,12 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	sysadmCommand "sysadm/command/app"
 	sysadmDB "sysadm/db"
 	sysadmObjects "sysadm/objects/app"
 	sysadmUtils "sysadm/utils"
-	sysadmYum "sysadm/yum/app"
 )
 
-func New(dbConfig *sysadmDB.DbConfig, workingRoot string) (Host, error) {
+func HostNew(dbConfig *sysadmDB.DbConfig, workingRoot string) (Host, error) {
 	ret := Host{}
 	if dbConfig == nil && runData.dbConf == nil {
 		return ret, fmt.Errorf("DB configuration has not be set")
@@ -58,9 +56,9 @@ func New(dbConfig *sysadmDB.DbConfig, workingRoot string) (Host, error) {
 		}
 	}
 
-	ret.Name = DefaultObjectName
-	ret.TableName = DefaultTableName
-	ret.PkName = DefaultPkName
+	ret.Name = hostObjectName
+	ret.TableName = hostTableName
+	ret.PkName = hostTablePkName
 	return ret, nil
 }
 
@@ -178,7 +176,7 @@ func (h Host) GetObjectIDFieldName() (string, string, error) {
 	return h.TableName, h.PkName, nil
 }
 
-func AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, status, k8sclusterid, machineID, systemID, architecture, kernelVersion string, ips []string) error {
+func (h Host) AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, status, k8sclusterid, machineID, systemID, architecture, kernelVersion string, ips []string) error {
 	hostIP := ""
 	hostIPType := HostTypeIPTypeV4
 	if len(ips) > 0 {
@@ -204,7 +202,7 @@ func AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, sta
 		KernelVersion: kernelVersion,
 	}
 
-	objHost, e := New(runData.dbConf, runData.workingRoot)
+	objHost, e := HostNew(runData.dbConf, runData.workingRoot)
 	if e != nil {
 		return e
 	}
@@ -226,12 +224,13 @@ func AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, sta
 		return e
 	}
 
-	hostid, e := sysadmObjects.GetObjectMaxID(tx.Tx.Entity, DefaultTableName, DefaultPkName)
+	_, e = sysadmObjects.GetObjectMaxID(tx.Tx.Entity, hostTableName, DefaultPkName)
 	if e != nil {
 		tx.Rollback()
 		return e
 	}
 
+	/* 直接添加上要执行的命令似乎不合理，暂时注释掉
 	// 为新创建的主机创建需要执行的命令及其参数信息
 	commandInst, e := sysadmCommand.New(runData.dbConf, runData.workingRoot)
 	if e != nil {
@@ -283,6 +282,70 @@ func AddHostFromCluster(userid, osID, osversionid, dcid, azid int, hostname, sta
 			}
 		}
 	}
+	*/
+	return tx.Commit()
+}
+
+func UpdateHostInfoForClusterAdd(hostID int, hostName, status, k8sclusterID, machineID, systemID, architecture,
+	kernelVersion string, dcid, azid uint, userid int) error {
+
+	conditions := make(map[string]string, 0)
+	conditions["hostid"] = strconv.Itoa(hostID)
+
+	hostSchemaData := HostSchema{
+		Hostname:      hostName,
+		Status:        status,
+		K8sClusterID:  k8sclusterID,
+		MachineID:     machineID,
+		SystemID:      systemID,
+		Architecture:  architecture,
+		KernelVersion: kernelVersion,
+		Dcid:          dcid,
+		Azid:          azid,
+		UserId:        strconv.Itoa(userid),
+	}
+
+	objHost, e := HostNew(runData.dbConf, runData.workingRoot)
+	if e != nil {
+		return e
+	}
+
+	tx, e := sysadmObjects.BeginTx(runData.dbConf.Entity, objHost)
+	if e != nil {
+		return e
+	}
+
+	e = tx.UpdateObject(hostSchemaData, conditions, hostTableName)
+	if e != nil {
+		tx.Rollback()
+		return e
+	}
 
 	return tx.Commit()
+}
+
+func sortHostByName(p, q interface{}) bool {
+	pData, ok := p.(HostSchema)
+	if !ok {
+		return false
+	}
+	qData, ok := q.(HostSchema)
+	if !ok {
+		return false
+	}
+
+	return pData.Hostname < qData.Hostname
+}
+
+func sortHostByClusterID(p, q interface{}) bool {
+	pData, ok := p.(HostSchema)
+	if !ok {
+		return false
+	}
+	qData, ok := q.(HostSchema)
+	if !ok {
+		return false
+	}
+
+	return pData.K8sClusterID < qData.K8sClusterID
 }

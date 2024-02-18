@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,26 +17,23 @@
 
 package app
 
-var DefaultObjectName = "host"
-var DefaultTableName = "host"
-var DefaultPkName = "hostid"
-var DefaultHostIPTableName = "hostIP"
-var DefaultHostIPPkName = "ipID"
-var defaultHostYumTableName = "hostYum"
-var defaultHostYumPkName = "relationID"
-var DefaultModuleName = "host"
-var DefaultApiVersion = "1.0"
-
-type HostStatusKind string
+var defaultObjectName = "event"
+var defaultTableName = "event"
+var defaultPkName = "id"
+var defaultModuleName = "event"
+var defaultApiVersion = "1.0"
+var runData = runingData{}
 
 const (
-	HostStatusRunning     HostStatusKind = "running"
-	HostStatusMaintenance HostStatusKind = "maintenance"
-	HostStatusOffline     HostStatusKind = "offline"
-	HostStatusDeleted     HostStatusKind = "deleted"
-	HostStatusUnkown      HostStatusKind = "unkown"
-	HostTypeIPTypeV4      int            = 4
-	HostTypeIPTypeV6      int            = 6
+	ClassInfo    int = 0
+	ClassWarning int = 1
+	ClassError   int = 2
+	ClassFatal   int = 3
 )
 
-var runData = runingData{}
+const (
+	ScopeHareware = iota
+	ScopeCluster
+	ScopeApp
+	ScopeService
+)

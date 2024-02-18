@@ -18,10 +18,15 @@
 package k8sclient
 
 const (
-	ObjectStatusPending   = "Pending"
-	ObjectStatusRunning   = "Running"
-	ObjectStatusSucceeded = "Succeeded"
-	ObjectStatusFailed    = "Failed"
-	ObjectStatusUnknow    = "Unknow"
-	FieldManager          = "k8sclient.sysadm.cn"
+	ObjectStatusPending    = "Pending"
+	ObjectStatusRunning    = "Running"
+	ObjectStatusSucceeded  = "Succeeded"
+	ObjectStatusFailed     = "Failed"
+	ObjectStatusUnknow     = "Unknow"
+	FieldManager           = "k8sclient.sysadm.cn"
+	defaultClusterUserName = "kubernetes-admin"
+	// 当连接的上下文没有指定默认命名空间时，使用默认命名空间名
+	defaultNamespace = "default"
 )
+
+var K8sClusterConnectType = map[string]string{"0": "证书方式连接", "1": "Token方式连接", "2": "KubeConfig"}

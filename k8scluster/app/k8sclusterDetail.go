@@ -248,7 +248,7 @@ func buildTplDataForConnectInfo(data K8sclusterSchema) []objectsUI.LineDataForDe
 func buildTplDataForCountInfo(data K8sclusterSchema) ([]objectsUI.LineDataForDetail, error) {
 	var lines []objectsUI.LineDataForDetail
 
-	restConf, e := k8sclient.BuildConfigFromParametes([]byte(data.Ca), []byte(data.Cert), []byte(data.Key), data.Apiserver, data.Id, data.ClusterUser, "default")
+	restConf, e := k8sclient.BuildConfigFromParasWithConnectType(data.ConnectType, data.Apiserver, data.Id, data.ClusterUser, "default", data.Ca, data.Cert, data.Key, data.Token, data.KubeConfig)
 	if e != nil {
 		return lines, e
 	}

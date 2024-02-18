@@ -150,7 +150,7 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
-	formData, e := utils.GetMultipartData(c, []string{"dcid", "azid", "cnName", "enName", "apiserver", "clusterUser", "ca", "cert", "key", "dutyTel", "remark"})
+	formData, e := utils.GetMultipartData(c, []string{"dcid", "azid", "cnName", "enName", "connectType", "apiserver", "ca", "cert", "token", "kubeConfig", "key", "dutyTel", "remark"})
 	if e != nil {
 		response = apiutils.BuildResponseDataForError(700070014, "数据处理错误，请稍后再试或联系平台管理员")
 		err := sysadmLog.NewErrorWithStringLevel(700070014, "error", "%s", e)
@@ -201,79 +201,101 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
-	apiserver := strings.TrimSpace(formData["apiserver"].([]string)[0])
-	if !validApiserverAddress(apiserver) {
-		response = apiutils.BuildResponseDataForError(700070018, "集群的kube-apiserver地址为必埴项，且其长度不得大于255个字符.形式为为x.x.x.x:6443")
-		err := sysadmLog.NewErrorWithStringLevel(700070018, "info", "apiServer address is not valid when add cluster")
+	connectType := strings.TrimSpace(formData["connectType"].([]string)[0])
+	var connectTypeDefined []string
+	for k, _ := range k8sClusterConnectType {
+		connectTypeDefined = append(connectTypeDefined, k)
+	}
+	if !utils.FoundStrInSlice(connectTypeDefined, connectType, true) {
+		response = apiutils.BuildResponseDataForError(700070018, "集群连接类型不正确，请确认你操作正确或联系系统管理员")
+		err := sysadmLog.NewErrorWithStringLevel(700070018, "error", "connect type %s is not valid", connectType)
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
 		return
 	}
 
-	clusterUser := strings.TrimSpace(formData["clusterUser"].([]string)[0])
-	if !validClusterUser(clusterUser) {
-		response = apiutils.BuildResponseDataForError(700070019, "集群用户名必埴项，且其长度不得大于255个字符")
-		err := sysadmLog.NewErrorWithStringLevel(700070019, "info", "cluster user is not valid when add cluster")
+	token := strings.TrimSpace(formData["token"].([]string)[0])
+	if connectType == "1" && token == "" {
+		response = apiutils.BuildResponseDataForError(700070019, "集群连接类型已选择为通过token连接，但是token值为空")
+		err := sysadmLog.NewErrorWithStringLevel(700070019, "error", "content of token is empty")
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
 		return
+	}
+
+	apiserver := ""
+	if connectType == "1" || connectType == "2" {
+		apiserver = strings.TrimSpace(formData["apiserver"].([]string)[0])
+		if apiserver != "" && !validApiserverAddress(apiserver) {
+			response = apiutils.BuildResponseDataForError(700070020, "集群的kube-apiserver地址为必埴项，且其长度不得大于255个字符.形式为为x.x.x.x:6443")
+			err := sysadmLog.NewErrorWithStringLevel(700070020, "info", "apiServer address is not valid when add cluster")
+			errs = append(errs, err)
+			c.JSON(http.StatusOK, response)
+			runData.logEntity.LogErrors(errs)
+			return
+		}
 	}
 
 	dutyTel := strings.TrimSpace(formData["dutyTel"].([]string)[0])
 	if !validDutyTel(dutyTel) {
-		response = apiutils.BuildResponseDataForError(700070020, "值班电话为选填项，且其长度不得大于20个字符")
-		err := sysadmLog.NewErrorWithStringLevel(700070020, "info", "duty Tel is not valid when add cluster")
+		response = apiutils.BuildResponseDataForError(700070021, "值班电话为选填项，且其长度不得大于20个字符")
+		err := sysadmLog.NewErrorWithStringLevel(700070021, "info", "duty Tel is not valid when add cluster")
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
 		return
 	}
 
-	if formData["ca"] == nil || formData["cert"] == nil || formData["key"] == nil {
-		response = apiutils.BuildResponseDataForError(700070021, "连接集群所需要的证书和密钥文件必须要上传")
-		err := sysadmLog.NewErrorWithStringLevel(700070021, "info", "certification file or key file has not be updated when add cluster")
+	ca := strings.TrimSpace(formData["ca"].([]string)[0])
+	cert := strings.TrimSpace(formData["cert"].([]string)[0])
+	key := strings.TrimSpace(formData["key"].([]string)[0])
+	if connectType == "0" && (ca == "" || cert == "" || key == "") {
+		response = apiutils.BuildResponseDataForError(700070022, "连接集群所需要的证书和密钥文件必须填写")
+		err := sysadmLog.NewErrorWithStringLevel(700070022, "info", "ca, cert or key is empty")
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
 		return
 	}
 
-	caContent, e := utils.ReadUploadedFile(formData["ca"].(*multipart.FileHeader))
+	if connectType == "1" && ca == "" {
+		response = apiutils.BuildResponseDataForError(700070023, "使用Token连接时,根证书用必须填写")
+		err := sysadmLog.NewErrorWithStringLevel(700070023, "info", "ca is empty")
+		errs = append(errs, err)
+		c.JSON(http.StatusOK, response)
+		runData.logEntity.LogErrors(errs)
+		return
+	}
+
+	var kubeConfigContent []byte
+	if connectType == "2" {
+		if formData["kubeConfig"] == nil {
+			response = apiutils.BuildResponseDataForError(700070026, "连接方式已选择为通过kubeConfig方式连接，但是没有上传文件")
+			err := sysadmLog.NewErrorWithStringLevel(700070026, "info", "kubeconfig file is empty")
+			errs = append(errs, err)
+			c.JSON(http.StatusOK, response)
+			runData.logEntity.LogErrors(errs)
+			return
+		}
+		var e error = nil
+		kubeConfigContent, e = utils.ReadUploadedFile(formData["kubeConfig"].(*multipart.FileHeader))
+		if e != nil {
+			response = apiutils.BuildResponseDataForError(700070027, "上传kubeConfig文件失败,请确认操作是否正确")
+			err := sysadmLog.NewErrorWithStringLevel(700070027, "error", "upload kubeconfig file  error %s", e)
+			errs = append(errs, err)
+			c.JSON(http.StatusOK, response)
+			runData.logEntity.LogErrors(errs)
+			return
+		}
+	}
+
+	k8sClusterID, clusterID, kubeVersion, cri, podcidr, svccidr, restConf, e := getClusterInfo(dcidInt, azidInt, token, apiserver, ca, cert, key,
+		string(kubeConfigContent), connectType)
 	if e != nil {
-		response = apiutils.BuildResponseDataForError(700070022, "上传根证书出错,请确认操作是否正确")
-		err := sysadmLog.NewErrorWithStringLevel(700070022, "error", "upload ca error %s", e)
-		errs = append(errs, err)
-		c.JSON(http.StatusOK, response)
-		runData.logEntity.LogErrors(errs)
-		return
-	}
-
-	certContent, e := utils.ReadUploadedFile(formData["cert"].(*multipart.FileHeader))
-	if e != nil {
-		response = apiutils.BuildResponseDataForError(700070023, "上传证书出错,请确认操作是否正确")
-		err := sysadmLog.NewErrorWithStringLevel(700070023, "error", "upload certification file  error %s", e)
-		errs = append(errs, err)
-		c.JSON(http.StatusOK, response)
-		runData.logEntity.LogErrors(errs)
-		return
-	}
-
-	keyContent, e := utils.ReadUploadedFile(formData["key"].(*multipart.FileHeader))
-	if e != nil {
-		response = apiutils.BuildResponseDataForError(700070024, "上传证书密钥出错,请确认操作是否正确")
-		err := sysadmLog.NewErrorWithStringLevel(700070024, "error", "upload key file  error %s", e)
-		errs = append(errs, err)
-		c.JSON(http.StatusOK, response)
-		runData.logEntity.LogErrors(errs)
-		return
-	}
-
-	k8sClusterID, clusterID, kubeVersion, cri, podcidr, svccidr, restConf, e := getClusterInfo(dcidInt, azidInt, clusterUser, apiserver, string(caContent), string(certContent), string(keyContent))
-	if e != nil {
-		response = apiutils.BuildResponseDataForError(700070025, "连接集群出错，请确认集群连接数据是否正确")
-		err := sysadmLog.NewErrorWithStringLevel(700070025, "error", "%s", e)
+		response = apiutils.BuildResponseDataForError(700070028, "连接集群出错，请确认集群连接数据是否正确")
+		err := sysadmLog.NewErrorWithStringLevel(700070028, "error", "%s", e)
 		errs = append(errs, err)
 		c.JSON(http.StatusOK, response)
 		runData.logEntity.LogErrors(errs)
@@ -296,6 +318,7 @@ func addPostHandler(c *sysadmServer.Context) {
 		runData.logEntity.LogErrors(errs)
 		return
 	}
+	clusterUser := k8sclient.GetClusterDefaultUser()
 	addData := K8sclusterSchema{
 		Id:           clusterID,
 		K8sClusterID: k8sClusterID,
@@ -305,9 +328,12 @@ func addPostHandler(c *sysadmServer.Context) {
 		EnName:       enName,
 		Apiserver:    apiserver,
 		ClusterUser:  clusterUser,
-		Ca:           string(caContent),
-		Cert:         string(certContent),
-		Key:          string(keyContent),
+		Ca:           ca,
+		Cert:         cert,
+		Key:          key,
+		ConnectType:  connectType,
+		Token:        token,
+		KubeConfig:   string(kubeConfigContent),
 		Version:      kubeVersion,
 		Cri:          cri,
 		Podcidr:      podcidr,
@@ -329,21 +355,23 @@ func addPostHandler(c *sysadmServer.Context) {
 		return
 	}
 
-	e = tryReconizeHostsInCluster(addData, restConf, userid)
-	if e != nil {
-		err := sysadmLog.NewErrorWithStringLevel(700070028, "warn", "there is an error occurred when trying reconize host %s", e)
-		errs = append(errs, err)
-	}
 	response = apiutils.BuildResponseDataForSuccess("集群已经添加成功")
 	err := sysadmLog.NewErrorWithStringLevel(700070029, "info", "cluster infromation has be added")
 	errs = append(errs, err)
 	c.JSON(http.StatusOK, response)
+
+	e = tryReconizeHostsInCluster(addData, restConf, userid)
+	if e != nil {
+		err := sysadmLog.NewErrorWithStringLevel(700070030, "error", "add host to db error %s", e)
+		errs = append(errs, err)
+	}
+
 	runData.logEntity.LogErrors(errs)
 }
 
 // 为了避免重复添加，需要获取K8S集群的ID进行判断。当前k8s集群不支持集群层的ID,但是建议使用kube-system命名空间的uid代替集群的ID
 // 参见：https://github.com/open-telemetry/semantic-conventions/blob/156f9424fe5d83d8543119224c3af6ae9af518cf/specification/resource/semantic_conventions/k8s.md?plain=1#L28-L51
-func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string) (string, string, string, string, string, string, *rest.Config, error) {
+func getClusterInfo(dcid, azid int, token, apiserver, ca, cert, key, kubeConfig, connectType string) (string, string, string, string, string, string, *rest.Config, error) {
 	idData, e := utils.NewWorker(uint64(dcid), uint64(azid))
 	if e != nil {
 		return "", "", "", "", "", "", nil, e
@@ -353,12 +381,11 @@ func getClusterInfo(dcid, azid int, clusterUser, apiserver, ca, cert, key string
 		return "", "", "", "", "", "", nil, e
 	}
 
-	clusterUser = strings.TrimSpace(clusterUser)
 	apiserver = strings.TrimSpace(apiserver)
 	ca = strings.TrimSpace(ca)
 	cert = strings.TrimSpace(cert)
 	key = strings.TrimSpace(key)
-	restConf, e := k8sclient.BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
+	restConf, e := k8sclient.BuildConfigFromParasWithConnectType(connectType, apiserver, clusterID, "", "", ca, cert, key, token, kubeConfig)
 	if e != nil {
 		return "", "", "", "", "", "", nil, e
 	}

@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +26,13 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	sysadmAZObj "sysadm/availablezone/app"
+	datacenter "sysadm/datacenter/app"
 	"sysadm/db"
 	"sysadm/httpclient"
+	sysadmK8sCluster "sysadm/k8scluster/app"
+	sysadmObjects "sysadm/objects/app"
+	"sysadm/objectsUI"
 	"sysadm/sysadmapi/apiutils"
 	"sysadm/sysadmerror"
 	"sysadm/user"
@@ -50,7 +55,7 @@ func listHost(c *sysadmServer.Context) {
 	// get userid
 	userid, e := user.GetSessionValue(c, "userid", WorkingData.sessionOption.sessionName)
 	if e != nil || userid == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030003, "error", "user should login %s", e))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040002, "error", "user should login %s", e))
 		logErrors(errs)
 		tplData := map[string]interface{}{
 			"errormessage": "user should login",
@@ -65,26 +70,73 @@ func listHost(c *sysadmServer.Context) {
 	tplData["userid"] = userid
 	tplData, e = getYumList(c, apiServer, "showmessage.html", tplData)
 	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030006, "error", "get error yum list error %s", e))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040003, "error", "get error yum list error %s", e))
 		logErrors(errs)
+		tplData := map[string]interface{}{
+			"errormessage": "系统出错，请稍后再试或联系系统管理员",
+		}
+		templateFile := "showmessage.html"
+		c.HTML(http.StatusOK, templateFile, tplData)
 		return
 	}
 
-	requestData, err, ok := getRequestData(c)
-	errs = append(errs, err...)
-	if !ok {
+	requestKeys := []string{"dcID", "azID", "clusterID", "userid", "start", "orderfield", "direction", "searchContent", "objID"}
+	requestData, e := objectsUI.GetRequestData(c, requestKeys)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040004, "error", "get request data error %s", e))
 		logErrors(errs)
 		errorTplData := map[string]interface{}{
-			"errormessage": "get request data error",
+			"errormessage": "系统出错，请稍后再试或联系系统管理员",
 		}
 		templateFile := "showmessage.html"
 		c.HTML(http.StatusOK, templateFile, errorTplData)
+		return
+	}
 
+	// 为前端下拉菜单的数据中心部分准备数据
+	var dcEntity sysadmObjects.ObjectEntity
+	dcEntity = datacenter.New()
+	conditions := make(map[string]string, 0)
+	conditions["isDeleted"] = "=0"
+	order := make(map[string]string, 0)
+	var emptyString []string
+	dcList, e := dcEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, order)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040005, "error", "get datacenter data error %s", e))
+		logErrors(errs)
+		errorTplData := map[string]interface{}{
+			"errormessage": "系统出错，请稍后再试或联系系统管理员",
+		}
+		templateFile := "showmessage.html"
+		c.HTML(http.StatusOK, templateFile, errorTplData)
+		return
+	}
+	e = buildSelectData(tplData, dcList, requestData)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040006, "error", "building select data  error %s", e))
+		logErrors(errs)
+		errorTplData := map[string]interface{}{
+			"errormessage": "系统出错，请稍后再试或联系系统管理员",
+		}
+		templateFile := "showmessage.html"
+		c.HTML(http.StatusOK, templateFile, errorTplData)
+		return
+	}
+
+	listConditions, e := listHostCondition(requestData, false)
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700040006, "error", "build query conditions error %s", e))
+		logErrors(errs)
+		errorTplData := map[string]interface{}{
+			"errormessage": "系统出错，请稍后再试或联系系统管理员",
+		}
+		templateFile := "showmessage.html"
+		c.HTML(http.StatusOK, templateFile, errorTplData)
 		return
 	}
 
 	// get total number of hosts
-	hostCount, err, ok := getHostCountFromDB(requestData, false)
+	hostCount, err, ok := getHostCountFromDB(listConditions)
 	errs = append(errs, err...)
 	if !ok {
 		logErrors(errs)
@@ -105,10 +157,13 @@ func listHost(c *sysadmServer.Context) {
 		c.HTML(http.StatusOK, templateFile, errorTplData)
 		return
 	}
-	// caclusiong page information for HTML
+
+	startPos := objectsUI.GetStartPosFromRequest(requestData)
+	// prepare page number information
+	objectsUI.BuildPageNumInfoForWorkloadList(tplData, requestData, hostCount, startPos, WorkingData.pageInfo.numPerPage, "TD1", "1")
 
 	// get host list data
-	hostData, err, ok := getHostInfoListFromDB(requestData, false)
+	hostData, err, ok := getHostInfoListFromDB(requestData, listConditions, startPos)
 	errs = append(errs, err...)
 	if !ok {
 		logErrors(errs)
@@ -153,7 +208,7 @@ func listHost(c *sysadmServer.Context) {
 		return
 	}
 
-	templateFile := "infrastructurelist.html"
+	templateFile := "hostlist.html"
 	c.HTML(http.StatusOK, templateFile, tplData)
 }
 
@@ -288,143 +343,22 @@ func getYumList(c *sysadmServer.Context, apiServer *ApiServer, msgTpl string, tp
 	return tplData, nil
 }
 
-func getRequestData(c *sysadmServer.Context) (map[string]string, []sysadmerror.Sysadmerror, bool) {
-	var errs []sysadmerror.Sysadmerror
-	ret := make(map[string]string, 0)
-
-	dataMap, err := utils.GetRequestData(c, []string{"projectid", "userid", "hostid", "searchKey", "start", "numperpage", "orderfield", "direction"})
-	errs = append(errs, err...)
-
-	projectid := ""
-	projectid, ok := dataMap["projectid"]
-	if ok {
-		projectid = strings.TrimSpace(projectid)
-	}
-	ret["projectid"] = projectid
-
-	// try to get userid in request data
-	userid := ""
-	userid, ok = dataMap["userid"]
-	if ok {
-		userid = strings.TrimSpace(userid)
-	}
-
-	// try to get get userid from session if there is not userid in request data
-	if userid == "" {
-		// get userid
-		useridInterface, e := user.GetSessionValue(c, "userid", WorkingData.sessionOption.sessionName)
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030008, "error", "can not got user", e))
-			return ret, errs, false
-		}
-
-		userid = utils.Interface2String(useridInterface)
-
-	}
-	ret["userid"] = userid
-
-	hostids := ""
-	hostIDMap, _ := utils.GetRequestDataArray(c, []string{"hostid[]"})
-	if hostIDMap != nil {
-		hostIDSlice, ok := hostIDMap["hostid[]"]
-		if ok {
-			hostids = strings.Join(hostIDSlice, ",")
-		}
-	}
-	ret["hostids"] = hostids
-
-	searchKey := ""
-	searchKey, ok = dataMap["searchKey"]
-	if ok {
-		searchKey = strings.TrimSpace(searchKey)
-	}
-	ret["searchKey"] = searchKey
-
-	start := ""
-	start, ok = dataMap["start"]
-	if ok {
-		start = strings.TrimSpace(start)
-	}
-	ret["start"] = start
-
-	numperpage := ""
-	numperpage, ok = dataMap["numperpage"]
-	if ok {
-		numperpage = strings.TrimSpace(numperpage)
-	}
-	ret["numperpage"] = numperpage
-
-	orderfield := ""
-	orderfield, ok = dataMap["orderfield"]
-	if ok {
-		orderfield = strings.TrimSpace(orderfield)
-	}
-	ret["orderfield"] = orderfield
-
-	direction := ""
-	direction, ok = dataMap["direction"]
-	if ok {
-		direction = strings.TrimSpace(direction)
-	}
-	ret["direction"] = direction
-
-	return ret, errs, true
-}
-
-func getHostInfoListFromDB(data map[string]string, isDeleted bool) ([]map[string]string, []sysadmerror.Sysadmerror, bool) {
+func getHostInfoListFromDB(requestData, conditions map[string]string, startPos int) ([]map[string]string, []sysadmerror.Sysadmerror, bool) {
 	var errs []sysadmerror.Sysadmerror
 	var ret []map[string]string
 
-	// Qeurying data from DB
-	whereMap := make(map[string]string, 0)
-	if data["projectid"] != "" {
-		whereMap["projectid"] = "=\"" + data["projectid"] + "\""
-	}
-
-	if data["userid"] != "" {
-		whereMap["userid"] = "=\"" + data["userid"] + "\""
-	}
-
-	if data["hostids"] != "" {
-		whereMap["hostid"] = "in (" + data["hostids"] + ")"
-	}
-
-	if data["searchKey"] != "" {
-		searchSql := "=1 and (hostname like \"%" + data["searchKey"] + "%\" or ip like \"%" + data["searchKey"] + "%\")"
-		whereMap["1"] = searchSql
-	}
-
-	if !isDeleted {
-		whereMap["status"] = "!=\"deleted\""
-	}
-
-	num := 0
-	if data["numperpage"] != "" {
-		tmpNum, e := strconv.Atoi(data["numperpage"])
-		if e != nil {
-			num = tmpNum
-		}
-	}
-
 	var limit []int
-	if num > 0 {
-		startInt := 0
-		if data["start"] != "" {
-			if tmpStartInt, e := strconv.Atoi(data["start"]); e != nil {
-				startInt = tmpStartInt
-			}
-		}
-		limit = append(limit, startInt)
-		limit = append(limit, num)
-	}
+	limit = append(limit, startPos)
+	limit = append(limit, WorkingData.pageInfo.numPerPage)
 
 	var order []db.OrderData
 	direction := 0
-	if strings.ToUpper(data["direction"]) == "DESC" {
+	if requestData["direction"] == "1" {
 		direction = 1
 	}
-	if data["orderfield"] != "" {
-		fieldSlice := strings.Split(data["orderfield"], ",")
+
+	if requestData["orderfield"] != "" {
+		fieldSlice := strings.Split(requestData["orderfield"], ",")
 		for _, f := range fieldSlice {
 			line := db.OrderData{Key: f, Order: direction}
 			order = append(order, line)
@@ -433,7 +367,7 @@ func getHostInfoListFromDB(data map[string]string, isDeleted bool) ([]map[string
 	selectData := db.SelectData{
 		Tb:        []string{"host"},
 		OutFeilds: []string{"*"},
-		Where:     whereMap,
+		Where:     conditions,
 		Limit:     limit,
 		Order:     order,
 	}
@@ -457,37 +391,14 @@ func getHostInfoListFromDB(data map[string]string, isDeleted bool) ([]map[string
 	return ret, errs, true
 }
 
-func getHostCountFromDB(data map[string]string, isDeleted bool) (int, []sysadmerror.Sysadmerror, bool) {
+func getHostCountFromDB(conditons map[string]string) (int, []sysadmerror.Sysadmerror, bool) {
 	var errs []sysadmerror.Sysadmerror
 	ret := 0
-
-	// Qeurying data from DB
-	whereMap := make(map[string]string, 0)
-	if data["projectid"] != "" {
-		whereMap["projectid"] = "=\"" + data["projectid"] + "\""
-	}
-
-	if data["userid"] != "" {
-		whereMap["userid"] = "=\"" + data["userid"] + "\""
-	}
-
-	if data["hostids"] != "" {
-		whereMap["hostid"] = "in (" + data["hostids"] + ")"
-	}
-
-	if data["searchKey"] != "" {
-		searchSql := "=1 and (hostname like \"%" + data["searchKey"] + "%\" or ip like \"%" + data["searchKey"] + "%\")"
-		whereMap["1"] = searchSql
-	}
-
-	if !isDeleted {
-		whereMap["status"] = "!=\"deleted\""
-	}
 
 	selectData := db.SelectData{
 		Tb:        []string{"host"},
 		OutFeilds: []string{"count(hostid) as totalNum"},
-		Where:     whereMap,
+		Where:     conditons,
 	}
 
 	dbEntity := WorkingData.dbConf.Entity
@@ -664,4 +575,171 @@ func buildHostStatusInfo(tplData map[string]interface{}) map[string]interface{} 
 	tplData["HostData"] = newHostData
 
 	return tplData
+}
+
+func listHostCondition(data map[string]string, isDeleted bool) (map[string]string, error) {
+	whereMap := make(map[string]string, 0)
+	if data["objectIds"] != "" {
+		whereMap["hostid"] = "in (" + data["objectIds"] + ")"
+		if !isDeleted {
+			whereMap["status"] = "!=\"deleted\""
+		}
+
+		return whereMap, nil
+	}
+
+	if data["clusterID"] != "" {
+		whereMap["k8sclusterid"] = "=\"" + data["clusterID"] + "\""
+		if !isDeleted {
+			whereMap["status"] = "!=\"deleted\""
+		}
+
+		return whereMap, nil
+	}
+
+	if data["azID"] != "" {
+		whereMap["azid"] = "=\"" + data["azID"] + "\""
+		if !isDeleted {
+			whereMap["status"] = "!=\"deleted\""
+		}
+
+		return whereMap, nil
+	}
+
+	if data["dcID"] != "" {
+		whereMap["dcid"] = "=\"" + data["dcID"] + "\""
+		if !isDeleted {
+			whereMap["status"] = "!=\"deleted\""
+		}
+
+		return whereMap, nil
+	}
+
+	if data["searchKey"] != "" {
+		searchSql := "=1 and (hostname like \"%" + data["searchKey"] + "%\" or ip like \"%" + data["searchKey"] + "%\")"
+		whereMap["1"] = searchSql
+		if !isDeleted {
+			whereMap["status"] = "!=\"deleted\""
+		}
+
+		return whereMap, nil
+	}
+
+	return whereMap, nil
+}
+
+func buildSelectData(tplData map[string]interface{}, dcList []interface{}, requestData map[string]string) error {
+
+	selectedDC := strings.TrimSpace(requestData["dcID"])
+	if selectedDC == "" {
+		selectedDC = "0"
+	}
+
+	selectedAZ := strings.TrimSpace(requestData["azID"])
+	if selectedAZ == "" {
+		selectedAZ = "0"
+	}
+
+	selectedCluster := strings.TrimSpace(requestData["clusterID"])
+	if selectedCluster == "" {
+		selectedCluster = "0"
+	}
+
+	// preparing datacenter options
+	var dcOptions []objectsUI.SelectOption
+	dcOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择数据中心===",
+		ParentID: "0",
+	}
+	dcOptions = append(dcOptions, dcOption)
+	for _, line := range dcList {
+		dcData, ok := line.(datacenter.DatacenterSchema)
+		if !ok {
+			return fmt.Errorf("the data is not datacenter schema")
+		}
+		dcOption := objectsUI.SelectOption{
+			Id:       strconv.Itoa(int(dcData.Id)),
+			Text:     dcData.CnName,
+			ParentID: "0",
+		}
+		dcOptions = append(dcOptions, dcOption)
+	}
+	dcSelect := objectsUI.SelectData{Title: "数据中心", SelectedId: selectedDC, Options: dcOptions}
+	tplData["dcSelect"] = dcSelect
+
+	// preparing AZ options
+	var azOptions []objectsUI.SelectOption
+	azOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择可用区===",
+		ParentID: "0",
+	}
+	azOptions = append(azOptions, azOption)
+	if selectedDC != "0" {
+		var azEntity sysadmObjects.ObjectEntity
+		azEntity = sysadmAZObj.New()
+		conditions := make(map[string]string, 0)
+		var emptyString []string
+		conditions["isDeleted"] = "='0'"
+		conditions["dcid"] = "='" + selectedDC + "'"
+		azList, e := azEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, make(map[string]string))
+		if e != nil {
+			return e
+		}
+		for _, line := range azList {
+			azData, ok := line.(sysadmAZObj.AvailablezoneSchema)
+			if !ok {
+				return fmt.Errorf("the data is not AZ schema")
+			}
+
+			azOption := objectsUI.SelectOption{
+				Id:       strconv.Itoa(int(azData.Id)),
+				Text:     azData.CnName,
+				ParentID: strconv.Itoa(int(azData.Datacenterid)),
+			}
+			azOptions = append(azOptions, azOption)
+		}
+	}
+	azSelect := objectsUI.SelectData{Title: "可用区", SelectedId: selectedAZ, Options: azOptions}
+	tplData["azSelect"] = azSelect
+
+	// preparing cluster options
+	var clusterOptions []objectsUI.SelectOption
+	clusterOption := objectsUI.SelectOption{
+		Id:       "0",
+		Text:     "===选择集群===",
+		ParentID: "0",
+	}
+	clusterOptions = append(clusterOptions, clusterOption)
+	if selectedDC != "0" {
+		var k8sclusterEntity sysadmObjects.ObjectEntity
+		k8sclusterEntity = sysadmK8sCluster.New()
+		conditions := make(map[string]string, 0)
+		var emptyString []string
+		conditions["isDeleted"] = "='0'"
+		conditions["azid"] = "='" + selectedAZ + "'"
+		clusterList, e := k8sclusterEntity.GetObjectList("", emptyString, emptyString, conditions, 0, 0, make(map[string]string))
+		if e != nil {
+			return e
+		}
+
+		for _, line := range clusterList {
+			clusterData, ok := line.(sysadmK8sCluster.K8sclusterSchema)
+			if !ok {
+				return fmt.Errorf("the data is not cluster schema")
+			}
+
+			clusterOption := objectsUI.SelectOption{
+				Id:       clusterData.Id,
+				Text:     clusterData.CnName,
+				ParentID: strconv.Itoa(int(clusterData.Azid)),
+			}
+			clusterOptions = append(clusterOptions, clusterOption)
+		}
+	}
+	clusterSelect := objectsUI.SelectData{Title: "集群", SelectedId: selectedCluster, Options: clusterOptions}
+	tplData["clusterSelect"] = clusterSelect
+
+	return nil
 }

@@ -22,77 +22,84 @@ import (
 	"os"
 	"path/filepath"
 
-	"sysadm/sysadm/config"
 	"github.com/wangyysde/sysadmServer"
+	"sysadm/sysadm/config"
 )
 
 // add handlers for static html page,image,css and js to routers
 // return nil if success or return error
-func addStaicRoute(r *sysadmServer.Engine,cmdRunPath string) error {
+func addStaicRoute(r *sysadmServer.Engine, cmdRunPath string) error {
 	if r == nil {
 		return fmt.Errorf("route is nil.")
 	}
 
 	// favicon.ico
-	path,err := getStaticPath(config.FaviconFile,cmdRunPath)
+	path, err := getStaticPath(config.FaviconFile, cmdRunPath)
 	if err == nil {
 		r.Static("/favicon.ico", path)
 	}
-	
+
 	// images directory
-	path,err = getStaticPath(config.ImagesDir,cmdRunPath)
+	path, err = getStaticPath(config.ImagesDir, cmdRunPath)
 	if err != nil {
 		return err
 	}
 	r.Static("/images", path)
-	
+
 	// css directory
-	path,err = getStaticPath(config.CssDir,cmdRunPath)
+	path, err = getStaticPath(config.CssDir, cmdRunPath)
 	if err != nil {
 		return err
 	}
 	r.Static("/css", path)
 
 	// css directory
-	path,err = getStaticPath(config.JsDir,cmdRunPath)
+	path, err = getStaticPath(config.JsDir, cmdRunPath)
 	if err != nil {
 		return err
 	}
-	r.Static("/js", path)    
+	r.Static("/js", path)
 
 	// fonts directory
-	path,err = getStaticPath(config.FontsDir,cmdRunPath)
+	path, err = getStaticPath(config.FontsDir, cmdRunPath)
 	if err != nil {
 		return err
 	}
-	r.Static("/fonts", path)   
+	r.Static("/fonts", path)
+
+	// download directory
+	path, err = getStaticPath("download", cmdRunPath)
+	if err != nil {
+		return err
+	}
+	r.Static("/download", path)
 
 	return nil
 }
 
-func getStaticPath(path string, cmdRunPath string) (string, error){
-	dir ,error := filepath.Abs(filepath.Dir(cmdRunPath))
+func getStaticPath(path string, cmdRunPath string) (string, error) {
+	dir, error := filepath.Abs(filepath.Dir(cmdRunPath))
 	if error != nil {
-		return "",error
+		return "", error
 	}
 
 	if path == "" {
-		return dir,nil
+		return dir, nil
 	}
 
 	if filepath.IsAbs(path) {
-		return path,nil
+		return path, nil
 	}
 
-	tmpDir := filepath.Join(dir,"../")
-	tmpDir = filepath.Join(tmpDir,config.DefaultHtmlPath)
-	tmpDir = filepath.Join(tmpDir,"/")
-	tmpDir = filepath.Join(tmpDir,path)
+	tmpDir := filepath.Join(dir, "../")
+	tmpDir = filepath.Join(tmpDir, config.DefaultHtmlPath)
+	tmpDir = filepath.Join(tmpDir, "/")
+	tmpDir = filepath.Join(tmpDir, path)
 
-	_,err := os.Stat(tmpDir)
+	_, err := os.Stat(tmpDir)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
-	return tmpDir,nil
+	return tmpDir, nil
 }

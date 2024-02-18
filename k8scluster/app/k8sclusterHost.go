@@ -24,7 +24,6 @@ import (
 	"strings"
 	"sysadm/k8sclient"
 
-	hostApp "sysadm/host/app"
 	osApp "sysadm/os/app"
 	versionApp "sysadm/version/app"
 )
@@ -36,8 +35,11 @@ func tryReconizeHostsInCluster(clusterData K8sclusterSchema, restConf *rest.Conf
 		ca := strings.TrimSpace(clusterData.Ca)
 		cert := strings.TrimSpace(clusterData.Cert)
 		key := strings.TrimSpace(clusterData.Key)
+		connectType := strings.TrimSpace(clusterData.ConnectType)
+		token := strings.TrimSpace(clusterData.Token)
+		kubeConfig := strings.TrimSpace(clusterData.KubeConfig)
 		clusterID := clusterData.Id
-		tmpRestConf, e := k8sclient.BuildConfigFromParametes([]byte(ca), []byte(cert), []byte(key), apiserver, clusterID, clusterUser, "default")
+		tmpRestConf, e := k8sclient.BuildConfigFromParasWithConnectType(connectType, apiserver, clusterID, clusterUser, "", ca, cert, key, token, kubeConfig)
 		if e != nil {
 			return e
 		}
@@ -50,38 +52,11 @@ func tryReconizeHostsInCluster(clusterData K8sclusterSchema, restConf *rest.Conf
 		return e
 	}
 
-	host, e := hostApp.New(runData.dbConf, runData.workingRoot)
-	if e != nil {
-		return e
-	}
-	var emptyString []string
-	systemidCondition := make(map[string]string, 0)
 	for _, node := range nodes.Items {
-		systemID := node.Status.NodeInfo.SystemUUID
-		if id := strings.TrimSpace(systemID); id != "" {
-			systemidCondition["systemID"] = `="` + id + `"`
-			hostList, e := host.GetObjectList("", emptyString, emptyString, systemidCondition, 0, 0, nil)
-			if e != nil {
-				continue
-			}
-
-			if len(hostList) < 1 {
-				e = tryAddHost(clusterData, node, userid)
-				if e != nil {
-					return e
-				}
-				continue
-			}
-
-			if len(hostList) > 1 {
-				//TODO
-				// 说明系统中的数据不正确，发出告警，请系统管理员进行处理
-				continue
-			}
-
-			// 检查并处理主机的信息
+		e = tryAddHost(clusterData, node, userid)
+		if e != nil {
+			return e
 		}
-
 	}
 
 	return nil
@@ -127,7 +102,23 @@ func tryAddHost(clusterData K8sclusterSchema, node corev1.Node, userid int) erro
 		osversionid = verData.VersionID
 	}
 
-	status := hostApp.HostStatusUnkown
+	status := ""
+	for _, c := range node.Status.Conditions {
+		if c.Type == corev1.NodeReady && c.Status == corev1.ConditionTrue {
+			status = string(HostStatusReady)
+			break
+		}
+		if c.Status == corev1.ConditionTrue {
+			if status == "" {
+				status = string(c.Type)
+			} else {
+				status = status + "," + string(c.Type)
+			}
+		}
+	}
+	if status == "" {
+		status = string(HostStatusUnkown)
+	}
 	k8sclusterid := clusterData.Id
 	dcid := clusterData.Dcid
 	azid := clusterData.Azid
@@ -136,7 +127,60 @@ func tryAddHost(clusterData K8sclusterSchema, node corev1.Node, userid int) erro
 	architecture := node.Status.NodeInfo.Architecture
 	kernelVersion := node.Status.NodeInfo.KernelVersion
 
-	return hostApp.AddHostFromCluster(userid, osid, osversionid, int(dcid), int(azid), hostname, string(status),
+	hostInst, e := HostNew(runData.dbConf, runData.workingRoot)
+	if e != nil {
+		return e
+	}
+	return hostInst.AddHostFromCluster(userid, osid, osversionid, int(dcid), int(azid), hostname, string(status),
 		k8sclusterid, machineID, systemID, architecture, kernelVersion, ips)
 
 }
+
+/*
+func tryUpdateHostInfoForClusterAdd(clusterData K8sclusterSchema, node corev1.Node, userid int,
+	hostList []interface{}) error {
+
+	hostLine := hostList[0]
+	hostData, ok := hostLine.(hostApp.HostSchema)
+	if !ok {
+		return fmt.Errorf("the data is not hostSchema data")
+	}
+
+	// 如果对应的主机存在关联的集群，
+
+
+	hostID := hostData.HostId
+	hostName := node.Name
+	status := ""
+	for _, c := range node.Status.Conditions {
+		if c.Type == corev1.NodeReady && c.Status == corev1.ConditionTrue {
+			status = string(hostApp.HostStatusReady)
+			break
+		}
+		if c.Status == corev1.ConditionTrue {
+			if status == "" {
+				status = string(c.Type)
+			} else {
+				status = status + "," + string(c.Type)
+			}
+		}
+	}
+	if status == "" {
+		status = string(hostApp.HostStatusUnkown)
+	}
+
+	k8sclusterid := clusterData.Id
+	dcid := clusterData.Dcid
+	azid := clusterData.Azid
+	machineID := node.Status.NodeInfo.MachineID
+	systemID := node.Status.NodeInfo.SystemUUID
+	architecture := node.Status.NodeInfo.Architecture
+	kernelVersion := node.Status.NodeInfo.KernelVersion
+	ips := make([]string, 0)
+	for _, addr := range node.Status.Addresses {
+		ips = append(ips, addr.Address)
+	}
+
+	return hostApp.UpdateHostInfoForClusterAdd(hostID, hostName, status, k8sclusterid, machineID, systemID, architecture, kernelVersion, dcid, azid, userid)
+}
+*/

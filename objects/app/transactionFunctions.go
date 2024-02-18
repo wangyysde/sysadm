@@ -71,6 +71,29 @@ func (o ObjectTx) AddObject(data interface{}) error {
 	return tx.NewInsertData(tbName, dbFieldData)
 }
 
+func (o ObjectTx) UpdateObject(data interface{}, conditions map[string]string, tbName string) error {
+	if o.Entity == nil {
+		return fmt.Errorf("objection entity is nil")
+	}
+
+	dbData, e := Marshal(data)
+	if e != nil {
+		return e
+	}
+
+	tbName = strings.TrimSpace(tbName)
+	if tbName == "" {
+		return fmt.Errorf("object table is nil")
+	}
+	dbFieldData := sysadmDB.FieldData(dbData)
+	tx := o.Tx
+	if tx == nil {
+		return fmt.Errorf("transaction has not began")
+	}
+
+	return tx.NewUpdateData(tbName, dbFieldData, conditions)
+}
+
 func (o ObjectTx) AddObjectWithMap(tbName string, data map[string]interface{}) error {
 	if o.Tx == nil {
 		return fmt.Errorf("transaction has not began")

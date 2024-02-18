@@ -162,10 +162,11 @@ CREATE TABLE `yum` (
 
 DROP TABLE IF EXISTS `host`;
 
+/* 20240202: 取消host与project的关联 */
 CREATE TABLE `host` (
   `hostid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'hostid identified a host',
   `userid` int(10) NOT NULL COMMENT '主机所属的用户ID',
-  `projectid` int(10) DEFAULT '0' COMMENT '主机所属的项目ID',
+  `projectid` int(10) DEFAULT '0' COMMENT '主机所属的项目ID.',
   `hostname` varchar(63) DEFAULT NULL COMMENT 'host name of OS',
   `osID` int(3) NOT NULL COMMENT 'which OS distrubition,such as centos,readhat, ubantu',
   `osversionid` int(11) NOT NULL COMMENT 'version id identified OS version ',
@@ -483,33 +484,35 @@ CREATE TABLE `availablezone` (
 insert  into `availablezone`(`id`,`no`,`cnName`,`enName`,`datacenterid`,`dutyTel`,`status`,`isDeleted`,`createTime`,`updateTime`,`createBy`,`updateBy`,`remark`) values (1,0,'AZ1','AZ1',1,'021-XXXXXXXX',1,0,'2023-07-04 14:51:38','2023-07-04 14:51:41',1,NULL,'测试可用区'),(2,1,'BJ_AZ1','BJ_AZ1',2,'010-XXXXXXX',1,0,'2023-07-04 14:52:46','2023-07-04 14:52:46',1,NULL,'北京可用区1');
 
 /* k8s 集群信息表 */
-DROP TABLE IF EXISTS `k8scluster`;
-create table `k8scluster` (
-    `id` int unsigned not null comment '集群ID，非自增，由雪花算法生成',
-    `k8sClusterID` varchar(255) comment 'k8s集群自身的ID,这个值的获取见k8sclient组件的GetKubernetesClusterID函数',
-    `dcid` int unsigned not null comment '集群所属的数据中心ID',
-    `azid` int unsigned not null comment '集群所属的可用区ID',
-    `cnName` varchar(255) not null comment '集群中文名称',
-    `enName` varchar(255) comment '集群英文名称',
-    `apiserver` varchar(255) not null comment 'kube apiserver 连接地址和端口',
-    `clusterUser` varchar(255) comment '连接集群的集群用户名',
-    `ca` longtext not null comment '连接集群的CA证书',
-    `cert` longtext not null comment '连接集群的证书',
-    `key` longtext not null comment '连接集群的密钥',
-    `version` varchar(50) comment '集群的kubernetes版本',
-    `cri` varchar(50) comment '集群的cri',
-    `podcidr` varchar(50) comment '集群的pod cidr',
-    `servicecidr` varchar(50) comment '集群的service cidr',
-    `dutyTel` varchar(20) comment '值班电话',
-    `status` tinyint(1) not null default 1 comment '状态0未启用 1已启用 2 已停用',
-    `isDeleted` tinyint(1) not null default 0 comment '是否删除 0正常 1已删除',
-    `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `createBy` int(10) unsigned comment '创建人,对应user表的userid',
-    `updateBy` int(10) unsigned comment '更新人,对应user表的userid',
-    `remark` varchar(255) comment '备注',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+CREATE TABLE `k8scluster` (
+  `id` varchar(20) NOT NULL COMMENT '集群ID，非自增，由雪花算法生成',
+  `k8sClusterID` varchar(255) DEFAULT NULL COMMENT 'k8s集群自身的ID,这个值的获取见k8sclient组件的GetKubernetesClusterID函数',
+  `dcid` int(10) unsigned DEFAULT NULL COMMENT '集群所属的数据中心ID',
+  `azid` int(10) unsigned NOT NULL COMMENT '集群所属的可用区ID',
+  `cnName` varchar(255) NOT NULL COMMENT '集群中文名称',
+  `enName` varchar(255) DEFAULT NULL COMMENT '集群英文名称',
+  `apiserver` varchar(255)  COMMENT 'kube apiserver 连接地址和端口',
+  `clusterUser` varchar(255) DEFAULT NULL COMMENT '连接集群的集群用户名',
+  `connectType` char(1) NOT NULL DEFAULT '0' COMMENT '集群连接方式，定义参见k8scluster模块的k8sclusterDefined.go文件',
+  `ca` longtext  COMMENT '连接集群的CA证书',
+  `cert` longtext  COMMENT '连接集群的证书',
+  `key` longtext  COMMENT '连接集群的密钥',
+  `token` longtext COMMENT '连接集群的token值',
+  `kubeConfig` longtext COMMENT '连接集群的kubeconfig配置',
+  `version` varchar(50) DEFAULT NULL COMMENT '集群的kubernetes版本',
+  `cri` varchar(50) DEFAULT NULL COMMENT '集群的cri',
+  `podcidr` varchar(50) DEFAULT NULL COMMENT '集群的pod cidr',
+  `servicecidr` varchar(50) DEFAULT NULL COMMENT '集群的pod cidr',
+  `dutyTel` varchar(20) DEFAULT NULL COMMENT '值班电话',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态0未启用 1已启用 2 已停用',
+  `isDeleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0正常 1已删除',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `createBy` int(10) unsigned DEFAULT NULL COMMENT '创建人,对应user表的userid',
+  `updateBy` int(10) unsigned DEFAULT NULL COMMENT '更新人,对应user表的userid',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC
 
 DROP TABLE IF EXISTS `objectinfo`;
 CREATE TABLE `objectinfo` (
@@ -545,4 +548,51 @@ CREATE TABLE `objecttable` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
 
+/* 记录系统事件的事件表 */
+DROP TABLE IF EXISTS `events`;
+CREATE TABLE `events` (
+    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '事件ID值',
+    `class` TINYINT(1) NOT NULL COMMENT '事件类型：0信息类,  1警告, 2错误， 3故障',
+    `scope` TINYINT(1) NOT NULL COMMENT '产生事件对象的范围',
+    `startTime` INT(11)  COMMENT '事件发生时的时间截',
+    `reasonMessage` VARCHAR(255) COMMENT '发生事件的原因',
+    `object` VARCHAR(255) COMMENT '产生事件的对象并及其ID或标识',
+    `subObject` VARCHAR(255) COMMENT '产生事件如果有子对象，则本字段记录子对象及它的ID或标识',
+    `action` VARCHAR(255) COMMENT '事件发生时的动作',
+    `data` VARCHAR(1024) COMMENT '记录事件后续处理所必须的数据',
+    `userID` INT(10) NULL COMMENT '事件产生时的操作者,如果是系统动作产生的事件,此字段为空',
+    `isDeleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0正常 1已删除',
+    `deletedTime` INT(11) COMMENT '事件的删除时间截',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
 
+/* 记录系统事件与用户对应关系的表 */
+DROP TABLE IF EXISTS `eventUser`;
+CREATE TABLE `eventUser` (
+    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '关系ID值',
+    `eventID` INT(10) NOT NULL COMMENT '事件ID值',
+    `userID` INT(10) NOT NULL COMMENT '用户ID值',
+    `isRead` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '用户是否已经阅读了事件,0表示未读，1表示已读',
+    `readTime` INT(11)  COMMENT '如果用户已阅读了事件，记录用户阅读事件的时间截',
+    `isDeleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0正常 1已删除',
+    `deletedTime` INT(11) COMMENT '事件的删除时间截',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;
+
+/* 系统配置表 */
+DROP TABLE IF EXISTS `sysSettings`;
+CREATE TABLE `sysSettings` (
+    `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '配置的ID值',
+    `scope` TINYINT(1) NOT NULL COMMENT '配置项的范围 0 全局 1 k8s集群 2 节点级别 3 项目级别 4 用户组级别 5 用户级别 6 应用级别 ',
+    `key` varchar(64) not null comment '配置的key值, 不能为空',
+    `defaultValue` longtext  comment '配置项的默认值',
+    `value` longtext  comment '配置项值',
+    `deprecated` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否废弃，0表示否，1表示是',
+    `deprecatedVersion` varchar(64) comment '废弃的版本号,即应用的版本号大于本字段指定的值表示废弃对应的配置项',
+    `deprecatedReason` varchar(255) comment '废弃原因',
+    `lastModifiedBy` int(10) unsigned DEFAULT NULL COMMENT '上次修改配置项值的用户,对应user表的userid.0表示系统自动设置的',
+    `lastModifiedTime` INT(11)  COMMENT '上次修改配置项值的时间截',
+    `lastModifiedReason` varchar(255)  COMMENT '上次修改配置项值的原因',
+    `lastValue` longtext comment '上次修改前的值',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=INNODB DEFAULT CHARSET=utf8 CHECKSUM=1 ROW_FORMAT=DYNAMIC;

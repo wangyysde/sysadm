@@ -58,6 +58,12 @@ type K8sclusterSchema struct {
 	Cert string `form:"cert" json:"cert" yaml:"cert" xml:"cert" db:"cert"`
 	// 连接集群的密钥
 	Key string `form:"key" json:"key" yaml:"key" xml:"key" db:"key"`
+	// 连接集群类型
+	ConnectType string `form:"connectType" yaml:"connectType" xml:"connectType" db:"connectType"`
+	// 连接集群所使用的token
+	Token string `form:"token" yaml:"token" xml:"token" db:"token"`
+	// 连接集群所使用的kubeconfig
+	KubeConfig string `form:"kubeConfig" yaml:"kubeConfig" xml:"kubeConfig" db:"kubeConfig"`
 	// 集群的kubernetes版本
 	Version string `form:"version" json:"version" yaml:"version" xml:"version" db:"version"`
 	// 集群的cri

@@ -1,0 +1,166 @@
+<script type="text/javascript" src="/js/objectlist.js"></script>
+<link rel="stylesheet" href="/css/objectlist.css">
+
+{{range $index,$line := .addtionalJs }}
+<script type="text/javascript" src="{{ $line }}"></script>
+{{end}}
+
+{{range $index, $line := .addtionalCss }}
+<link rel="stylesheet" href="/{{- $line -}}">
+{{end}}
+
+<script language="javascript1.2">
+	var popMenuItems = new Array();
+	var pageUrl = {{.baseUri}};
+	{{range $index,$line := .allPopMenuItems }}
+	popMenuItems[{{- $index -}}] = {{- $line -}};
+	{{end}}
+
+</script>
+
+<section class="content-header">
+	<h1>
+		{{ .mainCategory }}
+		<small>{{ .subCategory }}</small>
+	</h1>
+</section>
+
+{{ $dcSelectedId := .dcSelect.SelectedId }}
+{{ $azSelectedId := .azSelect.SelectedId }}
+{{ $clusterSelectedId := .clusterSelect.SelectedId }}
+{{ $searchContent := .searchContent }}
+{{ $objName := .objName }}
+<div>
+	<div class="mutilSelectForm">
+		<form id="groupSelect" name="groupSelect" method="post" target="_self" onsubmit="return false">
+			{{ .dcSelect.Title }}:
+			<select name="dcID" id="dcID" onChange="ChangeSubOptions('getazoptionbydc','azID',this.options[this.options.selectedIndex].value,'{{.objName}}')">
+			{{ range $index,$line := .dcSelect.Options }}
+			   {{if eq $dcSelectedId $line.Id }}
+				   <option value="{{ $line.Id }}" selected> {{ $line.Text }} </option>
+				{{else}}
+				   <option value="{{ $line.Id }}" > {{ $line.Text }} </option>
+				{{end}}
+			{{end}}
+			</select> &nbsp;
+
+			{{ .azSelect.Title }}:
+			  <select name="azID"  id="azID" onChange="ChangeSubOptions('getclusteroptionbyaz','cluster',this.options[this.options.selectedIndex].value,'{{$objName}}')">
+
+		    {{ range $index,$line := .azSelect.Options }}
+		       {{if eq $azSelectedId $line.Id }}
+  		           <option value="{{ $line.Id }}" selected> {{ $line.Text }} </option>
+		       {{else}}
+			    	<option value="{{ $line.Id }}" > {{ $line.Text }} </option>
+              {{end}}
+            {{end}}
+		    </select>
+
+           {{ .clusterSelect.Title }}:
+			 <select name="cluster" id="cluster" onChange="hostReloadListPage('0','','','','{{.objName}}')">
+				 {{ $clusterSelected := .clusterSelect.SelectedId }}
+				 {{ range $index,$line := .clusterSelect.Options }}
+				 {{if eq $clusterSelected $line.Id }}
+					     <option value="{{ $line.Id }}" selected> {{ $line.Text }} </option>
+					 {{else}}
+					     <option value="{{ $line.Id }}" > {{ $line.Text }} </option>
+					 {{end}}
+					 {{end}}
+		   </select>
+		   {{ if .addButtonTitle }}
+			   {{if gt (len .clusterSelect.Options) 1 }}
+    				<span class="addObjectSign" onclick="displayAddHostForm()" title="{{ .addButtonTitle }}"> <b class="fa-plus"></b> </span>
+			   {{else}}
+					{{if gt $azSelectedId "0" }}
+					<span class="addObjectSign" onclick="displayAddHostForm()" title="{{ .addButtonTitle }}"> <b class="fa-plus"></b> </span>
+					{{end}}
+			   {{end}}
+			{{ end }}
+		</form>
+	</div>
+
+	{{ if .isSearchForm }}
+	<div class="searchForm">
+		<form id="searchForm" name="search" method="post" target="_self" onsubmit="return false">
+			<input type="text" name="searchContent" placeholder="Search..." autocomplete="off" onblur="doSearch(this.value)" />
+		</form>
+	</div>
+	{{ end }}
+</div>
+
+{{if .noData }}
+<div class="infoBox" id="infoBox">
+	<span>{{.noData }}</span>
+</div>
+{{else}}
+<form id="objectList" method="post" target="_self" onsubmit="return false">
+	<table class="list-table">
+		<tr>
+			{{range $index,$line := .thData }}
+			<th>
+				{{if $line.IsOrder }}
+				   <a href="#" onclick='hostReloadListPage("0","{{$line.ID}}","{{$line.OrderDirection}}","{{$searchContent}}","{{ $objName}}")' >
+					  {{ $line.Title }}
+				   </a>
+				    {{if $line.OrderSelected }}
+				       {{if eq $line.OrderDirection "1" }}
+				          <i class="fa fa-arrow-down"></i>
+				       {{else}}
+				          <i class="fa fa-arrow-up"></i>
+				       {{end}}
+				    {{end}}
+				{{else}}
+				{{ $line.Title }}
+				{{end}}
+			</th>
+			{{end}}
+			<th> &nbsp;&nbsp;&nbsp;操作 &nbsp;&nbsp;&nbsp;</th>
+		</tr>
+
+		{{range $index,$line := .objListData }}
+		<tr>
+			{{range $key,$value := $.thData }}
+				<td >
+					{{ $itemData := index $line (print $value.ID) }}
+
+					{{ index $line (print $value.ID) }}
+				</td>
+			{{end}}
+
+			<td>
+				<a href="#" id="popmenuid" onclick='hostListShowPopMenu(event,{{ $line.popmenuitems}}, {{ $line.objectID }},{{ $objName}})'>更多<i class="fa fa-angle-down"></i> </a>
+			</td>
+		</tr>
+		{{end}}
+	</table>
+</form>
+
+<table class="foot-table">
+	<tr>
+		<td>
+			<div class="div-foot">当前第{{ .currentPage }}页
+				{{if .prePage }}
+				    <a href="#" onclick='hostReloadListPage("{{.prePage}}","{{.orderfield}}","{{.direction}}","{{.searchContent}}","{{ $objName}}")' >前一页</a>
+				{{else}}
+				    前一页
+				{{end}}
+				{{if .nextPage }}
+				<a href="#" onclick='hostReloadListPage("{{.nextPage}}","{{.orderfield}}","{{.direction}}","{{.searchContent}}","{{ $objName}}")' >后一页</a>
+
+				{{else}}
+				   后一页
+				{{end}}
+			 共{{ .totalPage }}页 </div>
+		</td>
+	</tr>
+</table>	
+
+<div class="pop-menu" id="popmenu">
+</div>
+
+<div class="poppage" id="poppage">
+</div>
+
+<div class="detailPoppage" id="detailPoppage">
+</div>
+{{end}}
