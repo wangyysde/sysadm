@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2023 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,9 @@
 
 package main
 
-import (
-	"sysadm/agent/cmd"
-)
+import "sysadm/agent/cmd"
 
-func main(){
+func main() {
 
-    cmd.Execute()
+	cmd.Execute()
 }

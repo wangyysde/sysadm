@@ -259,9 +259,11 @@ func NewBuildRoundTripper(dialer *net.Dialer, idleConn, maxIdleConns, maxIdleCon
 		WriteBufferSize:       writeBuffer,
 		ReadBufferSize:        readBuffer,
 		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: defaultInsecureSkipVerify,
-		},
+		/*
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: defaultInsecureSkipVerify,
+			},
+		*/
 	}
 
 	return transport, nil
@@ -338,7 +340,7 @@ func GetRequestBody(r *http.Request) ([]byte, []sysadmerror.Sysadmerror) {
 	}
 
 	bodyRead := r.Body
-	if  bodyRead == nil {
+	if bodyRead == nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(106019, "error", "no request body can be read"))
 		return body, errs
 	}

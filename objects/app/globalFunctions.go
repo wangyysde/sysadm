@@ -22,6 +22,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	runtime "sysadm/apimachinery/runtime/v1beta1"
 	"sysadm/db"
 	sysadmDB "sysadm/db"
 	"sysadm/utils"
@@ -532,4 +533,312 @@ func GetCommandRelatedObjectList() ([]interface{}, error) {
 	}
 
 	return tmpRes, nil
+}
+
+// CreateGetCondition build condition(map[string]string) for get resources from DB.
+// obj is the type of resource,queryData is a map[string][]string with key is the value of the tag of the field and value
+// is a []string
+func CreateGetCondition(obj reflect.Type, queryData runtime.RequestQuery) (map[string]string, error) {
+	if len(queryData) < 1 {
+		return nil, fmt.Errorf("no request query data")
+	}
+
+	if obj.Kind() == reflect.Pointer {
+		obj = obj.Elem()
+	}
+	if obj.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("object is not a valid resource")
+	}
+
+	condition := make(map[string]string, 0)
+	for k, q := range queryData {
+		if len(q) < 1 {
+			continue
+		}
+		objElem := obj.Elem()
+		for i := 0; i < objElem.NumField(); i++ {
+			field := objElem.Field(i)
+			if !field.IsExported() {
+				continue
+			}
+			tag, okTag := field.Tag.Lookup("db")
+			if !okTag || tag == "" {
+				continue
+			}
+			if strings.TrimSpace(k) == strings.TrimSpace(tag) {
+				if len(q) == 1 {
+					condition[tag] = "='" + q[0] + "'"
+				} else {
+					qStr := ""
+					for _, qv := range q {
+						if qStr == "" {
+							qStr = "'" + qv + "'"
+						} else {
+							qStr = qStr + ",'" + qv + "'"
+						}
+					}
+					condition[tag] = "in (" + qStr + ")"
+				}
+			}
+		}
+	}
+
+	if len(condition) < 1 {
+		return nil, fmt.Errorf("request query data is not valid")
+	}
+
+	return condition, nil
+}
+
+func GetResource(gvk runtime.GroupVersionKind, obj reflect.Type, condition map[string]string) ([]interface{}, error) {
+	tbName := getResourceTableName(gvk)
+	dbData, e := getResourceFromDB(tbName, condition)
+	if e != nil {
+		return nil, e
+	}
+
+	var ret = make([]interface{}, 0)
+	for _, line := range dbData {
+		objValue := reflect.Zero(obj)
+		e := Unmarshal(line, &objValue)
+		if e != nil {
+			return nil, e
+		}
+		ret = append(ret, &objValue)
+	}
+
+	return ret, nil
+}
+
+func getResourceTableName(gvk runtime.GroupVersionKind) string {
+	group := gvk.Group
+	groupUnderline := strings.Replace(group, ".", "_", -1)
+	tbName := strings.ToLower("object_" + groupUnderline + "_" + gvk.Kind)
+
+	return tbName
+}
+
+// GetFeildValueByName get a field name from a struct by the field name.
+// return nil and an error if there is not a field named fieldname in the struct
+func GetFeildValueByName(data any, fieldName string) (interface{}, error) {
+	dT := reflect.TypeOf(data)
+	dV := reflect.ValueOf(data)
+	if dT.Kind() == reflect.Pointer {
+		dT = dT.Elem()
+		dV = dV.Elem()
+	}
+	if dT.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("we can not only get a struct field value")
+	}
+
+	for i := 0; i < dT.NumField(); i++ {
+		field := dT.Field(i)
+		if field.Name == fieldName {
+			fieldValue := dV.Field(i)
+			return fieldValue.Interface(), nil
+		}
+	}
+
+	return nil, fmt.Errorf("field named %s was not found in struct %s", fieldName, dT.Name())
+}
+
+// SetFeildValueByName set value to a field named fieldName in a struct.
+// data must be a pointer point to a struct.
+// return an error if the field named fieldName is not find in the struct or the type of the value is not
+// equal to the type of field.
+func SetFeildValueByName(data, value any, fieldName string) error {
+	dT := reflect.TypeOf(data)
+	if dT.Kind() != reflect.Pointer || dT.Elem().Kind() != reflect.Struct {
+		return fmt.Errorf("data must be a pointer point to a struct")
+	}
+	fieldName = strings.TrimSpace(fieldName)
+	if fieldName == "" {
+		return fmt.Errorf("field name must not empty")
+	}
+
+	dTElem := dT.Elem()
+	dV := reflect.ValueOf(data).Elem()
+	for i := 0; i < dTElem.NumField(); i++ {
+		field := dTElem.Field(i)
+		if field.Name == fieldName {
+			fieldType := field.Type
+			valueType := reflect.TypeOf(value)
+			if fieldType != valueType {
+				return fmt.Errorf("the type of value is not equal to the type of the field of the data")
+			}
+			tmpValue := reflect.ValueOf(value)
+			dV.Field(i).Set(tmpValue)
+			return nil
+		}
+	}
+
+	return fmt.Errorf("field named %s was not found in struct %s", fieldName, dTElem.Name())
+}
+
+func SetFieldValueZeroByName(data any, fieldName string) error {
+	dT := reflect.TypeOf(data)
+	if dT.Kind() != reflect.Pointer || dT.Elem().Kind() != reflect.Struct {
+		return fmt.Errorf("data must be a pointer point to a struct")
+	}
+	fieldName = strings.TrimSpace(fieldName)
+	if fieldName == "" {
+		return fmt.Errorf("field name must not empty")
+	}
+
+	dTElem := dT.Elem()
+	dV := reflect.ValueOf(data).Elem()
+	for i := 0; i < dTElem.NumField(); i++ {
+		field := dTElem.Field(i)
+		if field.Name == fieldName {
+			fieldType := field.Type
+			value := reflect.ValueOf(fieldType)
+			dV.Field(i).Set(value)
+			return nil
+		}
+	}
+
+	return fmt.Errorf("field named %s was not found in struct %s", fieldName, dTElem.Name())
+}
+
+func createGetRelationResourceCondition(ids []interface{}) (map[string]string, error) {
+	condition := make(map[string]string, 0)
+
+	if len(ids) < 1 {
+		return nil, fmt.Errorf("parent ID should not be empty")
+	}
+
+	if len(ids) == 1 {
+		condition[runtime.ResourceRelationParentDBFieldName] = "'" + utils.Interface2String(ids[0]) + "'"
+		return condition, nil
+	}
+
+	idsStr := ""
+	for _, id := range ids {
+		if idsStr == "" {
+			idsStr = "in('" + utils.Interface2String(id) + "'"
+		} else {
+			idsStr = idsStr + ",'" + utils.Interface2String(id) + "'"
+		}
+	}
+	idsStr = idsStr + ")"
+	condition[runtime.ResourceRelationParentDBFieldName] = idsStr
+
+	return condition, nil
+}
+
+func buildConditionByIds(ids []interface{}) (map[string]string, error) {
+	condition := make(map[string]string, 0)
+	if len(ids) < 1 {
+		return nil, fmt.Errorf("resource ID should not be empty")
+	}
+	if len(ids) == 1 {
+		condition[runtime.ResourcepKDbFieldName] = "'" + utils.Interface2String(ids[0]) + "'"
+		return condition, nil
+	}
+
+	idsStr := ""
+	for _, id := range ids {
+		if idsStr == "" {
+			idsStr = "in ('" + utils.Interface2String(id) + "'"
+		} else {
+			idsStr = idsStr + ",'" + utils.Interface2String(id) + "'"
+		}
+	}
+	idsStr = idsStr + ")"
+	condition[runtime.ResourcepKDbFieldName] = idsStr
+
+	return condition, nil
+}
+
+func GetRelatedResource(parentGvk, childGvk runtime.GroupVersionKind, childObj reflect.Type, ids []interface{}) ([]interface{}, error) {
+	relationTable := getResourceRelationTableName(parentGvk, childGvk)
+	condition, e := createGetRelationResourceCondition(ids)
+	if e != nil {
+		return nil, e
+	}
+	dbData, e := getResourceFromDB(relationTable, condition)
+	if e != nil {
+		return nil, e
+	}
+	childIds := make([]interface{}, 0)
+	for _, line := range dbData {
+		v, ok := line[runtime.ResourceRelationChildDBFieldName]
+		if !ok {
+			return nil, fmt.Errorf("no filed name %s in table %s", runtime.ResourceRelationChildDBFieldName, relationTable)
+		}
+		childIds = append(childIds, v)
+	}
+	childCondition, e := buildConditionByIds(childIds)
+	if e != nil {
+		return nil, e
+	}
+
+	return GetResource(childGvk, childObj, childCondition)
+}
+
+func getResourceRelationTableName(parentGvk, childGvk runtime.GroupVersionKind) string {
+	parentGroup := parentGvk.Group
+	pG := strings.Replace(parentGroup, ".", "_", -1)
+	childGroup := childGvk.Group
+	cG := strings.Replace(childGroup, ".", "_", -1)
+
+	return "relation_" + pG + "_" + parentGvk.Kind + "_to_" + cG + "_" + childGvk.Kind
+}
+
+func ReplacePointerWithStructForSlice(src []interface{}) ([]interface{}, error) {
+	if src == nil {
+		return nil, fmt.Errorf("source data is nil")
+	}
+	if len(src) < 1 {
+		return nil, fmt.Errorf("source data is empty")
+	}
+	ret := make([]interface{}, 0)
+	for _, v := range src {
+		srcT := reflect.TypeOf(v)
+		if srcT.Kind() != reflect.Pointer {
+			return src, nil
+		}
+		srcD := reflect.ValueOf(v).Elem().Interface()
+		ret = append(ret, srcD)
+	}
+
+	return ret, nil
+}
+
+func GetResourceReferenceTablesName(gvk runtime.GroupVersionKind) string {
+	if gvk.Group == "" || gvk.Kind == "" {
+		return ""
+	}
+	group := gvk.Group
+	g := strings.Replace(group, ".", "_", -1)
+
+	return "reference_" + g + "_" + gvk.Kind + "_objects"
+}
+
+// GetReferencedResources get referenced resources from DB by resource ID
+// return nil and error if any error occurred. otherewise []runtime.ReferenceInfo and nil
+func GetReferencedResources(tableName string, id int) ([]runtime.ReferenceInfo, error) {
+	tableName = strings.TrimSpace(tableName)
+	if tableName == "" {
+		return nil, fmt.Errorf("table name of reference resource must not empty")
+	}
+	condition := make(map[string]string, 0)
+	condition[runtime.ResourceReferenceDBObjectIdFieldName] = "='" + strconv.Itoa(id) + "'"
+
+	dbData, e := getResourceFromDB(tableName, condition)
+	if e != nil {
+		return nil, e
+	}
+
+	var ret = make([]runtime.ReferenceInfo, 0)
+	for _, line := range dbData {
+		objValue := runtime.ReferenceInfo{}
+		e := Unmarshal(line, &objValue)
+		if e != nil {
+			return nil, e
+		}
+		ret = append(ret, objValue)
+	}
+
+	return ret, nil
 }

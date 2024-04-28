@@ -20,6 +20,34 @@
 
 package app
 
+import (
+	"crypto/x509"
+)
+
+const (
+	DefaultTlsPort              = 9443
+	DefaultPort                 = 9080
+	ApiVersion           string = "v1beta1"
+	GetCommandUri        string = "getCommand"
+	publicKeyAlgorithm          = x509.RSA
+	pkiPath                     = "pki"
+	caFile                      = "ca.crt"
+	caKeyFile                   = "ca.key"
+	apiServerCertFile           = "apiserver.crt"
+	apiServerCertKeyFile        = "apiserver.key"
+
+	apiServerCertCommonName = "sysadm-apiserver"
+	agentCertCommonName     = "sysadm-agent"
+)
+
+var caOrgnaization = []string{"sysadm.cn", "www.sysadm.cn"}
+var apiServerCertOrgnaization = []string{"sysadm.cn", "www.sysadm.cn"}
+var agentCertOrgnaization = []string{"sysadm.cn", "www.sysadm.cn"}
+var caCommonName = "sysadm"
+var caPeriodDays = 10 * 365
+var apiServerCertPeriodDays = 5 * 365
+var agentCertPeriodDays = 365
+
 // current version of apiserver
 var appVer string = "1.0.1"
 

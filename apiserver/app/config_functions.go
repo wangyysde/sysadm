@@ -26,6 +26,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sysadm/sysadmLog"
 
 	"sysadm/config"
 	"sysadm/db"
@@ -35,7 +36,7 @@ import (
 	"sysadm/utils"
 )
 
-func HandlerConfig() (bool, []sysadmerror.Sysadmerror) {
+func handlerConfig() (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020007, "debug", "try to handle configurations for apiserver"))
@@ -500,24 +501,29 @@ func validateDbBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 }
 
 // SetLogger set parameters to accessLogger and errorLoger
-func SetLogger() (bool, []sysadmerror.Sysadmerror) {
+func setLogger() (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
-
+	logger := sysadmLog.NewSysadmLogger()
 	_ = sysadmServer.SetLoggerKind(runData.runConf.ConfLog.Kind)
+	logger.SetLoggerKind(runData.runConf.ConfLog.Kind)
 	_ = sysadmServer.SetLogLevel(runData.runConf.ConfLog.Level)
+	logger.SetLoggerLevel(runData.runConf.ConfLog.Level)
 	_ = sysadmServer.SetTimestampFormat(runData.runConf.ConfLog.TimeStampFormat)
+	logger.SetTimestampFormat(runData.runConf.ConfLog.TimeStampFormat)
 
 	if runData.runConf.ConfLog.AccessLog != "" {
 		_, fp, err := sysadmServer.SetAccessLogFile(runData.runConf.ConfLog.AccessLog)
 		if err != nil {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020026, "error", "access log %s can not be openned. error %. access logs will be output to standard device", runData.runConf.ConfLog.AccessLog, err))
 			e := sysadmServer.SetAccessLoggerWithFp(os.Stdout)
+			_ = logger.SetAccessLoggerWithFp(os.Stdout)
 			if e != nil {
 				errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020027, "error", "can not set access logger error %s", e))
 				return false, errs
 			}
 		} else {
 			runData.runConf.ConfLog.AccessLogFp = fp
+			_ = logger.SetAccessLoggerWithFp(fp)
 		}
 	}
 
@@ -527,20 +533,23 @@ func SetLogger() (bool, []sysadmerror.Sysadmerror) {
 			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020028, "error", "can not open error log file(%s) error: %s", runData.runConf.ConfLog.ErrorLog, err))
 		} else {
 			runData.runConf.ConfLog.ErrorLogFp = fp
+			logger.SetErrorLoggerWithFp(fp)
 		}
 	}
 
 	sysadmServer.SetIsSplitLog(runData.runConf.ConfLog.SplitAccessAndError)
+	logger.SetIsSplitLog(runData.runConf.ConfLog.SplitAccessAndError)
 	if runData.runConf.ConfGlobal.Debug {
 		sysadmServer.SetMode(sysadmServer.DebugMode)
 	}
 
+	runData.logEntity = logger
 	return true, errs
 }
 
 // CloseLogger close access log file descriptor and error log file descriptor
 // set AccessLogger  and ErrorLogger to nil
-func CloseLogger() {
+func closeLogger() {
 	if runData.runConf.ConfLog.AccessLogFp != nil {
 		fp := runData.runConf.ConfLog.AccessLogFp
 		_ = fp.Close()
@@ -555,7 +564,7 @@ func CloseLogger() {
 }
 
 // InitRedis initate a new redis entity
-func InitRedis() (bool, []sysadmerror.Sysadmerror) {
+func initRedis() (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	entity, e := redis.NewClient(runData.runConf.ConfRedis, runData.workingRoot)
@@ -572,7 +581,7 @@ func InitRedis() (bool, []sysadmerror.Sysadmerror) {
 }
 
 // close the entity of redis
-func CloseRedisEntity() {
+func closeRedisEntity() {
 
 	if runData.redisEntity != nil {
 		entity := runData.redisEntity
@@ -584,7 +593,7 @@ func CloseRedisEntity() {
 }
 
 // InitDB initate a new DB entity
-func InitDBEntity() (bool, []sysadmerror.Sysadmerror) {
+func initDBEntity() (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
 	definedConf := runData.runConf.ConfDB
@@ -633,7 +642,7 @@ func InitDBEntity() (bool, []sysadmerror.Sysadmerror) {
 }
 
 // close the entity of DB
-func CloseDBEntity() {
+func closeDBEntity() {
 	dbEntity := runData.dbEntity
 	if dbEntity != nil {
 		dbEntity.CloseDB()

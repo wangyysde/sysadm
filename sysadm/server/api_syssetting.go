@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2022 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,42 +18,40 @@
 package server
 
 import (
-	"sysadm/config"
-	"sysadm/sysadmerror"
-	"sysadm/syssetting/app"
 	"github.com/wangyysde/sysadmServer"
+	"sysadm/sysadmerror"
+	sysadmSysSetting "sysadm/syssetting/app"
 )
 
-func AddSyssettingHandlers(r *sysadmServer.Engine)(errs []sysadmerror.Sysadmerror){
+func addSyssettingHandlers(r *sysadmServer.Engine) []sysadmerror.Sysadmerror {
+	var errs []sysadmerror.Sysadmerror
+
 	if r == nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700030001,"fatal","can not add handlers to nil" ))
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700110001, "fatal", "can not add handlers to nil"))
 		return errs
 	}
 
-	dbConf := RuntimeData.RuningParas.DBConfig 
-	logConf :=  config.Log{}
-	definedConfig := RuntimeData.RuningParas.DefinedConfig
-	logConf.AccessLog = definedConfig.Log.AccessLog
-	logConf.AccessLogFp = RuntimeData.RuningParas.AccessLogFp
-	logConf.ErrorLog = definedConfig.Log.ErrorLog
-	logConf.ErrorLogFp = RuntimeData.RuningParas.ErrorLogFp
-	logConf.Kind = definedConfig.Log.Kind
-	logConf.Level = definedConfig.Log.Level
-	logConf.SplitAccessAndError = definedConfig.Log.SplitAccessAndError
-	logConf.TimeStampFormat = definedConfig.Log.TimeStampFormat
-	workingRoot := RuntimeData.StartParas.SysadmRootPath 
+	dbConf := RuntimeData.RuningParas.DBConfig
 
-	syssetting := app.NewSyssetting()
-	err := syssetting.SetWorkingData(dbConf,&logConf,workingRoot)
-	errs = append(errs,err...)
-	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal"){
+	workingRoot := RuntimeData.StartParas.SysadmRootPath
+
+	if e := sysadmSysSetting.SetRunData(dbConf, RuntimeData.sysadmLogEntity, workingRoot); e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700110002, "fatal", "set run data error error message is：%s", e))
+	}
+
+	sysadmSysSetting.SetSessionOptions(sessionOptions, sessionName)
+	pageInfo := sysadmSysSetting.PageInfo{
+		NumPerPage: numPerPage,
+	}
+
+	sysadmSysSetting.SetPageInfo(pageInfo)
+	if sysadmerror.GetMaxLevel(errs) >= sysadmerror.GetLevelNum("fatal") {
 		return errs
 	}
 
-	err = syssetting.AddHandlers(r)
-	errs = append(errs,err...)
-	
-	
+	if e := sysadmSysSetting.AddHandlers(r); e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(700110003, "fatal", "add handlers error, error message is %s", e))
+	}
+
 	return errs
 }
-

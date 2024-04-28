@@ -1,29 +1,29 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2022 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at:
-* https://www.sysadm.cn/licenses/apache-2.0.txt
+* http://www.apache.org/licenses/LICENSE-2.0
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and  limitations under the License.
-*
+* @License GNU Lesser General Public License  https://www.sysadm.cn/lgpl.html
  */
 
 package cmd
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/spf13/cobra"
-	"sysadm/agent/app"
-	"github.com/wangyysde/sysadmLog"
 	"github.com/wangyysde/yaml"
+	"sysadm/agent/app"
 )
 
 var versionCmd = &cobra.Command{
@@ -36,32 +36,32 @@ var versionCmd = &cobra.Command{
 			of, err := cmd.Flags().GetString(flag)
 
 			if err != nil {
-				sysadmLog.Error("error accessing flag %s for command %s", version.Version, cmd.Name())
+				fmt.Printf("error accessing flag %s for command %s\n", version.Version, cmd.Name())
 				return
 			}
 
 			switch of {
 			case "":
-				sysadmLog.Info("agent version %+v", version)
+				fmt.Printf("agent version %s\n", version.Version)
 			case "short":
-				sysadmLog.Info("agent version %+v", version)
+				fmt.Printf("agent version %s\n", version.Version)
 			case "yaml":
 				y, err := yaml.Marshal(&version)
 				if err != nil {
 					return
 				}
-				sysadmLog.Info("%s", string(y))
+				fmt.Printf("%s\n", string(y))
 			case "json":
 				y, err := json.MarshalIndent(&version, "", "  ")
 				if err != nil {
 					return
 				}
-				sysadmLog.Info(string(y))
+				fmt.Printf("%s\n", string(y))
 			default:
-				sysadmLog.Info("invalid output format: %s", of)
+				fmt.Printf("invalid output format: %s\n", of)
 			}
 		} else {
-			sysadmLog.Error("can not get version inforation  %s", cmd.Name())
+			fmt.Printf("can not get version of %s", cmd.Name())
 			return
 		}
 
@@ -70,7 +70,6 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-
 	rootCmd.AddCommand(versionCmd)
 	versionCmd.Flags().StringP("format", "f", "", "Output format; available options are 'yaml', 'json' and 'short'")
 

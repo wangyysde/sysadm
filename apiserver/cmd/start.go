@@ -20,14 +20,13 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	apiserverApp "sysadm/apiserver/app"
-	apiserverServer "sysadm/apiserver/server"
 )
 
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "start apiserver  as daemon",
 	Run: func(cmd *cobra.Command, args []string) {
-		apiserverServer.Start(cmd, args)
+		apiserverApp.StartServer(cmd, args)
 	},
 	Args: cobra.NoArgs,
 }

@@ -91,11 +91,20 @@ function build::package(){
 		return 1
 	fi
 
+  if [ "X${package_name}" == "Xapiserver"  ];then
+      . "${SYSADM_ROOT}/build/update_generated_runtime.sh"
+      generate::runtime::files "${SYSADM_ROOT}"
+  fi
+
 	cd "${SYSADM_ROOT}" 
 	goFiles="$(ls ${package_name}/*.go |tr "\n" " ")"
 	echo  "Now building ${package_name} package. ${package_name} binary file will be placed into ${SYSADM_OUTPUT}/....."
     echo -n "go build -o ${SYSADM_OUTPUT}/${package_name} ${goFiles}"
-	go build -o "${SYSADM_OUTPUT}/${package_name}" ${goFiles}
+        # static compiling 
+	# GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o "${SYSADM_OUTPUT}/${package_name}" ${goFiles}
+	# static and cross compiling 
+	# GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o "${SYSADM_OUTPUT}/${package_name}" ${goFiles}
+ 	go build -o "${SYSADM_OUTPUT}/${package_name}" ${goFiles}
 	[ $? -eq 0 ] && echo "[ Success ]" || echo "[ False ]"
 }
 

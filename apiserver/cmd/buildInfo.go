@@ -1,7 +1,7 @@
 /* =============================================================
 * @Author:  Wayne Wang <net_use@bzhy.com>
 *
-* @Copyright (c) 2021 Bzhy Network. All rights reserved.
+* @Copyright (c) 2024 Bzhy Network. All rights reserved.
 * @HomePage http://www.sysadm.cn
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
 */
 package cmd
 
-var gitCommitId = "ddebcb253c120ff47b171d0f225ea296f5182aeb"
-var branchName = "impleent-addhost"
+var gitCommitId = "00a86bcd3d3c2fab9052e0da2c63888becc93e50"
+var branchName = "agent_registrynode_20240218"
 var gitTreeStatus = "noclean"
-var buildDateTime = "2023-05-28CST14:55:14"
-var goVersion = "go1.19.7"
+var buildDateTime = "2024-04-28CST10:37:54"
+var goVersion = "go1.22.2"
 var compiler = "gcc"
 var arch = "amd64"
 var hostos = "linux"

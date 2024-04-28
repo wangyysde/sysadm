@@ -33,6 +33,12 @@ global:
   # interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
   getLogInterval: 5
 
+  # internalVIP is the  virtual IP for apiservers when apiserver(s) are behind a LB or HA
+  internalVip: ""
+
+  # Optional extra Subject Alternative Names (SANs) to use for the API Server serving certificate. Can be both IP addresses and DNS names.
+  extraSans: ""
+
 server:
   # apiserver listen address, default value is 0.0.0.0
   address: "0.0.0.0"

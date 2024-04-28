@@ -26,14 +26,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wangyysde/sysadmLog"
+	"github.com/wangyysde/sysadmServer"
 	apiserver "sysadm/apiserver/app"
 	"sysadm/config"
 	"sysadm/httpclient"
 	redis "sysadm/redis"
 	"sysadm/sysadmerror"
 	"sysadm/utils"
-	"github.com/wangyysde/sysadmLog"
-	"github.com/wangyysde/sysadmServer"
 )
 
 func SetVersion(version *config.Version) {
@@ -252,8 +252,8 @@ func doRouteCommand(gotCommand *apiserver.CommandData, c *sysadmServer.Context) 
 	default:
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090266, "error", "command %s is not in the list of agent supported", gotCommand.Command.Command))
 		data := make(map[string]interface{}, 0)
-		tmpC, err := handleCommandStatus(c, gotCommand, fmt.Sprintf("command %s is not in the list of agent supported", gotCommand.Command.Command), data, 
-		apiserver.CommandStatusUnrecognized, false, true)
+		tmpC, err := handleCommandStatus(c, gotCommand, fmt.Sprintf("command %s is not in the list of agent supported", gotCommand.Command.Command), data,
+			apiserver.CommandStatusUnrecognized, false, true)
 		if tmpC == nil {
 			c = nil
 		}
@@ -564,7 +564,7 @@ func setCommandLogIntoRedis(commandSeq, message string, level sysadmLog.Level) (
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090248, "error", "can not convert log struct to json error: %s", e))
 		return false, errs
 	}
-	
+
 	e = redis.LPush(runData.redisEntity, runData.redisctx, key, logJson)
 	if e != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090249, "error", "can not save log message into redis server error:%s", e))
@@ -574,7 +574,7 @@ func setCommandLogIntoRedis(commandSeq, message string, level sysadmLog.Level) (
 	return true, errs
 }
 
-// handleCommandLogs get log data from redis server then 
+// handleCommandLogs get log data from redis server then
 // response the log data to the server if agent is running acitve mode
 // otherwise send the log data to the server if agent is running passive mode
 func handleCommandLogs(commandSeq string, maxNum, tryTimes int, c *sysadmServer.Context) {
@@ -597,7 +597,7 @@ func handleCommandLogs(commandSeq string, maxNum, tryTimes int, c *sysadmServer.
 		return
 	}
 
-	logs := make([]apiserver.Log,0)
+	logs := make([]apiserver.Log, 0)
 	var logData = apiserver.LogData{
 		CommandSeq:     "",
 		NodeIdentifier: *runData.nodeIdentifer,
@@ -667,7 +667,7 @@ func handleCommandLogs(commandSeq string, maxNum, tryTimes int, c *sysadmServer.
 	}
 
 	total := 0
-	for i :=0; i<maxNum; i++ {
+	for i := 0; i < maxNum; i++ {
 		logJson, e := redis.LPop(runData.redisEntity, runData.redisctx, key)
 		if e != nil {
 			continue
@@ -678,8 +678,8 @@ func handleCommandLogs(commandSeq string, maxNum, tryTimes int, c *sysadmServer.
 		if e != nil {
 			continue
 		}
-		
-		logs = append(logs,log)
+
+		logs = append(logs, log)
 		total = total + 1
 	}
 
@@ -691,9 +691,9 @@ func handleCommandLogs(commandSeq string, maxNum, tryTimes int, c *sysadmServer.
 
 	if RunConf.Agent.Passive {
 		go trySendCommandLogToServer(logData, true)
-		return 
+		return
 	}
-	
+
 	_, err := responseCommandLogToServer(c, logData, true)
 	errs = append(errs, err...)
 	logErrors(errs)
@@ -801,14 +801,14 @@ func trySendCommandLogToServer(logData apiserver.LogData, deleteKey bool) {
 	if !RunConf.Agent.Passive {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090263, "debug", "agent can not send command logs to apiserver when it is running in active mode."))
 		logErrors(errs)
-		return 
+		return
 	}
 
 	datajson, err := json.Marshal(logData)
 	if err != nil {
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(50090264, "error", "encoding response data to json string error %s", err))
 		logErrors(errs)
-		return 
+		return
 	}
 
 	for i := 0; i < sendCommandLogMaxTryTimes; i++ {
@@ -816,7 +816,7 @@ func trySendCommandLogToServer(logData apiserver.LogData, deleteKey bool) {
 		if ok {
 			errs = append(errs, err...)
 			logErrors(errs)
-			return 
+			return
 		}
 
 		intervalTimes := math.Pow(2, float64(i))

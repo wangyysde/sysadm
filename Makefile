@@ -21,6 +21,10 @@ all:
 	build/build.sh "$(WHAT)" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 endif
 
+.PHONY: apiserver
+apiserver:
+	$(info Now building apiserver package. apiserver binary file will be placed into "$(BIN_DIR)")
+	build/build.sh "apiserver" "$(BUILD_IMAGE)" "$(IMAGEVER)" "$(DEPLOY)" "$(DEPLOYTYPE)"
 
 .PHONY: sysadm
 sysadm:

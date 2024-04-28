@@ -139,6 +139,9 @@ type CommandData struct {
 
 	// 需要发送的命令数据
 	Command `form:"command" json:"command" yaml:"command" xml:"command"`
+
+	// 废弃本结构体内的NodeIdentiferStr,用系统的systemUUID代替NodeIdentiferStr
+	SystemUUID string `form:"SystemUUID" json:"SystemUUID" yaml:"SystemUUID" xml:"SystemUUID"`
 }
 
 // 当运行于被动模式时，客户端向服务端发送的用于获取要执行的命令时，所发请求的数据结构

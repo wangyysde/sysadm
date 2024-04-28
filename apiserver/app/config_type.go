@@ -26,6 +26,7 @@ import (
 
 	"sysadm/config"
 	"sysadm/redis"
+	"sysadm/sysadmLog"
 )
 
 // for global block
@@ -64,6 +65,12 @@ type ConfGlobal struct {
 
 	// interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
 	GetLogInterval int `form:"getLogInterval" json:"getLogInterval" yaml:"getLogInterval" xml:"getLogInterval"`
+
+	// InternalVIP is the  virtual IP for apiservers when apiserver(s) are behind a LB or HA
+	InternalVIP string `form:"internalVip" json:"internalVip" yaml:"internalVip" xml:"internalVip"`
+
+	// Optional extra Subject Alternative Names (SANs) to use for the API Server serving certificate. Can be both IP addresses and DNS names.
+	ExtraSans string `form:"extraSans" json:"extraSans" yaml:"extraSans" xml:"extraSans"`
 }
 
 // for server block
@@ -143,6 +150,9 @@ type runningData struct {
 
 	// hold the running data related to command. this items can be configurable in the feature
 	command runDataForCommand
+
+	// logger entity
+	logEntity *sysadmLog.LoggerConfig
 }
 
 var runData runningData = runningData{
@@ -159,5 +169,6 @@ var runData runningData = runningData{
 		ConfRedis:  redis.ClientConf{},
 		ConfDB:     ConfDB{},
 	},
-	command: runDataForCommand{},
+	command:   runDataForCommand{},
+	logEntity: nil,
 }

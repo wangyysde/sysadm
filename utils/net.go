@@ -397,3 +397,70 @@ func JudgeIpv4OrIpv6(s string) (net.IP, int) {
 	}
 	return nil, 0
 }
+
+// ValidateAddress 验证address是否是一个合法的IP地址或主机名。如果address是一个合法的IP地址，则返回address和nil
+// 当address不是一个合法的IP地址或主机名时，返回”“和相应的错误提示。
+// 当address是一个主机名时，函数会尝试使用本地域名解析器来解析该主机名，如果不能解析则返回相应错误
+// 当isLocal值主true时,本函数除了验证address是否是合法的IP地址或主机名外，并检查该IP地址是否绑定在本地的某块网卡上,如果没有绑定,则返回”“及错误
+func ValidateAddress(address string, isLocal bool) (string, error) {
+	address = strings.TrimSpace(address)
+	if len(address) < 1 {
+		return "", fmt.Errorf("length of address should bigger 1 byte")
+	}
+
+	if ip := net.ParseIP(address); ip != nil {
+		if !isLocal {
+			return address, nil
+		}
+
+		if address == "0.0.0.0" || address == "::" {
+			return address, nil
+		}
+
+		adds, e := net.InterfaceAddrs()
+		if e != nil {
+			return "", e
+		}
+
+		for _, v := range adds {
+			ipnet, ok := v.(*net.IPNet)
+			if !ok {
+				continue
+			}
+			if ip.Equal(ipnet.IP) {
+				return address, nil
+			}
+		}
+
+		return "", fmt.Errorf("The address(%s) is not any of the address of local interfaces.", address)
+	}
+
+	ips, e := net.LookupIP(address)
+	if e != nil {
+		return "", e
+	}
+
+	if !isLocal {
+		ip := ips[0]
+		return ip.String(), nil
+	}
+
+	adds, e := net.InterfaceAddrs()
+	if e != nil {
+		return "", e
+	}
+
+	for _, ip := range ips {
+		for _, v := range adds {
+			ipnet, ok := v.(*net.IPNet)
+			if !ok {
+				continue
+			}
+			if ip.Equal(ipnet.IP) {
+				return ip.String(), nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("The IPs to the address(%s) is not any the IP address of local interfaces.", address)
+}

@@ -19,12 +19,18 @@
 
 SYSADM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 INFRASTRUCTURE_VER="1.0"
-BASE_IMG="harbor.bzhy.com/os/centos:centos7.9.2009"
 TEMP=`mktemp -d ${TMPDIR-/tmp}/sysadm.XXXXXX`
 EMAIL="net_use@bzhy.com"
 
-AGENT_VER=$1
-REGISTRY_URL=$2
+if [ -f "${SYSADM_ROOT}/build/build_common.sh" ]; then
+    . "${SYSADM_ROOT}/build/build_common.sh"
+else
+    echo "${SYSADM_ROOT}/build/build_common.sh was not found"
+    exit 1
+fi
+
+APISERVER_VER=$1
+ISDEPLOY=$2
 
 function create::dockerfile(){
 	datetime=`date  '+%Y%m%d %H:%M:%S'`
@@ -57,10 +63,10 @@ create::dockerfile
 cp ${SYSADM_ROOT}/_output/bin/apiserver ${TEMP}/
 cp ${SYSADM_ROOT}/build/apiserver/entrypoint.sh ${TEMP}/
 cp ${SYSADM_ROOT}/_output/conf/apiserver.yaml ${TEMP}/
-echo "Now building apiserver:${AGENT_VER} ..."
-docker build -f Dockerfile  -t ${REGISTRY_URL}apiserver:${AGENT_VER} .
+echo "Now building apiserver:${APISERVER_VER} ..."
+docker build -f Dockerfile  -t ${DEFAULT_REGISTRY_URL}apiserver:${APISERVER_VER} .
 if [ $? == 0 ]; then
-	docker push ${DEFAULT_REGISTRY_URL}apiserver:${AGENT_VER}
+	docker push ${DEFAULT_REGISTRY_URL}apiserver:${APISERVER_VER}
 else 
-	echo "build apiserver:${AGENT_VER} image error"
+	echo "build apiserver:${APISERVER_VER} image error"
 fi

@@ -101,21 +101,6 @@ func addHandlers(r *sysadmServer.Engine) (bool, []sysadmerror.Sysadmerror) {
 	return true, errs
 }
 
-// addRootHandler adding handler for root path
-func addRootHandler(r *sysadmServer.Engine) error {
-	if r == nil {
-		return fmt.Errorf("router is nil")
-	}
-
-	r.Any("/", func(c *sysadmServer.Context) {
-		c.JSON(200, sysadmServer.H{
-			"status": "ok",
-		})
-	})
-
-	return nil
-}
-
 func getCommand(c *sysadmServer.Context) {
 	// TODO
 
