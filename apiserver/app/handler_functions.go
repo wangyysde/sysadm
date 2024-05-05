@@ -75,6 +75,10 @@ func addResourceHanders(r *sysadmServer.Engine) error {
 		r.Any("/api/"+version+"/"+kind+"/", noActionForResourceHandler)
 	}
 
+	r.Any("/api/", noActionForResourceHandler)
+
+	// add root path handler
+	addRootHandler(r)
 	return nil
 }
 

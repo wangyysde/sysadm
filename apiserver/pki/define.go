@@ -40,3 +40,8 @@ const (
 	// CertificateBlockType is a possible value for pem.Block.Type.
 	CertificateBlockType = "CERTIFICATE"
 )
+
+var (
+	CertUsageTypeServerAuth = []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}
+	CertUsageTypeClientAuth = []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}
+)

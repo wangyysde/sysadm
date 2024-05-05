@@ -23,7 +23,6 @@ import (
 	"net"
 	"testing"
 
-	certutil "k8s.io/client-go/util/cert"
 	netutils "k8s.io/utils/net"
 )
 
@@ -40,7 +39,7 @@ func TestCreateCA(t *testing.T) {
 }
 
 func TestCreateServerCert(t *testing.T) {
-	ca, caKey, _, _, err := CreateCertificateAuthority("sysadm", []string{"sysadm", "bzhy.com"}, defaultCaPeriodDays, x509.RSA)
+	_, _, caPem, caKeyPem, err := CreateCertificateAuthority("sysadm", []string{"sysadm", "bzhy.com"}, defaultCaPeriodDays, x509.RSA)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		t.Fatal("create CA failed\n")
@@ -50,17 +49,9 @@ func TestCreateServerCert(t *testing.T) {
 	ip2 := netutils.ParseIPSloppy("172.28.1.103")
 	ip3 := netutils.ParseIPSloppy("127.0.0.1")
 
-	altNames := &certutil.AltNames{
-		DNSNames: []string{"localhost", "WIN-20230717WDZ", "cp1"},
-		IPs: []net.IP{
-			ip1,
-			ip2,
-			ip3,
-		},
-	}
-
-	_, _, certPem, keyPem, err := CreateCertAndKey(x509.RSA, ca, caKey, altNames, 365, "testcert",
-		[]string{"sysadm", "bzhy.com"}, []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth})
+	ips := []net.IP{ip1, ip2, ip3}
+	_, _, certPem, keyPem, err := CreateCertAndKey(x509.RSA, string(caPem), string(caKeyPem), ips, 365, "testcert",
+		[]string{"localhost", "WIN-20230717WDZ", "cp1"}, []string{"sysadm", "bzhy.com"}, []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth})
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		t.Fatal("create Certificate failed\n")
@@ -72,14 +63,14 @@ func TestCreateServerCert(t *testing.T) {
 }
 
 func TestCreateClientCert(t *testing.T) {
-	ca, caKey, _, _, err := CreateCertificateAuthority("sysadm", []string{"sysadm", "bzhy.com"}, defaultCaPeriodDays, x509.RSA)
+	_, _, caPem, caKeyPem, err := CreateCertificateAuthority("sysadm", []string{"sysadm", "bzhy.com"}, defaultCaPeriodDays, x509.RSA)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		t.Fatal("create CA failed\n")
 	}
 
-	_, _, certPem, keyPem, err := CreateCertAndKey(x509.RSA, ca, caKey, &certutil.AltNames{}, 365, "testcert",
-		[]string{"sysadm", "bzhy.com"}, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth})
+	_, _, certPem, keyPem, err := CreateCertAndKey(x509.RSA, string(caPem), string(caKeyPem), []net.IP{}, 365, "testcert",
+		[]string{}, []string{"sysadm", "bzhy.com"}, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth})
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		t.Fatal("create Certificate failed\n")

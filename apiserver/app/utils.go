@@ -84,6 +84,7 @@ func createHttpClient(tcpTimeOut, keepaliveProbe, tlsHandshakeTimeout, idleConnT
 	return client, nil
 }
 
+/*
 // buildSendCommandRequestParas build completion url and set request parameters for sending a command data to client.
 func buildSendCommandRequestParas(data *commandDataBeSent) (bool, *httpclient.RequestParams, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
@@ -103,6 +104,7 @@ func buildSendCommandRequestParas(data *commandDataBeSent) (bool, *httpclient.Re
 
 	return true, requestParas, errs
 }
+*/
 
 // buildClientRequestParas build completion url and set request parameters for connecting to a client.
 func buildClientRequestParas(address, uri string, port int, isTls bool) (bool, *httpclient.RequestParams, []sysadmerror.Sysadmerror) {

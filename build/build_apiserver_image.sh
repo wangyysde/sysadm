@@ -40,7 +40,7 @@ LABEL Version=${AGENT_VER} \\
 	Maintainer="wayne.wang<${EMAIL}>" \\
 	Built="${datetime}" \\
 	Description="apiserver component of sysadm platform"
-RUN mkdir -p /opt/apiserver/{bin,conf,logs,run} && useradd sysadm 
+RUN mkdir -p /opt/apiserver/bin /opt/apiserver/conf /opt/apiserver/logs /opt/apiserver/pki && useradd sysadm
 COPY ./apiserver /opt/apiserver/bin/
 COPY ./entrypoint.sh /opt/apiserver/bin/
 COPY ./apiserver.yaml /opt/apiserver/conf/

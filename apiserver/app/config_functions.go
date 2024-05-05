@@ -22,11 +22,19 @@ package app
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/wangyysde/sysadmServer"
+	"io/fs"
+	certutil "k8s.io/client-go/util/cert"
+	netutils "k8s.io/utils/net"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
+	sysadmPki "sysadm/apiserver/pki"
 	"sysadm/sysadmLog"
+	"time"
 
 	"sysadm/config"
 	"sysadm/db"
@@ -39,7 +47,7 @@ import (
 func handlerConfig() (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
 
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020007, "debug", "try to handle configurations for apiserver"))
+	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020007, "debug", "try to handle configurations for apiServer"))
 	ok, err := handleNotInConfFile()
 	errs = append(errs, err...)
 	if !ok {
@@ -184,56 +192,30 @@ func SetCfgFile(cfgFile string) {
 // validate configurations read from configuration file, then pass them to runData if them are valid.
 func validateGlobalBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020008, "debug", "try to handle configuration items in global block"))
 
-	runData.runConf.ConfGlobal.Passive = conf.ConfGlobal.Passive
 	runData.runConf.ConfGlobal.Debug = conf.ConfGlobal.Debug
-	runData.runConf.ConfGlobal.Daemon = conf.ConfGlobal.Daemon
-
-	commandUri := strings.TrimSpace(conf.ConfGlobal.CommandUri)
-	if commandUri == "" {
-		if conf.ConfGlobal.Passive {
-			commandUri = passiveResponseCommandUri
-		} else {
-			commandUri = activeSendCommandUri
+	var newVirtualIP []string
+	for _, ip := range conf.ConfGlobal.VirtualIP {
+		validatedIp, e := utils.ValidateAddress(ip, false)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020030, "fatal", "virtual IP %s is not valid ", ip))
+			return false, errs
 		}
+		newVirtualIP = append(newVirtualIP, validatedIp)
 	}
-	runData.runConf.ConfGlobal.CommandUri = commandUri
+	runData.runConf.ConfGlobal.VirtualIP = newVirtualIP
 
-	commandStatusUri := strings.TrimSpace(conf.ConfGlobal.CommandStatusUri)
-	if commandStatusUri == "" {
-		if conf.ConfGlobal.Passive {
-			commandStatusUri = passiveResponseCommandStatusUri
-		} else {
-			commandStatusUri = defaultCommandStatusUri
+	var newExtraSans []string
+	for _, san := range conf.ConfGlobal.ExtraSans {
+		san = strings.TrimSpace(san)
+		_, e := utils.ValidateAddress(san, false)
+		if e != nil {
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020031, "fatal", "extra san  %s is not an IP or hostname ", san))
+			return false, errs
 		}
+		newExtraSans = append(newExtraSans, san)
 	}
-	runData.runConf.ConfGlobal.CommandStatusUri = commandStatusUri
-
-	commandLogsUri := strings.TrimSpace(conf.ConfGlobal.CommandLogsUri)
-	if commandLogsUri == "" {
-		if conf.ConfGlobal.Passive {
-			commandLogsUri = passiveResponseCommandLogsUri
-		} else {
-			commandLogsUri = defaultCommandLogsUri
-		}
-	}
-	runData.runConf.ConfGlobal.CommandLogsUri = commandLogsUri
-
-	runData.runConf.ConfGlobal.CheckCommandInterval = conf.ConfGlobal.CheckCommandInterval
-	if conf.ConfGlobal.CheckCommandInterval == 0 {
-		runData.runConf.ConfGlobal.CheckCommandInterval = defaultCheckCommandInterval
-	}
-
-	runData.runConf.ConfGlobal.GetStatusInterval = conf.ConfGlobal.GetStatusInterval
-	if conf.ConfGlobal.GetStatusInterval == 0 {
-		runData.runConf.ConfGlobal.GetStatusInterval = defaultGetStatusInterval
-	}
-
-	runData.runConf.ConfGlobal.GetLogInterval = conf.ConfGlobal.GetLogInterval
-	if conf.ConfGlobal.GetLogInterval == 0 {
-		runData.runConf.ConfGlobal.GetLogInterval = defaultGetLogInterval
-	}
+	runData.runConf.ConfGlobal.ExtraSans = newExtraSans
 
 	return true, errs
 }
@@ -241,7 +223,6 @@ func validateGlobalBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 // validate configurations read from configuration file, then pass them to runData if them are valid.
 func validateServerBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	var errs []sysadmerror.Sysadmerror
-	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020009, "debug", "try to handle configuration items in server block"))
 
 	address := strings.TrimSpace(conf.ConfServer.Address)
 	tmpAddress, err := config.ValidateListenAddress(address, apiserverAddress, "")
@@ -252,51 +233,23 @@ func validateServerBlock(conf *Conf) (bool, []sysadmerror.Sysadmerror) {
 	errs = append(errs, err...)
 	runData.runConf.ConfServer.Port = tmpPort
 
-	socketFile := strings.TrimSpace(conf.ConfServer.Socket)
-	tmpSocket, err := config.ValidateListenSocket(socketFile, "", "", runData.workingRoot)
+	insecretPort, err := config.ValidateListenPort(conf.ConfServer.InsecretPort, apiserverInsecretPort, "")
 	errs = append(errs, err...)
-	runData.runConf.ConfServer.Socket = tmpSocket
+	runData.runConf.ConfServer.InsecretPort = insecretPort
 
 	runData.runConf.ConfServer.Insecret = conf.ConfServer.Insecret
 	runData.runConf.ConfServer.IsTls = conf.ConfServer.IsTls
+
 	if runData.runConf.ConfServer.IsTls {
-		ca := strings.TrimSpace(conf.ConfServer.Ca)
-		cert := strings.TrimSpace(conf.ConfServer.Cert)
-		key := strings.TrimSpace(conf.ConfServer.Key)
-		tmpCa, err := config.ValidateTlsFile(ca, "", "", runData.workingRoot)
-		errs = append(errs, err...)
-		tmpCert, err := config.ValidateTlsFile(cert, "", "", runData.workingRoot)
-		errs = append(errs, err...)
-		tmpKey, err := config.ValidateTlsFile(key, "", "", runData.workingRoot)
-		errs = append(errs, err...)
-		if tmpCa == "" || tmpCert == "" || tmpKey == "" {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020010, "warning", "isTls has be set to true, but one(s) of certifications file is not readable. apiserver will be started with insecret"))
+		e := prepareApiServerCerts()
+		if e != nil {
 			runData.runConf.ConfServer.IsTls = false
-			runData.runConf.ConfServer.InsecretPort = 0
-			runData.runConf.ConfServer.Ca = ""
-			runData.runConf.ConfServer.Cert = ""
-			runData.runConf.ConfServer.Key = ""
-		} else {
-			runData.runConf.ConfServer.Ca = tmpCa
-			runData.runConf.ConfServer.Cert = tmpCert
-			runData.runConf.ConfServer.Key = tmpKey
+			errs = append(errs, sysadmerror.NewErrorWithStringLevel(20020040, "warn", "an error(%s) has occurred when prepare certifications, we try start server without TLS", e))
 		}
 	} else {
-		runData.runConf.ConfServer.InsecretPort = 0
 		runData.runConf.ConfServer.Ca = ""
 		runData.runConf.ConfServer.Cert = ""
 		runData.runConf.ConfServer.Key = ""
-	}
-
-	insecretPort := conf.ConfServer.InsecretPort
-	if insecretPort == 0 {
-		insecretPort = apiserverInsecretPort
-	}
-
-	if runData.runConf.ConfServer.IsTls {
-		runData.runConf.ConfServer.InsecretPort = insecretPort
-	} else {
-		runData.runConf.ConfServer.InsecretPort = 0
 	}
 
 	return true, errs
@@ -547,7 +500,7 @@ func setLogger() (bool, []sysadmerror.Sysadmerror) {
 	return true, errs
 }
 
-// CloseLogger close access log file descriptor and error log file descriptor
+// closeLogger close access log file descriptor and error log file descriptor
 // set AccessLogger  and ErrorLogger to nil
 func closeLogger() {
 	if runData.runConf.ConfLog.AccessLogFp != nil {
@@ -651,7 +604,207 @@ func closeDBEntity() {
 	dbEntity = nil
 }
 
-// IsPassiveMode return the mode of apiserver running
-func IsPassiveMode() bool {
-	return runData.runConf.ConfGlobal.Passive
+func prepareApiServerCerts() error {
+	var caContent, caKeyContent, certContent, certKeyContent []byte
+	createCa := false
+	createCert := false
+
+	// try to read ca from disk and check them validity.
+	// regenerate the ca and caKey if them is not exist or NOT validate
+	workingRoot := runData.workingRoot
+	ca := strings.TrimSpace(runData.runConf.ConfServer.Ca)
+	if ca == "" {
+		ca = filepath.Join(pkiPath, caFile)
+	}
+	if !filepath.IsAbs(ca) {
+		ca = filepath.Join(workingRoot, ca)
+	}
+	caContent, e := os.ReadFile(ca)
+	if e != nil {
+		switch {
+		case errors.Is(e, fs.ErrInvalid):
+			return fmt.Errorf("maybe ca path %s is not valid", ca)
+		case errors.Is(e, fs.ErrPermission):
+			return fmt.Errorf("no permission to read ca file %s", ca)
+		case errors.Is(e, fs.ErrNotExist):
+			createCa = true
+		case errors.Is(e, os.ErrDeadlineExceeded):
+			return fmt.Errorf("read ca file %s timeout", ca)
+		}
+	}
+
+	if !createCa {
+		caCerts, e := certutil.ParseCertsPEM(caContent)
+		if e != nil {
+			createCa = true
+		} else {
+			caCert := caCerts[0]
+			e := sysadmPki.ValidateCertPeriod(caCert, time.Duration(0))
+			if e != nil {
+				createCa = true
+			}
+		}
+	}
+
+	if createCa {
+		_, _, newCaPem, newCaKeyPem, e := sysadmPki.CreateCertificateAuthority(caCommonName, caOrgnaization, caPeriodDays, publicKeyAlgorithm)
+		if e != nil {
+			return e
+		}
+		caContent = newCaPem
+		caKeyContent = newCaKeyPem
+		createCert = true
+	}
+
+	// try to read certification and key from  the disk and check them validity
+	// set createCert to true if certification(or key) is not exist or one of them is NOT validate
+	cert := strings.TrimSpace(runData.runConf.ConfServer.Cert)
+	certKey := strings.TrimSpace(runData.runConf.ConfServer.Key)
+	if cert == "" {
+		cert = filepath.Join(pkiPath, apiServerCertFile)
+	}
+	if certKey == "" {
+		certKey = filepath.Join(pkiPath, apiServerCertKeyFile)
+	}
+	if !filepath.IsAbs(cert) {
+		cert = filepath.Join(workingRoot, cert)
+	}
+	if !filepath.IsAbs(certKey) {
+		certKey = filepath.Join(workingRoot, certKey)
+	}
+
+	certContent, e = os.ReadFile(cert)
+	if e != nil {
+		switch {
+		case errors.Is(e, fs.ErrInvalid):
+			return fmt.Errorf("maybe certification path %s is not valid", cert)
+		case errors.Is(e, fs.ErrPermission):
+			return fmt.Errorf("no permission to read certification file %s", cert)
+		case errors.Is(e, fs.ErrNotExist):
+			createCert = true
+		case errors.Is(e, os.ErrDeadlineExceeded):
+			return fmt.Errorf("read certification file %s timeout", cert)
+		}
+	}
+	if !createCert {
+		certs, e := certutil.ParseCertsPEM(certContent)
+		if e != nil {
+			createCert = true
+		} else {
+			e := sysadmPki.ValidateCertPeriod(certs[0], time.Duration(0))
+			if e != nil {
+				createCert = true
+			}
+		}
+	}
+
+	if !createCert {
+		certKeyContent, e = os.ReadFile(certKey)
+		if e != nil {
+			switch {
+			case errors.Is(e, fs.ErrInvalid):
+				return fmt.Errorf("maybe path of certification key %s is not valid", certKey)
+			case errors.Is(e, fs.ErrPermission):
+				return fmt.Errorf("no permission to read certification key file %s", certKey)
+			case errors.Is(e, fs.ErrNotExist):
+				createCert = true
+			case errors.Is(e, os.ErrDeadlineExceeded):
+				return fmt.Errorf("read certification key file %s timeout", certKey)
+			}
+		}
+		_, e = sysadmPki.ParseKeyPEM(string(certKeyContent))
+		if e != nil {
+			createCert = true
+		}
+	}
+
+	if createCert {
+		if !createCa {
+			caKey := filepath.Join(workingRoot, pkiPath, caKeyFile)
+			caKeyContent, e = os.ReadFile(caKey)
+			if e != nil {
+				switch {
+				case errors.Is(e, fs.ErrInvalid):
+					return fmt.Errorf("maybe ca key path %s is not valid", caKey)
+				case errors.Is(e, fs.ErrPermission):
+					return fmt.Errorf("no permission to read ca key file %s", caKey)
+				case errors.Is(e, fs.ErrNotExist):
+					_, _, newCaPem, newCaKeyPem, e := sysadmPki.CreateCertificateAuthority(caCommonName, caOrgnaization, caPeriodDays, publicKeyAlgorithm)
+					if e != nil {
+						return e
+					}
+					caContent = newCaPem
+					caKeyContent = newCaKeyPem
+					createCa = true
+				case errors.Is(e, os.ErrDeadlineExceeded):
+					return fmt.Errorf("read ca key  %s from disk  timeout", caKey)
+				}
+			}
+		}
+
+		localIPs, e := utils.GetLocalIPs()
+		if e != nil {
+			return e
+		}
+		var altNameIPs []net.IP
+		for _, ip := range localIPs {
+			netIP := netutils.ParseIPSloppy(ip)
+			altNameIPs = append(altNameIPs, netIP)
+		}
+		for _, ip := range runData.runConf.ConfGlobal.VirtualIP {
+			netIP := netutils.ParseIPSloppy(ip)
+			altNameIPs = append(altNameIPs, netIP)
+		}
+
+		hostName, e := os.Hostname()
+		if e != nil {
+			return fmt.Errorf("an error has occurred when get hostname: %s", e)
+		}
+		dnsNames := []string{"localhost", hostName}
+		for _, v := range runData.runConf.ConfGlobal.ExtraSans {
+			dnsNames = append(dnsNames, v)
+		}
+
+		_, _, certPem, keyPem, e := sysadmPki.CreateCertAndKey(publicKeyAlgorithm, string(caContent), string(caKeyContent),
+			altNameIPs, apiServerCertPeriodDays, apiServerCertCommonName, apiServerCertOrgnaization, dnsNames, sysadmPki.CertUsageTypeServerAuth)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when generate certification and key for apiServer: %s", e)
+		}
+		certContent = certPem
+		certKeyContent = keyPem
+	}
+
+	if createCa {
+		e = os.WriteFile(ca, caContent, 0644)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when write ca certification to disk: %s", e)
+		}
+		caKey := filepath.Join(workingRoot, pkiPath, caKeyFile)
+		e = os.WriteFile(caKey, caKeyContent, 0600)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when write key of ca to disk: %s", e)
+		}
+	}
+
+	if createCert {
+		e = os.WriteFile(cert, certContent, 0644)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when write ca certification to disk: %s", e)
+		}
+		e = os.WriteFile(certKey, certKeyContent, 0600)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when write key of certification to disk: %s", e)
+		}
+	}
+
+	fullCertFile := filepath.Join(workingRoot, pkiPath, apiServerFullCertFile)
+	if !utils.IsFileReadable(fullCertFile) || createCert {
+		fullCertContent := string(certContent) + "\n" + string(caContent)
+		e = os.WriteFile(fullCertFile, []byte(fullCertContent), 0644)
+		if e != nil {
+			return fmt.Errorf("an error has occurred when write full certification to disk: %s", e)
+		}
+	}
+
+	return nil
 }

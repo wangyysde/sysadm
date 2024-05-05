@@ -22,23 +22,14 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/wangyysde/sysadmServer"
 	"os"
-	"os/signal"
 	"path/filepath"
-	"syscall"
-	"time"
-
-	certutil "k8s.io/client-go/util/cert"
-
-	runtime "sysadm/apimachinery/runtime/v1beta1"
-	sysadmPki "sysadm/apiserver/pki"
 	"sysadm/sysadmerror"
-	sysadmSysSetting "sysadm/syssetting"
 )
 
-var exitChan chan os.Signal
+// var exitChan chan os.Signal
 var shouldExit = false
-var startedInSecret = false
-var startedSecret = false
+var falseStartInSecret chan bool
+var falseStartSecret chan bool
 
 func StartServer(cmd *cobra.Command, args []string) {
 	var errs []sysadmerror.Sysadmerror
@@ -81,30 +72,16 @@ func StartServer(cmd *cobra.Command, args []string) {
 	}
 	defer closeDBEntity()
 
-	exitChan = make(chan os.Signal, 1)
 	logErrors(errs)
 
-	for {
-		e := startDaemon()
-		if e != nil {
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080004, "error", "%s", e))
-			if shouldExit {
-				logErrors(errs)
-				os.Exit(0)
-			}
-			errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080005, "info", "server restarting"))
-		}
+	e := startDaemon()
+	if e != nil {
+		errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080004, "error", "%s", e))
+		logErrors(errs)
 		if shouldExit {
+			logErrors(errs)
 			os.Exit(0)
 		}
-		signal.Notify(exitChan, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
-		s := <-exitChan
-		if s == syscall.SIGHUP || s == syscall.SIGINT || s == syscall.SIGTERM {
-			shouldExit = true
-		}
-		logErrors(errs)
-		errs = errs[0:0]
-
 	}
 
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(10080006, "error", "unknow error"))
@@ -119,6 +96,9 @@ func startDaemon() error {
 		return fmt.Errorf("prepare resource schema data error: %s", e)
 	}
 
+	if !runData.runConf.ConfGlobal.Debug {
+		sysadmServer.SetMode(sysadmServer.ReleaseMode)
+	}
 	r := sysadmServer.New()
 	r.Use(sysadmServer.Logger(), sysadmServer.Recovery())
 	e = addResourceHanders(r)
@@ -128,69 +108,26 @@ func startDaemon() error {
 	}
 
 	// listen insecret port
+
+	falseStartInSecret = make(chan bool, 1)
+	falseStartSecret = make(chan bool, 1)
 	if runData.runConf.ConfServer.Insecret && runData.runConf.ConfServer.InsecretPort != 0 {
 		go startInsecret(r)
-
 	}
 
 	if runData.runConf.ConfServer.IsTls {
 		go startSecret(r)
-
 	}
 
-	if !startedInSecret && !startedSecret {
+	s1 := <-falseStartInSecret
+	s2 := <-falseStartSecret
+	if s1 && s2 {
 		shouldExit = true
+		return fmt.Errorf("both secret and insecret service start error")
 	}
 
+	shouldExit = false
 	return nil
-}
-
-func getCertAndKey(certType, scope int) (string, string, error) {
-	gv := sysadmSysSetting.SchemaGroupVersion
-
-	gvk := runtime.GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: runtime.APIVersionInternal}
-	certKey, keyKey, e := sysadmSysSetting.GetCertAndKeyName(certType)
-	if e != nil {
-		return "", "", e
-	}
-
-	certQueryData, e := sysadmSysSetting.BuildQueryData(0, scope, 0, certKey)
-	if e != nil {
-		return "", "", e
-	}
-	certData, e := getResource(gvk, certQueryData)
-	if e != nil {
-		return "", "", e
-	}
-	keyQueryData, e := sysadmSysSetting.BuildQueryData(0, scope, 0, keyKey)
-	if e != nil {
-		return "", "", e
-	}
-	keyData, e := getResource(gvk, keyQueryData)
-	if e != nil {
-		return "", "", e
-	}
-
-	if len(certData) < 1 || len(keyData) < 1 {
-		return "", "", fmt.Errorf("certification or key was not exist")
-	}
-
-	certs, e := sysadmSysSetting.GetValue(certData)
-	if e != nil {
-		return "", "", e
-	}
-
-	keys, e := sysadmSysSetting.GetValue(keyData)
-	if e != nil {
-		return "", "", e
-	}
-
-	if len(certs) > 1 || len(keys) > 1 {
-		return "", "", fmt.Errorf("certification or key is duplicated in the system ")
-	}
-
-	return certs[0], keys[0], nil
-
 }
 
 func startInsecret(engine *sysadmServer.Engine) {
@@ -199,23 +136,16 @@ func startInsecret(engine *sysadmServer.Engine) {
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20030001, "debug", "listening  service to %s", listenStr))
 	logErrors(errs)
 	errs = errs[0:0]
-	startedInSecret = true
 	e := engine.Run(listenStr)
 	if e != nil {
-		startedInSecret = false
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(20030002, "error", "can not listent service. error %s", e))
 		logErrors(errs)
+		falseStartInSecret <- true
 	}
 }
 
 func startSecret(engine *sysadmServer.Engine) {
 	var errs []sysadmerror.Sysadmerror
-	e := prepareApiServerCerts()
-	if e != nil {
-		errs = append(errs, sysadmerror.NewErrorWithStringLevel(20030003, "error", "prepare certification for apiServer error %s", e))
-		logErrors(errs)
-		return
-	}
 
 	tlsStr := fmt.Sprintf("%s:%d", runData.runConf.ConfServer.Address, runData.runConf.ConfServer.Port)
 	errs = append(errs, sysadmerror.NewErrorWithStringLevel(20030004, "debug", "listening TLS service to %s", tlsStr))
@@ -223,67 +153,14 @@ func startSecret(engine *sysadmServer.Engine) {
 	errs = errs[0:0]
 
 	certPath := filepath.Join(runData.workingRoot, pkiPath)
-	certFile := filepath.Join(certPath, apiServerCertFile)
+	certFile := filepath.Join(certPath, apiServerFullCertFile)
 	keyFile := filepath.Join(certPath, apiServerCertKeyFile)
-	startedSecret = true
-	e = engine.RunTLS(tlsStr, certFile, keyFile)
+	e := engine.RunTLS(tlsStr, certFile, keyFile)
 	if e != nil {
-		startedSecret = false
 		errs = append(errs, sysadmerror.NewErrorWithStringLevel(20030005, "error", "can not listent TLS service. error %s", e))
 		logErrors(errs)
+		falseStartSecret <- true
 	}
 
 	return
-}
-
-func prepareApiServerCerts() error {
-	ca, caKey, e := getCertAndKey(sysadmSysSetting.CertTypeCa, sysadmSysSetting.SettingScopeGlobal)
-	if e != nil {
-		return e
-	}
-	caCerts, e := certutil.ParseCertsPEM([]byte(ca))
-	if e != nil {
-		return e
-	}
-	caCert := caCerts[0]
-
-	e = sysadmPki.ValidateCertPeriod(caCert, time.Duration(0))
-	if e != nil {
-		return e
-	}
-	_, e = sysadmPki.ParseKeyPEM(caKey)
-	if e != nil {
-		return e
-	}
-
-	cert, key, e := getCertAndKey(sysadmSysSetting.CertTypeApiServer, sysadmSysSetting.SettingScopeGlobal)
-	if e != nil {
-		return e
-	}
-	certs, e := certutil.ParseCertsPEM([]byte(cert))
-	if e != nil {
-		return e
-	}
-	apiServerCert := certs[0]
-	e = sysadmPki.ValidateCertPeriod(apiServerCert, time.Duration(0))
-	if e != nil {
-		return e
-	}
-
-	_, e = sysadmPki.ParseKeyPEM(key)
-	if e != nil {
-		return e
-	}
-
-	certPath := filepath.Join(runData.workingRoot, pkiPath)
-	if err := os.MkdirAll(certPath, os.FileMode(0755)); err != nil {
-		return err
-	}
-
-	fullCert := cert + "\n" + ca
-	if err := os.WriteFile(filepath.Join(certPath, apiServerCertFile), []byte(fullCert), os.FileMode(0600)); err != nil {
-		return err
-	}
-
-	return os.WriteFile(filepath.Join(certPath, apiServerCertKeyFile), []byte(key), os.FileMode(0600))
 }

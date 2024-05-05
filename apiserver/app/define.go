@@ -25,16 +25,17 @@ import (
 )
 
 const (
-	DefaultTlsPort              = 9443
-	DefaultPort                 = 9080
-	ApiVersion           string = "v1beta1"
-	GetCommandUri        string = "getCommand"
-	publicKeyAlgorithm          = x509.RSA
-	pkiPath                     = "pki"
-	caFile                      = "ca.crt"
-	caKeyFile                   = "ca.key"
-	apiServerCertFile           = "apiserver.crt"
-	apiServerCertKeyFile        = "apiserver.key"
+	DefaultTlsPort               = 9443
+	DefaultPort                  = 9080
+	ApiVersion            string = "v1beta1"
+	GetCommandUri         string = "getCommand"
+	publicKeyAlgorithm           = x509.RSA
+	pkiPath                      = "pki"
+	caFile                       = "ca.crt"
+	caKeyFile                    = "ca.key"
+	apiServerCertFile            = "apiserver.crt"
+	apiServerFullCertFile        = "apiserver-full.crt"
+	apiServerCertKeyFile         = "apiserver.key"
 
 	apiServerCertCommonName = "sysadm-apiserver"
 	agentCertCommonName     = "sysadm-agent"
@@ -57,41 +58,14 @@ var appAuthor string = "Wayne Wang<net_use@bzhy.com>"
 // default path of configuration file
 var confFilePath string = "conf/apiserver.yaml"
 
-// specifies the default uri where client get commands to run when apiserver runing as daemon in passive mode
-var passiveResponseCommandUri string = "/getCommand"
-
-// specifies the default uri for apiserver to send command data to client when apiserver is run in active mode
-var activeSendCommandUri string = "/receiveCommand"
-
-// specifies the default uri where client send command status to when apiserver running as daemon in passive mode
-var passiveResponseCommandStatusUri string = "/receiveCommandStatus"
-
-// specifies the default uri for apiserver to send command status to client when apiserver is run in active mode
-var defaultCommandStatusUri string = "/getCommandStatus"
-
-// specifies the default uri where client send command logs to when apiserver running as daemon in passive mode
-var passiveResponseCommandLogsUri string = "/receiveLogs"
-
-// specifies the default uri for apiserver to send command status to client when apiserver is run in active mode
-var defaultCommandLogsUri string = "/getLogs"
-
-// interval of checking new command for client by apiserver when apiserver is running actively. default is 5 second.
-var defaultCheckCommandInterval int = 5
-
-// interval of try to get command status from client by apiserver when apiserver is running actively. default is 5 second
-var defaultGetStatusInterval int = 5
-
-// interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
-var defaultGetLogInterval int = 5
-
 // default address of apiserver listening
 var apiserverAddress string = "0.0.0.0"
 
 // default port of apiserver listening
-var apiserverPort int = 8085
+var apiserverPort int = 9443
 
 // default insecret port of apiserver listening
-var apiserverInsecretPort int = 5085
+var apiserverInsecretPort int = 8085
 
 // default access log file path
 var accessLogFile string = "logs/apiserver-accesslog.log"

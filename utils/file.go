@@ -152,6 +152,39 @@ func CheckFileIsReadable(f string, workingDir string) (string, error) {
 	return f, nil
 }
 
+// IsFileReadable check a regular file is readable. it returns true if the file can open with RDONLY
+// otherwise it returns false.
+// f will be join with current directory if f is not a absolute
+func IsFileReadable(f string) bool {
+	f = strings.TrimSpace(f)
+	if f == "" {
+		return false
+	}
+	if !filepath.IsAbs(f) {
+		currentDir, e := os.Getwd()
+		if e != nil {
+			return false
+		}
+		f = filepath.Join(currentDir, f)
+	}
+
+	fi, e := os.Stat(f)
+	if e != nil {
+		return false
+	}
+	if fi.IsDir() {
+		return false
+	}
+
+	fp, e := os.Open(f)
+	if e != nil {
+		return false
+	}
+	fp.Close()
+
+	return true
+}
+
 /*
 Converting relative path to absolute path of file and return the  file path
 return "" and error if  file can not opened . Or return string and nil.

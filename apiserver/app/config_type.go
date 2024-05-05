@@ -31,46 +31,15 @@ import (
 
 // for global block
 type ConfGlobal struct {
-	// apiserver running mode. apiserver response command data to client and receive command status and command logs from client
-	// when this item is true. otherwise apiserver send command data to client actively and get command statuses and command logs from clients.
-	Passive bool `form:"passive" json:"passive" yaml:"passive" xml:"passive"`
 
 	// set whether apiserver running in debug mode
-	Debug bool `form:"debug" json:"debug" yaml:"debug" xml:"debug"`
+	Debug bool `form:"debug" json:"debug" yaml:"debug" xml:"debug" `
 
-	// set whether apiserver running as daemon
-	// TODO
-	Daemon bool `form:"daemon" json:"daemon" yaml:"daemon" xml:"daemon"`
-
-	// specifies the uri where client get commands to run when apiserver runing as daemon in passive mode. default value is "/getCommand"
-	// in other word, apiserver is listening this path for client getting command data when apiserver running in passive mode.
-	// when apiserver is run in active mode, apiserver send command data to client on the path of this item specified.default value is "/receiveCommand"
-	CommandUri string `form:"commandUri" json:"commandUri" yaml:"commandUri" xml:"commandUri"`
-
-	// specifies the uri where client send command status to when apiserver running as daemon in passive mode.default value is "/receiveCommandStatus"
-	// in other word, apiserver is listening this path for client send command status to  when apiserver running in passive mode.
-	// when apiserver is run in active mode, apiserver send command status to client on the path of this item specified.default value is "/getCommandStatus"
-	CommandStatusUri string `form:"commandStatusUri" json:"commandStatusUri" yaml:"commandStatusUri" xml:"commandStatusUri"`
-
-	// specifies the uri where client send command logs to when apiserver running as daemon in passive mode.default value is "/receiveLogs"
-	// in other word, apiserver is listening this path for client send command logs to  when apiserver running in passive mode.
-	// when apiserver is run in active mode, apiserver send command status to client on the path of this item specified.default value is "/getLogs"
-	CommandLogsUri string `form:"commandLogsUri" json:"commandLogsUri" yaml:"commandLogsUri" xml:"commandLogsUri"`
-
-	// interval of checking new command for client by apiserver when apiserver is running actively. default is 5 second.
-	CheckCommandInterval int `form:"checkCommandInterval" json:"checkCommandInterval" yaml:"checkCommandInterval" xml:"checkCommandInterval"`
-
-	// interval of try to get command status from client by apiserver when apiserver is running actively. default is 5 second
-	GetStatusInterval int `form:"getStatusInterval" json:"getStatusInterval" yaml:"getStatusInterval" xml:"getStatusInterval"`
-
-	// interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
-	GetLogInterval int `form:"getLogInterval" json:"getLogInterval" yaml:"getLogInterval" xml:"getLogInterval"`
-
-	// InternalVIP is the  virtual IP for apiservers when apiserver(s) are behind a LB or HA
-	InternalVIP string `form:"internalVip" json:"internalVip" yaml:"internalVip" xml:"internalVip"`
+	// virtualIP is the  virtual IP for apiserver(s) when apiserver(s) are behind a LB or HA
+	VirtualIP []string `form:"virtualIP" json:"virtualIP" yaml:"virtualIP" xml:"virtualIP"`
 
 	// Optional extra Subject Alternative Names (SANs) to use for the API Server serving certificate. Can be both IP addresses and DNS names.
-	ExtraSans string `form:"extraSans" json:"extraSans" yaml:"extraSans" xml:"extraSans"`
+	ExtraSans []string `form:"extraSans" json:"extraSans" yaml:"extraSans" xml:"extraSans"`
 }
 
 // for server block
@@ -83,7 +52,18 @@ type ConfServer struct {
 	// insecret listen port of apiserver listening when it is running ad daemon
 	InsecretPort int `form:"insecretPort" json:"insecretPort" yaml:"insecretPort" xml:"insecretPort"`
 
-	config.Tls
+	// IsTls identify whether apiServer listening TLS Port
+	// apiServer will get certificate from DB if IsTls is true
+	IsTls bool `form:"isTls" json:"isTls" yaml:"isTls" xml:"isTls"`
+
+	// ca  path of apiServer if apiServer listen on TLS
+	Ca string `form:"ca" json:"ca" yaml:"ca" xml:"ca"`
+
+	// certification  path of apiServer if apiServer listen on TLS
+	Cert string `form:"cert" json:"cert" yaml:"cert" xml:"cert"`
+
+	// key path of apiServer if apiServer listen on TLS
+	Key string `form:"key" json:"key" yaml:"key" xml:"key"`
 }
 
 // for DB block
@@ -148,9 +128,6 @@ type runningData struct {
 	// configuration data for apiserver running
 	runConf Conf
 
-	// hold the running data related to command. this items can be configurable in the feature
-	command runDataForCommand
-
 	// logger entity
 	logEntity *sysadmLog.LoggerConfig
 }
@@ -169,6 +146,5 @@ var runData runningData = runningData{
 		ConfRedis:  redis.ClientConf{},
 		ConfDB:     ConfDB{},
 	},
-	command:   runDataForCommand{},
 	logEntity: nil,
 }

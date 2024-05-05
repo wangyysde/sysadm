@@ -1,0 +1,136 @@
+global:
+  # apiserver running mode. apiserver response command data to client and receive command status and command logs from client when this item is true
+  # otherwise apiserver send command data to client actively and get command statuses and command logs from clients.
+  passive: true
+
+  # set whether apiserver running in debug mode
+  debug: true
+
+  # set whether apiserver running as daemon
+  daemon: true
+
+  # specifies the uri where client get commands to run when apiserver runing as daemon in passive mode. default value is "/getCommand"
+  # in other word, apiserver is listening this path for client getting command data when apiserver running in passive mode.
+  # when apiserver is run in active mode, apiserver send command data to client on the path of this item specified.default value is "/receiveCommand"
+  commandUri: "/getCommand"
+
+  # specifies the uri where client send command status to when apiserver running as daemon in passive mode.default value is "/receiveCommandStatus"
+  # in other word, apiserver is listening this path for client send command status to  when apiserver running in passive mode.
+  # when apiserver is run in active mode, apiserver send command status to client on the path of this item specified.default value is "/getCommandStatus"
+  commandStatusUri: "/receiveCommandStatus"
+
+  # specifies the uri where client send command logs to when apiserver running as daemon in passive mode.default value is "/receiveLogs"
+  # in other word, apiserver is listening this path for client send command logs to  when apiserver running in passive mode.
+  # when apiserver is run in active mode, apiserver send command status to client on the path of this item specified.default value is "/getLogs"
+  commandLogsUri: "/receiveLogs"
+
+  # interval of checking new command for client by apiserver when apiserver is running actively. default is 5 second.
+  checkCommandInterval: 5
+
+  # interval of try to get command status from client by apiserver when apiserver is running actively. default is 5 second
+  getStatusInterval: 5
+
+  # interval of try to get command log from client by apiserver when apiserver is running actively. default is 5 second
+  getLogInterval: 5
+
+  # internalVIP is the  virtual IP for apiservers when apiserver(s) are behind a LB or HA
+  internalVip: ""
+
+  # Optional extra Subject Alternative Names (SANs) to use for the API Server serving certificate. Can be both IP addresses and DNS names.
+  extraSans: ""
+
+server:
+  # apiserver listen address, default value is 0.0.0.0
+  address: "0.0.0.0"
+
+  # apiserver listen port, default value is 8085.this port is tls port when tls parameters has specified
+  port: 8085
+
+  # apiserver socket file path. default is "". apiserver will not create socket file when this item is empty
+  socket: "/var/run/apisever.sock"
+
+  # insecret specifies whether apiserver listen on a insecret port when it is runing as daemon
+  insecret: false
+
+  # insecret listen port of apiserver listening when it is running ad daemon 
+  insecretPort: 5085
+
+  # tls parameters for agent when agent running as daemon.
+  # whether use TLS
+  isTls: true
+  # ca path
+  ca: ""
+  # certification path
+  cert: "certs/fullchain.crt"
+  # key path
+  key: "certs/sincerecloud.key"
+  # whether skip insecure verify
+  insecureSkipVerify: false
+
+log:
+    #the path of access log file
+    accessLog: ""
+    # the path of error log file. both access log messages and error log messages will be log into access log file if error log file not set.
+    errorLog: ""
+    # log message with the format(kind) will be output. its value is one of "text" and "json". default value is text 
+    kind: "text"
+    # specifies log level. just the log messages will be output what the level of the log message is higher "logLevel".
+    level: "debug"
+    # specifies the format of time in the log message
+    timeStampFormat: ""
+redis:
+  # connection mode 1 for single server; 2 for cluster; 3 for sentinel mode
+  mode: 1
+
+  # master server name
+  master: "master"
+
+  # a string join with semicolon for the addresses of server
+  # this is redis server address and port,like as localhost:6379 when mode is 1
+  # these are addresses and ports of redis servers like as localhost:6379;192.168.1.10:6379;x.x.x.x:6379 when mode is 2
+  # these are addresses and ports of sentinel like as localhost:6379;192.168.1.10:6379;x.x.x.x:6379 when mode is 3
+  addrs: "192.53.117.73:6379"
+
+  # redis server username
+  username: ""
+
+  # redis server password
+  password: ""
+
+  # sentinel username
+  sentinelUsername: ""
+
+  # sentinel password
+  sentinelPassword: ""
+
+  # db name. default db if the value of this field is zero
+  db: 0
+
+  # tls parameters for agent when agent running as daemon.
+  tls:
+    isTls: true
+    #  If the certificate is signed by a certificate authority, the certFile should be the concatenation of
+    # the server's certificate, any intermediates, and the CA's certificate.
+    ca: ""
+    cert: ""
+    key: ""
+    insecureSkipVerify: false
+    
+db:
+  # db type. the value of this item is "mysql" only now
+  type: "mysql"
+  # db name
+  dbName: "k8ssysadm" 
+  # address of the db server
+  address: "www.sysadm.cn"
+  # port of the db server
+  port: 3306
+  isTls: false
+  ca: ""
+  cert: ""
+  key: ""
+  insecureSkipVerify: true 
+  userName: "sysadm"
+  password: "bwyy1679"
+  maxOpenConns: 10
+  maxIdleConns: 2

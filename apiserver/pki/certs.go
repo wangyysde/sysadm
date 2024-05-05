@@ -137,14 +137,25 @@ func EncodeCertPEM(cert *x509.Certificate) []byte {
 }
 
 // CreateCertAndKey creates new certificate and key by passing the certificate authority certificate and key
-func CreateCertAndKey(keyType x509.PublicKeyAlgorithm, caCert *x509.Certificate, caKey crypto.Signer, altNames *certutil.AltNames,
-	periodDays int, commonName string, orgnaization []string, usages []x509.ExtKeyUsage) (*x509.Certificate, crypto.Signer, []byte, []byte, error) {
+func CreateCertAndKey(keyType x509.PublicKeyAlgorithm, ca, caKey string, IPs []net.IP,
+	periodDays int, commonName string, orgnaization, dnsNames []string, usages []x509.ExtKeyUsage) (*x509.Certificate, crypto.Signer, []byte, []byte, error) {
 	key, err := GeneratePrivateKey(keyType)
 	if err != nil {
 		return nil, nil, nil, nil, errors.Wrap(err, "unable to create private key")
 	}
 
-	cert, err := CreateSignedCert(altNames, periodDays, commonName, orgnaization, usages, key, caCert, caKey)
+	altNames := &certutil.AltNames{DNSNames: dnsNames, IPs: IPs}
+
+	caCert, e := ParseCertPEM(ca)
+	if e != nil {
+		return nil, nil, nil, nil, errors.Wrap(e, "parse ca error")
+	}
+	keySigner, e := ParseKeyPEM(caKey)
+	if e != nil {
+		return nil, nil, nil, nil, errors.Wrap(e, "ca key is not valid")
+	}
+
+	cert, err := CreateSignedCert(altNames, periodDays, commonName, orgnaization, usages, key, caCert, keySigner)
 	if err != nil {
 		return nil, nil, nil, nil, errors.Wrap(err, "unable to sign certificate")
 	}

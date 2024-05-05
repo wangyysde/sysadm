@@ -29,9 +29,21 @@ func (s *Scheme) AddSchemeData(r *RegistryType) error {
 }
 
 func (s *Scheme) AddKnowTypes(gv GroupVersion, verbs VerbKind, types ...interface{}) error {
+	if s.gvkToType == nil {
+		s.gvkToType = make(map[GroupVersionKind]reflect.Type)
+	}
 	gvkToType := s.gvkToType
+	if s.typeToGVK == nil {
+		s.typeToGVK = make(map[reflect.Type]GroupVersionKind)
+	}
 	typeToGVK := s.typeToGVK
+	if s.unversionedGvkToType == nil {
+		s.unversionedGvkToType = make(map[GroupVersionKind]reflect.Type)
+	}
 	unversionedGvkToType := s.unversionedGvkToType
+	if s.unversionedTypeToGVK == nil {
+		s.unversionedTypeToGVK = make(map[reflect.Type]GroupVersionKind)
+	}
 	unversionTypeToGVK := s.unversionedTypeToGVK
 
 	if len(gv.Group) == 0 || len(gv.Version) == 0 {
@@ -44,6 +56,13 @@ func (s *Scheme) AddKnowTypes(gv GroupVersion, verbs VerbKind, types ...interfac
 			return fmt.Errorf("all types must be pointers point  to structs")
 
 		}
+		if t.Kind() == reflect.Pointer {
+			t = t.Elem()
+		}
+		if t.Kind() != reflect.Struct {
+			return fmt.Errorf("all types must be pointers to structs")
+		}
+
 		objName := t.Name()
 		kind := strings.TrimSpace(strings.ToLower(objName))
 		gvk := GroupVersionKind{
@@ -51,12 +70,7 @@ func (s *Scheme) AddKnowTypes(gv GroupVersion, verbs VerbKind, types ...interfac
 			Version: gv.Version,
 			Kind:    kind,
 		}
-
-		t = t.Elem()
-		if t.Kind() != reflect.Struct {
-			return fmt.Errorf("all types must be pointers to structs")
-		}
-
+		
 		if gv.Version == APIVersionInternal {
 			if oldT, found := unversionedGvkToType[gvk]; found && oldT != t {
 				return fmt.Errorf("Double registration of different types for %v: old=%v.%v, new=%v.%v in scheme ", gvk, oldT.PkgPath(), oldT.Name(), t.PkgPath(), t.Name())
@@ -103,6 +117,9 @@ func (s *Scheme) addObservedVersion(gvk GroupVersionKind, verbs VerbKind) {
 		Verbs: verbs,
 	}
 
+	if s.observedVersionKinds == nil {
+		s.observedVersionKinds = make([]ObservedVersionKind, 0)
+	}
 	s.observedVersionKinds = append(s.observedVersionKinds, ovk)
 
 	return
