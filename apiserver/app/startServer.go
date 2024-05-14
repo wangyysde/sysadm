@@ -23,7 +23,11 @@ import (
 	"github.com/wangyysde/sysadmServer"
 	"os"
 	"path/filepath"
+	sysadmPki "sysadm/apiserver/pki"
+
+	runtime "sysadm/apimachinery/runtime/v1beta1"
 	"sysadm/sysadmerror"
+	"sysadm/syssetting"
 )
 
 // var exitChan chan os.Signal
@@ -96,7 +100,9 @@ func startDaemon() error {
 		return fmt.Errorf("prepare resource schema data error: %s", e)
 	}
 
-	if !runData.runConf.ConfGlobal.Debug {
+	if runData.runConf.ConfGlobal.Debug {
+		sysadmServer.SetMode(sysadmServer.DebugMode)
+	} else {
 		sysadmServer.SetMode(sysadmServer.ReleaseMode)
 	}
 	r := sysadmServer.New()
@@ -163,4 +169,32 @@ func startSecret(engine *sysadmServer.Engine) {
 	}
 
 	return
+}
+
+func getApiServerCerts() error {
+	createCa := false
+	createCert := false
+
+	gv := syssetting.SchemaGroupVersion
+	kind, e := syssetting.GetKind()
+	if e != nil {
+		return e
+	}
+
+	// get ca content from DB
+	gvk := runtime.GroupVersionKind{Group: gv.Group, Version: gv.Version, Kind: kind}
+	queryData, e := syssetting.BuildQueryData(0, syssetting.SettingScopeGlobal, 0, syssetting.SettingKeyForCA)
+	cas, e := getResource(gvk, queryData)
+	if e != nil {
+		return e
+	}
+
+	if len(cas) < 1 {
+		_, _, newCaPem, newCaKeyPem, e := sysadmPki.CreateCertificateAuthority(caCommonName, caOrgnaization, caPeriodDays, publicKeyAlgorithm)
+		if e != nil {
+			return e
+		}
+		createCa = true
+	}
+
 }

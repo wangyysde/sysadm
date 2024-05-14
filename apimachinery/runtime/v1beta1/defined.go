@@ -45,14 +45,8 @@ const (
 	// List lists the information of a resource list HTTP verb is GET
 	List
 
-	// HTTP verb is Patch
-	Patch
-
 	// Update update the information of a resource. HTTP verb is PUT
 	Update
-
-	// Watch watching an individual resource or collection of resources. HTTP verb is GET
-	Watch
 )
 
 const (

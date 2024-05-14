@@ -91,6 +91,10 @@ func getResource(gvk runtime.GroupVersionKind, queryData runtime.RequestQuery) (
 		return nil, e
 	}
 
+	if len(resourceData) < 1 {
+		return resourceData, nil
+	}
+
 	// try to set relation resource data to every line data
 	rr, e := getRelationGvks(obj, gvk)
 	if e != nil {

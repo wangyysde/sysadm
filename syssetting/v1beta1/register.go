@@ -22,7 +22,7 @@ import (
 )
 
 // GroupName is the group name use in this package
-const GroupName = "sys.sysadm.cn"
+const GroupName = "syssetting.sysadm.cn"
 
 // SchemeGroupVersion is group version used to register these objects
 var SchemaGroupVersion = runtime.GroupVersion{GroupName, "v1beta1"}
@@ -36,10 +36,6 @@ var allowedVerbs runtime.VerbKind = runtime.Create | runtime.Get | runtime.List 
 func addNewType(schema *runtime.Scheme) error {
 	return schema.AddKnowTypes(SchemaGroupVersion, allowedVerbs,
 		&Syssetting{})
-}
-
-func GetKind() (string, error) {
-	return runtime.GetKindByType(&Syssetting{})
 }
 
 func init() {

@@ -44,9 +44,9 @@ func RegisterConversions(s *runtime.Scheme) error {
 }
 
 func Convert_v1beta1_Syssetting_To_syssetting_Syssetting(in *Syssetting, out *syssetting.Syssetting) error {
-	out.Id = in.Id
+	out.ID = in.ID
 	out.Scope = in.Scope
-	out.ObjectID = in.ObjectID
+	out.ReferenceObject = in.ReferenceObject
 	out.Key = in.Key
 	out.DefaultValue = in.DefaultValue
 	out.Value = in.Value
@@ -59,9 +59,9 @@ func Convert_v1beta1_Syssetting_To_syssetting_Syssetting(in *Syssetting, out *sy
 }
 
 func Convert_syssetting_Syssetting_To_v1beta1_Syssetting(in *syssetting.Syssetting, out *Syssetting) error {
-	out.Id = in.Id
+	out.ID = in.ID
 	out.Scope = in.Scope
-	out.ObjectID = in.ObjectID
+	out.ReferenceObject = in.ReferenceObject
 	out.Key = in.Key
 	out.DefaultValue = in.DefaultValue
 	out.Value = in.Value
