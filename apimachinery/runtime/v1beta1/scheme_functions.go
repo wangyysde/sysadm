@@ -70,7 +70,7 @@ func (s *Scheme) AddKnowTypes(gv GroupVersion, verbs VerbKind, types ...interfac
 			Version: gv.Version,
 			Kind:    kind,
 		}
-		
+
 		if gv.Version == APIVersionInternal {
 			if oldT, found := unversionedGvkToType[gvk]; found && oldT != t {
 				return fmt.Errorf("Double registration of different types for %v: old=%v.%v, new=%v.%v in scheme ", gvk, oldT.PkgPath(), oldT.Name(), t.PkgPath(), t.Name())
@@ -197,6 +197,9 @@ func GetKindByType(obj interface{}) (string, error) {
 	if t.Kind() != reflect.Ptr || t.Elem().Kind() != reflect.Struct {
 		return "", fmt.Errorf("all types must be pointers point  to structs")
 
+	}
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
 	}
 	objName := t.Name()
 	kind := strings.TrimSpace(strings.ToLower(objName))

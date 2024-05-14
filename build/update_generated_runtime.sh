@@ -22,7 +22,7 @@ set -o pipefail
 
 GENERATED_FILE="zz_generated.runtime.go"
 GOHEADERFILE_FILE="CopyRight"
-APIDIRS="command"
+APIDIRS="command syssetting"
 MODULENAME="sysadm"
 CONVERSIONTAG="// +sysadm:api-resource=true"
 

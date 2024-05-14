@@ -18,6 +18,13 @@
 package v1beta1
 
 const (
+	SettingScopeGlobal = iota
+	SettingScopeK8sCluster
+	SettingScopeNode
+	SettingScopeProject
+	SettingScopeUserGroup
+	SettingScopeUser
+
 	CertTypeCa = iota
 	CertTypeApiServer
 	CertTypeAgent

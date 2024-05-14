@@ -22,7 +22,7 @@ import (
 )
 
 // GroupName is the group name use in this package
-const GroupName = "sys.sysadm.cn"
+const GroupName = "command.sysadm.cn"
 
 // SchemeGroupVersion is group version used to register these objects
 var SchemaGroupVersion = runtime.GroupVersion{GroupName, "v1beta1"}

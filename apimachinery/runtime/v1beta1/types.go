@@ -146,3 +146,9 @@ type ReferenceInfo struct {
 	// Version of the resource referencing this resource
 	ReferenceVersion string `json:"referenceVersion" xml:"referenceVersion" yaml:"referenceVersion" db:"referenceVersion"`
 }
+
+// ServerError represent an error response to the client
+type ServerError struct {
+	// Message represent an error detail
+	Message string `json:"message" xml:"message" yaml:"message" db:"message"`
+}

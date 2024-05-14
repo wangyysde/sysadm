@@ -20,5 +20,7 @@ package app
 import (
 	_ "sysadm/command"
 	_ "sysadm/command/v1beta1"
+	_ "sysadm/syssetting"
+	_ "sysadm/syssetting/v1beta1"
 )
 

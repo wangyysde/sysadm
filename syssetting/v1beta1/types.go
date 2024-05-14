@@ -17,14 +17,16 @@
 
 package v1beta1
 
+import runtime "sysadm/apimachinery/runtime/v1beta1"
+
 type Syssetting struct {
-	// 配置项ID,数据库中自增整数值
-	Id uint `form:"id" json:"id" yaml:"id" xml:"id" db:"id"`
+	// 配置项ID,数据库中自增整数值.字段名必须是ID，且tag值一定为id
+	ID int `form:"id" json:"id" yaml:"id" xml:"id" db:"id"`
 	// 配置项的应用范围，0 全局 1 k8s集群 2 节点级别 3 项目级别 4 用户组级别 5 用户级别
 	// 对应的值参见syssettingDefined.go文件中的定义
 	Scope int `form:"scope" json:"scope" yaml:"scope" xml:"scope" db:"scope"`
-	// 配置项所适用的对象ID.如scope为0时,本字段值为0,如果scope字段是1时，则本字段为设置项所适用的k8s集群的集群ID值
-	ObjectID string `form:"objectID" json:"objectID" yaml:"objectID" xml:"objectID" db:"objectID"`
+	// 配置了硒配置项的资源信息引用，字段名和切片类型是固定的。
+	ReferenceObject []runtime.ReferenceInfo
 	// 配置的key值, 不能为空。同一个级别的不能重复，大小写不敏感
 	Key string `form:"key" json:"key" yaml:"key" xml:"key" db:"key"`
 	// 配置项的默认值
